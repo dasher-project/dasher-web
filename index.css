@@ -4,3 +4,7 @@
 html {font-family: sans-serif;}
 p.smallprint {font-size: 0.7rem;}
 p.smallprint a {text-decoration: none;}
+
+svg {
+    border: 1px black solid;
+}
