@@ -46,6 +46,10 @@ class Index {
         this._sizesTextNode = this._createHTML(
             'span', {id:"sizes-text-node"}, "loading sizes ...", this._header
         ).firstChild;
+        // TOTH https://github.com/patrickhlauke/touch
+        this._touch = 'ontouchstart' in window;
+        this._createHTML(
+            'span', {}, this._touch ? "touch " : "mouse ", this._header);
         this._xTextNode = this._createHTML(
             'span', {}, "X", this._header).firstChild;
         this._createHTML('span', {}, ",", this._header);
@@ -137,7 +141,10 @@ class Index {
         //
         // Add a listener to set the pointer line end when the pointer moves.
         this._svg.addEventListener(
-            'mousemove', this._on_pointer_move.bind(this), {capture:true});
+            this._touch ? 'touchmove' : 'mousemove',
+            this._on_pointer_move.bind(this),
+            {capture:true}
+        );
         //
         // Safari supports the above, mouse event, but doesn't support the
         // below, pointer events.
