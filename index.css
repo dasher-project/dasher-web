@@ -1,10 +1,38 @@
-/* (c) 2018 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+/* (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
  */
 
 html {font-family: sans-serif;}
-p.smallprint {font-size: 0.7rem;}
-p.smallprint a {text-decoration: none;}
+p.small-print {font-size: 0.7rem;}
+p.small-print a {text-decoration: none;}
 
 svg {
     border: 1px black solid;
+}
+
+#sizes-text-node {display: block;}
+
+body {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+#user-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#user-interface > *:nth-child(1) {
+    /* background-color: aquamarine; */
+    flex: none;
+}
+#user-interface > *:nth-child(2) {
+    /* background-color: cornflowerblue; */
+    flex: auto;
+}
+#user-interface > *:nth-child(3) {
+    /* background-color: aqua; */
+    flex: none;
 }
