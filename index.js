@@ -114,28 +114,35 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
 
+    _on_pointer_move(event) {
+        const xAdjust = -1 * (this._svgRect.x + (this._svgRect.width * 0.5));
+        const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
+        const x = xAdjust + event.clientX;
+        const y = yAdjust - event.clientY;
+        this._pointerLine.setAttribute('x2', x.toString());
+        this._pointerLine.setAttribute('y2', (-1 * y).toString());
+        this._setXY(x, y);
+    }
+
     _load1() {
         this._on_resize()
         window.addEventListener('resize', () => this._on_resize());
 
         // Add the pointer line, which will start at the origin and end wherever
         // the pointer happens to be.
-        const pointerLine = this._create('line', {
+        this._pointerLine = this._create('line', {
             x1:"0", y1:"0", x2:"0", y2:"0",
             stroke:"red", "stroke-width":"1px"
         });
         //
         // Add a listener to set the pointer line end when the pointer moves.
-        this._svg.addEventListener('pointermove', (event) => {
-            const xAdjust = -1 * (
-                this._svgRect.x + (this._svgRect.width * 0.5));
-            const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);    
-            const x = xAdjust + event.clientX;
-            const y = yAdjust - event.clientY;
-            pointerLine.setAttribute('x2', x.toString());
-            pointerLine.setAttribute('y2', (-1 * y).toString());
-            this._setXY(x, y);
-        }, {capture:true});
+        this._svg.addEventListener(
+            'mousemove', this._on_pointer_move.bind(this), {capture:true});
+        //
+        // Safari supports the above, mouse event, but doesn't support the
+        // below, pointer events.
+        // this._svg.addEventListener(
+        //     'pointermove', this._on_pointer_move.bind(this), {capture:true});
 
         // Load some likely looking content.
         const rectHeight = 30;
