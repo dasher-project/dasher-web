@@ -118,14 +118,30 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
 
-    _on_pointer_move(event) {
+    _update_pointer_line(clientX, clientY) {
         const xAdjust = -1 * (this._svgRect.x + (this._svgRect.width * 0.5));
         const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
-        const x = xAdjust + event.clientX;
-        const y = yAdjust - event.clientY;
+        const x = xAdjust + clientX;
+        const y = yAdjust - clientY;
         this._pointerLine.setAttribute('x2', x.toString());
         this._pointerLine.setAttribute('y2', (-1 * y).toString());
         this._setXY(x, y);
+    }
+
+    _on_mouse_move(mouseEvent) {
+        mouseEvent.preventDefault();
+        return this._update_pointer_line(
+            mouseEvent.clientX, mouseEvent.clientY);
+    }
+
+    _on_touch_move(touchEvent) {
+        touchEvent.preventDefault();
+        if (event.changedTouches.length <= 0) {
+            return;
+        }
+        // For now, only handle the first touch point.
+        const touch = event.changedTouches[0];
+        return this._update_pointer_line(touch.clientX, touch.clientY);
     }
 
     _load1() {
@@ -140,27 +156,30 @@ class Index {
         });
         //
         // Add a listener to set the pointer line end when the pointer moves.
-        this._svg.addEventListener(
-            this._touch ? 'touchmove' : 'mousemove',
-            this._on_pointer_move.bind(this),
-            {capture:true}
-        );
+        if (this._touch) {
+            this._svg.addEventListener(
+                'touchmove', this._on_touch_move.bind(this), {capture:true});
+        }
+        else {
+            this._svg.addEventListener(
+                'mousemove', this._on_mouse_move.bind(this), {capture:true});
+        }
         //
-        // Safari supports the above, mouse event, but doesn't support the
-        // below, pointer events.
-        // this._svg.addEventListener(
-        //     'pointermove', this._on_pointer_move.bind(this), {capture:true});
+        // Safari supports the above, mouse event, but doesn't support pointer
+        // events like:
+        // this._svg.addEventListener('pointermove', ...);
 
         // Load some likely looking content.
         const rectHeight = 30;
         let yPosition = -0.5 * this._svgRect.height;
+        const xPosition = (this._svgRect.width * 0.5) - (rectHeight * 2);
         for(const [index, character] of this._characters.entries()) {
             this._create('rect', {
-                x:5, y:yPosition, width:rectHeight, height:rectHeight,
+                x:xPosition, y:yPosition, width:rectHeight, height:rectHeight,
                 fill:(index % 2 === 0 ? "lightgray" : "lightblue")
             });
             this._create('text', {
-                x:10, y:yPosition + rectHeight / 2.0, fill:"black"
+                x:xPosition + 5, y:yPosition + rectHeight / 2.0, fill:"black"
             }, character );
             yPosition += rectHeight;
         }
