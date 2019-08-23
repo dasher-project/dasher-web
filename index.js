@@ -46,6 +46,10 @@ class Index {
         this._sizesTextNode = this._createHTML(
             'span', {id:"sizes-text-node"}, "loading sizes ...", this._header
         ).firstChild;
+        // TOTH https://github.com/patrickhlauke/touch
+        this._touch = 'ontouchstart' in window;
+        this._createHTML(
+            'span', {}, this._touch ? "touch " : "mouse ", this._header);
         this._xTextNode = this._createHTML(
             'span', {}, "X", this._header).firstChild;
         this._createHTML('span', {}, ",", this._header);
@@ -114,39 +118,68 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
 
+    _update_pointer_line(clientX, clientY) {
+        const xAdjust = -1 * (this._svgRect.x + (this._svgRect.width * 0.5));
+        const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
+        const x = xAdjust + clientX;
+        const y = yAdjust - clientY;
+        this._pointerLine.setAttribute('x2', x.toString());
+        this._pointerLine.setAttribute('y2', (-1 * y).toString());
+        this._setXY(x, y);
+    }
+
+    _on_mouse_move(mouseEvent) {
+        mouseEvent.preventDefault();
+        return this._update_pointer_line(
+            mouseEvent.clientX, mouseEvent.clientY);
+    }
+
+    _on_touch_move(touchEvent) {
+        touchEvent.preventDefault();
+        if (event.changedTouches.length <= 0) {
+            return;
+        }
+        // For now, only handle the first touch point.
+        const touch = event.changedTouches[0];
+        return this._update_pointer_line(touch.clientX, touch.clientY);
+    }
+
     _load1() {
         this._on_resize()
         window.addEventListener('resize', () => this._on_resize());
 
         // Add the pointer line, which will start at the origin and end wherever
         // the pointer happens to be.
-        const pointerLine = this._create('line', {
+        this._pointerLine = this._create('line', {
             x1:"0", y1:"0", x2:"0", y2:"0",
             stroke:"red", "stroke-width":"1px"
         });
         //
         // Add a listener to set the pointer line end when the pointer moves.
-        this._svg.addEventListener('pointermove', (event) => {
-            const xAdjust = -1 * (
-                this._svgRect.x + (this._svgRect.width * 0.5));
-            const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);    
-            const x = xAdjust + event.clientX;
-            const y = yAdjust - event.clientY;
-            pointerLine.setAttribute('x2', x.toString());
-            pointerLine.setAttribute('y2', (-1 * y).toString());
-            this._setXY(x, y);
-        }, {capture:true});
+        if (this._touch) {
+            this._svg.addEventListener(
+                'touchmove', this._on_touch_move.bind(this), {capture:true});
+        }
+        else {
+            this._svg.addEventListener(
+                'mousemove', this._on_mouse_move.bind(this), {capture:true});
+        }
+        //
+        // Safari supports the above, mouse event, but doesn't support pointer
+        // events like:
+        // this._svg.addEventListener('pointermove', ...);
 
         // Load some likely looking content.
         const rectHeight = 30;
         let yPosition = -0.5 * this._svgRect.height;
+        const xPosition = (this._svgRect.width * 0.5) - (rectHeight * 2);
         for(const [index, character] of this._characters.entries()) {
             this._create('rect', {
-                x:5, y:yPosition, width:rectHeight, height:rectHeight,
+                x:xPosition, y:yPosition, width:rectHeight, height:rectHeight,
                 fill:(index % 2 === 0 ? "lightgray" : "lightblue")
             });
             this._create('text', {
-                x:10, y:yPosition + rectHeight / 2.0, fill:"black"
+                x:xPosition + 5, y:yPosition + rectHeight / 2.0, fill:"black"
             }, character );
             yPosition += rectHeight;
         }
