@@ -9,6 +9,19 @@ svg {
     border: 1px black solid;
 }
 
+svg rect {
+    /* stroke: black; */
+    /* This works, for rect.
+     */
+    transition: x 0.2s linear, width 0.2s linear;
+}
+svg text {
+    /* This doesn't work, but see:
+     * https://stackoverflow.com/a/53452940
+     */
+    transition: x 0.2s linear;
+}
+
 #sizes-text-node {display: block;}
 
 body {

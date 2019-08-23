@@ -1,5 +1,7 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+import ZoomBox from './zoombox.js';
+
 class Index {
     constructor(parent) {
         this._parent = parent;
@@ -173,16 +175,35 @@ class Index {
         const rectHeight = 30;
         let yPosition = -0.5 * this._svgRect.height;
         const xPosition = (this._svgRect.width * 0.5) - (rectHeight * 2);
-        for(const [index, character] of this._characters.entries()) {
-            this._create('rect', {
-                x:xPosition, y:yPosition, width:rectHeight, height:rectHeight,
-                fill:(index % 2 === 0 ? "lightgray" : "lightblue")
-            });
-            this._create('text', {
-                x:xPosition + 5, y:yPosition + rectHeight / 2.0, fill:"black"
-            }, character );
+        const zoomBoxes = this._characters.map((character, index) => {
+            const zoomBox = new ZoomBox(
+                index % 2 === 0 ? "lightgray" : "lightgreen",
+                yPosition, this._svgRect.width * 0.5,
+                yPosition + rectHeight, xPosition
+            );
+            zoomBox.xChange = 1 - ((index % 2) * 2);
+            zoomBox.svgRect = this._create('rect');
+            zoomBox.svgText = this._create('text', undefined, character);
             yPosition += rectHeight;
-        }
+            return zoomBox;
+        });
+
+        setInterval(() => {
+            const xMin = this._svgRect.width * -0.5;
+            const xMax = (this._svgRect.width * 0.5) - (rectHeight * 2);
+            zoomBoxes.forEach(zoomBox => {
+                const xDelta = (1 + Math.random() * 50) * zoomBox.xChange;
+                if (
+                    (zoomBox.left + xDelta < xMin && zoomBox.xChange < 0) ||
+                    (zoomBox.left + xDelta > xMax && zoomBox.xChange > 0)
+                ) {
+                    zoomBox.xChange *= -1;
+                }
+                else {
+                    zoomBox.left += xDelta;
+                }
+            });
+        }, 200);
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
