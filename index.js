@@ -6,6 +6,8 @@ class Index {
     constructor(parent) {
         this._parent = parent;
         this._characters = "abcdefghijklmnopqrstuvwxyz".split("");
+        this._interval = undefined;
+        this._zoomBoxes = undefined;
     }
 
     _create(
@@ -48,6 +50,12 @@ class Index {
         this._sizesTextNode = this._createHTML(
             'span', {id:"sizes-text-node"}, "loading sizes ...", this._header
         ).firstChild;
+
+        this._button = this._createHTML(
+            'button', {'type': 'button', 'disabled': true},
+            'Go Random', this._header);
+        this._button.addEventListener('click', () => this.toggle_zooms());
+
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
         this._createHTML(
@@ -90,6 +98,63 @@ class Index {
         return this;
     }
 
+    toggle_zooms() {
+        if (this._interval === undefined) {
+            return;
+        }
+        if (this._interval === null) {
+            this._interval = setInterval(() => this.random_zooms(), 180);
+            this._button.textContent = "Stop";
+        }
+        else {
+            clearInterval(this._interval);
+            this._interval = null;
+            this._button.textContent = "Go Random";
+        }
+    }
+
+    random_zooms() {
+        const yMin = this._rectHeight;
+        const yMax = this._rectHeight * 3;
+        const xMin = this._svgRect.width * -0.5;
+        const xMax = (this._svgRect.width * 0.5) - (this._rectHeight * 2);
+        let top = this._zoomBoxes[0].top;
+        this._zoomBoxes.forEach(zoomBox => {
+            const xDelta = (50 + Math.random() * 250) * zoomBox.xChange;
+            const yDelta = this._rectHeight * Math.random() * zoomBox.yChange;
+            let left;
+            let bottom;
+            if (
+                (zoomBox.left + xDelta < xMin && zoomBox.xChange < 0) ||
+                (zoomBox.left + xDelta > xMax && zoomBox.xChange > 0)
+            ) {
+                zoomBox.xChange *= -1;
+            }
+            else {
+                left = zoomBox.left + xDelta;
+            }
+
+            const height = zoomBox.height;
+            if (
+                (height + yDelta < yMin && zoomBox.yChange < 0) ||
+                (height + yDelta > yMax && zoomBox.yChange > 0)
+            ) {
+                zoomBox.yChange *= -1;
+                bottom = top + height;
+            }
+            else {
+                bottom = top + height + yDelta;
+                zoomBox.svgText.setAttribute(
+                    'font-size',
+                    height + yDelta > this._rectHeight * 1.7 ? '60px' : '10px');
+            }
+
+            zoomBox.setDimensions(top, undefined, bottom, left);
+
+            top = zoomBox.bottom;
+        });
+    }
+
     static bbox_text(boundingBox, label) {
         return [
             label === undefined ? '' : label,
@@ -103,6 +168,15 @@ class Index {
 
     _on_resize() {
         this._svgRect = this._svg.getBoundingClientRect();
+        if (!!this._zoomBoxes) {
+            const zoomBoxRight = this._svgRect.width * 0.5
+            this._zoomBoxes.forEach(zoomBox => {
+                if (zoomBox.left > zoomBoxRight) {
+                    zoomBox.left = zoomBoxRight - (this._rectHeight * 2);
+                }
+                zoomBox.right = zoomBoxRight;
+            });
+        }
         // Change the svg viewBox so that the origin is in the centre.
         this._set_attributes(this._svg, {
             viewBox:
@@ -171,39 +245,27 @@ class Index {
         // events like:
         // this._svg.addEventListener('pointermove', ...);
 
-        // Load some likely looking content.
-        const rectHeight = 30;
+        // Spawn zoom boxes.
+        this._rectHeight = 30;
         let yPosition = -0.5 * this._svgRect.height;
-        const xPosition = (this._svgRect.width * 0.5) - (rectHeight * 2);
-        const zoomBoxes = this._characters.map((character, index) => {
+        const xPosition = (this._svgRect.width * 0.5) - (this._rectHeight * 2);
+        this._zoomBoxes = this._characters.map((character, index) => {
             const zoomBox = new ZoomBox(
                 index % 2 === 0 ? "lightgray" : "lightgreen",
                 yPosition, this._svgRect.width * 0.5,
-                yPosition + rectHeight, xPosition
+                yPosition + this._rectHeight + (
+                    this._rectHeight * Math.random()),
+                xPosition
             );
             zoomBox.xChange = 1 - ((index % 2) * 2);
-            zoomBox.svgRect = this._create('rect');
-            zoomBox.svgText = this._create('text', undefined, character);
-            yPosition += rectHeight;
+            zoomBox.yChange = zoomBox.xChange;
+            const svgG = this._create('g');
+            zoomBox.svgRect = this._create('rect', undefined, undefined, svgG);
+            zoomBox.svgText = this._create('text', undefined, character, svgG);
+            zoomBox.svgG = svgG;
+            yPosition += zoomBox.height;
             return zoomBox;
         });
-
-        setInterval(() => {
-            const xMin = this._svgRect.width * -0.5;
-            const xMax = (this._svgRect.width * 0.5) - (rectHeight * 2);
-            zoomBoxes.forEach(zoomBox => {
-                const xDelta = (1 + Math.random() * 50) * zoomBox.xChange;
-                if (
-                    (zoomBox.left + xDelta < xMin && zoomBox.xChange < 0) ||
-                    (zoomBox.left + xDelta > xMax && zoomBox.xChange > 0)
-                ) {
-                    zoomBox.xChange *= -1;
-                }
-                else {
-                    zoomBox.left += xDelta;
-                }
-            });
-        }, 200);
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
@@ -213,6 +275,8 @@ class Index {
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
         setTimeout( () => this._on_resize(), 0);
+        this._interval = null;
+        this._button.removeAttribute('disabled');
     }
 }
 

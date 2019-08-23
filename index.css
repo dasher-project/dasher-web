@@ -11,15 +11,19 @@ svg {
 
 svg rect {
     /* stroke: black; */
-    /* This works, for rect.
-     */
-    transition: x 0.2s linear, width 0.2s linear;
+    transition: width 0.2s linear;
 }
 svg text {
-    /* This doesn't work, but see:
-     * https://stackoverflow.com/a/53452940
+    /* Making text.x transition doesn't work. For an explanation and solution
+     * see: https://stackoverflow.com/a/53452940
+     * transition: x 0.2s linear;
+     *
+     * text.font-size will make a transition no problem.
      */
-    transition: x 0.2s linear;
+    transition: font-size 0.2s linear;
+}
+svg g {
+    transition: 0.2s linear;
 }
 
 #sizes-text-node {display: block;}
