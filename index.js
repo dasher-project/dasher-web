@@ -145,8 +145,7 @@ class Index {
             else {
                 bottom = top + height + yDelta;
                 zoomBox.svgText.setAttribute(
-                    'font-size',
-                    height + yDelta > this._rectHeight * 1.7 ? '60px' : '10px');
+                    'font-size', `${(height + yDelta) * 0.9}px`);
             }
 
             zoomBox.setDimensions(top, undefined, bottom, left);
@@ -261,7 +260,9 @@ class Index {
             zoomBox.yChange = zoomBox.xChange;
             const svgG = this._create('g');
             zoomBox.svgRect = this._create('rect', undefined, undefined, svgG);
-            zoomBox.svgText = this._create('text', undefined, character, svgG);
+            zoomBox.svgText = this._create('text', {
+                "alignment-baseline": "middle"
+            }, character, svgG);
             zoomBox.svgG = svgG;
             yPosition += zoomBox.height;
             return zoomBox;
