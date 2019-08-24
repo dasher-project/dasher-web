@@ -76,6 +76,8 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
         this._svg.style['touch-action'] = 'none';
 
+        this._zoomBoxG = this._create('g');
+
         // Axis lines.
         this._create('line', {
             x1:"0", y1:"-50%", x2:"0", y2:"50%",
@@ -258,7 +260,8 @@ class Index {
             );
             zoomBox.xChange = 1 - ((index % 2) * 2);
             zoomBox.yChange = zoomBox.xChange;
-            const svgG = this._create('g');
+            const svgG = this._create(
+                'g', undefined, undefined, this._zoomBoxG);
             zoomBox.svgRect = this._create('rect', undefined, undefined, svgG);
             zoomBox.svgText = this._create('text', {
                 "alignment-baseline": "middle"
