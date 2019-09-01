@@ -1,5 +1,6 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+import Piece from './piece.js';
 import ZoomBox from './zoombox.js';
 
 class Index {
@@ -10,82 +11,53 @@ class Index {
         this._zoomBoxes = undefined;
     }
 
-    _create(
-        tag, attributes, text, parent, nameSpace='http://www.w3.org/2000/svg'
-    ) {
-        const element = document.createElementNS(nameSpace, tag);
-        this._set_attributes(element, attributes);
-        if (text !== undefined) {
-            const textNode = document.createTextNode(text);
-            element.appendChild(textNode);
-        }
-
-        if (parent !== null) {
-            (parent === undefined ? this._svg : parent).appendChild(element);
-        }
-        return element;
-    }
-    _set_attributes(element, attributes) {
-        if (attributes !== undefined) {
-            for (const [key, value] of Object.entries(attributes)) {
-                element.setAttribute(key, value);
-            }
-        }
-        return element;
-    }
-    _createHTML(tag, attributes, text, parent) {
-        return this._create(
-            tag, attributes, text,
-            parent === undefined ? this._parent : parent,
-            'http://www.w3.org/1999/xhtml'
-        );
-    }
-
     load(loadingID, footerID) {
         // Create a diagnostic area in which to display a bunch of numbers.
-        this._header = this._createHTML('div');
-        this._loading = document.getElementById(loadingID);
-        this._header.appendChild(this._loading);
+        this._header = new Piece('div', this._parent);
+        this._loading = new Piece(document.getElementById(loadingID));
+        this._header.add_child(this._loading);
 
-        this._sizesTextNode = this._createHTML(
-            'span', {id:"sizes-text-node"}, "loading sizes ...", this._header
+        this._sizesTextNode = this._header.create(
+            'span', {id:"sizes-text-node"}, "loading sizes ..."
         ).firstChild;
 
-        this._button = this._createHTML(
-            'button', {'type': 'button', 'disabled': true},
-            'Go Random', this._header);
+        this._button = this._header.create(
+            'button', {'type': 'button', 'disabled': true}, 'Go Random');
         this._button.addEventListener('click', () => this.toggle_zooms());
 
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
-        this._createHTML(
-            'span', {}, this._touch ? "touch " : "mouse ", this._header);
-        this._xTextNode = this._createHTML(
-            'span', {}, "X", this._header).firstChild;
-        this._createHTML('span', {}, ",", this._header);
-        this._yTextNode = this._createHTML(
-            'span', {}, "Y", this._header).firstChild;
-        this._setXY = (x, y) => {
-            this._xTextNode.nodeValue = x.toFixed().toString();
-            this._yTextNode.nodeValue = y.toFixed().toString();
-        }
 
-        this._svg = this._create('svg', undefined, undefined, this._parent);
+        const spans = this._header.create('span', {}, [
+                this._touch ? "touch " : "mouse ", "X", ",", "Y"
+        ]);
+        this._xTextNode = spans[1].firstChild;
+        this._yTextNode = spans[3].firstChild;
+
+        this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
         // screen, by default. Next line suppresses that. Reference:
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-        this._svg.style['touch-action'] = 'none';
+        this._svg.node.style['touch-action'] = 'none';
 
-        this._zoomBoxG = this._create('g');
+        // SVG group to hold zoom boxes. This is first so that the cross hairs
+        // and pointer line will always be rendered in front of them.
+        this._zoomBoxGroup = new Piece('g', this._svg);
 
-        // Axis lines.
-        this._create('line', {
+        // Cross hair axis lines.
+        this._svg.create('line', {
             x1:"0", y1:"-50%", x2:"0", y2:"50%",
             stroke:"black", "stroke-width":"1px"
         });
-        this._create('line', {
+        this._svg.create('line', {
             x1:"-50%", y1:"0", x2:"50%", y2:"0",
             stroke:"black", "stroke-width":"1px"
+        });
+        // Add the pointer line, which will start at the origin and end wherever
+        // the pointer happens to be.
+        this._pointerLine = this._svg.create('line', {
+            x1:"0", y1:"0", x2:"0", y2:"0",
+            stroke:"red", "stroke-width":"1px"
         });
 
         const footer = document.getElementById(footerID);
@@ -98,6 +70,11 @@ class Index {
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
+    }
+
+    _setXY(x, y) {
+        this._xTextNode.nodeValue = x.toFixed().toString();
+        this._yTextNode.nodeValue = y.toFixed().toString();
     }
 
     toggle_zooms() {
@@ -146,8 +123,6 @@ class Index {
             }
             else {
                 bottom = top + height + yDelta;
-                zoomBox.svgText.setAttribute(
-                    'font-size', `${(height + yDelta) * 0.9}px`);
             }
 
             zoomBox.setDimensions(top, undefined, bottom, left);
@@ -168,7 +143,7 @@ class Index {
     }
 
     _on_resize() {
-        this._svgRect = this._svg.getBoundingClientRect();
+        this._svgRect = this._svg.node.getBoundingClientRect();
         if (!!this._zoomBoxes) {
             const zoomBoxRight = this._svgRect.width * 0.5
             this._zoomBoxes.forEach(zoomBox => {
@@ -179,11 +154,10 @@ class Index {
             });
         }
         // Change the svg viewBox so that the origin is in the centre.
-        this._set_attributes(this._svg, {
-            viewBox:
+        this._svg.node.setAttribute('viewBox',
                 `${this._svgRect.width * -0.5} ${this._svgRect.height * -0.5}` +
                 ` ${this._svgRect.width} ${this._svgRect.height}`
-        });
+        );
 
         // Update the diagnostic display with all the sizes.
         this._sizesTextNode.nodeValue = [
@@ -223,22 +197,16 @@ class Index {
 
     _load1() {
         this._on_resize()
-        window.addEventListener('resize', () => this._on_resize());
+        window.addEventListener('resize', this._on_resize.bind(this));
 
-        // Add the pointer line, which will start at the origin and end wherever
-        // the pointer happens to be.
-        this._pointerLine = this._create('line', {
-            x1:"0", y1:"0", x2:"0", y2:"0",
-            stroke:"red", "stroke-width":"1px"
-        });
         //
         // Add a listener to set the pointer line end when the pointer moves.
         if (this._touch) {
-            this._svg.addEventListener(
+            this._svg.node.addEventListener(
                 'touchmove', this._on_touch_move.bind(this), {capture:true});
         }
         else {
-            this._svg.addEventListener(
+            this._svg.node.addEventListener(
                 'mousemove', this._on_mouse_move.bind(this), {capture:true});
         }
         //
@@ -260,22 +228,26 @@ class Index {
             );
             zoomBox.xChange = 1 - ((index % 2) * 2);
             zoomBox.yChange = zoomBox.xChange;
-            const svgG = this._create(
-                'g', undefined, undefined, this._zoomBoxG);
-            zoomBox.svgRect = this._create('rect', undefined, undefined, svgG);
-            zoomBox.svgText = this._create('text', {
-                "alignment-baseline": "middle"
-            }, character, svgG);
-            zoomBox.svgG = svgG;
+            zoomBox.parentPiece = this._zoomBoxGroup;
+            zoomBox.text = character;
+
+            zoomBox.render();
+
             yPosition += zoomBox.height;
             return zoomBox;
         });
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
-        this._header.removeChild(this._loading);
-        const h1 = this._createHTML('h1', undefined, "Proof of Concept", null);
-        this._header.insertBefore(h1, this._header.firstChild);
+        // this._header.removeChild(this._loading);
+        this._loading.remove();
+
+        // const h1 = this._createHTML('h1', undefined, "Proof of Concept", null);
+        const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
+       
+        // this._header.insertBefore(h1, this._header.firstChild);
+        this._header.node.insertBefore(h1, this._header.node.firstChild);
+
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
         setTimeout( () => this._on_resize(), 0);
