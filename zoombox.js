@@ -3,14 +3,16 @@
 import Piece from "./piece.js";
 
 export default class ZoomBox {
-    constructor(colour, top, right, bottom, left) {
-        this._top = top;
-        this._right = right;
-        this._bottom = bottom;
-        this._left = left;
-
+    constructor(colour, text) {
         this._colour = colour;
-        // this._text = text;
+        this._text = text;
+
+        this._top = undefined;
+        this._right = undefined;
+        this._bottom = undefined;
+        this._left = undefined;
+
+        this._resetWidth = undefined;
 
         this._svgG = undefined;
         this._svgRect = undefined;
@@ -18,6 +20,12 @@ export default class ZoomBox {
 
         this._xChange = undefined;
         this._yChange = undefined;
+
+        this._children = [];
+    }
+
+    get children() {
+        return this._children;
     }
 
     get left() {
@@ -33,7 +41,23 @@ export default class ZoomBox {
     }
     set right(right) {
         this._right = right;
+        this._cascade_right();
         this._update_render();
+    }
+    _cascade_right() {
+        if (this.resetWidth !== undefined && this._left > this._right) {
+            // Set the underlying property to avoid the setter.
+            this._left = this._right - this.resetWidth;
+        }
+        this._children.forEach(
+            child => child.right = this._right - this._left);
+    }
+
+    get resetWidth() {
+        return this._resetWidth;
+    }
+    set resetWidth(resetWidth) {
+        this._resetWidth = resetWidth;
     }
 
     get top() {
@@ -56,11 +80,16 @@ export default class ZoomBox {
         return this._bottom - this._top;
     }
 
+    get piece() {
+        return this._svgGroup;
+    }
+
     setDimensions(top, right, bottom, left) {
+        const rightChange = (right !== undefined);
         if (top !== undefined) {
             this._top = top;
         }
-        if (right !== undefined) {
+        if (rightChange) {
             this._right = right;
         }
         if (bottom !== undefined) {
@@ -69,34 +98,30 @@ export default class ZoomBox {
         if (left !== undefined) {
             this._left = left;
         }
+        if (rightChange) {
+            this._cascade_right();
+        }
         this._update_render();
     }
 
-    get parentPiece() {
-        return this._parentPiece;
-    }
-    set parentPiece(parentPiece) {
-        this._parentPiece = parentPiece;
-    }
-
-    get text() {
-        return this._text;
-    }
-    set text(text) {
-        this._text = text;
-    }
-
-    render() {
+    render(parentPiece) {
         this._svgGroup = new Piece('g');
-        this._svgRect = this._svgGroup.create('rect', {
-            "x": 0, "fill": this._colour
-        });
-        this._svgText = this._svgGroup.create('text', {
-            "x": 5, "y": 0, "fill": "black", "alignment-baseline": "middle"
-        }, this.text);
+
+        if (this._colour !== undefined) {
+            this._svgRect = this._svgGroup.create('rect', {
+                "x": 0, "fill": this._colour
+            });
+        }
+
+        if (this._text !== undefined) {
+            this._svgText = this._svgGroup.create('text', {
+                "x": 5, "y": 0, "fill": "black", "alignment-baseline": "middle"
+            }, this._text);
+        }
 
         this._update_render();
-        this.parentPiece.add_child(this._svgGroup);
+        parentPiece.add_child(this._svgGroup);
+        this._children.forEach(child => child.render(this._svgGroup));
     }
 
     _update_render() {

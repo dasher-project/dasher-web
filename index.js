@@ -1,14 +1,15 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
 import Piece from './piece.js';
-import ZoomBox from './zoombox.js';
+import ZoomBoxRandom from './zoomboxrandom.js';
 
 class Index {
     constructor(parent) {
         this._parent = parent;
-        this._characters = "abcdefghijklmnopqrstuvwxyz".split("");
         this._interval = undefined;
-        this._zoomBoxes = undefined;
+
+        this._zoomBox = new ZoomBoxRandom(
+            "abcdefghijklmnopqrstuvwxyz".split(""), 30);
     }
 
     load(loadingID, footerID) {
@@ -39,10 +40,6 @@ class Index {
         // screen, by default. Next line suppresses that. Reference:
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
         this._svg.node.style['touch-action'] = 'none';
-
-        // SVG group to hold zoom boxes. This is first so that the cross hairs
-        // and pointer line will always be rendered in front of them.
-        this._zoomBoxGroup = new Piece('g', this._svg);
 
         // Cross hair axis lines.
         this._svg.create('line', {
@@ -82,7 +79,8 @@ class Index {
             return;
         }
         if (this._interval === null) {
-            this._interval = setInterval(() => this.random_zooms(), 180);
+            this._interval = setInterval(
+                () => this._zoomBox.random_zooms(), 180);
             this._button.textContent = "Stop";
         }
         else {
@@ -90,45 +88,6 @@ class Index {
             this._interval = null;
             this._button.textContent = "Go Random";
         }
-    }
-
-    random_zooms() {
-        const yMin = this._rectHeight;
-        const yMax = this._rectHeight * 3;
-        const xMin = this._svgRect.width * -0.5;
-        const xMax = (this._svgRect.width * 0.5) - (this._rectHeight * 2);
-        let top = this._zoomBoxes[0].top;
-        this._zoomBoxes.forEach(zoomBox => {
-            const xDelta = (50 + Math.random() * 250) * zoomBox.xChange;
-            const yDelta = this._rectHeight * Math.random() * zoomBox.yChange;
-            let left;
-            let bottom;
-            if (
-                (zoomBox.left + xDelta < xMin && zoomBox.xChange < 0) ||
-                (zoomBox.left + xDelta > xMax && zoomBox.xChange > 0)
-            ) {
-                zoomBox.xChange *= -1;
-            }
-            else {
-                left = zoomBox.left + xDelta;
-            }
-
-            const height = zoomBox.height;
-            if (
-                (height + yDelta < yMin && zoomBox.yChange < 0) ||
-                (height + yDelta > yMax && zoomBox.yChange > 0)
-            ) {
-                zoomBox.yChange *= -1;
-                bottom = top + height;
-            }
-            else {
-                bottom = top + height + yDelta;
-            }
-
-            zoomBox.setDimensions(top, undefined, bottom, left);
-
-            top = zoomBox.bottom;
-        });
     }
 
     static bbox_text(boundingBox, label) {
@@ -144,14 +103,13 @@ class Index {
 
     _on_resize() {
         this._svgRect = this._svg.node.getBoundingClientRect();
-        if (!!this._zoomBoxes) {
-            const zoomBoxRight = this._svgRect.width * 0.5
-            this._zoomBoxes.forEach(zoomBox => {
-                if (zoomBox.left > zoomBoxRight) {
-                    zoomBox.left = zoomBoxRight - (this._rectHeight * 2);
-                }
-                zoomBox.right = zoomBoxRight;
-            });
+        if (!!this._zoomBox) {
+            this._zoomBox.setDimensions(
+                this._svgRect.height * -0.5,
+                this._svgRect.width * 0.5,
+                this._svgRect.height * 0.5,
+                this._svgRect.width * -0.5
+            );
         }
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
@@ -196,10 +154,9 @@ class Index {
     }
 
     _load1() {
-        this._on_resize()
+        this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
 
-        //
         // Add a listener to set the pointer line end when the pointer moves.
         if (this._touch) {
             this._svg.node.addEventListener(
@@ -214,38 +171,16 @@ class Index {
         // events like:
         // this._svg.addEventListener('pointermove', ...);
 
-        // Spawn zoom boxes.
-        this._rectHeight = 30;
-        let yPosition = -0.5 * this._svgRect.height;
-        const xPosition = (this._svgRect.width * 0.5) - (this._rectHeight * 2);
-        this._zoomBoxes = this._characters.map((character, index) => {
-            const zoomBox = new ZoomBox(
-                index % 2 === 0 ? "lightgray" : "lightgreen",
-                yPosition, this._svgRect.width * 0.5,
-                yPosition + this._rectHeight + (
-                    this._rectHeight * Math.random()),
-                xPosition
-            );
-            zoomBox.xChange = 1 - ((index % 2) * 2);
-            zoomBox.yChange = zoomBox.xChange;
-            zoomBox.parentPiece = this._zoomBoxGroup;
-            zoomBox.text = character;
-
-            zoomBox.render();
-
-            yPosition += zoomBox.height;
-            return zoomBox;
-        });
+        this._zoomBox.render(this._svg);
+        // Move the ZoomBox SVG group to be first so that the cross hairs and
+        // pointer line will always be rendered in front of them.
+        this._svg.node.insertBefore(
+            this._zoomBox.piece.node, this._svg.node.firstChild);
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
-        // this._header.removeChild(this._loading);
         this._loading.remove();
-
-        // const h1 = this._createHTML('h1', undefined, "Proof of Concept", null);
         const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
-       
-        // this._header.insertBefore(h1, this._header.firstChild);
         this._header.node.insertBefore(h1, this._header.node.firstChild);
 
         // Previous lines could have changed the size of the svg so, after a
