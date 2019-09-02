@@ -105,10 +105,10 @@ class Index {
         this._svgRect = this._svg.node.getBoundingClientRect();
         if (!!this._zoomBox) {
             this._zoomBox.setDimensions(
+                this._svgRect.width * -0.5,
+                this._svgRect.width,
                 this._svgRect.height * -0.5,
-                this._svgRect.width * 0.5,
-                this._svgRect.height * 0.5,
-                this._svgRect.width * -0.5
+                this._svgRect.height * 0.5
             );
         }
         // Change the svg viewBox so that the origin is in the centre.

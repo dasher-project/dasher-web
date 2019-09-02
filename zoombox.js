@@ -7,12 +7,10 @@ export default class ZoomBox {
         this._colour = colour;
         this._text = text;
 
-        this._top = undefined;
-        this._right = undefined;
-        this._bottom = undefined;
         this._left = undefined;
-
-        this._resetWidth = undefined;
+        this._width = undefined;
+        this._top = undefined;
+        this._bottom = undefined;
 
         this._svgG = undefined;
         this._svgRect = undefined;
@@ -36,28 +34,16 @@ export default class ZoomBox {
         this._update_render();
     }
 
-    get right() {
-        return this._right;
+    get width() {
+        return this._width;
     }
-    set right(right) {
-        this._right = right;
-        this._cascade_right();
+    set width(width) {
+        this._width = width;
+        this.cascade_width();
         this._update_render();
     }
-    _cascade_right() {
-        if (this.resetWidth !== undefined && this._left > this._right) {
-            // Set the underlying property to avoid the setter.
-            this._left = this._right - this.resetWidth;
-        }
-        this._children.forEach(
-            child => child.right = this._right - this._left);
-    }
-
-    get resetWidth() {
-        return this._resetWidth;
-    }
-    set resetWidth(resetWidth) {
-        this._resetWidth = resetWidth;
+    cascade_width() {
+        this._children.forEach(child => child.width = this._width - child.left);
     }
 
     get top() {
@@ -84,22 +70,22 @@ export default class ZoomBox {
         return this._svgGroup;
     }
 
-    setDimensions(top, right, bottom, left) {
-        const rightChange = (right !== undefined);
+    setDimensions(left, width, top, bottom) {
+        const widthChange = (width !== undefined);
+        if (left !== undefined) {
+            this._left = left;
+        }
+        if (widthChange) {
+            this._width = width;
+        }
         if (top !== undefined) {
             this._top = top;
-        }
-        if (rightChange) {
-            this._right = right;
         }
         if (bottom !== undefined) {
             this._bottom = bottom;           
         }
-        if (left !== undefined) {
-            this._left = left;
-        }
-        if (rightChange) {
-            this._cascade_right();
+        if (widthChange) {
+            this.cascade_width();
         }
         this._update_render();
     }
@@ -135,7 +121,8 @@ export default class ZoomBox {
             // console.log(this._svgGroup.node.style.transform);
         }
         if (!!this._svgRect) {
-            this._svgRect.setAttribute('width', this._right - this._left);
+            this._svgRect.setAttribute(
+                'width', this._width > 0 ? this._width : 0);
             this._svgRect.setAttribute('y', (this._top - this._bottom)/2);
             this._svgRect.setAttribute('height', this.height);
         }
