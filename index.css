@@ -9,10 +9,6 @@ svg {
     border: 1px black solid;
 }
 
-svg rect {
-    /* stroke: black; */
-    transition: width 0.2s linear;
-}
 svg text {
     /* Making text.x transition doesn't work. For an explanation and solution
      * see: https://stackoverflow.com/a/53452940

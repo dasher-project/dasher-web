@@ -12,6 +12,8 @@ export default class ZoomBox {
         this._top = undefined;
         this._bottom = undefined;
 
+        this._excessWidth = 0;
+
         this._svgG = undefined;
         this._svgRect = undefined;
         this._svgText = undefined;
@@ -44,6 +46,14 @@ export default class ZoomBox {
     }
     cascade_width() {
         this._children.forEach(child => child.width = this._width - child.left);
+    }
+
+    get excessWidth() {
+        return this._excessWidth;
+    }
+    set excessWidth(excessWidth) {
+        this._excessWidth = excessWidth;
+        this._update_render();
     }
 
     get top() {
@@ -82,7 +92,7 @@ export default class ZoomBox {
             this._top = top;
         }
         if (bottom !== undefined) {
-            this._bottom = bottom;           
+            this._bottom = bottom;
         }
         if (widthChange) {
             this.cascade_width();
@@ -122,7 +132,7 @@ export default class ZoomBox {
         }
         if (!!this._svgRect) {
             this._svgRect.setAttribute(
-                'width', this._width > 0 ? this._width : 0);
+                'width', this._width > 0 ? this._width + this.excessWidth : 0);
             this._svgRect.setAttribute('y', (this._top - this._bottom)/2);
             this._svgRect.setAttribute('height', this.height);
         }
