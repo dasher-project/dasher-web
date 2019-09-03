@@ -60,7 +60,8 @@ export default class Piece {
     }
 
     remove() {
-        return this.node.parentElement.removeChild(this.node);
+        const parent = this.node.parentElement;
+        return (!!parent) ? parent.removeChild(this.node) : this.node;
     }
 
     static set_attributes(element, attributes) {

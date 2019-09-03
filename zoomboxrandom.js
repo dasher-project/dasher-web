@@ -8,6 +8,8 @@ export default class ZoomBoxRandom extends ZoomBox {
         this._texts = texts;
         this._rectHeight = rectHeight;
         this._resetWidth = rectHeight * 2;
+
+        this._spawn();
     }
 
     // Override.
@@ -27,33 +29,32 @@ export default class ZoomBoxRandom extends ZoomBox {
 
     // Override.
     render(parentPiece) {
-        super.render(parentPiece);
-        if (this.children.length <= 0) {
-            this._spawn();
+        if (this._svgGroup === undefined) {
+            let top = this.top;
+            const width = this._rectHeight * 2;
+            const left = this.width - width;
+            this._children.forEach(zoomBox => {
+                zoomBox.setDimensions(
+                    left, width, top,
+                    top + this._rectHeight + (this._rectHeight * Math.random())
+                );
+                top += zoomBox.height;
+            });
         }
+
+        // Invoke the base class render, which will render all the children.
+        super.render(parentPiece);
     }
 
     _spawn() {
-        let top = this.top;
-        const width = this._rectHeight * 2;
-        const left = this.width - width;
-
         this._texts.forEach((character, index) => {
             const zoomBox = new ZoomBox(
-                index % 2 === 0 ? "lightgray" : "lightgreen", character
-            );
-            zoomBox.setDimensions(
-                left, width, top,
-                top + this._rectHeight + (this._rectHeight * Math.random())
+                index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
             zoomBox.excessWidth = this.width;
             zoomBox.xChange = 1 - ((index % 2) * 2);
             zoomBox.yChange = zoomBox.xChange;
-
             this.children.push(zoomBox);
-            zoomBox.render(this._svgGroup);
-
-            top += zoomBox.height;
         });
     }
 

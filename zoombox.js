@@ -101,22 +101,30 @@ export default class ZoomBox {
     }
 
     render(parentPiece) {
-        this._svgGroup = new Piece('g');
+        if (this._svgGroup === undefined) {
+            this._svgGroup = new Piece('g');
 
-        if (this._colour !== undefined) {
-            this._svgRect = this._svgGroup.create('rect', {
-                "x": 0, "fill": this._colour
-            });
-        }
+            if (this._colour !== undefined) {
+                this._svgRect = this._svgGroup.create('rect', {
+                    "x": 0, "fill": this._colour
+                });
+            }
 
-        if (this._text !== undefined) {
-            this._svgText = this._svgGroup.create('text', {
-                "x": 5, "y": 0, "fill": "black", "alignment-baseline": "middle"
-            }, this._text);
+            if (this._text !== undefined) {
+                this._svgText = this._svgGroup.create('text', {
+                    "x": 5, "y": 0, "fill": "black",
+                    "alignment-baseline": "middle"
+                }, this._text);
+            }
         }
 
         this._update_render();
-        parentPiece.add_child(this._svgGroup);
+        if (parentPiece === null) {
+            this._svgGroup.remove();
+        }
+        else {
+            parentPiece.add_child(this._svgGroup);
+        }
         this._children.forEach(child => child.render(this._svgGroup));
     }
 

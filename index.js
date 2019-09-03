@@ -22,9 +22,14 @@ class Index {
             'span', {id:"sizes-text-node"}, "loading sizes ..."
         ).firstChild;
 
-        this._button = this._header.create(
+        this._buttonRandom = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
-        this._button.addEventListener('click', () => this.toggle_zooms());
+        this._buttonRandom.addEventListener('click', () => this.toggle_zooms());
+
+        this._buttonClear = this._header.create(
+            'button', {'type': 'button', 'disabled': true}, 'Clear');
+        this._buttonClear.addEventListener(
+            'click', () => this._zoomBox.render(null));
 
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
@@ -78,15 +83,18 @@ class Index {
         if (this._interval === undefined) {
             return;
         }
+        this._zoomBox.render(this._svg);
+        this._svg.node.insertBefore(
+            this._zoomBox.piece.node, this._svg.node.firstChild);
         if (this._interval === null) {
             this._interval = setInterval(
                 () => this._zoomBox.random_zooms(), 180);
-            this._button.textContent = "Stop";
+            this._buttonRandom.textContent = "Stop";
         }
         else {
             clearInterval(this._interval);
             this._interval = null;
-            this._button.textContent = "Go Random";
+            this._buttonRandom.textContent = "Go Random";
         }
     }
 
@@ -187,7 +195,8 @@ class Index {
         // time out for rendering, process a resize.
         setTimeout( () => this._on_resize(), 0);
         this._interval = null;
-        this._button.removeAttribute('disabled');
+        this._buttonRandom.removeAttribute('disabled');
+        this._buttonClear.removeAttribute('disabled');
     }
 }
 
