@@ -14,7 +14,7 @@ export default class ZoomBox {
 
         this._excessWidth = 0;
 
-        this._svgG = undefined;
+        this._svgGroup = undefined;
         this._svgRect = undefined;
         this._svgText = undefined;
 
