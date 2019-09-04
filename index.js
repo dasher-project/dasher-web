@@ -140,8 +140,8 @@ class Index {
         const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
         const x = xAdjust + clientX;
         const y = yAdjust - clientY;
-        this._pointerLine.setAttribute('x2', x.toString());
-        this._pointerLine.setAttribute('y2', (-1 * y).toString());
+        this._pointerLine.setAttribute('x2', x);
+        this._pointerLine.setAttribute('y2', -1 * y);
         this._setXY(x, y);
     }
 
