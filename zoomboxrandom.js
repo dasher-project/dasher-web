@@ -16,7 +16,6 @@ export default class ZoomBoxRandom extends ZoomBox {
     cascade_width() {
         this._children.forEach(child => {
             const width = this._width - child.left;
-            child.excessWidth = this._width;
             if (width > 0) {
                 child.width = width;
             }
@@ -34,6 +33,7 @@ export default class ZoomBoxRandom extends ZoomBox {
             const width = this._rectHeight * 2;
             const left = this.width - width;
             this._children.forEach(zoomBox => {
+                zoomBox.excessWidth = this.width;
                 zoomBox.setDimensions(
                     left, width, top,
                     top + this._rectHeight + (this._rectHeight * Math.random())
@@ -51,7 +51,6 @@ export default class ZoomBoxRandom extends ZoomBox {
             const zoomBox = new ZoomBox(
                 index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
-            zoomBox.excessWidth = this.width;
             zoomBox.xChange = 1 - ((index % 2) * 2);
             zoomBox.yChange = zoomBox.xChange;
             this.children.push(zoomBox);

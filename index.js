@@ -2,14 +2,56 @@
 
 import Piece from './piece.js';
 import ZoomBoxRandom from './zoomboxrandom.js';
+import ZoomBoxPointer from './zoomboxpointer.js';
 
 class Index {
     constructor(parent) {
         this._parent = parent;
-        this._interval = undefined;
+        this._intervalZoom = undefined;
 
-        this._zoomBox = new ZoomBoxRandom(
-            "abcdefghijklmnopqrstuvwxyz".split(""), 30);
+        this._zoomBoxRandom = undefined;
+        this._zoomBoxPointer = undefined;
+        this._zoomBox = undefined;
+
+        this._pointerX = undefined;
+        this._pointerY = undefined;
+    }
+
+    get zoomBox() {
+        return this._zoomBox;
+    }
+    set zoomBox(zoomBox) {
+        // Setting to the same value, do nothing.
+        if (Object.is(this._zoomBox, zoomBox)) {
+            return;
+        }
+
+        if (!!this._intervalZoom) {
+            clearInterval(this._intervalZoom);
+            this._intervalZoom = null;
+        }
+
+        // De-render current zoomBox, if any.
+        if (!!this._zoomBox) {
+            this._zoomBox.render(null);
+        }
+
+        // Set underlying property, and render.
+        this._zoomBox = zoomBox;
+        this._zoomBox.render(this._svg);
+
+        // Move the ZoomBox SVG group to be first so that the cross hairs and
+        // pointer line will always be rendered in front of them.
+        this._svg.node.insertBefore(
+            this._zoomBox.piece.node, this._svg.node.firstChild);
+    }
+
+    get pointerX() {
+        return this._pointerX;
+    }
+
+    get pointerY() {
+        return this._pointerY;
     }
 
     load(loadingID, footerID) {
@@ -26,10 +68,9 @@ class Index {
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
         this._buttonRandom.addEventListener('click', () => this.toggle_zooms());
 
-        this._buttonClear = this._header.create(
-            'button', {'type': 'button', 'disabled': true}, 'Clear');
-        this._buttonClear.addEventListener(
-            'click', () => this._zoomBox.render(null));
+        this._buttonPointer = this._header.create(
+            'button', {'type': 'button', 'disabled': true}, 'Pointer');
+        this._buttonPointer.addEventListener('click', () => this.pointer());
 
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
@@ -74,27 +115,53 @@ class Index {
         return this;
     }
 
-    _setXY(x, y) {
-        this._xTextNode.nodeValue = x.toFixed().toString();
-        this._yTextNode.nodeValue = y.toFixed().toString();
-    }
-
     toggle_zooms() {
-        if (this._interval === undefined) {
+        if (this._intervalZoom === undefined) {
             return;
         }
-        this._zoomBox.render(this._svg);
-        this._svg.node.insertBefore(
-            this._zoomBox.piece.node, this._svg.node.firstChild);
-        if (this._interval === null) {
-            this._interval = setInterval(
-                () => this._zoomBox.random_zooms(), 180);
+        if (this._zoomBoxRandom === undefined) {
+            this._zoomBoxRandom = new ZoomBoxRandom(
+                "abcdefghijklmnopqrstuvwxyz".split(""), 30);
+            this._set_zoomBox_size(this._zoomBoxRandom);
+        }
+
+        // Invoke setter and clear interval if different.
+        this.zoomBox = this._zoomBoxRandom;
+        this._buttonPointer.removeAttribute('disabled');
+
+        if (this._intervalZoom === null) {
+            this._zoomBoxRandom.random_zooms();
+            this._intervalZoom = setInterval(
+                () => this._zoomBoxRandom.random_zooms(), 180);
             this._buttonRandom.textContent = "Stop";
         }
         else {
-            clearInterval(this._interval);
-            this._interval = null;
+            clearInterval(this._intervalZoom);
+            this._intervalZoom = null;
             this._buttonRandom.textContent = "Go Random";
+        }
+    }
+
+    pointer() {
+        if (this._intervalZoom === undefined) {
+            return;
+        }
+
+        if (this._zoomBoxPointer === undefined) {
+            this._zoomBoxPointer = new ZoomBoxPointer(
+                "abcdefghijklmnopqrstuvwxyz".split(""), this);
+            this._set_zoomBox_size(this._zoomBoxPointer);
+        }
+
+        // Invoke setter and clear interval if different.
+        this.zoomBox = this._zoomBoxPointer;
+        this._buttonRandom.textContent = "Go Random";
+
+        if (this._intervalZoom === null) {
+            this._zoomBoxPointer.zoom();
+            this._intervalZoom = setInterval(
+                () => this._zoomBoxPointer.zoom(), 180);
+            this._buttonPointer.setAttribute('disabled', true);
         }
     }
 
@@ -111,14 +178,7 @@ class Index {
 
     _on_resize() {
         this._svgRect = this._svg.node.getBoundingClientRect();
-        if (!!this._zoomBox) {
-            this._zoomBox.setDimensions(
-                this._svgRect.width * -0.5,
-                this._svgRect.width,
-                this._svgRect.height * -0.5,
-                this._svgRect.height * 0.5
-            );
-        }
+        this._set_zoomBox_size(this._zoomBox);
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
                 `${this._svgRect.width * -0.5} ${this._svgRect.height * -0.5}` +
@@ -134,21 +194,33 @@ class Index {
         // Reference for innerHeight property.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
+    _set_zoomBox_size(zoomBox) {
+        if (!!zoomBox) {
+            zoomBox.setDimensions(
+                this._svgRect.width * -0.5,
+                this._svgRect.width,
+                this._svgRect.height * -0.5,
+                this._svgRect.height * 0.5
+            );
+        }
+    }
 
-    _update_pointer_line(clientX, clientY) {
+    _update_pointer(clientX, clientY) {
         const xAdjust = -1 * (this._svgRect.x + (this._svgRect.width * 0.5));
         const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
-        const x = xAdjust + clientX;
-        const y = yAdjust - clientY;
-        this._pointerLine.setAttribute('x2', x);
-        this._pointerLine.setAttribute('y2', -1 * y);
-        this._setXY(x, y);
+        this._pointerX = xAdjust + clientX;
+        this._pointerY = yAdjust - clientY;
+
+        this._pointerLine.setAttribute('x2', this._pointerX);
+        this._pointerLine.setAttribute('y2', -1 * this._pointerY);
+
+        this._xTextNode.nodeValue = this._pointerX.toFixed().toString();
+        this._yTextNode.nodeValue = this._pointerY.toFixed().toString();
     }
 
     _on_mouse_move(mouseEvent) {
         mouseEvent.preventDefault();
-        return this._update_pointer_line(
-            mouseEvent.clientX, mouseEvent.clientY);
+        return this._update_pointer(mouseEvent.clientX, mouseEvent.clientY);
     }
 
     _on_touch_move(touchEvent) {
@@ -158,7 +230,7 @@ class Index {
         }
         // For now, only handle the first touch point.
         const touch = event.changedTouches[0];
-        return this._update_pointer_line(touch.clientX, touch.clientY);
+        return this._update_pointer(touch.clientX, touch.clientY);
     }
 
     _load1() {
@@ -179,11 +251,7 @@ class Index {
         // events like:
         // this._svg.addEventListener('pointermove', ...);
 
-        this._zoomBox.render(this._svg);
-        // Move the ZoomBox SVG group to be first so that the cross hairs and
-        // pointer line will always be rendered in front of them.
-        this._svg.node.insertBefore(
-            this._zoomBox.piece.node, this._svg.node.firstChild);
+        this._load_zoomBox();
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
@@ -194,9 +262,12 @@ class Index {
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
         setTimeout( () => this._on_resize(), 0);
-        this._interval = null;
+        this._intervalZoom = null;
         this._buttonRandom.removeAttribute('disabled');
-        this._buttonClear.removeAttribute('disabled');
+        this._buttonPointer.removeAttribute('disabled');
+    }
+
+    _load_zoomBox() {
     }
 }
 
