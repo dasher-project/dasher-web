@@ -13,8 +13,8 @@ class Index {
         this._zoomBoxPointer = undefined;
         this._zoomBox = undefined;
 
-        this._pointerX = undefined;
-        this._pointerY = undefined;
+        this._pointerX = 0;
+        this._pointerY = 0;
     }
 
     get zoomBox() {
@@ -36,14 +36,17 @@ class Index {
             this._zoomBox.render(null);
         }
 
-        // Set underlying property, and render.
+        // Set underlying property.
         this._zoomBox = zoomBox;
-        this._zoomBox.render(this._svg);
 
-        // Move the ZoomBox SVG group to be first so that the cross hairs and
-        // pointer line will always be rendered in front of them.
-        this._svg.node.insertBefore(
-            this._zoomBox.piece.node, this._svg.node.firstChild);
+        if (!!this._zoomBox) {
+            this._zoomBox.render(this._svg);
+
+            // Move the ZoomBox SVG group to be first so that the cross hairs
+            // and pointer line will always be rendered in front of them.
+            this._svg.node.insertBefore(
+                this._zoomBox.piece.node, this._svg.node.firstChild);
+        }
     }
 
     get pointerX() {
@@ -127,7 +130,7 @@ class Index {
 
         // Invoke setter and clear interval if different.
         this.zoomBox = this._zoomBoxRandom;
-        this._buttonPointer.removeAttribute('disabled');
+        this._buttonPointer.textContent = "Pointer";
 
         if (this._intervalZoom === null) {
             this._zoomBoxRandom.random_zooms();
@@ -152,16 +155,21 @@ class Index {
                 "abcdefghijklmnopqrstuvwxyz".split(""), this);
             this._set_zoomBox_size(this._zoomBoxPointer);
         }
+        const alreadyPointer = Object.is(this._zoomBox, this._zoomBoxPointer);
 
         // Invoke setter and clear interval if different.
         this.zoomBox = this._zoomBoxPointer;
         this._buttonRandom.textContent = "Go Random";
 
-        if (this._intervalZoom === null) {
+        if (alreadyPointer) {
+            this._set_zoomBox_size(this.zoomBox);
+            this.zoomBox.reset();
+        }
+        else {
             this._zoomBoxPointer.zoom();
             this._intervalZoom = setInterval(
                 () => this._zoomBoxPointer.zoom(), 180);
-            this._buttonPointer.setAttribute('disabled', true);
+            this._buttonPointer.textContent = "Reset";
         }
     }
 
@@ -206,10 +214,14 @@ class Index {
     }
 
     _update_pointer(clientX, clientY) {
-        const xAdjust = -1 * (this._svgRect.x + (this._svgRect.width * 0.5));
-        const yAdjust = this._svgRect.y + (this._svgRect.height * 0.5);
-        this._pointerX = xAdjust + clientX;
-        this._pointerY = yAdjust - clientY;
+        this._update_pointer_raw(
+            clientX - (this._svgRect.x + (this._svgRect.width * 0.5)),
+            (this._svgRect.y + (this._svgRect.height * 0.5)) - clientY
+        );
+    }
+    _update_pointer_raw(adjustedX, adjustedY) {
+        this._pointerX = parseFloat(adjustedX);
+        this._pointerY = parseFloat(adjustedY);
 
         this._pointerLine.setAttribute('x2', this._pointerX);
         this._pointerLine.setAttribute('y2', -1 * this._pointerY);
@@ -221,6 +233,14 @@ class Index {
     _on_mouse_move(mouseEvent) {
         mouseEvent.preventDefault();
         return this._update_pointer(mouseEvent.clientX, mouseEvent.clientY);
+    }
+    _on_mouse_leave(mouseEvent) {
+        // console.log(mouseEvent.target);
+        // Mouse Leave events are posted for child nodes too.
+        if (Object.is(mouseEvent.target, this._svg.node)) {
+            mouseEvent.preventDefault();
+            return this._update_pointer_raw(0, 0);
+        }
     }
 
     _on_touch_move(touchEvent) {
@@ -245,6 +265,8 @@ class Index {
         else {
             this._svg.node.addEventListener(
                 'mousemove', this._on_mouse_move.bind(this), {capture:true});
+            this._svg.node.addEventListener(
+                'mouseleave', this._on_mouse_leave.bind(this), {capture:true});
         }
         //
         // Safari supports the above, mouse event, but doesn't support pointer

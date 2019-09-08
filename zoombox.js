@@ -13,7 +13,9 @@ export default class ZoomBox {
         this._bottom = undefined;
 
         this._excessWidth = 0;
+        this._scale = 1;
 
+        this._renderParent = undefined;
         this._svgGroup = undefined;
         this._svgRect = undefined;
         this._svgText = undefined;
@@ -123,29 +125,49 @@ export default class ZoomBox {
             this._svgGroup.remove();
         }
         else {
+            this._renderParent = parentPiece;
             parentPiece.add_child(this._svgGroup);
         }
         this._children.forEach(child => child.render(this._svgGroup));
     }
 
     _update_render() {
+        const height = this.height;
+        if (isNaN(height)) {
+            console.log('nan height');
+            return;
+        }
+
         if (!!this._svgGroup) {
+            const parent = this._svgGroup.node.parentElement;
+            if (height <= 0 && !!parent) {
+                // Remove the <G> from its parent.
+                console.log(
+                    'negative height', this.top, this.bottom, this.colour);
+                this._svgGroup.remove();
+            }
+            else if (height > 0 && !parent && !!this._renderParent) {
+                // Add the <G> back to whatever parent it had last time.
+                this._renderParent.add_child(this._svgGroup);
+            }
+
             // Use an SVG group <g> element because its translate can be
             // smoothed with a CSS transition, which a <text> element's x and y
             // attributes cannot. TOTH https://stackoverflow.com/a/53452940
             this._svgGroup.node.style.transform = 
                 `translate(${this._left}px` +
-                `, ${(this._top + this._bottom) / 2}px)`;
-            // console.log(this._svgGroup.node.style.transform);
+                `, ${(this._top + this._bottom) / 2}px)` +
+                ` scale(${this._scale}`;
+                // console.log(this._svgGroup.node.style.transform);
         }
-        if (!!this._svgRect) {
+        if (!!this._svgRect && height > 0) {
             this._svgRect.setAttribute(
                 'width', this._width > 0 ? this._width + this.excessWidth : 0);
             this._svgRect.setAttribute('y', (this._top - this._bottom)/2);
-            this._svgRect.setAttribute('height', this.height);
+            this._svgRect.setAttribute('height', height);
         }
-        if (!!this._svgText) {
-            this._svgText.setAttribute('font-size', `${this.height * 0.9}px`);
+        if (!!this._svgText && height > 0) {
+            this._svgText.setAttribute('font-size', `${height * 0.9}px`);
         }
     }
 
