@@ -252,15 +252,26 @@ class Index {
         const touch = event.changedTouches[0];
         return this._update_pointer(touch.clientX, touch.clientY);
     }
+    _on_touch_leave(touchEvent) {
+        touchEvent.preventDefault();
+        return this._update_pointer_raw(0, 0);
+    }
 
     _load1() {
         this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
 
-        // Add a listener to set the pointer line end when the pointer moves.
+        // Add pointer listeners, either touch or mouse. Desktop Safari doesn't
+        // support pointer events like:
+        // 
+        //     this._svg.addEventListener('pointermove', ...);
+        // 
+        // So the code here uses mouse events instead.
         if (this._touch) {
             this._svg.node.addEventListener(
                 'touchmove', this._on_touch_move.bind(this), {capture:true});
+            this._svg.node.addEventListener(
+                'touchend', this._on_touch_leave.bind(this), {capture:true});
         }
         else {
             this._svg.node.addEventListener(
@@ -268,10 +279,6 @@ class Index {
             this._svg.node.addEventListener(
                 'mouseleave', this._on_mouse_leave.bind(this), {capture:true});
         }
-        //
-        // Safari supports the above, mouse event, but doesn't support pointer
-        // events like:
-        // this._svg.addEventListener('pointermove', ...);
 
         this._load_zoomBox();
 
