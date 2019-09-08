@@ -47,11 +47,10 @@ export default class ZoomBoxPointer extends ZoomBox {
     }
     reset() {
         this._scale = 1;
-        let top = this.top; // / 3;
+        let top = this.top;
         const width = this.width / 6;
         const left = this.width - width;
         const unitHeight = this._unit_height();
-        // / (3 * this._children.length);
         this.children.forEach(zoomBox => {
             zoomBox.excessWidth = this.width;
             const height = zoomBox.weight * unitHeight;
@@ -68,143 +67,43 @@ export default class ZoomBoxPointer extends ZoomBox {
 
     zoom() {
         const deltaUpDown = this._pointer.pointerY * this.multiplierUpDown;
-        const deltaZoom = this._pointer.pointerX;
-        this._scale += deltaZoom / 1000;
+        const deltaLeftRight = this._pointer.pointerX * 0.05;
+
+        const heightZoom = 1 + Math.abs(0.01 * deltaLeftRight);
+        const heightMultiplier = (
+            deltaLeftRight > 0 ? heightZoom : 1 / heightZoom);
+        // if (heightMultiplier != 1) {
+        //     console.log(heightMultiplier);
+        // }
+
+        const thisHeightChangeHalf = (
+            ((heightMultiplier * this.height) - this.height) / 2);
         this.setDimensions(
-            this.left - (deltaZoom), undefined,
-            this.top + deltaUpDown, // - deltaZoom,
-            this.bottom + deltaUpDown //  + deltaZoom
+            undefined, undefined,
+            this.top - thisHeightChangeHalf, this.bottom + thisHeightChangeHalf
         );
-        return;
 
         const unitHeight = this._unit_height();
-        // const aboveIncrement = deltaUpDown; // -deltaZoom
-        // const belowIncrement = deltaUpDown;
 
         const childs = this.children.length;
-        const firstMover = this.children.findIndex(
+        const firstBelow = this.children.findIndex(
             zoomBox => zoomBox.bottom > 0);
-        // let lastAbove = -1;
-        // let firstBelow = childs;
-        // for(const [index, zoomBox] of this.children.entries()) {
-        //     // if (zoomBox.top < 0) {
-        //     //     lastAbove = index;
-        //     // }
-        //     if (zoomBox.bottom > 0) {
-        //         firstBelow = index;
-        //         break;
-        //     }
-        // }
-        // const lastAbove = (
-        //     firstBelow === childs ? childs - 1 : (
-        //         this.children[firstBelow].top < 0 ? firstBelow : -1
-        //     )
-        // );
 
-        let startBottom = undefined;
-        let startTop = undefined;
-        let lastAbove = firstMover;
-        let firstBelow = firstMover;
-        if (firstMover === -1) {
-            // All are above zero.
-            lastAbove = childs - 1;
-            firstBelow = childs;
-            startBottom = this.children[lastAbove].bottom; // + deltaUpDown;
-        }
-        else {
-            const zoomBox = this.children[firstMover];
-            if (zoomBox.top > 0) {
-                // All are below zero.
-                startTop = zoomBox.top; // + deltaUpDown;
-                lastAbove = -1;
-            }
-            else {
-                const heightChangeHalf = (
-                    (unitHeight * zoomBox.weight) - zoomBox.height) * 0.5;
-                // startBottom = (zoomBox.top + deltaUpDown) - deltaZoom;
-                // startTop = zoomBox.bottom + deltaUpDown + deltaZoom;
-                startBottom = zoomBox.top + heightChangeHalf;
-                startTop = zoomBox.bottom - heightChangeHalf;
-                zoomBox.setDimensions(
-                    // index < firstBelow ? zoomBox.left - deltaZoom : 
-                    undefined,
-                    undefined, startBottom, startTop
-                );
-                lastAbove = firstMover - 1;
-                firstBelow = firstMover + 1;
-            }
-        }
+        const firstMover = firstBelow === -1 ? childs - 1 : firstBelow;
+        const zoomBox = this.children[firstMover];
+        const heightChangeHalf = (
+            (unitHeight * zoomBox.weight) - zoomBox.height) * 0.5;
+        const startBottom = (zoomBox.top + deltaUpDown) - heightChangeHalf;
+        const startTop = (zoomBox.bottom + deltaUpDown) + heightChangeHalf;
+        zoomBox.setDimensions(
+            zoomBox.left - deltaLeftRight, undefined,
+            startBottom, startTop
+        );
 
-
-        // if (lastAbove === -1) { return;}
-
-        // console.log(lastAbove, firstMover, firstBelow, loggable(deltaUpDown));
-
-        this._zoom_above(lastAbove, startBottom, deltaUpDown, unitHeight);
-        //, 0 - deltaZoom);
-        this._zoom_below(firstBelow, startTop, deltaUpDown, unitHeight);
-        //, deltaZoom);
-
-        // let bottom = (
-        //     firstBelow === childs && lastAbove !== -1 ?
-        //     this.children[lastAbove].bottom + aboveIncrement :
-        //     undefined
-        // );
-        // for(let index=lastAbove; index >= 0; index--) {
-        //     const zoomBox = this.children[index];
-        //     bottom = top;
-        //     top = zoomBox.top + deltaUpDown;// + aboveIncrement;
-        //     console.log(
-        //         'above', index, loggable(zoomBox.top), loggable(top),
-        //         loggable(bottom));
-        //     zoomBox.setDimensions(
-        //         // index < firstBelow ? zoomBox.left - deltaZoom : 
-        //         undefined,
-        //         undefined, top, bottom
-        //     );
-        // }
-
-        // let top = (
-        //     lastAbove === -1 && firstBelow !== childs ?
-        //     this.children[firstBelow].top + belowIncrement :
-        //     undefined
-        // );
-        // for(let index=firstBelow; index < childs; index++) {
-        //     const zoomBox = this.children[index];
-        //     top = bottom;
-        //     bottom = zoomBox.bottom + belowIncrement;
-        //     console.log(
-        //         'below', index, loggable(zoomBox.bottom), loggable(top),
-        //         loggable(bottom));
-        //     zoomBox.setDimensions(
-        //         // index < firstBelow ? zoomBox.left - deltaZoom : 
-        //         undefined,
-        //         undefined, top, bottom
-        //     );
-        // }
-
-        // this.children
-        // .filter(zoomBox => !(
-        //     isNaN(zoomBox.top) ||
-        //     isNaN(zoomBox.bottom) ||
-        //     isNaN(zoomBox.left)
-        // ))
-        // .forEach((zoomBox, index) => {
-        //     const top = deltaUpDown + (
-        //         zoomBox.top < 0 ?
-        //         zoomBox.top - deltaZoom : 
-        //         zoomBox.top + deltaZoom
-        //     );
-        //     const bottom = deltaUpDown + (
-        //         zoomBox.bottom < 0 ?
-        //         zoomBox.bottom - deltaZoom : 
-        //         zoomBox.bottom + deltaZoom
-        //     );
-        //     // 
-        //     if (index === 0) {
-        //         zoomBox.setDimensions(
-        //         zoomBox.left - deltaZoom, undefined, top, bottom);}
-        // });
+        this._zoom_above(
+            firstMover - 1, startBottom, -1 * deltaLeftRight, unitHeight);
+        this._zoom_below(
+            firstMover + 1, startTop, -1 * deltaLeftRight, unitHeight);
     }
 
     _zoom_above(startIndex, startBottom, delta, unitHeight) {
@@ -212,16 +111,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         for(let index=startIndex; index >= 0; index--) {
             const zoomBox = this.children[index];
             const bottom = top;
-            top = bottom + delta + (zoomBox.weight * unitHeight);
-            // delta += increment;
-            // console.log(
-            //     'above', index, loggable(zoomBox.top), loggable(top),
-            //     loggable(bottom));
-            zoomBox.setDimensions(
-                // index < firstBelow ? zoomBox.left - deltaZoom : 
-                undefined,
-                undefined, top, bottom
-            );
+            top = bottom  - (zoomBox.weight * unitHeight);
+            zoomBox.setDimensions(zoomBox.left + delta, undefined, top, bottom);
         }
     }
 
@@ -231,16 +122,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         for(let index=startIndex; index < childs; index++) {
             const zoomBox = this.children[index];
             const top = bottom;
-            bottom = top + delta - (zoomBox.weight * unitHeight);
-            // delta += increment;
-            // console.log(
-            //     'below', index, loggable(zoomBox.bottom), loggable(top),
-            //     loggable(bottom));
-            zoomBox.setDimensions(
-                // index < firstBelow ? zoomBox.left - deltaZoom : 
-                undefined,
-                undefined, top, bottom
-            );
+            bottom = top + (zoomBox.weight * unitHeight);
+            zoomBox.setDimensions(zoomBox.left + delta, undefined, top, bottom);
         }
 
     }

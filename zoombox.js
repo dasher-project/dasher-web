@@ -134,7 +134,7 @@ export default class ZoomBox {
     _update_render() {
         const height = this.height;
         if (isNaN(height)) {
-            console.log('nan height');
+            // console.log('nan height');
             return;
         }
 
