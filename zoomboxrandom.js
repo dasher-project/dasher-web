@@ -57,7 +57,8 @@ export default class ZoomBoxRandom extends ZoomBox {
         });
     }
 
-    random_zooms() {
+    // Override.
+    zoom() {
         const heightMin = this._rectHeight;
         const heightMax = this._rectHeight * 3;
         const leftMax = this.width - (this._rectHeight * 2);

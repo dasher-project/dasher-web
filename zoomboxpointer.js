@@ -13,6 +13,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._pointer = pointer;
 
         this._multiplierUpDown = 0.3;
+        this._multiplierLeftRight = 0.1;
+        this._multiplierHeight = 0.0005;
 
         this._scale = 1;
 
@@ -65,11 +67,14 @@ export default class ZoomBoxPointer extends ZoomBox {
         return this.height / totalWeight;
     }
 
+    // Override.
     zoom() {
         const deltaUpDown = this._pointer.pointerY * this.multiplierUpDown;
-        const deltaLeftRight = this._pointer.pointerX * 0.05;
+        const deltaLeftRight = (
+            this._pointer.pointerX * this._multiplierLeftRight);
 
-        const heightZoom = 1 + Math.abs(0.01 * deltaLeftRight);
+        const heightZoom = 1 + Math.abs(
+            this._pointer.pointerX * this._multiplierHeight);
         const heightMultiplier = (
             deltaLeftRight > 0 ? heightZoom : 1 / heightZoom);
         // if (heightMultiplier != 1) {

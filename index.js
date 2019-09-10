@@ -133,9 +133,9 @@ class Index {
         this._buttonPointer.textContent = "Pointer";
 
         if (this._intervalZoom === null) {
-            this._zoomBoxRandom.random_zooms();
+            this._zoomBoxRandom.zoom();
             this._intervalZoom = setInterval(
-                () => this._zoomBoxRandom.random_zooms(), 180);
+                () => this._zoomBoxRandom.zoom(), 180);
             this._buttonRandom.textContent = "Stop";
         }
         else {

@@ -184,4 +184,8 @@ export default class ZoomBox {
     set yChange(yChange) {
         this._yChange = yChange;
     }
+
+    zoom() {
+        // Override in subclass.
+    }
 }
