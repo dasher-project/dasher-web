@@ -22,6 +22,7 @@ export default class ZoomBox {
 
         this._xChange = undefined;
         this._yChange = undefined;
+        this._weight = 1;
 
         this._children = [];
     }
@@ -100,6 +101,27 @@ export default class ZoomBox {
             this.cascade_width();
         }
         this._update_render();
+    }
+
+    get weight() {
+        return this._weight;
+    }
+    set weight(weight) {
+        this._weight = weight;
+    }
+
+    child_arrange() {
+        const totalWeight = this.children.reduce(
+            (accumulator, zoomBox) => accumulator + zoomBox.weight, 0
+        );
+        const unitHeight = this.height / totalWeight;
+
+        let top = (this._top - this._bottom)/2;
+        this.children.forEach(zoomBox => {
+            const height = zoomBox.weight * unitHeight;
+            zoomBox.setDimensions(undefined, undefined, top, top + height);
+            top += height;
+        });
     }
 
     render(parentPiece) {

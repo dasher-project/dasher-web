@@ -203,7 +203,15 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
     _set_zoomBox_size(zoomBox) {
-        if (!!zoomBox) {
+        if (zoomBox instanceof ZoomBoxPointer) {
+            zoomBox.setDimensions(
+                this._svgRect.width / 6,
+                this._svgRect.width / 3,
+                this._svgRect.height / -6,
+                this._svgRect.height / 6
+            );
+        }
+        else if (zoomBox instanceof ZoomBoxRandom) {
             zoomBox.setDimensions(
                 this._svgRect.width * -0.5,
                 this._svgRect.width,
