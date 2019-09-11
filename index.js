@@ -13,6 +13,9 @@ class Index {
         this._zoomBoxPointer = undefined;
         this._zoomBox = undefined;
 
+        // Spawn margin in mystery SVG units.
+        this._spawnMargin = 60;
+
         this._pointerX = 0;
         this._pointerY = 0;
     }
@@ -204,6 +207,7 @@ class Index {
     }
     _set_zoomBox_size(zoomBox) {
         if (zoomBox instanceof ZoomBoxPointer) {
+            zoomBox.spawnMargin = this._spawnMargin;
             zoomBox.setDimensions(
                 this._svgRect.width / 6,
                 this._svgRect.width / 3,

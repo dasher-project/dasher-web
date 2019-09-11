@@ -14,11 +14,13 @@ export default class ZoomBox {
 
         this._excessWidth = 0;
         this._scale = 1;
+        this._spawnMargin = undefined;
 
         this._renderParent = undefined;
         this._svgGroup = undefined;
         this._svgRect = undefined;
         this._svgText = undefined;
+        this._svgSpawnMargin = undefined;
 
         this._xChange = undefined;
         this._yChange = undefined;
@@ -140,6 +142,15 @@ export default class ZoomBox {
                     "alignment-baseline": "middle"
                 }, this._text);
             }
+
+            if (this._spawnMargin !== undefined) {
+                this._svgSpawnMargin = this._svgGroup.create('line', {
+                        x1:"0", x2:`${this.spawnMargin}`,
+                        stroke:"black", "stroke-width":"1px",
+                        "stroke-dasharray":"4"
+                });
+            }
+
         }
 
         this._update_render();
@@ -151,6 +162,14 @@ export default class ZoomBox {
             parentPiece.add_child(this._svgGroup);
         }
         this._children.forEach(child => child.render(this._svgGroup));
+    }
+
+    get spawnMargin() {
+        return this._spawnMargin;
+    }
+    set spawnMargin(spawnMargin) {
+        this._spawnMargin = spawnMargin;
+        this._children.forEach(child => child.spawnMargin = spawnMargin);
     }
 
     _update_render() {
@@ -190,6 +209,10 @@ export default class ZoomBox {
         }
         if (!!this._svgText && height > 0) {
             this._svgText.setAttribute('font-size', `${height * 0.9}px`);
+        }
+        if (!!this._svgSpawnMargin) {
+            this._svgSpawnMargin.setAttribute('y1', `${height / -2}`);
+            this._svgSpawnMargin.setAttribute('y2', `${height / 2}`);
         }
     }
 

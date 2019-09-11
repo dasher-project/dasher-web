@@ -35,6 +35,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             const zoomBox = new ZoomBox(
                 index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
+            zoomBox.spawnMargin = this.spawnMargin;
             this.children.push(zoomBox);
         });
     }
