@@ -195,11 +195,16 @@ export default class ZoomBox {
             // Use an SVG group <g> element because its translate can be
             // smoothed with a CSS transition, which a <text> element's x and y
             // attributes cannot. TOTH https://stackoverflow.com/a/53452940
+            // Reference:
+            // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
             this._svgGroup.node.style.transform = 
                 `translate(${this._left}px` +
                 `, ${(this._top + this._bottom) / 2}px)` +
                 ` scale(${this._scale}`;
-                // console.log(this._svgGroup.node.style.transform);
+            // console.log(this._svgGroup.node.style.transform);
+
+            // ToDo: Try changing this to a transform list, see:
+            // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
         }
         if (!!this._svgRect && height > 0) {
             this._svgRect.setAttribute(
@@ -214,6 +219,9 @@ export default class ZoomBox {
             this._svgSpawnMargin.setAttribute('y1', `${height / -2}`);
             this._svgSpawnMargin.setAttribute('y2', `${height / 2}`);
         }
+
+        // Could optimise later, by tracking height and lastHeight.
+
     }
 
     get xChange() {
