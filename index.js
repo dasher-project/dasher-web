@@ -13,8 +13,10 @@ class Index {
         this._zoomBoxPointer = undefined;
         this._zoomBox = undefined;
 
-        // Spawn margin in mystery SVG units.
-        this._spawnMargin = 60;
+        // Spawn and render parameters in mystery SVG units.
+        this._spawnMargin = 120;
+        this._spawnHeight = 300;
+        this._renderHeightThreshold = 10;
 
         this._pointerX = 0;
         this._pointerY = 0;
@@ -36,19 +38,14 @@ class Index {
 
         // De-render current zoomBox, if any.
         if (!!this._zoomBox) {
-            this._zoomBox.render(null);
+            this._zoomBox.renderPiece = null;
         }
 
         // Set underlying property.
         this._zoomBox = zoomBox;
 
         if (!!this._zoomBox) {
-            this._zoomBox.render(this._svg);
-
-            // Move the ZoomBox SVG group to be first so that the cross hairs
-            // and pointer line will always be rendered in front of them.
-            this._svg.node.insertBefore(
-                this._zoomBox.piece.node, this._svg.node.firstChild);
+            this._zoomBox.renderPiece = this._zoomBoxGroup;
         }
     }
 
@@ -93,6 +90,10 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
         this._svg.node.style['touch-action'] = 'none';
 
+        // Add an SVG group to hold the root zoom box first. The cross hairs and
+        // pointer line will always be rendered in front of it.
+        this._zoomBoxGroup = new Piece('g', this._svg);
+
         // Cross hair axis lines.
         this._svg.create('line', {
             x1:"0", y1:"-50%", x2:"0", y2:"50%",
@@ -127,7 +128,7 @@ class Index {
         }
         if (this._zoomBoxRandom === undefined) {
             this._zoomBoxRandom = new ZoomBoxRandom(
-                "abcdefghijklmnopqrstuvwxyz".split(""), 30);
+                "abcdefghijklmnopqrstuvwxyz".split(""));
             this._set_zoomBox_size(this._zoomBoxRandom);
         }
 
@@ -155,7 +156,11 @@ class Index {
 
         if (this._zoomBoxPointer === undefined) {
             this._zoomBoxPointer = new ZoomBoxPointer(
-                "abcdefghijklmnopqrstuvwxyz".split(""), this);
+                "abcdefghijklmnopqrstuvwxyz".split(""), "", this, 'silver');
+            this._zoomBoxPointer.spawnMargin = this._spawnMargin;
+            this._zoomBoxPointer.spawnHeight = this._spawnHeight;
+            this._zoomBoxPointer.renderHeightThreshold = (
+                this._renderHeightThreshold);
             this._set_zoomBox_size(this._zoomBoxPointer);
         }
         const alreadyPointer = Object.is(this._zoomBox, this._zoomBoxPointer);
@@ -207,22 +212,25 @@ class Index {
     }
     _set_zoomBox_size(zoomBox) {
         if (zoomBox instanceof ZoomBoxPointer) {
-            zoomBox.spawnMargin = this._spawnMargin;
-            zoomBox.setDimensions(
+            zoomBox.set_dimensions(
                 this._svgRect.width / 6,
                 this._svgRect.width / 3,
-                this._svgRect.height / -6,
-                this._svgRect.height / 6
+                0, this._svgRect.height / 3
             );
         }
         else if (zoomBox instanceof ZoomBoxRandom) {
-            zoomBox.setDimensions(
+            zoomBox.set_dimensions(
                 this._svgRect.width * -0.5,
                 this._svgRect.width,
-                this._svgRect.height * -0.5,
-                this._svgRect.height * 0.5
+                0, this._svgRect.height
             );
         }
+        else {
+            return;
+        }
+        zoomBox.renderTop = this._svgRect.height * -0.5;
+        zoomBox.renderBottom = this._svgRect.height * 0.5;
+        zoomBox.excessWidth = this._svgRect.width;
     }
 
     _update_pointer(clientX, clientY) {

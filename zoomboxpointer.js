@@ -7,20 +7,17 @@ function loggable(num) {
 }
 
 export default class ZoomBoxPointer extends ZoomBox {
-    constructor(texts, pointer) {
-        super();
-        this._texts = texts;
+    constructor(childTexts, prefix, pointer, colour, text) {
+        super(colour, text);
+        this._childTexts = childTexts;
+        this._message = prefix + (text === undefined ? "" : text);
         this._pointer = pointer;
 
-        this._colour = 'lightyellow';
-
-        this._multiplierUpDown = 0.3;
-        this._multiplierLeftRight = 0.1;
+        this._multiplierUpDown = 0.1;
+        this._multiplierLeftRight = 0.05;
         this._multiplierHeight = 0.0005;
 
-        this._scale = 1;
-
-        this._spawn();
+        this._spawned = false;
     }
 
     get multiplierUpDown() {
@@ -30,37 +27,32 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._multiplierUpDown = multiplierUpDown;
     }
 
-    _spawn() {
-        this._texts.forEach((character, index) => {
-            const zoomBox = new ZoomBox(
+    // Override.
+    spawn() {
+        if (this._spawned) {
+            return;
+        }
+        this._spawned = true;
+        this._childTexts.forEach((character, index) => {
+            const zoomBox = new ZoomBoxPointer(
+                this._childTexts, this._message, this._pointer,
                 index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
-            zoomBox.spawnMargin = this.spawnMargin;
+            zoomBox.inherit(this);
+            zoomBox.renderPiece = this._svgGroup;
             this.children.push(zoomBox);
         });
+        this.reset();
     }
 
-    // Override.
-    render(parentPiece) {
-        if (this._svgGroup === undefined) {
-            this.reset();
-        }
-
-        // Invoke the base class render, which will render all the children.
-        super.render(parentPiece);
-    }
     reset() {
-        this._scale = 1;
-        const width = this.width / 6;
+        const width = (
+            this.spawnMargin === undefined ? this.width / 3 :
+            this.width - this.spawnMargin);
         const left = this.width - width;
         this.children.forEach(zoomBox => {
-            zoomBox.excessWidth = this.width;
-            zoomBox.setDimensions(left, width);
+            zoomBox.set_dimensions(left, width);
         });
-        // This isn't efficient because it makes two passes through the child
-        // boxes and renders each three times. Reset is a rare operation so it
-        // doesn't matter.
-        this.child_arrange();
     }
 
     // Override.
@@ -77,14 +69,78 @@ export default class ZoomBoxPointer extends ZoomBox {
         //     console.log(heightMultiplier);
         // }
 
-        const thisHeightChangeHalf = (
-            ((heightMultiplier * this.height) - this.height) / 2);
-        this.setDimensions(
-            this.left - deltaLeftRight, undefined,
-            (this.top + deltaUpDown) - thisHeightChangeHalf,
-            (this.bottom + deltaUpDown) + thisHeightChangeHalf
-        );
+        const renderOrigin = deltaUpDown - this.middle + (
+            (this.renderTop + this.renderBottom) / 2);
+        const originHolder = this.origin_holder();
+        // const holderMiddle = (
+        //     (originHolder === null || Object.is(originHolder, this)) ?
+        //     undefined : originHolder.middle);
+        // const originIndex = this.children.findIndex(
+        //     zoomBox => zoomBox.middle - renderOrigin > 0
+        // );
+        // const originOffset = (
+        //     originIndex < 0 ? undefined :
+        //     this.children[originIndex].middle - renderOrigin);
+        const offsetBefore = (
+            (originHolder === null || Object.is(originHolder, this)) ?
+            undefined : originHolder.middle - originHolder.renderOrigin);
 
-        this.child_arrange();
+
+        // const diagnostic = this.children.filter(zoomBox => (
+        //     zoomBox._text === "h" ||
+        //     zoomBox._text === "i" ||
+        //     zoomBox._text === "j"
+        // ))
+        // .reduce((accumulator, zoomBox) => accumulator.concat(
+        //     zoomBox._text, loggable(zoomBox.middle - renderOrigin)
+        // ), [
+        //     originIndex, originOffset,
+        //     renderOrigin, this.renderBottom, this.renderTop].map(
+        //     value => loggable(value))
+        // );
+    
+
+        if (offsetBefore === undefined) {
+            this.set_dimensions(
+                this.left - deltaLeftRight, this.width + deltaLeftRight,
+                this.middle + deltaUpDown, heightMultiplier * this.height
+            );
+        }
+        else {
+            this.set_dimensions(
+                this.left - deltaLeftRight, this.width + deltaLeftRight,
+                this.middle + deltaUpDown, heightMultiplier * this.height,
+                false
+            );
+            const revertOffset = offsetBefore + (
+                originHolder.renderOrigin - originHolder.middle);
+            console.log(
+                'originHolder', originHolder._message,
+                loggable(offsetBefore), loggable(originHolder.middle),
+                loggable(originHolder.renderOrigin), loggable(revertOffset));
+            
+            // Implicit render, including children.
+            this.middle += revertOffset + deltaUpDown;
+        }
+
+        // if (originOffset !== undefined) {
+        //     // if (originIndex !== undefined) {
+        //         // const revertOffset = originOffset - (
+        //         //     this.children[originIndex].middle - renderOrigin);
+        //     const revertOffset = originOffset - (
+        //         originHolder.middle - renderOrigin);
+        //     //     diagnostic.unshift(
+        // //         loggable(this.children[originIndex].middle - renderOrigin),
+        // //         loggable(revertOffset),
+        // //         this.children[originIndex]._text);
+        // //     console.log(diagnostic);
+
+        // //     // Next thing works but only if the tree is one-layer. Really, the
+        // //     // code should recursively descend to find the smallest child that
+        // //     // held the origin, and adjust for its move. It might have
+        // //     // derendered, which wouldn't be a problem actually.
+
+        //     this.middle += revertOffset;
+        // }
     }
 }

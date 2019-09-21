@@ -3,71 +3,54 @@
 import ZoomBox from "./zoombox.js";
 
 export default class ZoomBoxRandom extends ZoomBox {
-    constructor(texts, rectHeight) {
+    constructor(texts) {
         super();
         this._texts = texts;
-        this._rectHeight = rectHeight;
-        this._resetWidth = rectHeight * 2;
 
-        this._spawn();
+        this._spawned = false;
     }
 
-    // Override.
-    cascade_width() {
-        this._children.forEach(child => {
-            const width = this._width - child.left;
-            if (width > 0) {
-                child.width = width;
-            }
-            else {
-                child.setDimensions(
-                    this._width - this._resetWidth, this._resetWidth);
-            }
-        });
+    get_child_weight(index) {
+        return NaN;
     }
 
-    // Override.
-    render(parentPiece) {
-        if (this._svgGroup === undefined) {
-            let top = this.top;
-            const width = this._rectHeight * 2;
-            const left = this.width - width;
-            this._children.forEach(zoomBox => {
-                zoomBox.excessWidth = this.width;
-                zoomBox.setDimensions(
-                    left, width, top,
-                    top + this._rectHeight + (this._rectHeight * Math.random())
-                );
-                top += zoomBox.height;
-            });
+    spawn() {
+        if (this._spawned) {
+            return;
         }
+        this._spawned = true;
 
-        // Invoke the base class render, which will render all the children.
-        super.render(parentPiece);
-    }
+        this._rectHeight = (this.height / this._texts.length) * 0.75;
 
-    _spawn() {
+        let top = this.height / -2;
+        const width = this._rectHeight * 2;
+        const left = this.width - width;
         this._texts.forEach((character, index) => {
             const zoomBox = new ZoomBox(
                 index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
             zoomBox.xChange = 1 - ((index % 2) * 2);
             zoomBox.yChange = zoomBox.xChange;
+            zoomBox.inherit(this);
+            zoomBox.set_dimensions(
+                left, width, top + (this._rectHeight / 2), this._rectHeight
+            );
+            zoomBox.renderPiece = this._svgGroup;
             this.children.push(zoomBox);
+            top += this._rectHeight;
         });
     }
 
     // Override.
     zoom() {
-        const heightMin = this._rectHeight;
-        const heightMax = this._rectHeight * 3;
+        const heightMin = this._rectHeight * 0.75;
+        const heightMax = this._rectHeight * 1.75;
         const leftMax = this.width - (this._rectHeight * 2);
-        let top = this.children[0].top;
+        let top = this.height / -2;
         this.children.forEach(zoomBox => {
             const xDelta = (50 + Math.random() * 250) * zoomBox.xChange;
-            const yDelta = this._rectHeight * Math.random() * zoomBox.yChange;
+            const yDelta = heightMin * Math.random() * zoomBox.yChange;
             let left;
-            let bottom;
             let width;
             if (
                 (zoomBox.left + xDelta < 0 && zoomBox.xChange < 0) ||
@@ -80,21 +63,20 @@ export default class ZoomBoxRandom extends ZoomBox {
                 width = this.width - left;
             }
 
-            const height = zoomBox.height;
+            let height = zoomBox.height;
             if (
                 (height + yDelta < heightMin && zoomBox.yChange < 0) ||
                 (height + yDelta > heightMax && zoomBox.yChange > 0)
             ) {
                 zoomBox.yChange *= -1;
-                bottom = top + height;
             }
             else {
-                bottom = top + height + yDelta;
+                height += yDelta;
             }
 
-            zoomBox.setDimensions(left, width, top, bottom);
+            zoomBox.set_dimensions(left, width, top + (height / 2), height);
 
-            top = zoomBox.bottom;
+            top += height;
         });
     }
 

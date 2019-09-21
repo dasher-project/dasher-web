@@ -55,13 +55,26 @@ export default class Piece {
         return Piece.create(tag, this.node, attributes, text, nameSpace);
     }
 
-    add_child(piece) {
-        return this.node.appendChild(piece.node);
+    add_child(piece, append=true) {
+        // In case this.node has no child nodes, this.node.firstChild is null
+        // anyway, which causes appending.
+        return this.node.insertBefore(
+            piece.node, append ? null : this.node.firstChild);
     }
 
     remove() {
         const parent = this.node.parentElement;
         return (!!parent) ? parent.removeChild(this.node) : this.node;
+    }
+
+    remove_all() {
+        // TOTH: https://stackoverflow.com/a/22966637
+        const parent = this.node.parentNode;
+        if (parent === null) {
+            return;
+        }
+        const clone = this.node.cloneNode(false);
+        parent.replaceChild(clone, this.node);
     }
 
     static set_attributes(element, attributes) {
@@ -98,7 +111,7 @@ Piece.nameSpaces = {
     },
     'svg': {
         'url': 'http://www.w3.org/2000/svg',
-        'tags': ['svg', 'rect', 'text', 'g', 'line']
+        'tags': ['svg', 'rect', 'text', 'g', 'line', 'animate']
     }
 };
 
