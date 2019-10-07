@@ -6,26 +6,23 @@ export default class ZoomBoxRandom extends ZoomBox {
     constructor(texts) {
         super();
         this._texts = texts;
-
-        this._spawned = false;
     }
 
-    get_child_weight(index) {
-        return NaN;
-    }
+    // get_child_weight(index) {
+    //     return NaN;
+    // }
 
     spawn() {
-        if (this._spawned) {
-            return;
+        if (this._childBoxes !== undefined) {
+            return false;
         }
-        this._spawned = true;
 
         this._rectHeight = (this.height / this._texts.length) * 0.75;
 
-        let top = this.height / -2;
+        let top = this.top;
         const width = this._rectHeight * 2;
-        const left = this.width - width;
-        this._texts.forEach((character, index) => {
+        const left = (this.left + this.width) - width;
+        this._childBoxes = this._texts.map((character, index) => {
             const zoomBox = new ZoomBox(
                 index % 2 === 0 ? "lightblue" : "lightgreen", character
             );
@@ -35,32 +32,38 @@ export default class ZoomBoxRandom extends ZoomBox {
             zoomBox.set_dimensions(
                 left, width, top + (this._rectHeight / 2), this._rectHeight
             );
-            zoomBox.renderPiece = this._svgGroup;
-            this.children.push(zoomBox);
+            // zoomBox.renderPiece = this._svgGroup;
             top += this._rectHeight;
+
+            return zoomBox;
         });
+        return true;
     }
 
     // Override.
-    zoom() {
+    zoom(into, after, limits) {
+        this.spawn();
+
         const heightMin = this._rectHeight * 0.75;
         const heightMax = this._rectHeight * 1.75;
-        const leftMax = this.width - (this._rectHeight * 2);
-        let top = this.height / -2;
-        this.children.forEach(zoomBox => {
+        const widthMin = this._rectHeight * 2;
+        const widthMax = this.width;
+        let top = this.top;
+        this.each_childBox(zoomBox => {
             const xDelta = (50 + Math.random() * 250) * zoomBox.xChange;
             const yDelta = heightMin * Math.random() * zoomBox.yChange;
             let left;
-            let width;
+            let width = zoomBox.width + xDelta;
             if (
-                (zoomBox.left + xDelta < 0 && zoomBox.xChange < 0) ||
-                (zoomBox.left + xDelta > leftMax && zoomBox.xChange > 0)
+                (width < widthMin && zoomBox.xChange < 0) ||
+                (width > widthMax && zoomBox.xChange > 0)
             ) {
+                // Reverse direction; don't move.
                 zoomBox.xChange *= -1;
+                width = undefined;
             }
             else {
-                left = zoomBox.left + xDelta;
-                width = this.width - left;
+                left = (this.left + this.width) - width;
             }
 
             let height = zoomBox.height;
@@ -68,6 +71,9 @@ export default class ZoomBoxRandom extends ZoomBox {
                 (height + yDelta < heightMin && zoomBox.yChange < 0) ||
                 (height + yDelta > heightMax && zoomBox.yChange > 0)
             ) {
+                // Reverse direction, don't change height. But, top will still
+                // have to change because adjacent child boxes will have moved
+                // probably.
                 zoomBox.yChange *= -1;
             }
             else {
@@ -78,6 +84,8 @@ export default class ZoomBoxRandom extends ZoomBox {
 
             top += height;
         });
+
+        super.zoom(into, after, limits);
     }
 
 }

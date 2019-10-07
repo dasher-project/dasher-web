@@ -111,7 +111,7 @@ Piece.nameSpaces = {
     },
     'svg': {
         'url': 'http://www.w3.org/2000/svg',
-        'tags': ['svg', 'rect', 'text', 'g', 'line', 'animate']
+        'tags': ['svg', 'rect', 'text', 'g', 'line', 'animate', 'polyline']
     }
 };
 

@@ -9,8 +9,15 @@ svg {
     border: 1px black solid;
 }
 
+:root {
+    --transition: 0.4s;
+}
+
 svg rect {
-    transition: y 0.2s linear, height 0.2s linear;
+    transition: y var(--transition) linear, height var(--transition) linear;
+    stroke-width: 2px;
+    stroke: red;
+    stroke-dasharray: 3;
 }
 
 svg text {
@@ -20,10 +27,10 @@ svg text {
      *
      * text.font-size will make a transition no problem.
      */
-    transition: font-size 0.2s linear;
+    transition: font-size var(--transition) linear;
 }
 svg g {
-    transition: 0.2s linear;
+    transition: var(--transition) linear;
 }
 
 #sizes-text-node {display: block;}
