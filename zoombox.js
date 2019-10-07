@@ -417,6 +417,12 @@ export default class ZoomBox {
 
         const drawY = (this.height / -2) + renderOffset + trimTop;
         const drawHeight = this.height - (trimTop + trimBottom);
+
+        if (drawHeight < 0) {
+            console.log(
+                'drawHeight', this._message, drawHeight, trimTop, trimBottom);
+        }
+
         // console.log({
         //     offset:renderOffset, height: this.height,
         //     drawY:drawY, drawHeight:drawHeight,
@@ -428,7 +434,7 @@ export default class ZoomBox {
             // x: this.left < limitLeft ? limitLeft : this.left,
             width: this.width > 0 ? width : 0,
             // y: this.top < limitTop ? limitTop : this.top,
-            y: drawY, height: drawHeight
+            y: drawY, height: drawHeight > 0 ? drawHeight : 0
         });
     }
 

@@ -46,6 +46,8 @@ class Index {
             return;
         }
 
+        // intervalZoom is undefined just while the initial build of the page is
+        // in progress.
         if (this._intervalZoom !== undefined) {
             if (this._intervalZoom !== null) {
                 clearInterval(this._intervalZoom);
@@ -171,7 +173,8 @@ class Index {
         const zoom1 = () => {
             this.zoomBox.zoom(
                 this._zoomBoxGroup.node, null, this._renderLimits);
-            console.log(this.zoomBox.height);
+            console.log(this.zoomBox.height.toLocaleString(
+                undefined, {maximumFractionDigits:0}));
         };
         zoom1();
         this._intervalZoom = setInterval(zoom1, this._transitionMillis);

@@ -14,7 +14,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._pointer = pointer;
         console.log('spawn', this._message);
 
-        this._multiplierUpDown = 0.1;
+        this._multiplierUpDown = 0.3;
         this._multiplierLeftRight = 0.3;
         this._multiplierHeight = 0.0015;
 
@@ -64,14 +64,26 @@ export default class ZoomBoxPointer extends ZoomBox {
         if (index === -1) {
             // No child to consider; solve height for this parent.
             const left = this.left + delta;
-            console.log(`solve target "${this._message}".`)
             return {
-                "left": left, "height": this.solve_height(left, limits)
+                "left": left, "height": this.solve_height(left, limits),
+                "target": this
             };
         }
         else {
             const holder = this.childBoxes[index];
-            const holderHeight = holder.solve_x_delta(delta, limits).height;
+            const originalHeight = holder.height;
+            const {
+                height:holderHeight, target:target
+            } = holder.solve_x_delta(delta, limits);
+
+            if (holderHeight === originalHeight) {
+                console.log('stationary', holder._message);
+                const left = this.left + delta;
+                return {
+                    "left": left, "height": this.solve_height(left, limits),
+                    "target": this
+                };    
+            }
 
             // Solve this box's height from the unitHeight.
             const totalWeight = this._childWeights.reduce(
@@ -79,7 +91,8 @@ export default class ZoomBoxPointer extends ZoomBox {
             const unitHeight = holderHeight / this._childWeights[index];
             const height = unitHeight * totalWeight;
             return {
-                "left": this.solve_left(height, limits), "height": height
+                "left": this.solve_left(height, limits), "height": height,
+                "target": target
             };
         }
     }
@@ -154,20 +167,44 @@ export default class ZoomBoxPointer extends ZoomBox {
         return -1;
     }
 
-    arrange_children(limits) {
+    arrange_children(limits, up, initialiser) {
         const totalWeight = this._childWeights.reduce(
             (accumulator, weight) => accumulator + weight, 0);
         const unitHeight = this.height / totalWeight;
-        let childBottom = this.bottom;
 
-        let index = this.childBoxes.length - 1;
-        for(; index >= 0; index-- ) {
+        let childTop;
+        let childBottom;
+        if (up === undefined) {
+            childTop = this.top;
+            initialiser = -1;
+            up = false;
+        }
+        else if (up) {
+            childBottom = this._childBoxes[initialiser].top;
+        }
+        else {
+            childTop = this._childBoxes[initialiser].bottom;
+        }
+        const direction = (up ? -1 : 1)
+
+        const childLength = this.childBoxes.length;
+        for(
+            let index = initialiser + direction;
+            index >= 0 && index < childLength;
+            index += direction
+        ) {
             const childHeight = this._childWeights[index] * unitHeight;
+            if (up) {
+                childTop = childBottom - childHeight;
+            }
+            else {
+                childBottom = childTop + childHeight;
+            }
+
             const shouldSpawn = (
                 this.renderHeightThreshold === undefined ||
                 childHeight >= this.renderHeightThreshold) &&
-                childBottom > limits.top &&
-                (childBottom - childHeight < limits.bottom);
+                childBottom > limits.top && childTop < limits.bottom;
 
             if (shouldSpawn) {
                 if (this.childBoxes[index] === null) {
@@ -194,22 +231,80 @@ export default class ZoomBoxPointer extends ZoomBox {
                 }
             }
 
-            childBottom -= childHeight;
+            if (up) {
+                childBottom -= childHeight;
+            }
+            else {
+                childTop += childHeight;
+            }
         }
+        return up ? childBottom : childTop;
+    }
+
+    zoom_to_height(newHeight, left, limits) {
+        const index = this._origin_index();
+        if (index === -1) {
+            const halfHeightChange = (newHeight - this.height) / 2;
+            if (this.top > 0) {
+                this.middle += halfHeightChange;
+            }
+            // If the bottom of the box is above the origin, then the whole box
+            // is above the origin.
+            // Exactly one of the checks has to be or-equals.
+            if (this.bottom <= 0) {
+                this.middle -= halfHeightChange;
+            }
+            this.height = newHeight;
+            this.left = left;
+            this.width = limits.width - left;
+            this.arrange_children(limits)
+        }
+        else {
+            const totalWeight = this._childWeights.reduce(
+                (accumulator, weight) => accumulator + weight, 0);
+            const unitHeight = newHeight / totalWeight;
+            const holder = this.childBoxes[index];
+            const childHeight = unitHeight * this._childWeights[index];
+            holder.zoom_to_height(
+                childHeight, this.solve_left(childHeight, limits), limits);
+
+            this.height = newHeight;
+            this.left = left;
+            this.width = limits.width - left;
+
+            // push up everything above the holder; push down everything below
+            // the holder.
+            const top = this.arrange_children(limits, true, index);
+            this.arrange_children(limits, false, index);
+            this.middle = top + (newHeight / 2);
+        }
+
     }
 
     // Override.
     zoom(into, after, limits) {
-        const deltaUpDown = this._pointer.pointerY * this.multiplierUpDown;
         const deltaLeftRight = (
             this._pointer.pointerX * this._multiplierLeftRight) * -1;
 
-        const originHolder = this.origin_holder();
-        const holderMiddle = (
-            originHolder === null ? undefined : originHolder.middle);
+        // const originHolder = this.origin_holder();
+        // const holderMiddle = (
+        //     originHolder === null ? this.middle : originHolder.middle);
 
 
-        const {left, height} = this.solve_x_delta(deltaLeftRight, limits);
+        const {
+            left, height, target
+        } = this.solve_x_delta(deltaLeftRight, limits);
+        if (!Object.is(this, target)) {
+            console.log('Solver target', target._message);
+        }
+        const originHolder = target;
+        const holderMiddle = target.middle;
+
+        const deltaUpDown = (
+            this._pointer.pointerY * this.multiplierUpDown
+            // * (target.height / limits.height)
+        );
+
         // const left = this.left + deltaLeftRight;
         // const height = (
         //     (limits.height * (limits.right - left)) /
@@ -218,23 +313,25 @@ export default class ZoomBoxPointer extends ZoomBox {
         // let top = middle - (height / 2);
 
         // this.set_dimensions(left, undefined, undefined, height);
-        this.set_dimensions(
-            left, limits.width - left, this.middle + deltaUpDown, height);
+        this.set_dimensions(undefined, limits.width - left);
+        //, this.middle + deltaUpDown, height);
+        this.zoom_to_height(height, left, limits)
 
-        this.arrange_children(limits);
+
+        // this.arrange_children(limits);
 
         // It's possible the holder has been despawned. That's OK. The
         // originHolder keeps a reference to it so it won't have been garbage
         // collected.
-        const originAdjustment = 0;
-        // (
-        //     holderMiddle === undefined ? 0 :
-        //     holderMiddle - originHolder.middle);
-        if (originHolder !== null) {
-            console.log(originHolder._message);
-        }
+        // const originChange = (
+        //     originHolder === null ? this.middle : originHolder.middle
+        // ) -  holderMiddle;
 
-        // this.adjust_dimensions(undefined, deltaUpDown + originAdjustment, true);
+        // if (originHolder !== null && !Object.is(originHolder, this)) {
+        //     console.log("origin", originHolder._message, originChange);
+        // }
+
+        this.adjust_dimensions(undefined,  deltaUpDown, true);
 
 
         // let topTrim = limits.top - top;
