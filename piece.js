@@ -97,6 +97,16 @@ export default class Piece {
         );
     }
 
+    static toggle(piece, condition, create) {
+        if (condition) {
+            return piece === null ? create() : piece;
+        }
+        if (piece !== null) {
+            piece.remove();
+        }
+        return null;
+    }
+
     static NS_for_tag(tag) {
         return Piece.tagMap[tag];
     }
@@ -107,7 +117,7 @@ export default class Piece {
 Piece.nameSpaces = {
     'html': {
         'url': 'http://www.w3.org/1999/xhtml',
-        'tags': ['div', 'span', 'button', 'h1']
+        'tags': ['div', 'span', 'button', 'h1', 'input', 'label']
     },
     'svg': {
         'url': 'http://www.w3.org/2000/svg',

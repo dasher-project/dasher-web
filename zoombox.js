@@ -385,7 +385,8 @@ export default class ZoomBox {
         this._render_rect(
             limitTop, limits.bottom, limits.width, this.middle - renderMiddle);
         this._render_text();
-        this._render_diagnostics(this.middle - renderMiddle);
+        this._render_diagnostics(
+            limits.showDiagnostic, this.middle - renderMiddle);
 
     }
 
@@ -414,6 +415,10 @@ export default class ZoomBox {
             this.top < limitTop ? limitTop - this.top : 0);
         const trimBottom = (
             this.bottom > limitBottom ? this.bottom - limitBottom : 0);
+            this._svgRect.node.classList.toggle(
+                'trim-top', trimTop !== 0);
+            this._svgRect.node.classList.toggle(
+                'trim-bottom', trimBottom !== 0);
 
         const drawY = (this.height / -2) + renderOffset + trimTop;
         const drawHeight = this.height - (trimTop + trimBottom);
@@ -461,38 +466,36 @@ export default class ZoomBox {
         this._svgText.node.setAttribute('font-size', `${fontSize}px`);
     }
 
-    _render_diagnostics(renderOffset) {
-        if (this._svgWidth === null) {
-            this._svgWidth = new Piece('line',  this._svgGroup, {
+    _render_diagnostics(show, renderOffset) {
+        const y1 = renderOffset + (this.height / -2);
+        const y2 = renderOffset + (this.height / 2);
+
+        this._svgWidth = Piece.toggle(
+            this._svgWidth, show, () => new Piece('line',  this._svgGroup, {
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4",
                 "class": 'diagnostic-width'
-            });
-        }
-        const y1 = renderOffset + (this.height / -2);
-        const y2 = renderOffset + (this.height / 2);
-        this._svgWidth.set_attributes({
-            x1: `${this.width}`, y1: `${y1}`,
-            x2: `${this.width}`, y2: `${y2}`
-        });
-
-        if (this.spawnMargin === undefined) {
-            if (this._svgSpawnMargin !== null) {
-                this._svgSpawnMargin.remove();
-                this._svgSpawnMargin = null;
-            }
-            return;
+            })
+        );
+        if (show) {
+            this._svgWidth.set_attributes({
+                x1: `${this.width}`, y1: `${y1}`,
+                x2: `${this.width}`, y2: `${y2}`
+            });    
         }
 
-        if (this._svgSpawnMargin === null) {
-            this._svgSpawnMargin = new Piece('line', this._svgGroup, {
+        this._svgSpawnMargin = Piece.toggle(
+            this._svgSpawnMargin, show && (this.spawnMargin !== undefined),
+            () => new Piece('line', this._svgGroup, {
                 x1:"0", x2:`${this.spawnMargin}`,
-                // y1:"0", y2:"0",
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
-            });
+            })
+        )
+        if (this._svgSpawnMargin !== null) {
+            this._svgSpawnMargin.set_attributes({y1: `${y1}`, y2: `${y2}`});
         }
-        this._svgSpawnMargin.set_attributes({y1: `${y1}`, y2: `${y2}`});
+
         /* The following animation code doesn't seem to work.
         this._svgSpawnMargin.remove_all();
         this._svgSpawnMargin.create('animateDUFF', {

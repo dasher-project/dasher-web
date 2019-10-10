@@ -5,6 +5,10 @@ html {font-family: sans-serif;}
 p.small-print {font-size: 0.7rem;}
 p.small-print a {text-decoration: none;}
 
+button {
+    margin: 0.25rem;
+}
+
 svg {
     border: 1px black solid;
 }
@@ -15,9 +19,9 @@ svg {
 
 svg rect {
     transition: y var(--transition) linear, height var(--transition) linear;
-    stroke-width: 2px;
-    stroke: red;
-    stroke-dasharray: 3;
+    stroke-width: 1px;
+    stroke: black;
+    /* stroke-dasharray: 3; */
 }
 
 svg text {

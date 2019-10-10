@@ -20,9 +20,9 @@ class Index {
         this._renderHeightThreshold = 20;
 
         this._ratios = [
-            {left:0.5, height: 0.02},
-            {left:0.4, height: 0.05},
-            {left:0, height: 0.5},
+            {left:1 / 2, height: 0.01},
+            {left:1 / 5, height: 0.05},
+            {left:1 / -6, height: 0.5},
             {left:1 / -3, height: 1}            
         ];
         // this._multiplierXFullHeight = 1 / -3;
@@ -35,6 +35,7 @@ class Index {
 
         this._svgRect = undefined;
         this._renderLimits = undefined;
+        this._heightGradientPolyline = null;
     }
 
     get zoomBox() {
@@ -101,6 +102,18 @@ class Index {
             'span', {id:"sizes-text-node"}, "loading sizes ..."
         ).firstChild;
 
+        const identifier = "show-diagnostic";
+        this._controlShowDiagnostic = this._header.create(
+            'input', {'type':'checkbox', 'id':identifier, 'name':identifier}
+        );
+        this._header.create('label', {'for':identifier}, "Show diagnostic");
+        this._controlShowDiagnostic.addEventListener('change', (event) => {
+            if (this._renderLimits !== undefined) {
+                this._renderLimits.showDiagnostic = event.target.checked;
+                this._show_limits(this._renderLimits);
+            }
+        });
+
         this._buttonRandom = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
         this._buttonRandom.addEventListener(
@@ -146,17 +159,6 @@ class Index {
             stroke:"red", "stroke-width":"1px"
         });
 
-        // Height gradient indicator lines. X and Y attributes get set properly
-        // later.
-        this._heightGradientPolyline = new Piece('polyline', this._svg, {
-            // x1:0, y1:0, x2:0, y2:0, 
-            "points":"", "stroke":"green", "stroke-width":"1px", "fill": "none"
-        });
-        // this._heightGradientBottomLine = new Piece('polyline', this._svg, {
-        //     // x1:0, y1:0, x2:0, y2:0, 
-        //     points:"", stroke:"green", "stroke-width":"1px"
-        // });
-
         const footer = document.getElementById(footerID);
         this._parent.appendChild(footer);
 
@@ -173,8 +175,8 @@ class Index {
         const zoom1 = () => {
             this.zoomBox.zoom(
                 this._zoomBoxGroup.node, null, this._renderLimits);
-            console.log(this.zoomBox.height.toLocaleString(
-                undefined, {maximumFractionDigits:0}));
+            // console.log(this.zoomBox.height.toLocaleString(
+            //     undefined, {maximumFractionDigits:0}));
         };
         zoom1();
         this._intervalZoom = setInterval(zoom1, this._transitionMillis);
@@ -257,18 +259,17 @@ class Index {
     }
     set svgRect(boundingClientRect) {
         this._svgRect = boundingClientRect;
-        this._renderLimits = {
+        if (this._renderLimits === undefined) {
+            this._renderLimits = {};
+        }
+        Object.assign(this._renderLimits, {
             "top": boundingClientRect.height / -2,
             "bottom":  boundingClientRect.height / 2,
             "height":  boundingClientRect.height,
             "left": boundingClientRect.width / -2,
             "right": boundingClientRect.width / 2,
             "width": boundingClientRect.width,
-            // "xFullHeight":
-            //     boundingClientRect.width * this._multiplierXFullHeight,
-            // "xZeroHeight":
-            //     boundingClientRect.width * this._multiplierXZeroHeight
-        };
+        });
         this._renderLimits.gradients = this._ratios.map(({left, height}) => {
             return {
                 "left": boundingClientRect.width * left,
@@ -276,9 +277,24 @@ class Index {
             };
         }).sort((first, second) => first.left - second.left);
         // Previous line will sort from lowest to highest. In practice, lowest
-        // means most negative.
+        // means most negative. The left-most will be gradients[0].
 
-        // Height gradient track.
+        this._show_limits(this._renderLimits);
+    }
+
+    _show_limits(limits) {
+        this._heightGradientPolyline = Piece.toggle(
+            this._heightGradientPolyline, limits.showDiagnostic, () =>
+            new Piece('polyline', this._svg, {
+                 "points":"", "stroke":"green", "stroke-width":"1px",
+                 "fill": "none"
+            })
+        );
+
+        if (this._heightGradientPolyline === null) {
+            return;
+        }
+        
         this._heightGradientPolyline.set_attributes({"points":[
             ...Array.from(this._renderLimits.gradients,
                 ({left, height}) => {return {
@@ -292,18 +308,6 @@ class Index {
             (accumulated, {left, height}) => `${accumulated} ${left},${height}`,
             "")
         });
-            
-        
-
-
-        // this._heightGradientTopLine.set_attributes({
-        //     x1:this._renderLimits.xFullHeight, y1:"-50%",
-        //     x2:this._renderLimits.xZeroHeight, y2:0
-        // });
-        // this._heightGradientBottomLine.set_attributes({
-        //     x1:this._renderLimits.xFullHeight, y1:"50%",
-        //     x2:this._renderLimits.xZeroHeight, y2:0
-        // });
     }
 
     _on_resize() {
@@ -327,16 +331,15 @@ class Index {
     _set_zoomBox_size(zoomBox) {
         if (zoomBox instanceof ZoomBoxPointer) {
 
-            // Set left; solve height.
-            const width = this._spawnMargin * 2;
-            const left = this._renderLimits.right - width;
-            const height = zoomBox.solve_height(left, this._renderLimits);
+            // // Set left; solve height.
+            // const width = this._spawnMargin * 2;
+            // const left = this._renderLimits.right - width;
+            // const height = zoomBox.solve_height(left, this._renderLimits);
 
-            // // Set height; solve left.
-            // const height = this.svgRect.height / 10;
-            // const left = zoomBox.solve_left(height, this._renderLimits);
-            // const width = this._renderLimits.right - left;
-
+            // Set height; solve left.
+            const height = this.svgRect.height / 4;
+            const left = zoomBox.solve_left(height, this._renderLimits);
+            const width = this._renderLimits.right - left;
 
             zoomBox.set_dimensions(
                 // (this._svgRect.width / 2) - width, width,

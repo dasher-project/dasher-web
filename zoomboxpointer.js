@@ -60,8 +60,29 @@ export default class ZoomBoxPointer extends ZoomBox {
     // }
 
     solve_x_delta(delta, limits) {
-        const index = this._origin_index();
-        if (index === -1) {
+        let candidateHolder = this._origin_index();
+        let holder;
+        let originalHeight;
+        let holderHeight;
+        let target;
+
+        if (candidateHolder !== -1) {
+            holder = this.childBoxes[candidateHolder];
+            originalHeight = holder.height;
+            const solved = holder.solve_x_delta(delta, limits);
+            holderHeight = solved.height;
+            target = solved.target;
+            if (holderHeight === originalHeight) {
+                console.log('Stationary holder', holder._message);
+                candidateHolder = -1;
+            }
+            else if (solved.left > limits.right) {
+                console.log('Off holder', holder._message);
+                candidateHolder = -1;
+            }
+        }
+
+        if (candidateHolder === -1) {
             // No child to consider; solve height for this parent.
             const left = this.left + delta;
             return {
@@ -70,25 +91,11 @@ export default class ZoomBoxPointer extends ZoomBox {
             };
         }
         else {
-            const holder = this.childBoxes[index];
-            const originalHeight = holder.height;
-            const {
-                height:holderHeight, target:target
-            } = holder.solve_x_delta(delta, limits);
-
-            if (holderHeight === originalHeight) {
-                console.log('stationary', holder._message);
-                const left = this.left + delta;
-                return {
-                    "left": left, "height": this.solve_height(left, limits),
-                    "target": this
-                };    
-            }
-
             // Solve this box's height from the unitHeight.
             const totalWeight = this._childWeights.reduce(
                 (accumulator, weight) => accumulator + weight, 0);
-            const unitHeight = holderHeight / this._childWeights[index];
+            const unitHeight = (
+                holderHeight / this._childWeights[candidateHolder]);
             const height = unitHeight * totalWeight;
             return {
                 "left": this.solve_left(height, limits), "height": height,
