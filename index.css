@@ -14,6 +14,9 @@ svg {
 }
 
 :root {
+    /* This value also appears in the index.js file, in the _transitionMillis
+     * property, and it's good if they're the same.
+     */
     --transition: 0.4s;
 }
 
@@ -46,6 +49,16 @@ body {
     left: 0px;
     right: 0px;
 }
+
+/*
+The user interface is laid out as follows.
+
+-   There's an overall holder element, identified by id:user-interface.
+-   There are expected to be three child nodes within the holder.
+-   The child nodes are laid out in a column.
+-   The first and third elements are each as tall as their content requires.
+-   The second element occupies all the remaining vertical space.
+*/
 #user-interface {
     display: flex;
     flex-direction: column;

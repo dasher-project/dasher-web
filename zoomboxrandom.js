@@ -1,5 +1,7 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+// ZoomBox class in which child boxes change left position and height at random.
+
 import ZoomBox from "./zoombox.js";
 
 export default class ZoomBoxRandom extends ZoomBox {
@@ -7,10 +9,6 @@ export default class ZoomBoxRandom extends ZoomBox {
         super();
         this._texts = texts;
     }
-
-    // get_child_weight(index) {
-    //     return NaN;
-    // }
 
     spawn() {
         if (this._childBoxes !== undefined) {
@@ -32,7 +30,6 @@ export default class ZoomBoxRandom extends ZoomBox {
             zoomBox.set_dimensions(
                 left, width, top + (this._rectHeight / 2), this._rectHeight
             );
-            // zoomBox.renderPiece = this._svgGroup;
             top += this._rectHeight;
 
             return zoomBox;

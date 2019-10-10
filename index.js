@@ -1,5 +1,13 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+// This script gets run by inclusion in a script tag in the index.html file.
+// It has to have type="module" because it imports other modules. Structure is:
+//
+// 1.  Import statements.
+// 2.  Class definition.
+// 3.  Set the body onload to a function that instantiates the class.
+//
+
 import Piece from './piece.js';
 import ZoomBoxRandom from './zoomboxrandom.js';
 import ZoomBoxPointer from './zoomboxpointer.js';
@@ -8,7 +16,6 @@ class Index {
     constructor(parent) {
         this._parent = parent;
         this._intervalZoom = undefined;
-        // this._intervalRender = null;
 
         this._zoomBoxRandom = null;
         this._zoomBoxPointer = null;
@@ -25,9 +32,9 @@ class Index {
             {left:1 / -6, height: 0.5},
             {left:1 / -3, height: 1}            
         ];
-        // this._multiplierXFullHeight = 1 / -3;
-        // this._multiplierXZeroHeight = 1;
 
+        // This value also appears in the index.css file, in the --transition
+        // variable, and it's good if they're the same.
         this._transitionMillis = 400;
 
         this._pointerX = 0;
@@ -55,34 +62,16 @@ class Index {
                 this._intervalZoom = null;
             }
         }
-        // if (this._intervalRender !== null) {
-        //     clearInterval(this._intervalRender);
-        //     this._intervalRender = null;
-        // }
 
         // De-render current zoomBox, if any.
         if (this._zoomBox !== null) {
-            // this._zoomBox.renderPiece = null;
             this._zoomBox.render(null);
         }
 
         // Set underlying property.
         this._zoomBox = zoomBox;
 
-        // if (this._zoomBox !== null) {
-        //     // this._zoomBox.renderPiece = this._zoomBoxGroup;
-        //     this._render_zoomBox();
-        //     this._intervalRender = setInterval(
-        //         this._render_zoomBox.bind(this), this._transitionMillis);
-        // }
     }
-
-    // _render_zoomBox() {
-    //     if (this.zoomBox !== null && this._svgRect !== undefined) {
-    //         this.zoomBox.render(
-    //             this._zoomBoxGroup.node, null, this._renderLimits);
-    //     }
-    // }
 
     get pointerX() {
         return this._pointerX;
@@ -102,9 +91,15 @@ class Index {
             'span', {id:"sizes-text-node"}, "loading sizes ..."
         ).firstChild;
 
+        // Controls.
         const identifier = "show-diagnostic";
         this._controlShowDiagnostic = this._header.create(
-            'input', {'type':'checkbox', 'id':identifier, 'name':identifier}
+            'input', {
+                'type':'checkbox',
+                'id':identifier,
+                'name':identifier,
+                'disabled': true
+            }
         );
         this._header.create('label', {'for':identifier}, "Show diagnostic");
         this._controlShowDiagnostic.addEventListener('change', (event) => {
@@ -127,11 +122,17 @@ class Index {
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
 
-        const spans = this._header.create('span', {}, [
-                this._touch ? "touch " : "mouse ", "X", ",", "Y"
+        // Another diagnostic, for the type and co-ordinates of the pointer.
+        // This is an array so that the co-ordinates can be updated.
+        const pointerSpans = this._header.create('span', {}, [
+                this._touch ? "touch(" : "mouse(", "X", ",", "Y", ")"
         ]);
-        this._xTextNode = spans[1].firstChild;
-        this._yTextNode = spans[3].firstChild;
+        this._xTextNode = pointerSpans[1].firstChild;
+        this._yTextNode = pointerSpans[3].firstChild;
+
+        const heightSpans = this._header.create(
+            'span', {}, [" height:", "Height"]);
+        this._heightTextNode = heightSpans[1].firstChild;
 
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
@@ -159,11 +160,13 @@ class Index {
             stroke:"red", "stroke-width":"1px"
         });
 
+        // Grab the footer, which holds some small print, and re-insert it. The
+        // small print has to be in the static HTML too.
         const footer = document.getElementById(footerID);
         this._parent.appendChild(footer);
 
         // Next part of loading is after a time out so that the browser gets an
-        // opportunity to render the layout.
+        // opportunity to render the layout first.
         setTimeout(() => this._load1(footerID), 0);
 
         // To-do: should be an async function that returns a promise that
@@ -175,8 +178,8 @@ class Index {
         const zoom1 = () => {
             this.zoomBox.zoom(
                 this._zoomBoxGroup.node, null, this._renderLimits);
-            // console.log(this.zoomBox.height.toLocaleString(
-            //     undefined, {maximumFractionDigits:0}));
+            this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
+                undefined, {maximumFractionDigits:0});
         };
         zoom1();
         this._intervalZoom = setInterval(zoom1, this._transitionMillis);
@@ -197,10 +200,7 @@ class Index {
         this._buttonPointer.textContent = "Pointer";
 
         if (this._intervalZoom === null) {
-            this._start_zoom()
-            // this._zoomBoxRandom.zoom();
-            // this._intervalZoom = setInterval(
-            //     this.zoomBox.zoom.bind(this.zoomBox), this._transitionMillis);
+            this._start_zoom();
             this._buttonRandom.textContent = "Stop";
         }
         else {
@@ -235,9 +235,6 @@ class Index {
             this.zoomBox.arrange_children(this._renderLimits);
         }
         else {
-            // this._zoomBoxPointer.zoom();
-            // this._intervalZoom = setInterval(
-            //     this.zoomBox.zoom.bind(this.zoomBox), this._transitionMillis);
             this._start_zoom();
             this._buttonPointer.textContent = "Reset";
         }
@@ -286,8 +283,8 @@ class Index {
         this._heightGradientPolyline = Piece.toggle(
             this._heightGradientPolyline, limits.showDiagnostic, () =>
             new Piece('polyline', this._svg, {
-                 "points":"", "stroke":"green", "stroke-width":"1px",
-                 "fill": "none"
+                "points":"", "stroke":"green", "stroke-width":"1px",
+                "fill": "none"
             })
         );
 
@@ -330,6 +327,7 @@ class Index {
     }
     _set_zoomBox_size(zoomBox) {
         if (zoomBox instanceof ZoomBoxPointer) {
+            // Comment out one or other of the following.
 
             // // Set left; solve height.
             // const width = this._spawnMargin * 2;
@@ -341,11 +339,7 @@ class Index {
             const left = zoomBox.solve_left(height, this._renderLimits);
             const width = this._renderLimits.right - left;
 
-            zoomBox.set_dimensions(
-                // (this._svgRect.width / 2) - width, width,
-                left, width, 0, height
-            );
-
+            zoomBox.set_dimensions(left, width, 0, height);
         }
         else if (zoomBox instanceof ZoomBoxRandom) {
             zoomBox.set_dimensions(
@@ -357,9 +351,6 @@ class Index {
         else {
             return;
         }
-        // zoomBox.renderTop = this.svgRect.height * -0.5;
-        // zoomBox.renderBottom = this.svgRect.height * 0.5;
-        // zoomBox.excessWidth = this.svgRect.width;
     }
 
     _update_pointer(clientX, clientY) {
@@ -375,8 +366,8 @@ class Index {
         this._pointerLine.setAttribute('x2', this._pointerX);
         this._pointerLine.setAttribute('y2', -1 * this._pointerY);
 
-        this._xTextNode.nodeValue = this._pointerX.toFixed().toString();
-        this._yTextNode.nodeValue = this._pointerY.toFixed().toString();
+        this._xTextNode.nodeValue = this._pointerX.toFixed();
+        this._yTextNode.nodeValue = this._pointerY.toFixed();
     }
 
     _on_mouse_move(mouseEvent) {
@@ -438,9 +429,12 @@ class Index {
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
         setTimeout( () => this._on_resize(), 0);
+
+        // Activate intervals and controls.
         this._intervalZoom = null;
-        this._buttonRandom.removeAttribute('disabled');
-        this._buttonPointer.removeAttribute('disabled');
+        [
+            this._buttonRandom, this._buttonPointer, this._controlShowDiagnostic
+        ].forEach(control => control.removeAttribute('disabled'));
     }
 }
 

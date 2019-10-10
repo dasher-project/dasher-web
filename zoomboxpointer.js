@@ -1,5 +1,7 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+// ZoomBox subclass in which zooming is controlled by the pointer.
+
 import ZoomBox from "./zoombox.js";
 
 function loggable(num) {
@@ -14,6 +16,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._pointer = pointer;
         console.log('spawn', this._message);
 
+        // Tunable parameters.  
+        // ToDo: Make them be set from the user interface instead.
         this._multiplierUpDown = 0.3;
         this._multiplierLeftRight = 0.3;
         this._multiplierHeight = 0.0015;
@@ -32,33 +36,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._multiplierUpDown = multiplierUpDown;
     }
 
-    // Override.
-    // spawn() {
-    //     if (this.childBoxes.length > 0) {
-    //         return false;
-    //     }
-    //     this._childTexts.forEach((character, index) => {
-    //         const zoomBox = new ZoomBoxPointer(
-    //             this._childTexts, this._message, this._pointer,
-    //             index % 2 === 0 ? "lightblue" : "lightgreen", character
-    //         );
-    //         // Setting zoomBox.weight would go here.
-    //         zoomBox.inherit(this);
-    //         // zoomBox.renderPiece = this._svgGroup;
-    //         this.childBoxes.push(zoomBox);
-    //     });
-    //     this.reset();
-    //     return true;
-    // }
-
-    // reset() {
-    //     const width = (
-    //         this.spawnMargin === undefined ? this.width / 3 :
-    //         this.width - this.spawnMargin);
-    //     const left = (this.left + this.width) - width;
-    //     this.arrange_children(left, width);
-    // }
-
+    // Solve application of the right-left dimension of the pointer.
     solve_x_delta(delta, limits) {
         let candidateHolder = this._origin_index();
         let holder;
@@ -67,6 +45,9 @@ export default class ZoomBoxPointer extends ZoomBox {
         let target;
 
         if (candidateHolder !== -1) {
+            // There's a candidate child. Do half the calculation, then make
+            // some checks. Consequence of the checks may be to discard the
+            // candidate.
             holder = this.childBoxes[candidateHolder];
             originalHeight = holder.height;
             const solved = holder.solve_x_delta(delta, limits);
@@ -104,6 +85,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         }
     }
 
+    // Calculate height, given left position.
     solve_height(left, limits) {
         const index = limits.gradients.findIndex(
             gradient => left < gradient.left);
@@ -119,11 +101,9 @@ export default class ZoomBoxPointer extends ZoomBox {
             ((gradient1.height - gradient0.height) * (gradient0.left - left)) /
             (gradient0.left - gradient1.left)
         )
-        // return (
-        //     (limits.height * (limits.xZeroHeight - left)) /
-        //     (limits.xZeroHeight - limits.xFullHeight)
-        // );
     }
+
+    // Calculate left position, given height.
     solve_left(height, limits) {
         const index = limits.gradients.findIndex(
             gradient => height > gradient.height);
@@ -142,15 +122,10 @@ export default class ZoomBoxPointer extends ZoomBox {
             ) /
             (gradient0.height - gradient1.height)
         )
-
-        // return gradient0.left - (
-        //     (height * (gradient0.left - gradient1.left)) / limits.height
-        // );
-        // return limits.xZeroHeight - (
-        //     (height * (limits.xZeroHeight - limits.xFullHeight)) / limits.height
-        // );
     }
 
+    // Cut-down version of zoomBox.origin_holder() that doesn't descend
+    // recursively.
     _origin_index() {
         if (this.holds_origin() !== 0) {
             return -1;
@@ -174,6 +149,20 @@ export default class ZoomBoxPointer extends ZoomBox {
         return -1;
     }
 
+    // Arrange some or all child boxes. There are three procedures, selected by
+    // the `up` parameter:
+    //
+    // -   up:undefined  
+    //     Assume this box already has its top set and arrange child boxes to
+    //     occupy it.
+    // -   up:true  
+    //     Arrange all the child boxes above an initialiser specified by its
+    //     index. Assume that the initialiser has its top set.
+    // -   up:false  
+    //     Arrange all the child boxes below an initialiser specified by its
+    //     index. Assume that the initialiser has its bottom set.
+    //
+    // Returns the bottom or top value of the last child arranged.    
     arrange_children(limits, up, initialiser) {
         const totalWeight = this._childWeights.reduce(
             (accumulator, weight) => accumulator + weight, 0);
@@ -248,6 +237,17 @@ export default class ZoomBoxPointer extends ZoomBox {
         return up ? childBottom : childTop;
     }
 
+    // Zoom this box to a specified new height, as follows.
+    //
+    // If this box has a child box that is across the origin, recursively call
+    // its zoom_to_height, then shuffle all the other child boxes in this box,
+    // then set this box to hold all its child boxes.  
+    // Otherwise, move this box up or down, if it isn't across the origin, set
+    // its height, then arrange its child boxes.
+    //
+    // The array of child boxes is sparse, so the origin might be in between two
+    // child boxes, if the intervening child boxes are currently too small to
+    // render.
     zoom_to_height(newHeight, left, limits) {
         const index = this._origin_index();
         if (index === -1) {
@@ -290,169 +290,27 @@ export default class ZoomBoxPointer extends ZoomBox {
 
     // Override.
     zoom(into, after, limits) {
+        // Solve left position and height, based on the pointer X position.
         const deltaLeftRight = (
             this._pointer.pointerX * this._multiplierLeftRight) * -1;
-
-        // const originHolder = this.origin_holder();
-        // const holderMiddle = (
-        //     originHolder === null ? this.middle : originHolder.middle);
-
-
         const {
             left, height, target
         } = this.solve_x_delta(deltaLeftRight, limits);
         if (!Object.is(this, target)) {
             console.log('Solver target', target._message);
         }
-        const originHolder = target;
-        const holderMiddle = target.middle;
 
-        const deltaUpDown = (
-            this._pointer.pointerY * this.multiplierUpDown
-            // * (target.height / limits.height)
-        );
-
-        // const left = this.left + deltaLeftRight;
-        // const height = (
-        //     (limits.height * (limits.right - left)) /
-        //     (limits.right - limits.xFullHeight));
-        // const middle = this.middle + deltaUpDown;
-        // let top = middle - (height / 2);
-
-        // this.set_dimensions(left, undefined, undefined, height);
+        // Set the width, simple.
         this.set_dimensions(undefined, limits.width - left);
-        //, this.middle + deltaUpDown, height);
+
+        // Zoom to the solved height and left position.
         this.zoom_to_height(height, left, limits)
 
-
-        // this.arrange_children(limits);
-
-        // It's possible the holder has been despawned. That's OK. The
-        // originHolder keeps a reference to it so it won't have been garbage
-        // collected.
-        // const originChange = (
-        //     originHolder === null ? this.middle : originHolder.middle
-        // ) -  holderMiddle;
-
-        // if (originHolder !== null && !Object.is(originHolder, this)) {
-        //     console.log("origin", originHolder._message, originChange);
-        // }
-
+        // Increment the middle, based on the pointer Y position, and cascade to
+        // all child boxes.
+        const deltaUpDown = this._pointer.pointerY * this.multiplierUpDown;
         this.adjust_dimensions(undefined,  deltaUpDown, true);
 
-
-        // let topTrim = limits.top - top;
-        // if (topTrim < 0) {
-        //     topTrim = 0;
-        // }
-        // else {
-        //     top = limits.top;
-        // }
-        
-        // const heightZoom = 1 + Math.abs(
-        //     this._pointer.pointerX * this._multiplierHeight);
-        // const heightMultiplier = (
-        //     this._pointer.pointerX > 0 ? heightZoom : 1 / heightZoom);
-
-        //     // if (heightMultiplier != 1) {
-        // //     console.log(heightMultiplier);
-        // // }
-        // const originHolder = this.origin_holder();
-        // const holderMiddle = (
-        //     originHolder === null ? undefined : originHolder.middle);
-        // this.height *= heightMultiplier;
-        // this.arrange_children();
-        // // console.log(
-        // //     holderMiddle,
-        // //     originHolder === null ? undefined :
-        // //     holderMiddle - originHolder.middle,
-        // //     originHolder === null ? null : originHolder._text
-        // // );
-        // const originAdjustment = (
-        //     holderMiddle === undefined ? 0 :
-        //     holderMiddle - originHolder.middle);
-        
-        // this.adjust_dimensions(
-        //     deltaLeftRight, originAdjustment + deltaUpDown, true);
-
-        super.zoom(into, after, limits);
-        return;
-
-
-
-
-
-        const renderOrigin = deltaUpDown - this.middle + (
-            (this.renderTop + this.renderBottom) / 2);
-        // const holderMiddle = (
-        //     (originHolder === null || Object.is(originHolder, this)) ?
-        //     undefined : originHolder.middle);
-        // const originIndex = this.children.findIndex(
-        //     zoomBox => zoomBox.middle - renderOrigin > 0
-        // );
-        // const originOffset = (
-        //     originIndex < 0 ? undefined :
-        //     this.children[originIndex].middle - renderOrigin);
-        const offsetBefore = (
-            (originHolder === null || Object.is(originHolder, this)) ?
-            undefined : originHolder.middle - originHolder.renderOrigin);
-
-
-        // const diagnostic = this.children.filter(zoomBox => (
-        //     zoomBox._text === "h" ||
-        //     zoomBox._text === "i" ||
-        //     zoomBox._text === "j"
-        // ))
-        // .reduce((accumulator, zoomBox) => accumulator.concat(
-        //     zoomBox._text, loggable(zoomBox.middle - renderOrigin)
-        // ), [
-        //     originIndex, originOffset,
-        //     renderOrigin, this.renderBottom, this.renderTop].map(
-        //     value => loggable(value))
-        // );
-    
-
-        if (offsetBefore === undefined) {
-            this.set_dimensions(
-                this.left - deltaLeftRight, this.width + deltaLeftRight,
-                this.middle + deltaUpDown, heightMultiplier * this.height
-            );
-        }
-        else {
-            this.set_dimensions(
-                this.left - deltaLeftRight, this.width + deltaLeftRight,
-                this.middle + deltaUpDown, heightMultiplier * this.height,
-                false
-            );
-            const revertOffset = offsetBefore + (
-                originHolder.renderOrigin - originHolder.middle);
-            console.log(
-                'originHolder', originHolder._message,
-                loggable(offsetBefore), loggable(originHolder.middle),
-                loggable(originHolder.renderOrigin), loggable(revertOffset));
-            
-            // Implicit render, including children.
-            this.middle += revertOffset + deltaUpDown;
-        }
-
-        // if (originOffset !== undefined) {
-        //     // if (originIndex !== undefined) {
-        //         // const revertOffset = originOffset - (
-        //         //     this.children[originIndex].middle - renderOrigin);
-        //     const revertOffset = originOffset - (
-        //         originHolder.middle - renderOrigin);
-        //     //     diagnostic.unshift(
-        // //         loggable(this.children[originIndex].middle - renderOrigin),
-        // //         loggable(revertOffset),
-        // //         this.children[originIndex]._text);
-        // //     console.log(diagnostic);
-
-        // //     // Next thing works but only if the tree is one-layer. Really, the
-        // //     // code should recursively descend to find the smallest child that
-        // //     // held the origin, and adjust for its move. It might have
-        // //     // derendered, which wouldn't be a problem actually.
-
-        //     this.middle += revertOffset;
-        // }
+        return super.zoom(into, after, limits);
     }
 }

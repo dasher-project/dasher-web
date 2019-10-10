@@ -1,5 +1,11 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+// This is a utility class that wraps creation of HTML and SVG nodes. The class
+// takes care of setting the required namespace (NS), by having a static map of
+// which tags are in which namespace. The maps is created as a static property,
+// at the end of the file.
+// If you're having trouble, check that the tag you're using is in the map.
+
 export default class Piece {
     constructor(tagOrNode, parent, attributes, text) {
         this._node = (

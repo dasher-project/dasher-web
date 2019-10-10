@@ -1,5 +1,7 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
+// Zoom Box base class.
+
 import Piece from "./piece.js";
 
 export default class ZoomBox {
@@ -12,23 +14,20 @@ export default class ZoomBox {
         this._middle = undefined;
         this._height = undefined;
 
-        // this._excessWidth = 0;
         this._scale = 1;
         this._spawnMargin = undefined;
         this._spawnHeight = undefined;
 
-        // this._renderPiece = null;
         this._derender();
 
-        // this._renderTop = undefined;
-        // this._renderBottom = undefined;
         this._renderHeightThreshold = undefined;
 
         this._xChange = undefined;
         this._yChange = undefined;
-        // this._weight = 1;
 
+        // childBoxes is a sparse array.
         this._childBoxes = undefined;
+        // childWeights mustn't be sparse.
         this._childWeights = undefined;
     }
     _derender() {
@@ -46,56 +45,27 @@ export default class ZoomBox {
         return this._childBoxes;
     }
 
+    // Invoke the callback on each child box that isn't null.
     each_childBox(callback) {
         this.childBoxes !== undefined && this.childBoxes.forEach(
             (child, index) => child !== null && callback(child, index));
     }
 
-    // get_child_weight(index) {
-    //     return 1;
-    // }
-
-    // get renderTop() {
-    //     return this._renderTop;
-    // }
-    // set renderTop(renderTop) {
-    //     this._renderTop = renderTop;
-    //     this.render();
-    // }
-
-    // get renderBottom() {
-    //     return this._renderBottom;
-    // }
-    // set renderBottom(renderBottom) {
-    //     this._renderBottom = renderBottom;
-    //     this.render();
-    // }
-
-    // get renderOrigin() {
-    //     return (this.renderTop + this.renderBottom) / 2;
-    // }
-
+    // Height at which this box is considered big enough to render. If the box
+    // gets zoomed below this height, it is de-rendered.
     get renderHeightThreshold() {
         return this._renderHeightThreshold;
     }
     set renderHeightThreshold(renderHeightThreshold) {
         this._renderHeightThreshold = renderHeightThreshold;
-        // this.render();
         this.each_childBox(child => 
             child.renderHeightThreshold = renderHeightThreshold
         );
     }
 
-    // get renderPiece() {
-    //     return this._renderPiece;
-    // }
-    // set renderPiece(renderPiece) {
-    //     if (!Object.is(renderPiece, this._renderPiece)) {
-    //         this._renderPiece = renderPiece;
-    //         this.render();
-    //     }
-    // }
-
+    // Principal properties that define the location and size of the box. The
+    // update() method is always a no-op in the current version but could be
+    // changed later.
     get left() {
         return this._left;
     }
@@ -111,15 +81,6 @@ export default class ZoomBox {
         this._width = width;
         this.update();
     }
-
-    // get excessWidth() {
-    //     return this._excessWidth;
-    // }
-    // set excessWidth(excessWidth) {
-    //     this._excessWidth = excessWidth;
-    //     this._children.forEach(child => child.excessWidth = excessWidth);
-    //     this.render();
-    // }
 
     get middle() {
         return this._middle;
@@ -137,6 +98,7 @@ export default class ZoomBox {
         this.update();
     }
 
+    // Computed properties for convenience.
     get top() {
         if (this.middle === undefined || this.height === undefined) {
             return undefined;
@@ -155,6 +117,7 @@ export default class ZoomBox {
         return this._svgGroup;
     }
 
+    // Special setters that avoid individual updates.
     set_dimensions(left, width, middle, height, actual=true) {
         if (left !== undefined) {
             this._left = left;
@@ -188,70 +151,23 @@ export default class ZoomBox {
     update() {
     }
 
-    // _set_for_render(width, top, height, renderTop, renderBottom, actual=true) {
-    //     this._width = width;
-    //     this._middle = top + (height / 2);
-    //     this._height = height;
-    //     // this._renderTop = renderTop;
-    //     // this._renderBottom = renderBottom;
-    //     // this.render(actual);
-    // }
-
     inherit(parent) {
         [
             "spawnMargin", "spawnHeight", "renderHeightThreshold"
-            //, "excessWidth"
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
-    // get weight() {
-    //     return this._weight;
-    // }
-    // set weight(weight) {
-    //     this._weight = weight;
-    // }
 
     // Override and call super in subclass
-    // Override and return to skip the render() and spawn();
+    // Override and return to skip the render().
     zoom(into, after, limits) {
-        // if (
-        //     this._should_render(into, limits) && (
-        //         this.spawnHeight === undefined ||
-        //         this.height >= this.spawnHeight
-        //     ) && (
-        //         this.spawnMargin === undefined ||
-        //         this.width >= this.spawnMargin
-        //     )
-        // ) {
-        //     this.spawn();
-        // }
-        this.render(into, after, limits);
+        return this.render(into, after, limits);
     }
 
-    spawn() {
-        // Override in subclass.
-        return false;
-    }
-
-    // render(actual=true) {
     // Don't override.
     render(into, after, limits) {
         if (this._should_render(into, limits)) {
             this._render_group(into, after, limits);
-
-            // if (
-            //     (
-            //         this.spawnHeight === undefined ||
-            //         this.height >= this.spawnHeight
-            //     ) && (
-            //         this.spawnMargin === undefined ||
-            //         this.width >= this.spawnMargin
-            //     )
-            // ) {
-            //     this.spawn();
-            // }
-
-            
             this.each_childBox(child =>
                 child.render(into, this._svgGroup.node, limits));
             return true;
@@ -263,35 +179,8 @@ export default class ZoomBox {
                 this._derender();
             }
             this.each_childBox(child => child.render(null));
-
-            // despawn!
-            // const childs = this.childBoxes.length;
-            // this.childBoxes.splice(0, this.childBoxes.length).forEach(
-            //     child => child.render(null));
-            // if (childs > 0) {
-            //     console.log('despawn', this._message);
-            // }
             return false;
         }
-
-        // if (actual) {
-
-        //     // Could optimise later, by tracking height and lastHeight.
-        //     if (
-        //         (
-        //             this.spawnMargin === undefined ||
-        //             this.width >= this.spawnMargin
-        //         ) && (
-        //             this.spawnHeight === undefined ||
-        //             this.height >= this.spawnHeight
-        //         )
-        //     ) {
-        //         this.spawn();
-        //     }
-        // }
-
-        // this.child_arrange(actual);
-
     }
 
     _should_render(into, limits) {
@@ -308,16 +197,12 @@ export default class ZoomBox {
             return false;
         }
 
-        // if (this.renderTop !== undefined) {
-            if (this.bottom < limits.top) {
-                return false;
-            }
-        // }
-        // if (this.renderBottom !== undefined) {
-            if (this.top > limits.bottom) {
-                return false;
-            }
-        // }
+        if (this.bottom < limits.top) {
+            return false;
+        }
+        if (this.top > limits.bottom) {
+            return false;
+        }
         if (this.renderHeightThreshold !== undefined) {
             if (this.height < this.renderHeightThreshold) {
                 return false;
@@ -358,21 +243,14 @@ export default class ZoomBox {
         const renderMiddle = (
             this.top < limitTop ? limitTop + this.spawnMargin : this.middle);
 
-        // const renderLeft = this.left;
-        // const renderMiddle = this.middle;
-
         this._svgGroup.node.style.transform = 
             `translate(${renderLeft}px, ${renderMiddle}px)` +
             ` scale(${this._scale}`;
-        // console.log(this._svgGroup.node.style.transform);
 
         // ToDo: Try changing the above to a transform list, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
 
         const parent = this._svgGroup.node.parentElement;
-        // if (!parent && (this.renderPiece !== null)) {
-        //     this.renderPiece.add_child(this._svgGroup);
-        // }
         if (!Object.is(parent, into)) {
             if (after === null) {
                 into.append(this._svgGroup.node);
@@ -403,8 +281,6 @@ export default class ZoomBox {
             this._svgRect = new Piece('rect', this._svgGroup, {
                 "x": 0, "fill": this._colour
             });
-            // this._svgGroup.node.insertAdjacentElement(
-            //     'beforebegin', this._svgRect.node);
 
             this._svgRect.node.addEventListener(
                 'click', event => console.log('rect', 'click', this, event)
@@ -435,11 +311,9 @@ export default class ZoomBox {
         // });
 
         this._svgRect.set_attributes({
-            // width: this._width > 0 ? this._width + this.excessWidth : 0,
-            // x: this.left < limitLeft ? limitLeft : this.left,
             width: this.width > 0 ? width : 0,
-            // y: this.top < limitTop ? limitTop : this.top,
-            y: drawY, height: drawHeight > 0 ? drawHeight : 0
+            y: drawY,
+            height: drawHeight > 0 ? drawHeight : 0
         });
     }
 
@@ -515,73 +389,14 @@ export default class ZoomBox {
         */
     }
 
-    // arrange_children(left, width) {
-    //     const totalWeight = (
-    //         this._childWeights === undefined ?
-    //         this.childBoxes.length :
-    //         this._childWeights.reduce(
-    //             (accumulator, weight) => accumulator + weight, 0)
-    //     );
-    //     const unitHeight = this.height / totalWeight;
-
-    //     let top = this.top;
-    //     this.each_childBox((zoomBox, index) => {
-    //         const height = this._childWeights[index] * unitHeight;
-
-
-
-    //         // Near here, spawn child[index] is it's null but big enough to
-    //         // render. Also, despawn if non-null and too small.
-
-
-
-    //         zoomBox.set_dimensions(left, width, top + (height / 2), height);
-    //         zoomBox.arrange_children();
-    //         top += height;
-    //     });
-    // }
-
-    // child_arrange(actual) {
-    //     let totalWeight = 0;
-    //     let index = this.children.length;
-    //     if (index <= 0) {
-    //         return;
-    //     }
-    //     while(index > 0 && !isNaN(totalWeight)) {
-    //         totalWeight += this.get_child_weight(--index);
-    //     }
-
-    //     if (isNaN(totalWeight)) {
-    //         this._children.forEach(child => {
-    //             child.width = this.width - child.left;
-    //         });
-    //     }
-    //     else {
-    //         const unitHeight = this.height / totalWeight;
-
-    //         let top = this.height / -2;
-    //         const renderTop = (
-    //             this.renderTop === undefined ? undefined :
-    //             this.renderTop - this.middle
-    //         );
-    //         const renderBottom = (
-    //             this.renderBottom === undefined ? undefined :
-    //             this.renderBottom - this.middle
-    //         );
-    //         this.children.forEach((zoomBox, index) => {
-    //             const height = this.get_child_weight(index) * unitHeight;
-    //             zoomBox._set_for_render(
-    //                 this.width - zoomBox.left, top, height,
-    //                 renderTop, renderBottom, actual);
-    //             top += height;
-    //         });
-    //     }
-    // }
-
+    // Returns a value indicating the vertical position of this box in relation
+    // to the origin.
+    //
+    // -   null if any properties involved in the determination aren't defined.
+    // -   0 if this box is across the origin.
+    // -   1 if this box is below the origin.
+    // -   -1 if this box is above the origin.
     holds_origin() {
-        // if (!this._should_render()) {
-        //     return null;
-        // }
         if (this.dimension_undefined()) {
             return null;
         }
@@ -593,24 +408,25 @@ export default class ZoomBox {
 
         // If the top of box is below the origin, then the whole box is below
         // the origin.
-        if (this.top > 0) { //this.renderOrigin) {
+        if (this.top > 0) {
             return 1;
         }
         // If the bottom of the box is above the origin, then the whole box is
         // above the origin.
         // Exactly one of the checks has to be or-equals.
-        if (this.bottom <= 0) { //this.renderOrigin) {
+        if (this.bottom <= 0) {
             return -1;
         }
         return 0;
     }
 
+    // If this box or a child of this box holds the origin, returns a reference
+    // to the holder. Otherwise returns null.
     origin_holder() {
         if (this.holds_origin() !== 0) {
             return null;
         }
         let childHolder = null;
-        // let offset = 0;
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
             const zoomBox = this.childBoxes[index];
             if (zoomBox === null) {
@@ -618,8 +434,6 @@ export default class ZoomBox {
             }
             const holds = zoomBox.holds_origin();
             if (holds === 0) {
-                // [childHolder, offset] = (
-                //     this.children[holderIndex].origin_holder());
                 childHolder = zoomBox.origin_holder();
                 break;
             }
@@ -630,11 +444,6 @@ export default class ZoomBox {
             }
         }
         return childHolder === null ? this : childHolder;
-            // [this, 0] :
-            // [childHolder, this.middle + offset]);
-        // }
-        // return [null, undefined];
-        // return null;
     }
 
     get spawnMargin() {
@@ -653,6 +462,7 @@ export default class ZoomBox {
         this.each_childBox(child => child.spawnHeight = spawnHeight);
     }
 
+    // Properties used by ZoomBoxRandom.
     get xChange() {
         return this._xChange;
     }
