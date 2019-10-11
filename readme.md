@@ -13,3 +13,5 @@ Backlog
 -   Show message in the UI somewhere copy-pastable.
 -   Capital letters, punctuation, spaces, paragraph markers.
 -   Group boxes.
+-   Refactor zoom method to be just an override of render.
+-   Change box colours to be set by the CSS maybe.
