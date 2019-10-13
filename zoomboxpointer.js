@@ -1,6 +1,6 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
-// ZoomBox subclass in which zooming is controlled by the pointer.
+// ZoomBox subclass in which zooming can be controlled by a pointer.
 
 import ZoomBox from "./zoombox.js";
 
@@ -9,12 +9,14 @@ function loggable(num) {
 }
 
 export default class ZoomBoxPointer extends ZoomBox {
-    constructor(childTexts, prefix, pointer, colour, text) {
+    constructor(childTexts, prefix, colour, text) {
         super(colour, text);
         this._childTexts = childTexts;
         this._message = prefix + (text === undefined ? "" : text);
-        this._pointer = pointer;
         console.log('spawn', this._message);
+
+        this._trimmedIndex = undefined;
+        this._trimmedParent = null;
 
         // Tunable parameters.  
         // ToDo: Make them be set from the user interface instead.
@@ -23,7 +25,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._multiplierHeight = 0.0015;
 
         const vowels = ["a", "e", "i", "o", "u"];
-        this._childWeights = childTexts.map(text => 
+        this.childWeights = childTexts.map(text => 
             vowels.includes(text) ? 2 : 1);
         //  Array(childTexts.length).fill(1);
         this._childBoxes = Array(childTexts.length).fill(null);
@@ -35,6 +37,21 @@ export default class ZoomBoxPointer extends ZoomBox {
     set multiplierUpDown(multiplierUpDown) {
         this._multiplierUpDown = multiplierUpDown;
     }
+
+    get trimmedIndex() {
+        return this._trimmedIndex;
+    }
+    set trimmedIndex(trimmedIndex) {
+        this._trimmedIndex = trimmedIndex;
+    }
+
+    get trimmedParent() {
+        return this._trimmedParent;
+    }
+    set trimmedParent(trimmedParent) {
+        this._trimmedParent = trimmedParent;
+    }
+
 
     // Solve application of the right-left dimension of the pointer.
     solve_x_delta(delta, limits) {
@@ -73,11 +90,9 @@ export default class ZoomBoxPointer extends ZoomBox {
         }
         else {
             // Solve this box's height from the unitHeight.
-            const totalWeight = this._childWeights.reduce(
-                (accumulator, weight) => accumulator + weight, 0);
             const unitHeight = (
-                holderHeight / this._childWeights[candidateHolder]);
-            const height = unitHeight * totalWeight;
+                holderHeight / this.childWeights[candidateHolder]);
+            const height = unitHeight * this.totalWeight;
             return {
                 "left": this.solve_left(height, limits), "height": height,
                 "target": target
@@ -162,11 +177,9 @@ export default class ZoomBoxPointer extends ZoomBox {
     //     Arrange all the child boxes below an initialiser specified by its
     //     index. Assume that the initialiser has its bottom set.
     //
-    // Returns the bottom or top value of the last child arranged.    
+    // Returns the bottom or top value of the last child arranged.
     arrange_children(limits, up, initialiser) {
-        const totalWeight = this._childWeights.reduce(
-            (accumulator, weight) => accumulator + weight, 0);
-        const unitHeight = this.height / totalWeight;
+        const unitHeight = this.height / this.totalWeight;
 
         let childTop;
         let childBottom;
@@ -189,7 +202,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             index >= 0 && index < childLength;
             index += direction
         ) {
-            const childHeight = this._childWeights[index] * unitHeight;
+            const childHeight = this.childWeights[index] * unitHeight;
             if (up) {
                 childTop = childBottom - childHeight;
             }
@@ -205,7 +218,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             if (shouldSpawn) {
                 if (this.childBoxes[index] === null) {
                     this.childBoxes[index] = new ZoomBoxPointer(
-                        this._childTexts, this._message, this._pointer,
+                        this._childTexts, this._message,
                         index % 2 === 0 ? "lightblue" : "lightgreen",
                         this._childTexts[index]);
                     this.childBoxes[index].inherit(this);
@@ -267,11 +280,9 @@ export default class ZoomBoxPointer extends ZoomBox {
             this.arrange_children(limits)
         }
         else {
-            const totalWeight = this._childWeights.reduce(
-                (accumulator, weight) => accumulator + weight, 0);
-            const unitHeight = newHeight / totalWeight;
+            const unitHeight = newHeight / this.totalWeight;
             const holder = this.childBoxes[index];
-            const childHeight = unitHeight * this._childWeights[index];
+            const childHeight = unitHeight * this.childWeights[index];
             holder.zoom_to_height(
                 childHeight, this.solve_left(childHeight, limits), limits);
 
@@ -289,28 +300,162 @@ export default class ZoomBoxPointer extends ZoomBox {
     }
 
     // Override.
-    zoom(into, after, limits) {
-        // Solve left position and height, based on the pointer X position.
-        const deltaLeftRight = (
-            this._pointer.pointerX * this._multiplierLeftRight) * -1;
-        const {
-            left, height, target
-        } = this.solve_x_delta(deltaLeftRight, limits);
-        if (!Object.is(this, target)) {
-            console.log('Solver target', target._message);
+    render(into, after, limits, level) {
+        // Convenience variable for the pointer control.
+        const pointer = this.controller;
+        let rootIndex = -1;
+        let insertParent = false;
+        
+        // If there's a pointer and the pointer isn't at the rest position, do
+        // the zooming. Only the current root will have a pointer; child boxes
+        // don't get the pointer.
+        if (
+            pointer !== null && into !== null &&
+            (pointer.pointerX !== 0 || pointer.pointerY !== 0)
+        ) {
+            // Solve left position and height, based on the pointer X position.
+            const deltaLeftRight = (
+                pointer.pointerX * this._multiplierLeftRight) * -1;
+            const {
+                left, height, target
+            } = this.solve_x_delta(deltaLeftRight, limits);
+            if (!Object.is(this, target)) {
+                console.log('Solver target', target._message);
+            }
+
+            // Set the width, simple.
+            this.set_dimensions(undefined, limits.width - left);
+
+            // Zoom to the solved height and left position.
+            this.zoom_to_height(height, left, limits)
+
+            // Increment the middle, based on the pointer Y position, and
+            // cascade to all child boxes.
+            const deltaUpDown = pointer.pointerY * this.multiplierUpDown;
+            this.adjust_dimensions(undefined, deltaUpDown, true);
+
+            rootIndex = this._trimmed_root_index(limits);
+            insertParent = (level === 0 && this._should_insert_parent(limits));
         }
 
-        // Set the width, simple.
-        this.set_dimensions(undefined, limits.width - left);
+        const baseReturn = super.render(into, after, limits, level);
 
-        // Zoom to the solved height and left position.
-        this.zoom_to_height(height, left, limits)
+        if (insertParent) {
+            return this._insert_parent(limits);
+        }
 
-        // Increment the middle, based on the pointer Y position, and cascade to
-        // all child boxes.
-        const deltaUpDown = this._pointer.pointerY * this.multiplierUpDown;
-        this.adjust_dimensions(undefined,  deltaUpDown, true);
+        if (rootIndex === -1) {
+            return baseReturn;
+        }
 
-        return super.zoom(into, after, limits);
+        // If the code reaches this point then there is a new root box. This box
+        // is about to be derendered. The new root is a child of this box and
+        // would also get derendered, so detach it here.
+        const trimmedRoot = this.childBoxes[rootIndex];
+        this.childBoxes[rootIndex] = null;
+        //
+        // Later, the user might backspace and this box would need to be
+        // inserted back, as a parent of the new root. Set a reference and some
+        // values into the new root to make that possible.
+        trimmedRoot.trimmedParent = this;
+        trimmedRoot.trimmedIndex = rootIndex;
+        //
+        // Hand over the controller.
+        trimmedRoot.controller = this.controller;
+        this.controller = null;
+        //
+        // Finally, derender this box and return the new root box.
+        this.render(null);
+
+        return trimmedRoot;
     }
+
+    _trimmed_root_index(limits) {
+        if (this.left > limits.left) {
+            // This box is still inside the window; don't trim.
+            return -1;
+        }
+
+        // If there is exactly one non-null child box, it could be the trimmed
+        // root. A child box will be null if it wasn't ever rendered, or if it
+        // went off limits and was derendered.
+        let candidate;
+        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
+            if (this.childBoxes[index] === null) {
+                continue;
+            }
+
+            if (candidate === undefined) {
+                candidate = index;
+            }
+            else {
+                // Second non-null child box; don't trim.
+                return -1;
+            }
+        }
+        
+        if (candidate === undefined) {
+            // Zero non-null child boxes; can't trim.
+            return -1;
+        }
+
+        if (this.childBoxes[candidate].left > limits.left) {
+            // The candidate box isn't at the edge of the window; don't trim.
+            return -1;
+        }
+
+        // console.log(
+        //     `should trim "${this._message}" "${candidate._message}"`);
+        // this.each_childBox(child => child._trimmed_root(limits));
+
+        return candidate;
+    }
+
+    _should_insert_parent(limits) {
+        // Parent should be inserted if there is one, and if there is any space
+        // around this box.
+        return this.trimmedParent !== null && (
+            this.left > limits.left ||
+            this.bottom < limits.bottom ||
+            this.top > limits.top
+        );
+    }
+
+    _insert_parent(limits) {
+        const parent = this.trimmedParent;
+        const index = this.trimmedIndex;
+
+        // Put this box in as a child box of the parent.
+        parent.childBoxes[index] = this;
+
+        // Next segment of code arranges the parent in such a way that this box
+        // doesn't move.
+        //
+        // Calculate the parent height from the height of this box, via the
+        // parent unitHeight. Then solve the left position of the parent from
+        // its height. Set width as usual.
+        const unitHeight = this.height / parent.childWeights[index];
+        const height = unitHeight * parent.totalWeight;
+        const left = parent.solve_left(height, limits);
+        const width = limits.width - left;
+        parent.set_dimensions(left, width, undefined, height);
+        //
+        // Now calculate the top of the parent by adding the tops of all the
+        // child boxes above this one. They will all be null but won't have zero
+        // weight. Fortunately, the same calculation is required by another
+        // method, so call it here.
+        const top = parent.arrange_children(limits, true, index);
+        parent.middle = top + (height / 2);
+        //
+        // Hand back the controller.
+        parent.controller = this.controller;
+        this.controller = null;
+        //
+        // Reset the parent insertion parameters.
+        this.trimmedParent = null;
+        this.trimmedIndex = undefined;
+
+        return parent;
+    }
+
 }

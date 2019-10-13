@@ -15,7 +15,7 @@ import ZoomBoxPointer from './zoomboxpointer.js';
 class Index {
     constructor(parent) {
         this._parent = parent;
-        this._intervalZoom = undefined;
+        this._intervalRender = undefined;
 
         this._zoomBoxRandom = null;
         this._zoomBoxPointer = null;
@@ -39,6 +39,7 @@ class Index {
 
         this._pointerX = 0;
         this._pointerY = 0;
+        this._randomStopped = false;
 
         this._svgRect = undefined;
         this._renderLimits = undefined;
@@ -48,29 +49,35 @@ class Index {
     get zoomBox() {
         return this._zoomBox;
     }
-    set zoomBox(zoomBox) {
+
+    set zoomBox(newBox) {
+        const oldBox = this._zoomBox;
+
         // Setting to the same value, do nothing.
-        if (Object.is(this._zoomBox, zoomBox)) {
+        if (Object.is(oldBox, newBox)) {
             return;
         }
 
-        // intervalZoom is undefined just while the initial build of the page is
-        // in progress.
-        if (this._intervalZoom !== undefined) {
-            if (this._intervalZoom !== null) {
-                clearInterval(this._intervalZoom);
-                this._intervalZoom = null;
-            }
+        if (newBox === null) {
+            this._stop_render();
         }
 
-        // De-render current zoomBox, if any.
-        if (this._zoomBox !== null) {
-            this._zoomBox.render(null);
+        // De-render current zoomBox, if appropriate.
+        if (oldBox !== null && newBox === null) {
+            oldBox.render(null);
         }
 
         // Set underlying property.
-        this._zoomBox = zoomBox;
+        this._zoomBox = newBox;
 
+        if (newBox === null) {
+            return;
+        }
+
+        newBox.controller = this;
+        if (oldBox === null) {
+            this._start_render();
+        }
     }
 
     get pointerX() {
@@ -79,6 +86,10 @@ class Index {
 
     get pointerY() {
         return this._pointerY;
+    }
+
+    get randomStopped() {
+        return this._randomStopped;
     }
 
     load(loadingID, footerID) {
@@ -174,19 +185,47 @@ class Index {
         return this;
     }
 
-    _start_zoom() {
-        const zoom1 = () => {
-            this.zoomBox.zoom(
-                this._zoomBoxGroup.node, null, this._renderLimits);
+    _start_render() {
+        const render_one = () => {
+            if (this.zoomBox === null) {
+                return false;
+            }
+            const rootBox = this.zoomBox.render(
+                this._zoomBoxGroup.node, null, this._renderLimits, 0);
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
+
+            if (rootBox !== null) {
+                // Invoke setter.
+                this.zoomBox = rootBox;
+            }
+
+            return true;
         };
-        zoom1();
-        this._intervalZoom = setInterval(zoom1, this._transitionMillis);
+
+        if (render_one()) {
+            this._intervalRender = setInterval(
+                render_one, this._transitionMillis);
+        }
+        else {
+            this._stop_render();
+        }
+    }
+    _stop_render() {
+        // intervalZoom is undefined just while the initial build of the page is
+        // in progress.
+        if (this._intervalRender === undefined) {
+            return;
+        }
+
+        if (this._intervalRender !== null) {
+            clearInterval(this._intervalRender);
+            this._intervalRender = null;
+        }
     }
 
     toggle_random() {
-        if (this._intervalZoom === undefined) {
+        if (this._intervalRender === undefined) {
             return;
         }
         if (this._zoomBoxRandom === null) {
@@ -194,50 +233,64 @@ class Index {
                 "abcdefghijklmnopqrstuvwxyz".split(""));
             this._set_zoomBox_size(this._zoomBoxRandom);
         }
+        const changeType = !this._already(this._zoomBoxRandom);
 
-        // Invoke setter and clear interval if different.
-        this.zoomBox = this._zoomBoxRandom;
         this._buttonPointer.textContent = "Pointer";
 
-        if (this._intervalZoom === null) {
-            this._start_zoom();
-            this._buttonRandom.textContent = "Stop";
+        if (changeType) {
+            this._randomStopped = false;
+            // Invoke setter.
+            this.zoomBox = null;
         }
         else {
-            clearInterval(this._intervalZoom);
-            this._intervalZoom = null;
-            this._buttonRandom.textContent = "Go Random";
+            this._randomStopped = !this._randomStopped;
         }
+
+        this.zoomBox = this._zoomBoxRandom;
+        this._buttonRandom.textContent = (
+            this._randomStopped ? "Go Random" : "Stop");
     }
 
     toggle_pointer() {
-        if (this._intervalZoom === undefined) {
+        if (this._intervalRender === undefined) {
             return;
         }
 
         if (this._zoomBoxPointer === null) {
-            this._zoomBoxPointer = new ZoomBoxPointer(
-                "abcdefghijklmnopqrstuvwxyz".split(""), "", this, 'silver');
-            this._zoomBoxPointer.spawnMargin = this._spawnMargin;
-            this._zoomBoxPointer.spawnHeight = this._spawnHeight;
-            this._zoomBoxPointer.renderHeightThreshold = (
-                this._renderHeightThreshold);
-            this._set_zoomBox_size(this._zoomBoxPointer);
+            this._new_ZoomBoxPointer();
         }
-        const alreadyPointer = Object.is(this.zoomBox, this._zoomBoxPointer);
+        const changeType = !this._already(this._zoomBoxPointer);
 
-        // Invoke setter and clear interval if different.
-        this.zoomBox = this._zoomBoxPointer;
         this._buttonRandom.textContent = "Go Random";
 
-        if (alreadyPointer) {
-            this._set_zoomBox_size(this.zoomBox);
-            this.zoomBox.arrange_children(this._renderLimits);
-        }
-        else {
-            this._start_zoom();
+        if (changeType) {
             this._buttonPointer.textContent = "Reset";
         }
+        else {
+            // Reset action.
+            this._new_ZoomBoxPointer();
+        }
+        // Invoke setter twice.
+        this.zoomBox = null;
+        this.zoomBox = this._zoomBoxPointer;
+    }
+    _new_ZoomBoxPointer() {
+        const zoomBox = new ZoomBoxPointer(
+            "abcdefghijklmnopqrstuvwxyz".split(""), "", 'silver');
+        zoomBox.controller = this;
+        zoomBox.spawnMargin = this._spawnMargin;
+        zoomBox.spawnHeight = this._spawnHeight;
+        zoomBox.renderHeightThreshold = this._renderHeightThreshold;
+
+        this._set_zoomBox_size(zoomBox);
+
+        zoomBox.arrange_children(this._renderLimits);
+
+        this._zoomBoxPointer = zoomBox;
+    }
+
+    _already(zoomBox) {
+        return Object.is(this.zoomBox, zoomBox);
     }
 
     static bbox_text(boundingBox, label) {
@@ -431,7 +484,7 @@ class Index {
         setTimeout( () => this._on_resize(), 0);
 
         // Activate intervals and controls.
-        this._intervalZoom = null;
+        this._intervalRender = null;
         [
             this._buttonRandom, this._buttonPointer, this._controlShowDiagnostic
         ].forEach(control => control.removeAttribute('disabled'));

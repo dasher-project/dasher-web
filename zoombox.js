@@ -9,6 +9,8 @@ export default class ZoomBox {
         this._colour = (colour === undefined ? null : colour);
         this._text = (text === undefined ? null : text);
 
+        this._controller = null;
+
         this._left = undefined;
         this._width = undefined;
         this._middle = undefined;
@@ -22,6 +24,7 @@ export default class ZoomBox {
 
         this._renderHeightThreshold = undefined;
 
+        // Only used by ZoomBoxRandom.
         this._xChange = undefined;
         this._yChange = undefined;
 
@@ -29,6 +32,7 @@ export default class ZoomBox {
         this._childBoxes = undefined;
         // childWeights mustn't be sparse.
         this._childWeights = undefined;
+        this._totalWeight = undefined;
     }
     _derender() {
         // Principal graphics.
@@ -43,6 +47,22 @@ export default class ZoomBox {
 
     get childBoxes() {
         return this._childBoxes;
+    }
+
+    get childWeights() {
+        return this._childWeights;
+    }
+    set childWeights(childWeights) {
+        this._childWeights = childWeights;
+        this._totalWeight = (
+            (childWeights === undefined || childWeights === null) ? undefined :
+            childWeights.reduce(
+                (accumulator, weight) => accumulator + weight, 0)
+        );
+    }
+
+    get totalWeight() {
+        return this._totalWeight;
     }
 
     // Invoke the callback on each child box that isn't null.
@@ -118,7 +138,7 @@ export default class ZoomBox {
     }
 
     // Special setters that avoid individual updates.
-    set_dimensions(left, width, middle, height, actual=true) {
+    set_dimensions(left, width, middle, height) {
         if (left !== undefined) {
             this._left = left;
         }
@@ -157,20 +177,19 @@ export default class ZoomBox {
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
-
-    // Override and call super in subclass
-    // Override and return to skip the render().
-    zoom(into, after, limits) {
-        return this.render(into, after, limits);
+    get controller() {
+        return this._controller;
+    }
+    set controller(controller) {
+        this._controller = controller;
     }
 
-    // Don't override.
-    render(into, after, limits) {
+    // Override and call super in subclass.
+    render(into, after, limits, level) {
         if (this._should_render(into, limits)) {
-            this._render_group(into, after, limits);
+            this._render_group(into, after, limits, level);
             this.each_childBox(child =>
-                child.render(into, this._svgGroup.node, limits));
-            return true;
+                child.render(into, this._svgGroup.node, limits, level + 1));
         }
         else {
             if (this._svgGroup !== null) {
@@ -179,8 +198,8 @@ export default class ZoomBox {
                 this._derender();
             }
             this.each_childBox(child => child.render(null));
-            return false;
         }
+        return null;
     }
 
     _should_render(into, limits) {
@@ -223,7 +242,7 @@ export default class ZoomBox {
         );
     }
 
-    _render_group(into, after, limits) {
+    _render_group(into, after, limits, level) {
         if (this._svgGroup === null) {
             // Use an SVG group <g> element because its translate can be
             // smoothed with a CSS transition, which a <text> element's x and y
@@ -234,26 +253,32 @@ export default class ZoomBox {
             this._svgGroup = new Piece('g');
         }
 
-        const messageLength = (
-            this._message === undefined ? 0 : this._message.length);
-        const limitLeft = limits.left + (messageLength * this.spawnMargin);
+        const margin = (this.spawnMargin === undefined ? 0 : this.spawnMargin);
+        // if (this._message !== undefined && this._message.length !== level) {
+        //     console.log('Level diff');
+        // }
+        const limitLeft = limits.left + (level * margin);
         const renderLeft = this.left < limitLeft ? limitLeft : this.left;
 
-        const limitTop = limits.top + (messageLength * 5);
+        const limitTop = limits.top + (margin === 0 ? 0 : level * 5);
         const renderMiddle = (
-            this.top < limitTop ? limitTop + this.spawnMargin : this.middle);
-
+            this.top < limitTop ? limitTop + margin : this.middle);
+        
         this._svgGroup.node.style.transform = 
             `translate(${renderLeft}px, ${renderMiddle}px)` +
             ` scale(${this._scale}`;
-
         // ToDo: Try changing the above to a transform list, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
+
+        // if (renderMiddle !== this.middle) {
+        //     console.log(
+        //         this._message, renderMiddle, limitTop, margin, limits.top);
+        // }
 
         const parent = this._svgGroup.node.parentElement;
         if (!Object.is(parent, into)) {
             if (after === null) {
-                into.append(this._svgGroup.node);
+                into.insertBefore(this._svgGroup.node, into.firstChild);
             }
             else {
                 after.insertAdjacentElement('afterend', this._svgGroup.node);
@@ -291,10 +316,8 @@ export default class ZoomBox {
             this.top < limitTop ? limitTop - this.top : 0);
         const trimBottom = (
             this.bottom > limitBottom ? this.bottom - limitBottom : 0);
-            this._svgRect.node.classList.toggle(
-                'trim-top', trimTop !== 0);
-            this._svgRect.node.classList.toggle(
-                'trim-bottom', trimBottom !== 0);
+        this._svgRect.node.classList.toggle('trim-top', trimTop !== 0);
+        this._svgRect.node.classList.toggle('trim-bottom', trimBottom !== 0);
 
         const drawY = (this.height / -2) + renderOffset + trimTop;
         const drawHeight = this.height - (trimTop + trimBottom);
