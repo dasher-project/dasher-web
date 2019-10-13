@@ -5,6 +5,7 @@ To run the proof of concept, go here:
 
 Backlog
 =======
+-   Fix the thing where the touch UIs are selecting the texts in the boxes.
 -   Maybe optimise origin_holder to have callbacks before and after descent.
 -   Change terminology of "origin holder" to maybe "delta target".
 -   Capital letters, numbers, punctuation, spaces, paragraph markers.
