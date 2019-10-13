@@ -123,7 +123,7 @@ export default class Piece {
 Piece.nameSpaces = {
     'html': {
         'url': 'http://www.w3.org/1999/xhtml',
-        'tags': ['div', 'span', 'button', 'h1', 'input', 'label']
+        'tags': ['div', 'span', 'button', 'h1', 'input', 'label', 'textarea']
     },
     'svg': {
         'url': 'http://www.w3.org/2000/svg',

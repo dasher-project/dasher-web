@@ -13,7 +13,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         super(colour, text);
         this._childTexts = childTexts;
         this._message = prefix + (text === undefined ? "" : text);
-        console.log('spawn', this._message);
+        console.log(`spawn "${this.message}".`);
 
         this._trimmedIndex = undefined;
         this._trimmedParent = null;
@@ -55,7 +55,7 @@ export default class ZoomBoxPointer extends ZoomBox {
 
     // Solve application of the right-left dimension of the pointer.
     solve_x_delta(delta, limits) {
-        let candidateHolder = this._origin_index();
+        let candidateHolder = this._y_origin_index();
         let holder;
         let originalHeight;
         let holderHeight;
@@ -71,11 +71,11 @@ export default class ZoomBoxPointer extends ZoomBox {
             holderHeight = solved.height;
             target = solved.target;
             if (holderHeight === originalHeight) {
-                console.log('Stationary holder', holder._message);
+                console.log('Stationary holder', holder.message);
                 candidateHolder = -1;
             }
             else if (solved.left > limits.right) {
-                console.log('Off holder', holder._message);
+                console.log('Off holder', holder.message);
                 candidateHolder = -1;
             }
         }
@@ -139,10 +139,11 @@ export default class ZoomBoxPointer extends ZoomBox {
         )
     }
 
-    // Cut-down version of zoomBox.origin_holder() that doesn't descend
-    // recursively.
-    _origin_index() {
-        if (this.holds_origin() !== 0) {
+    // Returns the index of the immediate child box that is across the Y origin,
+    // if there is one, or -1 otherwise. Doesn't descend recursively into child
+    // boxes.
+    _y_origin_index() {
+        if (this.across_y_origin() !== 0) {
             return -1;
         }
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
@@ -150,11 +151,11 @@ export default class ZoomBoxPointer extends ZoomBox {
             if (zoomBox === null) {
                 continue;
             }
-            const holds = zoomBox.holds_origin();
-            if (holds === 0) {
+            const across = zoomBox.across_y_origin();
+            if (across === 0) {
                 return index;
             }
-            if (holds === -1) {
+            if (across === -1) {
                 // Found a child above the origin. All remaining child boxes
                 // will be above this one, so stop checking.
                 return -1;
@@ -218,7 +219,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             if (shouldSpawn) {
                 if (this.childBoxes[index] === null) {
                     this.childBoxes[index] = new ZoomBoxPointer(
-                        this._childTexts, this._message,
+                        this._childTexts, this.message,
                         index % 2 === 0 ? "lightblue" : "lightgreen",
                         this._childTexts[index]);
                     this.childBoxes[index].inherit(this);
@@ -262,7 +263,7 @@ export default class ZoomBoxPointer extends ZoomBox {
     // child boxes, if the intervening child boxes are currently too small to
     // render.
     zoom_to_height(newHeight, left, limits) {
-        const index = this._origin_index();
+        const index = this._y_origin_index();
         if (index === -1) {
             const halfHeightChange = (newHeight - this.height) / 2;
             if (this.top > 0) {
@@ -320,7 +321,7 @@ export default class ZoomBoxPointer extends ZoomBox {
                 left, height, target
             } = this.solve_x_delta(deltaLeftRight, limits);
             if (!Object.is(this, target)) {
-                console.log('Solver target', target._message);
+                console.log('Solver target', target.message);
             }
 
             // Set the width, simple.
@@ -336,6 +337,10 @@ export default class ZoomBoxPointer extends ZoomBox {
 
             rootIndex = this._trimmed_root_index(limits);
             insertParent = (level === 0 && this._should_insert_parent(limits));
+
+            const originHolder = this.origin_holder();
+            this.controller.message = (
+                originHolder === null ? undefined : originHolder.message);
         }
 
         const baseReturn = super.render(into, after, limits, level);
@@ -403,10 +408,6 @@ export default class ZoomBoxPointer extends ZoomBox {
             // The candidate box isn't at the edge of the window; don't trim.
             return -1;
         }
-
-        // console.log(
-        //     `should trim "${this._message}" "${candidate._message}"`);
-        // this.each_childBox(child => child._trimmed_root(limits));
 
         return candidate;
     }

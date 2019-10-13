@@ -40,6 +40,8 @@ class Index {
         this._pointerX = 0;
         this._pointerY = 0;
         this._randomStopped = false;
+        this._message = undefined;
+        this._messageDisplay = null;
 
         this._svgRect = undefined;
         this._renderLimits = undefined;
@@ -92,27 +94,52 @@ class Index {
         return this._randomStopped;
     }
 
+    get message() {
+        return this._message;
+    }
+    set message(message) {
+        this._message = message;
+        if (this._messageDisplay === null) {
+            return;
+        }
+        this._messageDisplay.node.textContent = (
+            message === undefined ? null : message);
+    }
+
     load(loadingID, footerID) {
         // Create a diagnostic area in which to display a bunch of numbers.
         this._header = new Piece('div', this._parent);
         this._loading = new Piece(document.getElementById(loadingID));
         this._header.add_child(this._loading);
 
+        // Textarea in which the message is displayed.
+        this._messageDiv = new Piece(
+            'div', this._header, {'id':"message-holder"});
+        const identifierMessage = "message";
+        this._messageDiv.create('label', {'for':identifierMessage}, "Message:");
+        this._messageDisplay = new Piece('textarea', this._messageDiv, {
+            'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
+            'rows':6, 'cols':24,
+            'placeholder':"Message will appear here ..."
+        });
+
         this._sizesTextNode = this._header.create(
             'span', {id:"sizes-text-node"}, "loading sizes ..."
         ).firstChild;
 
         // Controls.
-        const identifier = "show-diagnostic";
+        const identifierShowDiagnostic = "show-diagnostic";
         this._controlShowDiagnostic = this._header.create(
             'input', {
                 'type':'checkbox',
-                'id':identifier,
-                'name':identifier,
+                'id':identifierShowDiagnostic,
+                'name':identifierShowDiagnostic,
                 'disabled': true
             }
         );
-        this._header.create('label', {'for':identifier}, "Show diagnostic");
+        this._header.create('label', {
+            'for':identifierShowDiagnostic
+        }, "Show diagnostic");
         this._controlShowDiagnostic.addEventListener('change', (event) => {
             if (this._renderLimits !== undefined) {
                 this._renderLimits.showDiagnostic = event.target.checked;
@@ -477,7 +504,7 @@ class Index {
         // loading has finished.
         this._loading.remove();
         const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
-        this._header.node.insertBefore(h1, this._header.node.firstChild);
+        this._messageDiv.node.insertAdjacentElement('afterend', h1);
 
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.

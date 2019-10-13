@@ -9,6 +9,8 @@ export default class ZoomBox {
         this._colour = (colour === undefined ? null : colour);
         this._text = (text === undefined ? null : text);
 
+        this._message = undefined;
+
         this._controller = null;
 
         this._left = undefined;
@@ -43,6 +45,10 @@ export default class ZoomBox {
         // Diagnostic graphics.
         this._svgSpawnMargin = null;
         this._svgWidth = null;      
+    }
+
+    get message() {
+        return this._message;
     }
 
     get childBoxes() {
@@ -133,8 +139,11 @@ export default class ZoomBox {
         return this.middle + (this.height / 2);
     }
 
-    get piece() {
-        return this._svgGroup;
+    get right() {
+        if (this.left === undefined || this.width === undefined) {
+            return undefined;
+        }
+        return this.left + this.width;
     }
 
     // Special setters that avoid individual updates.
@@ -194,7 +203,7 @@ export default class ZoomBox {
         else {
             if (this._svgGroup !== null) {
                 this._svgGroup.remove();
-                console.log('derender', this._message);
+                console.log('derender', this.message);
                 this._derender();
             }
             this.each_childBox(child => child.render(null));
@@ -254,9 +263,6 @@ export default class ZoomBox {
         }
 
         const margin = (this.spawnMargin === undefined ? 0 : this.spawnMargin);
-        // if (this._message !== undefined && this._message.length !== level) {
-        //     console.log('Level diff');
-        // }
         const limitLeft = limits.left + (level * margin);
         const renderLeft = this.left < limitLeft ? limitLeft : this.left;
 
@@ -272,7 +278,7 @@ export default class ZoomBox {
 
         // if (renderMiddle !== this.middle) {
         //     console.log(
-        //         this._message, renderMiddle, limitTop, margin, limits.top);
+        //         this.message, renderMiddle, limitTop, margin, limits.top);
         // }
 
         const parent = this._svgGroup.node.parentElement;
@@ -324,7 +330,7 @@ export default class ZoomBox {
 
         if (drawHeight < 0) {
             console.log(
-                'drawHeight', this._message, drawHeight, trimTop, trimBottom);
+                'drawHeight', this.message, drawHeight, trimTop, trimBottom);
         }
 
         // console.log({
@@ -419,7 +425,7 @@ export default class ZoomBox {
     // -   0 if this box is across the origin.
     // -   1 if this box is below the origin.
     // -   -1 if this box is above the origin.
-    holds_origin() {
+    across_y_origin() {
         if (this.dimension_undefined()) {
             return null;
         }
@@ -446,7 +452,7 @@ export default class ZoomBox {
     // If this box or a child of this box holds the origin, returns a reference
     // to the holder. Otherwise returns null.
     origin_holder() {
-        if (this.holds_origin() !== 0) {
+        if (this.across_y_origin() !== 0 || this.left > 0 || this.right <= 0) {
             return null;
         }
         let childHolder = null;
@@ -455,12 +461,12 @@ export default class ZoomBox {
             if (zoomBox === null) {
                 continue;
             }
-            const holds = zoomBox.holds_origin();
-            if (holds === 0) {
+            const across = zoomBox.across_y_origin();
+            if (across === 0 && zoomBox.left <= 0 && zoomBox.right > 0) {
                 childHolder = zoomBox.origin_holder();
                 break;
             }
-            if (holds === -1) {
+            if (across === -1) {
                 // Found a child above the origin. All remaining child boxes
                 // will be above this one, so stop checking.
                 break;
