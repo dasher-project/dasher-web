@@ -198,6 +198,19 @@ class Index {
             stroke:"red", "stroke-width":"1px"
         });
 
+        // Add a rect to catch all touch events. If the original target of a
+        // touch start is removed from the document, a touch end doesn't get
+        // sent. This means that the rect elements in the zoom UI can't be
+        // allowed to receive touch starts.  
+        // The catcher can't have fill:none because then it doesn't receive
+        // touch events at all. So, it has an opacity of zero.  
+        // The touch handlers are attached to the svg element, even so, the
+        // event will get handled down in the SVG elements.
+        this._svg.create('rect', {
+            x:"-50%", y:"-50%", width:"100%", height:"100%", id:"catcher",
+            'fill-opacity':0
+        })
+
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
         const footer = document.getElementById(footerID);
@@ -434,18 +447,37 @@ class Index {
     }
 
     _update_pointer(clientX, clientY) {
-        this._update_pointer_raw(
-            clientX - (this.svgRect.x + (this.svgRect.width * 0.5)),
-            (this.svgRect.y + (this.svgRect.height * 0.5)) - clientY
-        );
+        // Check that the pointer isn't out-of-bounds. The pointer will go out
+        // of bounds if the user touched the SVG and then moved out of the SVG.
+        // Touch events continue to be posted, with the same target, in that
+        // case.
+        if (
+            (clientY >= this.svgRect.y) &&
+            (clientY <= this.svgRect.y + this.svgRect.height) &&
+            (clientX >= this.svgRect.x) &&
+            (clientX <= this.svgRect.x + this.svgRect.width)
+        ) {
+            return this._update_pointer_raw(
+                clientX - (this.svgRect.x + (this.svgRect.width * 0.5)),
+                (this.svgRect.y + (this.svgRect.height * 0.5)) - clientY
+            );
+        }
+        else {
+            // Out of bounds, send co-ordinates that indicate stopping the
+            // touch.
+            return this._update_pointer_raw(0, 0);
+        }
     }
     _update_pointer_raw(adjustedX, adjustedY) {
+        // Update the zoom control properties.
         this._pointerX = parseFloat(adjustedX);
         this._pointerY = parseFloat(adjustedY);
 
+        // Update the line from the origin to the pointer.
         this._pointerLine.setAttribute('x2', this._pointerX);
         this._pointerLine.setAttribute('y2', -1 * this._pointerY);
 
+        // Update the diagnostic display.
         this._xTextNode.nodeValue = this._pointerX.toFixed();
         this._yTextNode.nodeValue = this._pointerY.toFixed();
     }
@@ -463,13 +495,19 @@ class Index {
         }
     }
 
-    _on_touch_move(touchEvent) {
+    _on_touch(touchEvent) {
         touchEvent.preventDefault();
-        if (event.changedTouches.length <= 0) {
+        if (event.changedTouches.length !== 1) {
+            console.log('touch changes', touchEvent);
             return;
         }
         // For now, only handle the first touch point.
         const touch = event.changedTouches[0];
+
+        // The target in the touch object will be the element in which the touch
+        // started, even if the touch has now moved outside it. This is handled
+        // downstream from here.
+
         return this._update_pointer(touch.clientX, touch.clientY);
     }
     _on_touch_leave(touchEvent) {
@@ -488,10 +526,25 @@ class Index {
         // 
         // So the code here uses mouse events instead.
         if (this._touch) {
+            // This code has the same handler for touchstart and touchmove. MDN
+            // says that best practice is to add the move and end handlers
+            // inside the start handler. However, some other Internet research
+            // suggests that this could be too late in the event life cycle to
+            // prevent the window from scrolling, which is the default action
+            // for a touch-move, or doesn't work on Android. A related point is
+            // that the scrolling action is prevented by use of the touch-action
+            // CSS feature, called when the SVG node is created.
             this._svg.node.addEventListener(
-                'touchmove', this._on_touch_move.bind(this), {capture:true});
+                'touchstart', this._on_touch.bind(this), {capture:true});
+            this._svg.node.addEventListener(
+                'touchmove', this._on_touch.bind(this), {capture:true});
+            //
+            // The same handler is used for touchend and touchcancel but this
+            // isn't contentious.
             this._svg.node.addEventListener(
                 'touchend', this._on_touch_leave.bind(this), {capture:true});
+            this._svg.node.addEventListener(
+                'touchcancel', this._on_touch_leave.bind(this), {capture:true});
         }
         else {
             this._svg.node.addEventListener(
