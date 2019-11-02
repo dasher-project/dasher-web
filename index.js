@@ -8,6 +8,7 @@
 // 3.  Set the body onload to a function that instantiates the class.
 //
 
+import Limits from './limits.js';
 import Piece from './piece.js';
 import Pointer from './pointer.js';
 import ZoomBoxRandom from './zoomboxrandom.js';
@@ -27,7 +28,8 @@ class Index {
         this._spawnHeight = 300;
         this._renderHeightThreshold = 20;
 
-        this._ratios = [
+        this._limits = new Limits();
+        this._limits.ratios = [
             {left:1 / 2, height: 0.01},
             {left:1 / 5, height: 0.05},
             {left:1 / -6, height: 0.5},
@@ -43,8 +45,6 @@ class Index {
         this._messageDisplay = null;
 
         this._svgRect = undefined;
-        this._renderLimits = undefined;
-        this._heightGradientPolyline = null;
     }
 
     get zoomBox() {
@@ -138,12 +138,9 @@ class Index {
         this._header.create('label', {
             'for':identifierShowDiagnostic
         }, "Show diagnostic");
-        this._controlShowDiagnostic.addEventListener('change', (event) => {
-            if (this._renderLimits !== undefined) {
-                this._renderLimits.showDiagnostic = event.target.checked;
-                this._show_limits(this._renderLimits);
-            }
-        });
+        this._controlShowDiagnostic.addEventListener('change', (event) => 
+            this._limits.showDiagnostic = event.target.checked
+        );
 
         this._buttonRandom = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
@@ -214,7 +211,7 @@ class Index {
                 return false;
             }
             const rootBox = this.zoomBox.render(
-                this._zoomBoxGroup.node, null, this._renderLimits, 0);
+                this._zoomBoxGroup.node, null, this._limits, 0);
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
 
@@ -308,7 +305,7 @@ class Index {
 
         this._set_zoomBox_size(zoomBox);
 
-        zoomBox.arrange_children(this._renderLimits);
+        zoomBox.arrange_children(this._limits);
 
         this._zoomBoxPointer = zoomBox;
     }
@@ -334,56 +331,7 @@ class Index {
     set svgRect(boundingClientRect) {
         this._svgRect = boundingClientRect;
         this._pointer.svgBoundingBox = boundingClientRect;
-
-        if (this._renderLimits === undefined) {
-            this._renderLimits = {};
-        }
-        Object.assign(this._renderLimits, {
-            "top": boundingClientRect.height / -2,
-            "bottom":  boundingClientRect.height / 2,
-            "height":  boundingClientRect.height,
-            "left": boundingClientRect.width / -2,
-            "right": boundingClientRect.width / 2,
-            "width": boundingClientRect.width,
-        });
-        this._renderLimits.gradients = this._ratios.map(({left, height}) => {
-            return {
-                "left": boundingClientRect.width * left,
-                "height": boundingClientRect.height * height
-            };
-        }).sort((first, second) => first.left - second.left);
-        // Previous line will sort from lowest to highest. In practice, lowest
-        // means most negative. The left-most will be gradients[0].
-
-        this._show_limits(this._renderLimits);
-    }
-
-    _show_limits(limits) {
-        this._heightGradientPolyline = Piece.toggle(
-            this._heightGradientPolyline, limits.showDiagnostic, () =>
-            new Piece('polyline', this._svg, {
-                "points":"", "stroke":"green", "stroke-width":"1px",
-                "fill": "none"
-            })
-        );
-
-        if (this._heightGradientPolyline === null) {
-            return;
-        }
-        
-        this._heightGradientPolyline.set_attributes({"points":[
-            ...Array.from(this._renderLimits.gradients,
-                ({left, height}) => {return {
-                    "left": left, "height": height / -2
-                };}),
-            ...Array.from(this._renderLimits.gradients,
-                ({left, height}) => {return {
-                    "left": left, "height": height / 2
-                };}).reverse()
-        ].reduce(
-            (accumulated, {left, height}) => `${accumulated} ${left},${height}`,
-            "")
-        });
+        this._limits.set(boundingClientRect.width, boundingClientRect.height);
     }
 
     _on_resize() {
@@ -410,13 +358,13 @@ class Index {
 
             // // Set left; solve height.
             // const width = this._spawnMargin * 2;
-            // const left = this._renderLimits.right - width;
-            // const height = zoomBox.solve_height(left, this._renderLimits);
+            // const left = this._limits.right - width;
+            // const height = this._limits.solve_height(left);
 
             // Set height; solve left.
             const height = this.svgRect.height / 4;
-            const left = zoomBox.solve_left(height, this._renderLimits);
-            const width = this._renderLimits.right - left;
+            const left = this._limits.solve_left(height);
+            const width = this._limits.right - left;
 
             zoomBox.set_dimensions(left, width, 0, height);
         }
@@ -433,6 +381,7 @@ class Index {
     }
 
     _load1() {
+        this._limits.svgPiece = this._svg;
         this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
 

@@ -73,7 +73,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             // No child to consider; solve height for this parent.
             const left = this.left + delta;
             return {
-                "left": left, "height": this.solve_height(left, limits),
+                "left": left, "height": limits.solve_height(left),
                 "target": this
             };
         }
@@ -83,49 +83,10 @@ export default class ZoomBoxPointer extends ZoomBox {
                 holderHeight / this.childWeights[candidateHolder]);
             const height = unitHeight * this.totalWeight;
             return {
-                "left": this.solve_left(height, limits), "height": height,
+                "left": limits.solve_left(height), "height": height,
                 "target": target
             };
         }
-    }
-
-    // Calculate height, given left position.
-    solve_height(left, limits) {
-        const index = limits.gradients.findIndex(
-            gradient => left < gradient.left);
-        
-        if (index < 0) {
-            return limits.gradients[limits.gradients.length - 1].height;
-        }
-
-        const gradient0 = limits.gradients[index === 0 ? 1 : index];
-        const gradient1 = limits.gradients[index === 0 ? 0 : index - 1];
-
-        return gradient0.height + (
-            ((gradient1.height - gradient0.height) * (gradient0.left - left)) /
-            (gradient0.left - gradient1.left)
-        )
-    }
-
-    // Calculate left position, given height.
-    solve_left(height, limits) {
-        const index = limits.gradients.findIndex(
-            gradient => height > gradient.height);
-        
-        if (index < 0) {
-            return limits.gradients[limits.gradients.length - 1].left;
-        }
-
-        const gradient0 = limits.gradients[index === 0 ? 1 : index];
-        const gradient1 = limits.gradients[index === 0 ? 0 : index - 1];
-
-        return gradient0.left + (
-            (
-                (gradient1.left - gradient0.left) *
-                (gradient0.height - height)
-            ) /
-            (gradient0.height - gradient1.height)
-        )
     }
 
     // Returns the index of the immediate child box that is across the Y origin,
@@ -215,7 +176,7 @@ export default class ZoomBoxPointer extends ZoomBox {
                 }
                 const zoomBox = this.childBoxes[index];
         
-                const childLeft = this.solve_left(childHeight, limits);
+                const childLeft = limits.solve_left(childHeight);
                 const childWidth = limits.width - childLeft;
     
                 zoomBox.set_dimensions(
@@ -274,7 +235,7 @@ export default class ZoomBoxPointer extends ZoomBox {
             const holder = this.childBoxes[index];
             const childHeight = unitHeight * this.childWeights[index];
             holder.zoom_to_height(
-                childHeight, this.solve_left(childHeight, limits), limits);
+                childHeight, limits.solve_left(childHeight), limits);
 
             this.height = newHeight;
             this.left = left;
@@ -426,7 +387,7 @@ export default class ZoomBoxPointer extends ZoomBox {
         // its height. Set width as usual.
         const unitHeight = this.height / parent.childWeights[index];
         const height = unitHeight * parent.totalWeight;
-        const left = parent.solve_left(height, limits);
+        const left = limits.solve_left(height);
         const width = limits.width - left;
         parent.set_dimensions(left, width, undefined, height);
         //

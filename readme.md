@@ -20,10 +20,7 @@ Backlog
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
 -   Change "render" to "draw" maybe.
--   Replace the ad hoc limits object with a class. Move methods like solve_left
-    and solve_height into the new class.
--   Refactor out some of the the index.js module into classes, like Pointer and
-    cross-hairs.
+-   Refactor out some of the the index.js module into classes, like cross-hairs.
 -   Move the ZoomBox base class xChange and yChange properties out to a
     dedicated custom object, or into a subclass.
 -   Refactor again to have separate draw_under_control and then render maybe.
