@@ -44,8 +44,6 @@ svg g {
     transition: var(--transition) linear;
 }
 
-#sizes-text-node {display: block;}
-
 body {
     position: absolute;
     top: 0px;

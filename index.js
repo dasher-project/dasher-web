@@ -99,7 +99,6 @@ class Index {
     }
 
     load(loadingID, footerID) {
-        // Create a diagnostic area in which to display a bunch of numbers.
         this._header = new Piece('div', this._parent);
         this._loading = new Piece(document.getElementById(loadingID));
         this._header.add_child(this._loading);
@@ -115,9 +114,16 @@ class Index {
             'placeholder':"Message will appear here ..."
         });
 
-        this._sizesTextNode = this._header.create(
-            'span', {id:"sizes-text-node"}, "loading sizes ..."
-        ).firstChild;
+        // Diagnostic area in which to display various numbers. This is an array
+        // so that the values can be updated.
+        const diagnosticDiv = new Piece('div', this._header);
+        const diagnosticSpans = diagnosticDiv.create('span', {}, [
+            "loading sizes ...",
+            " ", "pointer type", "(" , "X", ",", "Y", ")", " height:", "Height"
+        ]);
+        this._sizesTextNode = diagnosticSpans[0].firstChild;
+        this._heightTextNode = 
+            diagnosticSpans[diagnosticSpans.length - 1].firstChild;
 
         // Controls.
         const identifierShowDiagnostic = "show-diagnostic";
@@ -149,16 +155,6 @@ class Index {
         this._buttonPointer.addEventListener(
             'click', () => this.toggle_pointer());
 
-        // Another diagnostic, for the type and co-ordinates of the pointer.
-        // This is an array so that the co-ordinates can be updated.
-        const pointerSpans = this._header.create('span', {}, [
-            "pointer type", "(" , "X", ",", "Y", ")"
-        ]);
-
-        const heightSpans = this._header.create(
-            'span', {}, [" height:", "Height"]);
-        this._heightTextNode = heightSpans[1].firstChild;
-
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
         // screen, by default. Next line suppresses that. Reference:
@@ -180,10 +176,10 @@ class Index {
         });
 
         this._pointer = new Pointer(this._svg);
-        pointerSpans[0].firstChild.nodeValue = (
+        diagnosticSpans[2].firstChild.nodeValue = (
             this._pointer.touch ? "touch" : "mouse");
-        this._pointer.xTextNode = pointerSpans[2].firstChild;
-        this._pointer.yTextNode = pointerSpans[4].firstChild;
+        this._pointer.xTextNode = diagnosticSpans[4].firstChild;
+        this._pointer.yTextNode = diagnosticSpans[6].firstChild;
     
         // Add a rect to catch all touch events. If the original target of a
         // touch start is removed from the document, a touch end doesn't get
