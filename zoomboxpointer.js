@@ -31,27 +31,16 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._childBoxes = Array(childTexts.length).fill(null);
     }
 
-    get multiplierUpDown() {
-        return this._multiplierUpDown;
-    }
+    get multiplierUpDown() {return this._multiplierUpDown;}
     set multiplierUpDown(multiplierUpDown) {
         this._multiplierUpDown = multiplierUpDown;
     }
 
-    get trimmedIndex() {
-        return this._trimmedIndex;
-    }
-    set trimmedIndex(trimmedIndex) {
-        this._trimmedIndex = trimmedIndex;
-    }
+    get trimmedIndex() {return this._trimmedIndex;}
+    set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
 
-    get trimmedParent() {
-        return this._trimmedParent;
-    }
-    set trimmedParent(trimmedParent) {
-        this._trimmedParent = trimmedParent;
-    }
-
+    get trimmedParent() {return this._trimmedParent;}
+    set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
 
     // Solve application of the right-left dimension of the pointer.
     solve_x_delta(delta, limits) {
@@ -302,8 +291,6 @@ export default class ZoomBoxPointer extends ZoomBox {
 
     // Override.
     render(into, after, limits, level) {
-        // Convenience variable for the pointer control.
-        const pointer = this.controller;
         let rootIndex = -1;
         let insertParent = false;
         
@@ -311,12 +298,12 @@ export default class ZoomBoxPointer extends ZoomBox {
         // the zooming. Only the current root will have a pointer; child boxes
         // don't get the pointer.
         if (
-            pointer !== null && into !== null &&
-            (pointer.pointerX !== 0 || pointer.pointerY !== 0)
+            this.controller !== null && into !== null &&
+            (this.controller.x !== 0 || this.controller.y !== 0)
         ) {
             // Solve left position and height, based on the pointer X position.
             const deltaLeftRight = (
-                pointer.pointerX * this._multiplierLeftRight) * -1;
+                this.controller.x * this._multiplierLeftRight) * -1;
             const {
                 left, height, target
             } = this.solve_x_delta(deltaLeftRight, limits);
@@ -332,14 +319,14 @@ export default class ZoomBoxPointer extends ZoomBox {
 
             // Increment the middle, based on the pointer Y position, and
             // cascade to all child boxes.
-            const deltaUpDown = pointer.pointerY * this.multiplierUpDown;
+            const deltaUpDown = this.controller.y * this.multiplierUpDown;
             this.adjust_dimensions(undefined, deltaUpDown, true);
 
             rootIndex = this._trimmed_root_index(limits);
             insertParent = (level === 0 && this._should_insert_parent(limits));
 
             const originHolder = this.origin_holder();
-            this.controller.message = (
+            this.manager.message = (
                 originHolder === null ? undefined : originHolder.message);
         }
 
@@ -365,9 +352,11 @@ export default class ZoomBoxPointer extends ZoomBox {
         trimmedRoot.trimmedParent = this;
         trimmedRoot.trimmedIndex = rootIndex;
         //
-        // Hand over the controller.
+        // Hand over the controller and manager.
         trimmedRoot.controller = this.controller;
         this.controller = null;
+        trimmedRoot.manager = this.manager;
+        this.manager = null;
         //
         // Finally, derender this box and return the new root box.
         this.render(null);
@@ -449,6 +438,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         parent.middle = top + (height / 2);
         //
         // Hand back the controller.
+        parent.controller = this.controller;
+        this.controller = null;
         parent.controller = this.controller;
         this.controller = null;
         //

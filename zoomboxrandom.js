@@ -39,7 +39,7 @@ export default class ZoomBoxRandom extends ZoomBox {
 
     // Override.
     render(into, after, limits, level) {
-        if (this.controller !== null && !this.controller.randomStopped) {
+        if (this.manager !== null && !this.manager.randomStopped) {
             this.spawn();
 
             const heightMin = this._rectHeight * 0.75;

@@ -12,6 +12,7 @@ export default class ZoomBox {
         this._message = undefined;
 
         this._controller = null;
+        this._controller = null;
 
         this._left = undefined;
         this._width = undefined;
@@ -186,12 +187,11 @@ export default class ZoomBox {
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
-    get controller() {
-        return this._controller;
-    }
-    set controller(controller) {
-        this._controller = controller;
-    }
+    get controller() {return this._controller;}
+    set controller(controller) {this._controller = controller;}
+
+    get manager() {return this._manager;}
+    set manager(manager) {this._manager = manager;}
 
     // Override and call super in subclass.
     render(into, after, limits, level) {

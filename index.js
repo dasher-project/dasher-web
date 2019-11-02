@@ -9,6 +9,7 @@
 //
 
 import Piece from './piece.js';
+import Pointer from './pointer.js';
 import ZoomBoxRandom from './zoomboxrandom.js';
 import ZoomBoxPointer from './zoomboxpointer.js';
 
@@ -37,8 +38,6 @@ class Index {
         // variable, and it's good if they're the same.
         this._transitionMillis = 400;
 
-        this._pointerX = 0;
-        this._pointerY = 0;
         this._randomStopped = false;
         this._message = undefined;
         this._messageDisplay = null;
@@ -76,18 +75,11 @@ class Index {
             return;
         }
 
-        newBox.controller = this;
+        newBox.controller = this._pointer;
+        newBox.manager = this;
         if (oldBox === null) {
             this._start_render();
         }
-    }
-
-    get pointerX() {
-        return this._pointerX;
-    }
-
-    get pointerY() {
-        return this._pointerY;
     }
 
     get randomStopped() {
@@ -157,16 +149,11 @@ class Index {
         this._buttonPointer.addEventListener(
             'click', () => this.toggle_pointer());
 
-        // TOTH https://github.com/patrickhlauke/touch
-        this._touch = 'ontouchstart' in window;
-
         // Another diagnostic, for the type and co-ordinates of the pointer.
         // This is an array so that the co-ordinates can be updated.
         const pointerSpans = this._header.create('span', {}, [
-                this._touch ? "touch(" : "mouse(", "X", ",", "Y", ")"
+            "pointer type", "(" , "X", ",", "Y", ")"
         ]);
-        this._xTextNode = pointerSpans[1].firstChild;
-        this._yTextNode = pointerSpans[3].firstChild;
 
         const heightSpans = this._header.create(
             'span', {}, [" height:", "Height"]);
@@ -191,13 +178,13 @@ class Index {
             x1:"-50%", y1:"0", x2:"50%", y2:"0",
             stroke:"black", "stroke-width":"1px"
         });
-        // Add the pointer line, which will start at the origin and end wherever
-        // the pointer happens to be.
-        this._pointerLine = this._svg.create('line', {
-            x1:"0", y1:"0", x2:"0", y2:"0",
-            stroke:"red", "stroke-width":"1px"
-        });
 
+        this._pointer = new Pointer(this._svg);
+        pointerSpans[0].firstChild.nodeValue = (
+            this._pointer.touch ? "touch" : "mouse");
+        this._pointer.xTextNode = pointerSpans[2].firstChild;
+        this._pointer.yTextNode = pointerSpans[4].firstChild;
+    
         // Add a rect to catch all touch events. If the original target of a
         // touch start is removed from the document, a touch end doesn't get
         // sent. This means that the rect elements in the zoom UI can't be
@@ -317,7 +304,8 @@ class Index {
     _new_ZoomBoxPointer() {
         const zoomBox = new ZoomBoxPointer(
             "abcdefghijklmnopqrstuvwxyz".split(""), "", 'silver');
-        zoomBox.controller = this;
+        zoomBox.controller = this._pointer;
+        zoomBox.manager = this;
         zoomBox.spawnMargin = this._spawnMargin;
         zoomBox.spawnHeight = this._spawnHeight;
         zoomBox.renderHeightThreshold = this._renderHeightThreshold;
@@ -349,6 +337,8 @@ class Index {
     }
     set svgRect(boundingClientRect) {
         this._svgRect = boundingClientRect;
+        this._pointer.svgBoundingBox = boundingClientRect;
+
         if (this._renderLimits === undefined) {
             this._renderLimits = {};
         }
@@ -446,112 +436,9 @@ class Index {
         }
     }
 
-    _update_pointer(clientX, clientY) {
-        // Check that the pointer isn't out-of-bounds. The pointer will go out
-        // of bounds if the user touched the SVG and then moved out of the SVG.
-        // Touch events continue to be posted, with the same target, in that
-        // case.
-        if (
-            (clientY >= this.svgRect.y) &&
-            (clientY <= this.svgRect.y + this.svgRect.height) &&
-            (clientX >= this.svgRect.x) &&
-            (clientX <= this.svgRect.x + this.svgRect.width)
-        ) {
-            return this._update_pointer_raw(
-                clientX - (this.svgRect.x + (this.svgRect.width * 0.5)),
-                (this.svgRect.y + (this.svgRect.height * 0.5)) - clientY
-            );
-        }
-        else {
-            // Out of bounds, send co-ordinates that indicate stopping the
-            // touch.
-            return this._update_pointer_raw(0, 0);
-        }
-    }
-    _update_pointer_raw(adjustedX, adjustedY) {
-        // Update the zoom control properties.
-        this._pointerX = parseFloat(adjustedX);
-        this._pointerY = parseFloat(adjustedY);
-
-        // Update the line from the origin to the pointer.
-        this._pointerLine.setAttribute('x2', this._pointerX);
-        this._pointerLine.setAttribute('y2', -1 * this._pointerY);
-
-        // Update the diagnostic display.
-        this._xTextNode.nodeValue = this._pointerX.toFixed();
-        this._yTextNode.nodeValue = this._pointerY.toFixed();
-    }
-
-    _on_mouse_move(mouseEvent) {
-        mouseEvent.preventDefault();
-        return this._update_pointer(mouseEvent.clientX, mouseEvent.clientY);
-    }
-    _on_mouse_leave(mouseEvent) {
-        // console.log(mouseEvent.target);
-        // Mouse Leave events are posted for child nodes too.
-        if (Object.is(mouseEvent.target, this._svg.node)) {
-            mouseEvent.preventDefault();
-            return this._update_pointer_raw(0, 0);
-        }
-    }
-
-    _on_touch(touchEvent) {
-        touchEvent.preventDefault();
-        if (event.changedTouches.length !== 1) {
-            console.log('touch changes', touchEvent);
-            return;
-        }
-        // For now, only handle the first touch point.
-        const touch = event.changedTouches[0];
-
-        // The target in the touch object will be the element in which the touch
-        // started, even if the touch has now moved outside it. This is handled
-        // downstream from here.
-
-        return this._update_pointer(touch.clientX, touch.clientY);
-    }
-    _on_touch_leave(touchEvent) {
-        touchEvent.preventDefault();
-        return this._update_pointer_raw(0, 0);
-    }
-
     _load1() {
         this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
-
-        // Add pointer listeners, either touch or mouse. Desktop Safari doesn't
-        // support pointer events like:
-        // 
-        //     this._svg.addEventListener('pointermove', ...);
-        // 
-        // So the code here uses mouse events instead.
-        if (this._touch) {
-            // This code has the same handler for touchstart and touchmove. MDN
-            // says that best practice is to add the move and end handlers
-            // inside the start handler. However, some other Internet research
-            // suggests that this could be too late in the event life cycle to
-            // prevent the window from scrolling, which is the default action
-            // for a touch-move, or doesn't work on Android. A related point is
-            // that the scrolling action is prevented by use of the touch-action
-            // CSS feature, called when the SVG node is created.
-            this._svg.node.addEventListener(
-                'touchstart', this._on_touch.bind(this), {capture:true});
-            this._svg.node.addEventListener(
-                'touchmove', this._on_touch.bind(this), {capture:true});
-            //
-            // The same handler is used for touchend and touchcancel but this
-            // isn't contentious.
-            this._svg.node.addEventListener(
-                'touchend', this._on_touch_leave.bind(this), {capture:true});
-            this._svg.node.addEventListener(
-                'touchcancel', this._on_touch_leave.bind(this), {capture:true});
-        }
-        else {
-            this._svg.node.addEventListener(
-                'mousemove', this._on_mouse_move.bind(this), {capture:true});
-            this._svg.node.addEventListener(
-                'mouseleave', this._on_mouse_leave.bind(this), {capture:true});
-        }
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.

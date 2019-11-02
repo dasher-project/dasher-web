@@ -27,6 +27,9 @@ svg rect {
     stroke: black;
     /* stroke-dasharray: 3; */
 }
+svg rect#catcher {
+    stroke-width: 0;
+}
 
 svg text {
     /* Making text.x transition doesn't work. For an explanation and solution
