@@ -7,8 +7,12 @@ export default class Pointer {
         // TOTH https://github.com/patrickhlauke/touch
         this._touch = 'ontouchstart' in window;
 
-        this._x = 0;
-        this._y = 0;
+        this._rawX = 0;
+        this._rawY = 0;
+
+        // Tunable parameters.
+        this._multiplierLeftRight = 1;
+        this._multiplierUpDown = 1;
 
         this._xTextNode = null;
         this._yTextNode = null;
@@ -18,9 +22,33 @@ export default class Pointer {
         this.svgPiece = svgPiece;
     }
 
+    get multiplierLeftRight() {return this._multiplierLeftRight;}
+    set multiplierLeftRight(multiplierLeftRight) {
+        this._multiplierLeftRight = multiplierLeftRight;
+    }
+
+    get multiplierUpDown() {return this._multiplierUpDown;}
+    set multiplierUpDown(multiplierUpDown) {
+        this._multiplierUpDown = multiplierUpDown;
+    }
+
+    get x() {return this._rawX * this.multiplierLeftRight;}
+    get y() {return this._rawY * this.multiplierUpDown;}
+    get going() {return this._rawX !== 0 || this._rawY !== 0;}
+
     get svgPiece() { return this._svgPiece; }
     set svgPiece(svgPiece) {
         this._svgPiece = svgPiece;
+
+        // Cross hair axis lines.
+        this._svgPiece.create('line', {
+            x1:"0", y1:"-50%", x2:"0", y2:"50%",
+            stroke:"black", "stroke-width":"1px"
+        });
+        this._svgPiece.create('line', {
+            x1:"-50%", y1:"0", x2:"50%", y2:"0",
+            stroke:"black", "stroke-width":"1px"
+        });
 
         // Add the pointer line, which will start at the origin and end wherever
         // the pointer happens to be.
@@ -28,6 +56,19 @@ export default class Pointer {
             x1:"0", y1:"0", x2:"0", y2:"0",
             stroke:"red", "stroke-width":"1px"
         });
+
+        // Add a rect to catch all touch events. If the original target of a
+        // touch start is removed from the document, a touch end doesn't get
+        // sent. This means that the rect elements in the zoom UI can't be
+        // allowed to receive touch starts.  
+        // The catcher can't have fill:none because then it doesn't receive
+        // touch events at all. So, it has an opacity of zero.  
+        // The touch handlers are attached to the svg element, even so, the
+        // event will get handled down in the SVG elements.
+        this._svgPiece.create('rect', {
+            x:"-50%", y:"-50%", width:"100%", height:"100%", id:"catcher",
+            'fill-opacity':0
+        })
 
         // Add pointer listeners, either touch or mouse. Desktop Safari doesn't
         // support pointer events like:
@@ -69,9 +110,6 @@ export default class Pointer {
 
     get touch() {return this._touch;}
 
-    get x() {return this._x;}
-    get y() {return this._y;}
-
     get xTextNode() {return this._xTextNode;}
     set xTextNode(xTextNode) {
         this._xTextNode = xTextNode;
@@ -84,10 +122,10 @@ export default class Pointer {
     }
     _update_text_nodes() {
         if (this.xTextNode !== null) {
-            this.xTextNode.nodeValue = this.x.toFixed();
+            this.xTextNode.nodeValue = this._rawX.toFixed();
         }
         if (this.yTextNode !== null) {
-            this.yTextNode.nodeValue = this.y.toFixed();
+            this.yTextNode.nodeValue = this._rawY.toFixed();
         }
     }
 
@@ -120,12 +158,12 @@ export default class Pointer {
     }
     _update_pointer_raw(adjustedX, adjustedY) {
         // Update the zoom control properties.
-        this._x = parseFloat(adjustedX);
-        this._y = parseFloat(adjustedY);
+        this._rawX = parseFloat(adjustedX);
+        this._rawY = parseFloat(adjustedY);
 
         // Update the line from the origin to the pointer.
-        this._pointerLine.setAttribute('x2', this.x);
-        this._pointerLine.setAttribute('y2', -1 * this.y);
+        this._pointerLine.setAttribute('x2', this._rawX);
+        this._pointerLine.setAttribute('y2', 0 - this._rawY);
 
         // Update the diagnostic display.
         this._update_text_nodes();
@@ -154,7 +192,7 @@ export default class Pointer {
         const touch = event.changedTouches[0];
 
         // The target in the touch object will be the element in which the touch
-        // started, even if the touch has now moved outside it. This is handled
+        // started, even if the touch has now moved outside it. That's handled
         // downstream from here.
 
         return this._update_pointer(touch.clientX, touch.clientY);

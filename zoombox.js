@@ -418,6 +418,51 @@ export default class ZoomBox {
         */
     }
 
+    // Solve application of a right-left movement.
+    solve_x_move(delta, limits) {
+        let candidateIndex = this.y_origin_index();
+        let solvedHeight;
+        let target;
+
+        if (candidateIndex !== -1) {
+            // There's a candidate child. Do half the calculation, then make
+            // some checks. Consequence of the checks may be to discard the
+            // candidate.
+            const candidate = this.childBoxes[candidateIndex];
+            const originalHeight = candidate.height;
+            const solved = candidate.solve_x_move(delta, limits);
+            solvedHeight = solved.height;
+            target = solved.target;
+            if (solvedHeight === originalHeight) {
+                console.log('Stationary holder', candidate.message);
+                candidateIndex = -1;
+            }
+            else if (solved.left > limits.right) {
+                console.log('Off holder', candidate.message);
+                candidateIndex = -1;
+            }
+        }
+
+        if (candidateIndex === -1) {
+            // No child to consider; solve height for this parent.
+            const left = this.left + delta;
+            return {
+                "left": left, "height": limits.solve_height(left),
+                "target": this
+            };
+        }
+        else {
+            // Solve this box's height from the unitHeight.
+            const unitHeight = (
+                solvedHeight / this.childWeights[candidateIndex]);
+            const height = unitHeight * this.totalWeight;
+            return {
+                "left": limits.solve_left(height), "height": height,
+                "target": target
+            };
+        }
+    }
+
     // Returns a value indicating the vertical position of this box in relation
     // to the origin.
     //
@@ -473,6 +518,32 @@ export default class ZoomBox {
             }
         }
         return childHolder === null ? this : childHolder;
+    }
+
+    // Returns the index of the immediate child box that is across the Y origin,
+    // if there is one, or -1 otherwise. Doesn't descend recursively into child
+    // boxes.
+    y_origin_index() {
+        if (this.across_y_origin() !== 0) {
+            return -1;
+        }
+        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
+            const zoomBox = this.childBoxes[index];
+            if (zoomBox === null) {
+                continue;
+            }
+            const across = zoomBox.across_y_origin();
+            if (across === 0) {
+                return index;
+            }
+            if (across === -1) {
+                // Found a child above the origin. All remaining child boxes
+                // will be above this one, so stop checking.
+                return -1;
+            }
+        }
+        // Didn't find any child that holds the origin.
+        return -1;
     }
 
     get spawnMargin() {

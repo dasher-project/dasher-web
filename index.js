@@ -119,7 +119,7 @@ class Index {
         const diagnosticDiv = new Piece('div', this._header);
         const diagnosticSpans = diagnosticDiv.create('span', {}, [
             "loading sizes ...",
-            " ", "pointer type", "(" , "X", ",", "Y", ")", " height:", "Height"
+            " ", "pointer type", "(" , "X", ", ", "Y", ")", " height:", "Height"
         ]);
         this._sizesTextNode = diagnosticSpans[0].firstChild;
         this._heightTextNode = 
@@ -162,35 +162,14 @@ class Index {
         // pointer line will always be rendered in front of it.
         this._zoomBoxGroup = new Piece('g', this._svg);
 
-        // Cross hair axis lines.
-        this._svg.create('line', {
-            x1:"0", y1:"-50%", x2:"0", y2:"50%",
-            stroke:"black", "stroke-width":"1px"
-        });
-        this._svg.create('line', {
-            x1:"-50%", y1:"0", x2:"50%", y2:"0",
-            stroke:"black", "stroke-width":"1px"
-        });
-
         this._pointer = new Pointer(this._svg);
         diagnosticSpans[2].firstChild.nodeValue = (
             this._pointer.touch ? "touch" : "mouse");
         this._pointer.xTextNode = diagnosticSpans[4].firstChild;
         this._pointer.yTextNode = diagnosticSpans[6].firstChild;
+        this._pointer.multiplierLeftRight = 0.3;
+        this._pointer.multiplierUpDown = 0.3;
     
-        // Add a rect to catch all touch events. If the original target of a
-        // touch start is removed from the document, a touch end doesn't get
-        // sent. This means that the rect elements in the zoom UI can't be
-        // allowed to receive touch starts.  
-        // The catcher can't have fill:none because then it doesn't receive
-        // touch events at all. So, it has an opacity of zero.  
-        // The touch handlers are attached to the svg element, even so, the
-        // event will get handled down in the SVG elements.
-        this._svg.create('rect', {
-            x:"-50%", y:"-50%", width:"100%", height:"100%", id:"catcher",
-            'fill-opacity':0
-        })
-
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
         const footer = document.getElementById(footerID);

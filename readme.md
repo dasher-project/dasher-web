@@ -24,6 +24,10 @@ Backlog
 -   Move the ZoomBox base class xChange and yChange properties out to a
     dedicated custom object, or into a subclass.
 -   Refactor again to have separate draw_under_control and then render maybe.
+-   Add UI by which Pointer tunable parameters can be set:
+
+    -   multiplierLeftRight
+    -   multiplierUpDown
 
 Notes for developers
 ====================

@@ -18,12 +18,6 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._trimmedIndex = undefined;
         this._trimmedParent = null;
 
-        // Tunable parameters.  
-        // ToDo: Make them be set from the user interface instead.
-        this._multiplierUpDown = 0.3;
-        this._multiplierLeftRight = 0.3;
-        this._multiplierHeight = 0.0015;
-
         const vowels = ["a", "e", "i", "o", "u"];
         this.childWeights = childTexts.map(text => 
             vowels.includes(text) ? 2 : 1);
@@ -31,89 +25,11 @@ export default class ZoomBoxPointer extends ZoomBox {
         this._childBoxes = Array(childTexts.length).fill(null);
     }
 
-    get multiplierUpDown() {return this._multiplierUpDown;}
-    set multiplierUpDown(multiplierUpDown) {
-        this._multiplierUpDown = multiplierUpDown;
-    }
-
     get trimmedIndex() {return this._trimmedIndex;}
     set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
 
     get trimmedParent() {return this._trimmedParent;}
     set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
-
-    // Solve application of the right-left dimension of the pointer.
-    solve_x_delta(delta, limits) {
-        let candidateHolder = this._y_origin_index();
-        let holder;
-        let originalHeight;
-        let holderHeight;
-        let target;
-
-        if (candidateHolder !== -1) {
-            // There's a candidate child. Do half the calculation, then make
-            // some checks. Consequence of the checks may be to discard the
-            // candidate.
-            holder = this.childBoxes[candidateHolder];
-            originalHeight = holder.height;
-            const solved = holder.solve_x_delta(delta, limits);
-            holderHeight = solved.height;
-            target = solved.target;
-            if (holderHeight === originalHeight) {
-                console.log('Stationary holder', holder.message);
-                candidateHolder = -1;
-            }
-            else if (solved.left > limits.right) {
-                console.log('Off holder', holder.message);
-                candidateHolder = -1;
-            }
-        }
-
-        if (candidateHolder === -1) {
-            // No child to consider; solve height for this parent.
-            const left = this.left + delta;
-            return {
-                "left": left, "height": limits.solve_height(left),
-                "target": this
-            };
-        }
-        else {
-            // Solve this box's height from the unitHeight.
-            const unitHeight = (
-                holderHeight / this.childWeights[candidateHolder]);
-            const height = unitHeight * this.totalWeight;
-            return {
-                "left": limits.solve_left(height), "height": height,
-                "target": target
-            };
-        }
-    }
-
-    // Returns the index of the immediate child box that is across the Y origin,
-    // if there is one, or -1 otherwise. Doesn't descend recursively into child
-    // boxes.
-    _y_origin_index() {
-        if (this.across_y_origin() !== 0) {
-            return -1;
-        }
-        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
-            const zoomBox = this.childBoxes[index];
-            if (zoomBox === null) {
-                continue;
-            }
-            const across = zoomBox.across_y_origin();
-            if (across === 0) {
-                return index;
-            }
-            if (across === -1) {
-                // Found a child above the origin. All remaining child boxes
-                // will be above this one, so stop checking.
-                return -1;
-            }
-        }
-        // Didn't find any child that holds the origin.
-        return -1;
-    }
 
     // Arrange some or all child boxes. There are three procedures, selected by
     // the `up` parameter:
@@ -213,7 +129,7 @@ export default class ZoomBoxPointer extends ZoomBox {
     // child boxes, if the intervening child boxes are currently too small to
     // render.
     zoom_to_height(newHeight, left, limits) {
-        const index = this._y_origin_index();
+        const index = this.y_origin_index();
         if (index === -1) {
             const halfHeightChange = (newHeight - this.height) / 2;
             if (this.top > 0) {
@@ -255,19 +171,17 @@ export default class ZoomBoxPointer extends ZoomBox {
         let rootIndex = -1;
         let insertParent = false;
         
-        // If there's a pointer and the pointer isn't at the rest position, do
-        // the zooming. Only the current root will have a pointer; child boxes
-        // don't get the pointer.
+        // If there's a controller and it isn't at the rest position, do the
+        // zooming. Only the current root will have a controller; child boxes
+        // don't get the controller.
         if (
-            this.controller !== null && into !== null &&
-            (this.controller.x !== 0 || this.controller.y !== 0)
+            into !== null && this.controller !== null && this.controller.going
         ) {
             // Solve left position and height, based on the pointer X position.
-            const deltaLeftRight = (
-                this.controller.x * this._multiplierLeftRight) * -1;
+            const deltaLeftRight = 0 - this.controller.x;
             const {
                 left, height, target
-            } = this.solve_x_delta(deltaLeftRight, limits);
+            } = this.solve_x_move(deltaLeftRight, limits);
             if (!Object.is(this, target)) {
                 console.log('Solver target', target.message);
             }
@@ -280,7 +194,7 @@ export default class ZoomBoxPointer extends ZoomBox {
 
             // Increment the middle, based on the pointer Y position, and
             // cascade to all child boxes.
-            const deltaUpDown = this.controller.y * this.multiplierUpDown;
+            const deltaUpDown = this.controller.y;
             this.adjust_dimensions(undefined, deltaUpDown, true);
 
             rootIndex = this._trimmed_root_index(limits);
@@ -401,8 +315,8 @@ export default class ZoomBoxPointer extends ZoomBox {
         // Hand back the controller.
         parent.controller = this.controller;
         this.controller = null;
-        parent.controller = this.controller;
-        this.controller = null;
+        parent.manager = this.manager;
+        this.manager = null;
         //
         // Reset the parent insertion parameters.
         this.trimmedParent = null;
