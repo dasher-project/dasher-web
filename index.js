@@ -1,31 +1,38 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
-// This script gets run by inclusion in a script tag in the index.html file.
-// It has to have type="module" because it imports other modules. Structure is:
-//
-// 1.  Import statements.
-// 2.  Class definition.
-// 3.  Set the body onload to a function that instantiates the class.
-//
+/*
+This script gets run by inclusion in a script tag in the index.html file. It has
+to have type="module" because it imports other modules. Structure is:
+
+1.  Import statements.
+2.  Class definition.
+3.  Set the body onload to a function that instantiates the class.
+
+*/
 
 import Limits from './limits.js';
 import Piece from './piece.js';
 import Pointer from './pointer.js';
-import ZoomBoxRandom from './zoomboxrandom.js';
-import ZoomBoxPointer from './zoomboxpointer.js';
+import ControllerRandom from './controllerrandom.js';
+import ControllerPointer from './controllerpointer.js';
+import ZoomBox from './zoombox.js';
 
 class Index {
     constructor(parent) {
         this._parent = parent;
         this._intervalRender = undefined;
 
-        this._zoomBoxRandom = null;
-        this._zoomBoxPointer = null;
         this._zoomBox = null;
+
+        this._controllerRandom = new ControllerRandom(
+            "abcdefghijklmnopqrstuvwxyz".split(""));
+        // Pointer controller will need a Pointer and it isn't set up until the
+        // load().
+        this._controllerPointer = undefined;
+        this._controller = null;
 
         // Spawn and render parameters in mystery SVG units.
         this._spawnMargin = 30;
-        this._spawnHeight = 300;
         this._renderHeightThreshold = 20;
 
         this._limits = new Limits();
@@ -40,7 +47,6 @@ class Index {
         // variable, and it's good if they're the same.
         this._transitionMillis = 400;
 
-        this._randomStopped = false;
         this._message = undefined;
         this._messageDisplay = null;
 
@@ -59,32 +65,24 @@ class Index {
             return;
         }
 
-        if (newBox === null) {
-            this._stop_render();
-        }
-
-        // De-render current zoomBox, if appropriate.
-        if (oldBox !== null && newBox === null) {
-            oldBox.render(null);
-        }
-
         // Set underlying property.
         this._zoomBox = newBox;
 
         if (newBox === null) {
-            return;
-        }
+            this._stop_render();
 
-        newBox.controller = this._pointer;
-        newBox.manager = this;
-        if (oldBox === null) {
-            this._start_render();
+            if (oldBox !== null) {
+                oldBox.render(null);
+            }
+        }
+        else {
+            if (oldBox === null) {
+                // Transition from null to non-null, start the render interval.
+                this._start_render();
+            }
         }
     }
 
-    get randomStopped() {
-        return this._randomStopped;
-    }
 
     get message() {
         return this._message;
@@ -145,12 +143,12 @@ class Index {
         this._buttonRandom = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
         this._buttonRandom.addEventListener(
-            'click', () => this.toggle_random());
+            'click', () => this.clicked_random());
 
         this._buttonPointer = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Pointer');
         this._buttonPointer.addEventListener(
-            'click', () => this.toggle_pointer());
+            'click', () => this.clicked_pointer());
 
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
@@ -169,6 +167,9 @@ class Index {
         this._pointer.yTextNode = diagnosticSpans[6].firstChild;
         this._pointer.multiplierLeftRight = 0.3;
         this._pointer.multiplierUpDown = 0.3;
+
+        this._controllerPointer = new ControllerPointer(
+            this._pointer, "abcdefghijklmnopqrstuvwxyz".split(""));
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -184,19 +185,67 @@ class Index {
         return this;
     }
 
+    _load1() {
+        this._limits.svgPiece = this._svg;
+        this._on_resize();
+        window.addEventListener('resize', this._on_resize.bind(this));
+
+        // Remove the loading... element and add the proper heading to show that
+        // loading has finished.
+        this._loading.remove();
+        const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
+        this._messageDiv.node.insertAdjacentElement('afterend', h1);
+
+        // Previous lines could have changed the size of the svg so, after a
+        // time out for rendering, process a resize.
+        setTimeout( () => this._on_resize(), 0);
+
+        // Activate intervals and controls.
+        this._intervalRender = null;
+        [
+            this._buttonRandom, this._buttonPointer, this._controlShowDiagnostic
+        ].forEach(control => control.removeAttribute('disabled'));
+    }
+
     _start_render() {
         const render_one = () => {
-            if (this.zoomBox === null) {
+            if (this.zoomBox === null || this._controller === null) {
                 return false;
             }
-            const rootBox = this.zoomBox.render(
-                this._zoomBoxGroup.node, null, this._limits, 0);
+
+            // Process one control cycle.
+            this._controller.control(this.zoomBox, this._limits);
+            //
+            // Update diagnostic display.
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
+            //
+            // Update message to be the message of whichever box is across the
+            // origin.
+            const originHolder = this.zoomBox.origin_holder();
+            this.message = (
+                originHolder === null ? undefined : originHolder.message);
 
-            if (rootBox !== null) {
+            // Process one render cycle.
+            this.zoomBox.render(this._zoomBoxGroup.node, null, this._limits, 0);
+
+            // Check if the root box should change, either to a child or to a
+            // previously trimmed parent. Note that the current root should
+            // be de-rendered if it is being replace by a child.
+            let root = this.zoomBox.parent_root(this._limits);
+            if (root === null) {
+                root = this.zoomBox.child_root(this._limits);
+                if (root !== null) {
+                    // Could de-render by setting this.zoomBox to null and
+                    // letting the setter take care of it. However, that would
+                    // result in a suspension of the render interval.
+                    this.zoomBox.render(null);
+                }
+            }
+
+            if (root !== null) {
                 // Invoke setter.
-                this.zoomBox = rootBox;
+                this.zoomBox = root;
             }
 
             return true;
@@ -211,7 +260,7 @@ class Index {
         }
     }
     _stop_render() {
-        // intervalZoom is undefined just while the initial build of the page is
+        // intervalZoom is undefined only while the initial build of the page is
         // in progress.
         if (this._intervalRender === undefined) {
             return;
@@ -223,74 +272,66 @@ class Index {
         }
     }
 
-    toggle_random() {
+    // Go-Random button was clicked.
+    clicked_random() {
         if (this._intervalRender === undefined) {
             return;
         }
-        if (this._zoomBoxRandom === null) {
-            this._zoomBoxRandom = new ZoomBoxRandom(
-                "abcdefghijklmnopqrstuvwxyz".split(""));
-            this._set_zoomBox_size(this._zoomBoxRandom);
-        }
-        const changeType = !this._already(this._zoomBoxRandom);
 
+        if (Object.is(this._controller, this._controllerRandom)) {
+            // Consecutive clicks on this button stop and resume the random
+            // movement.
+            this._controllerRandom.going = !this._controllerRandom.going;
+        }
+        else {
+            // First click or click after clicking the pointer button. Set up
+            // the random moving boxes.
+            this._controllerRandom.going = true;
+            this._controller = this._controllerRandom;
+            this._new_ZoomBox();
+        }
+
+        // The other button will switch to pointer mode.
         this._buttonPointer.textContent = "Pointer";
 
-        if (changeType) {
-            this._randomStopped = false;
-            // Invoke setter.
-            this.zoomBox = null;
-        }
-        else {
-            this._randomStopped = !this._randomStopped;
-        }
-
-        this.zoomBox = this._zoomBoxRandom;
+        // This button will either stop or go.
         this._buttonRandom.textContent = (
-            this._randomStopped ? "Go Random" : "Stop");
+            this._controllerRandom.going ? "Stop" : "Go Random");
     }
 
-    toggle_pointer() {
+    clicked_pointer() {
         if (this._intervalRender === undefined) {
             return;
         }
 
-        if (this._zoomBoxPointer === null) {
-            this._new_ZoomBoxPointer();
-        }
-        const changeType = !this._already(this._zoomBoxPointer);
-
-        this._buttonRandom.textContent = "Go Random";
-
-        if (changeType) {
+        if (!Object.is(this._controller, this._controllerPointer)) {
+            // Current mode is random. Change this button's label to indicate
+            // what it does if clicked again.
             this._buttonPointer.textContent = "Reset";
         }
-        else {
-            // Reset action.
-            this._new_ZoomBoxPointer();
-        }
-        // Invoke setter twice.
-        this.zoomBox = null;
-        this.zoomBox = this._zoomBoxPointer;
+
+        this._controller = this._controllerPointer;
+        // Next line will discard the current zoom box, which will effect a
+        // reset, if the mode was already pointer.
+        this._new_ZoomBox();
+
+        // The other button will switch to random mode.
+        this._buttonRandom.textContent = "Go Random";
     }
-    _new_ZoomBoxPointer() {
-        const zoomBox = new ZoomBoxPointer(
-            "abcdefghijklmnopqrstuvwxyz".split(""), "", 'silver');
-        zoomBox.controller = this._pointer;
-        zoomBox.manager = this;
+
+    _new_ZoomBox() {
+        // Setter invocation that will de-render the current box, if any.
+        this.zoomBox = null;
+
+        const zoomBox = new ZoomBox(this._controller.rootSpecification);
         zoomBox.spawnMargin = this._spawnMargin;
-        zoomBox.spawnHeight = this._spawnHeight;
         zoomBox.renderHeightThreshold = this._renderHeightThreshold;
 
         this._set_zoomBox_size(zoomBox);
 
-        zoomBox.arrange_children(this._limits);
+        this._controller.populate(zoomBox, this._limits);
 
-        this._zoomBoxPointer = zoomBox;
-    }
-
-    _already(zoomBox) {
-        return Object.is(this.zoomBox, zoomBox);
+        this.zoomBox = zoomBox;
     }
 
     static bbox_text(boundingBox, label) {
@@ -332,7 +373,7 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
     _set_zoomBox_size(zoomBox) {
-        if (zoomBox instanceof ZoomBoxPointer) {
+        if (Object.is(this._controller, this._controllerPointer)) {
             // Comment out one or other of the following.
 
             // // Set left; solve height.
@@ -347,39 +388,15 @@ class Index {
 
             zoomBox.set_dimensions(left, width, 0, height);
         }
-        else if (zoomBox instanceof ZoomBoxRandom) {
+        else if (Object.is(this._controller, this._controllerRandom)) {
             zoomBox.set_dimensions(
                 this.svgRect.width * -0.5,
                 this.svgRect.width,
                 0, this.svgRect.height
             );
         }
-        else {
-            return;
-        }
     }
 
-    _load1() {
-        this._limits.svgPiece = this._svg;
-        this._on_resize();
-        window.addEventListener('resize', this._on_resize.bind(this));
-
-        // Remove the loading... element and add the proper heading to show that
-        // loading has finished.
-        this._loading.remove();
-        const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
-        this._messageDiv.node.insertAdjacentElement('afterend', h1);
-
-        // Previous lines could have changed the size of the svg so, after a
-        // time out for rendering, process a resize.
-        setTimeout( () => this._on_resize(), 0);
-
-        // Activate intervals and controls.
-        this._intervalRender = null;
-        [
-            this._buttonRandom, this._buttonPointer, this._controlShowDiagnostic
-        ].forEach(control => control.removeAttribute('disabled'));
-    }
 }
 
 document.body.onload = () => {

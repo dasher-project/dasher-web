@@ -5,37 +5,43 @@
 import Piece from "./piece.js";
 
 export default class ZoomBox {
-    constructor(colour, text) {
-        this._colour = (colour === undefined ? null : colour);
-        this._text = (text === undefined ? null : text);
+    constructor(specification) {
 
-        this._message = undefined;
-
-        this._controller = null;
-        this._controller = null;
+        this._specification = specification;
+        this._colour = (
+            specification.colour === undefined ? null : specification.colour);
+        this._text = (
+            specification.text === undefined ? null : specification.text);
 
         this._left = undefined;
         this._width = undefined;
         this._middle = undefined;
         this._height = undefined;
 
-        this._scale = 1;
+        this._trimmedIndex = undefined;
+        this._trimmedParent = null;
+
         this._spawnMargin = undefined;
-        this._spawnHeight = undefined;
 
         this._derender();
 
         this._renderHeightThreshold = undefined;
 
-        // Only used by ZoomBoxRandom.
-        this._xChange = undefined;
-        this._yChange = undefined;
+        this._controllerSettings = specification.controllerSettings;
+
+        this._childSpecifications = (
+            this._specification.spawner ?
+            this._specification.spawner.child_specifications(this) :
+            []
+        );
+        this._childCount = this._childSpecifications.length;
+        this._totalWeight = this._childSpecifications.reduce(
+            (accumulator, specification) => accumulator + specification.weight,
+            0
+        );
 
         // childBoxes is a sparse array.
-        this._childBoxes = undefined;
-        // childWeights mustn't be sparse.
-        this._childWeights = undefined;
-        this._totalWeight = undefined;
+        this._childBoxes = Array(this._childSpecifications.length).fill(null);
     }
     _derender() {
         // Principal graphics.
@@ -48,24 +54,21 @@ export default class ZoomBox {
         this._svgWidth = null;      
     }
 
-    get message() {
-        return this._message;
-    }
+    get trimmedIndex() {return this._trimmedIndex;}
+    set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
 
-    get childBoxes() {
-        return this._childBoxes;
-    }
+    get trimmedParent() {return this._trimmedParent;}
+    set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
 
-    get childWeights() {
-        return this._childWeights;
-    }
-    set childWeights(childWeights) {
-        this._childWeights = childWeights;
-        this._totalWeight = (
-            (childWeights === undefined || childWeights === null) ? undefined :
-            childWeights.reduce(
-                (accumulator, weight) => accumulator + weight, 0)
-        );
+    get message() {return this._specification.message;}
+
+    get childBoxes() {return this._childBoxes;}
+    get childCount() {return this._childCount;}
+    get childSpecifications() {return this._childSpecifications;}
+    get controllerSettings() {return this._controllerSettings;}
+
+    child_weight(index) {
+        return this.childSpecifications[index].weight;
     }
 
     get totalWeight() {
@@ -183,17 +186,10 @@ export default class ZoomBox {
 
     inherit(parent) {
         [
-            "spawnMargin", "spawnHeight", "renderHeightThreshold"
+            "spawnMargin", "renderHeightThreshold"
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
-    get controller() {return this._controller;}
-    set controller(controller) {this._controller = controller;}
-
-    get manager() {return this._manager;}
-    set manager(manager) {this._manager = manager;}
-
-    // Override and call super in subclass.
     render(into, after, limits, level) {
         if (this._should_render(into, limits)) {
             this._render_group(into, after, limits, level);
@@ -271,8 +267,7 @@ export default class ZoomBox {
             this.top < limitTop ? limitTop + margin : this.middle);
         
         this._svgGroup.node.style.transform = 
-            `translate(${renderLeft}px, ${renderMiddle}px)` +
-            ` scale(${this._scale}`;
+            `translate(${renderLeft}px, ${renderMiddle}px)`;
         // ToDo: Try changing the above to a transform list, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
 
@@ -453,8 +448,7 @@ export default class ZoomBox {
         }
         else {
             // Solve this box's height from the unitHeight.
-            const unitHeight = (
-                solvedHeight / this.childWeights[candidateIndex]);
+            const unitHeight = solvedHeight / this.child_weight(candidateIndex);
             const height = unitHeight * this.totalWeight;
             return {
                 "left": limits.solve_left(height), "height": height,
@@ -546,6 +540,139 @@ export default class ZoomBox {
         return -1;
     }
 
+    // Arrange some or all child boxes. There are three procedures, selected by
+    // the `up` parameter:
+    //
+    // -   up:undefined  
+    //     Assume this box already has its top set and arrange child boxes to
+    //     occupy it.
+    // -   up:true  
+    //     Arrange all the child boxes above an initialiser specified by its
+    //     index. Assume that the initialiser has its top set.
+    // -   up:false  
+    //     Arrange all the child boxes below an initialiser specified by its
+    //     index. Assume that the initialiser has its bottom set.
+    //
+    // Returns the bottom or top value of the last child arranged.
+    arrange_children(limits, up, initialiser) {
+        const unitHeight = this.height / this.totalWeight;
+
+        let childTop;
+        let childBottom;
+        if (up === undefined) {
+            childTop = this.top;
+            initialiser = -1;
+            up = false;
+        }
+        else if (up) {
+            childBottom = this._childBoxes[initialiser].top;
+        }
+        else {
+            childTop = this._childBoxes[initialiser].bottom;
+        }
+        const direction = (up ? -1 : 1)
+
+        const childLength = this.childBoxes.length;
+        for(
+            let index = initialiser + direction;
+            index >= 0 && index < childLength;
+            index += direction
+        ) {
+            const childHeight = this.child_weight(index) * unitHeight;
+            if (up) {
+                childTop = childBottom - childHeight;
+            }
+            else {
+                childBottom = childTop + childHeight;
+            }
+
+            const shouldSpawn = (
+                this.renderHeightThreshold === undefined ||
+                childHeight >= this.renderHeightThreshold) &&
+                childBottom > limits.top && childTop < limits.bottom;
+
+            if (shouldSpawn) {
+                if (this.childBoxes[index] === null) {
+                    this.childBoxes[index] = new ZoomBox(
+                        this.childSpecifications[index]);
+                    this.childBoxes[index].inherit(this);
+                }
+                const zoomBox = this.childBoxes[index];
+        
+                const childLeft = limits.solve_left(childHeight);
+                const childWidth = limits.width - childLeft;
+    
+                zoomBox.set_dimensions(
+                    childLeft, childWidth,
+                    childBottom - (childHeight / 2), childHeight);
+                zoomBox.arrange_children(limits);
+            }
+            else {
+                if (this.childBoxes[index] !== null) {
+                    this.childBoxes[index].render(null);
+                    this.childBoxes[index] = null;
+                }
+            }
+
+            if (up) {
+                childBottom -= childHeight;
+            }
+            else {
+                childTop += childHeight;
+            }
+        }
+        return up ? childBottom : childTop;
+    }
+
+    // Zoom this box to a specified new height, as follows.
+    //
+    // If this box has a child box that is across the origin, recursively call
+    // its zoom_to_height, then shuffle all the other child boxes in this box,
+    // then set this box to hold all its child boxes.  
+    // Otherwise, move this box up or down, if it isn't across the origin, set
+    // its height, then arrange its child boxes.
+    //
+    // The array of child boxes is sparse, so the origin might be in between two
+    // child boxes, if the intervening child boxes are currently too small to
+    // render.
+    zoom_to_height(newHeight, left, limits) {
+        const index = this.y_origin_index();
+        if (index === -1) {
+            const halfHeightChange = (newHeight - this.height) / 2;
+            if (this.top > 0) {
+                this.middle += halfHeightChange;
+            }
+            // If the bottom of the box is above the origin, then the whole box
+            // is above the origin.
+            // Exactly one of the checks has to be or-equals.
+            if (this.bottom <= 0) {
+                this.middle -= halfHeightChange;
+            }
+            this.height = newHeight;
+            this.left = left;
+            this.width = limits.width - left;
+            this.arrange_children(limits)
+        }
+        else {
+            const unitHeight = newHeight / this.totalWeight;
+            const holder = this.childBoxes[index];
+            const childHeight = unitHeight * this.child_weight(index);
+            holder.zoom_to_height(
+                childHeight, limits.solve_left(childHeight), limits);
+
+            this.height = newHeight;
+            this.left = left;
+            this.width = limits.width - left;
+
+            // push up everything above the holder; push down everything below
+            // the holder.
+            const top = this.arrange_children(limits, true, index);
+            this.arrange_children(limits, false, index);
+            this.middle = top + (newHeight / 2);
+        }
+
+    }
+
     get spawnMargin() {
         return this._spawnMargin;
     }
@@ -554,26 +681,110 @@ export default class ZoomBox {
         this.each_childBox(child => child.spawnMargin = spawnMargin);
     }
 
-    get spawnHeight() {
-        return this._spawnHeight;
-    }
-    set spawnHeight(spawnHeight) {
-        this._spawnHeight = spawnHeight;
-        this.each_childBox(child => child.spawnHeight = spawnHeight);
+    // If a child of this box should now be the new root box, then set it up and
+    // return the new root box. Otherwise return null.
+    child_root(limits) {
+        const rootIndex = this._trimmed_root_index(limits);
+        if (rootIndex === -1) {
+            return null;
+        }
+
+        // If the code reaches this point then there is a new root box. This box
+        // is about to be derendered. The new root is a child of this box and
+        // would also get derendered, so detach it here.
+        const trimmedRoot = this.childBoxes[rootIndex];
+        this.childBoxes[rootIndex] = null;
+        //
+        // Later, the user might backspace and this box would need to be
+        // inserted back, as a parent of the new root. Set a reference and some
+        // values into the new root to make that possible.
+        trimmedRoot.trimmedParent = this;
+        trimmedRoot.trimmedIndex = rootIndex;
+
+        return trimmedRoot;
     }
 
-    // Properties used by ZoomBoxRandom.
-    get xChange() {
-        return this._xChange;
-    }
-    set xChange(xChange) {
-        this._xChange = xChange;
+    _trimmed_root_index(limits) {
+        if (this.left > limits.left) {
+            // This box is still inside the window; don't trim.
+            return -1;
+        }
+
+        // If there is exactly one non-null child box, it could be the trimmed
+        // root. A child box will be null if it wasn't ever rendered, or if it
+        // went off limits and was derendered.
+        let candidate;
+        for(let index = this.childCount - 1; index >= 0; index--) {
+            if (this.childBoxes[index] === null) {
+                continue;
+            }
+
+            if (candidate === undefined) {
+                candidate = index;
+            }
+            else {
+                // Second non-null child box; don't trim.
+                return -1;
+            }
+        }
+        
+        if (candidate === undefined) {
+            // Zero non-null child boxes; can't trim.
+            return -1;
+        }
+
+        if (this.childBoxes[candidate].left > limits.left) {
+            // The candidate box isn't at the edge of the window; don't trim.
+            return -1;
+        }
+
+        return candidate;
     }
 
-    get yChange() {
-        return this._yChange;
-    }
-    set yChange(yChange) {
-        this._yChange = yChange;
+    // If the trimmed parent of this box should now be the new root box then set
+    // it up and return the new root box. Otherwise return null.
+    parent_root(limits) {
+        const parent = this.trimmedParent;
+        // If there isn't a trimmed parent, or there isn't any space around this
+        // box, root box shouldn't change.
+        if (
+            parent === null || !(
+                this.left > limits.left ||
+                this.bottom < limits.bottom ||
+                this.top > limits.top
+            )
+        ) {
+            return null;
+        }
+
+        const index = this.trimmedIndex;
+
+        // Put this box in as a child box of the parent.
+        parent.childBoxes[index] = this;
+
+        // Next segment of code arranges the parent in such a way that this box
+        // doesn't move.
+        //
+        // Calculate the parent height from the height of this box, via the
+        // parent unitHeight. Then solve the left position of the parent from
+        // its height. Set width as usual.
+        const unitHeight = this.height / parent.child_weight(index);
+        const height = unitHeight * parent.totalWeight;
+        const left = limits.solve_left(height);
+        const width = limits.width - left;
+        parent.set_dimensions(left, width, undefined, height);
+        //
+        // Now calculate the top of the parent by adding the tops of all the
+        // child boxes above this one. They will all be null but won't have zero
+        // weight. Fortunately, the same calculation is required by another
+        // method, so call it here.
+        const top = parent.arrange_children(limits, true, index);
+        parent.middle = top + (height / 2);
+        //
+        // Reset the parent insertion parameters.
+        this.trimmedParent = null;
+        this.trimmedIndex = undefined;
+
+        return parent;
     }
 }

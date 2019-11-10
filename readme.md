@@ -20,10 +20,6 @@ Backlog
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
 -   Change "render" to "draw" maybe.
--   Refactor out some of the the index.js module into classes, like cross-hairs.
--   Move the ZoomBox base class xChange and yChange properties out to a
-    dedicated custom object, or into a subclass.
--   Refactor again to have separate draw_under_control and then render maybe.
 -   Add UI by which Pointer tunable parameters can be set:
 
     -   multiplierLeftRight
@@ -61,7 +57,7 @@ chrome://inspect list and the Chrome developer tools can be used.
 
 Jim isn't aware of any way to do this with an iOS device, although it can be
 done on the simulator by entering the same address. An alternative may be to set
-up an intranet that is accessible to mobile browser.
+up an intranet that is accessible to the mobile browser.
 
 License
 =======
