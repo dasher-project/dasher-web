@@ -19,7 +19,7 @@ Backlog
     
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
--   Change "render" to "draw" maybe.
+-   Change "render" terminology to "viewer" and "draw".
 -   Add UI by which Pointer tunable parameters can be set:
 
     -   multiplierLeftRight

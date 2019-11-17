@@ -15,6 +15,7 @@ import Piece from './piece.js';
 import Pointer from './pointer.js';
 import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
+import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 
 class Index {
@@ -30,6 +31,8 @@ class Index {
         // load().
         this._controllerPointer = undefined;
         this._controller = null;
+
+        this._view = undefined;
 
         // Spawn and render parameters in mystery SVG units.
         this._spawnMargin = 30;
@@ -72,7 +75,7 @@ class Index {
             this._stop_render();
 
             if (oldBox !== null) {
-                oldBox.render(null);
+                oldBox.erase();
             }
         }
         else {
@@ -156,10 +159,12 @@ class Index {
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
         this._svg.node.style['touch-action'] = 'none';
 
-        // Add an SVG group to hold the root zoom box first. The cross hairs and
-        // pointer line will always be rendered in front of it.
-        this._zoomBoxGroup = new Piece('g', this._svg);
-
+        // Initialise the view first. It will insert an SVG group to hold what
+        // it draws.
+        this._view = Viewer.view(this._svg);
+        //
+        // Then instantiate the pointer. It will draw the cross hairs and
+        // pointer line, always in front of the zoombox as drawn by the viewer.
         this._pointer = new Pointer(this._svg);
         diagnosticSpans[2].firstChild.nodeValue = (
             this._pointer.touch ? "touch" : "mouse");
@@ -226,8 +231,8 @@ class Index {
             this.message = (
                 originHolder === null ? undefined : originHolder.message);
 
-            // Process one render cycle.
-            this.zoomBox.render(this._zoomBoxGroup.node, null, this._limits, 0);
+            // Process one draw cycle.
+            this.zoomBox.viewer.draw(this._limits);
 
             // Check if the root box should change, either to a child or to a
             // previously trimmed parent. Note that the current root should
@@ -239,7 +244,7 @@ class Index {
                     // Could de-render by setting this.zoomBox to null and
                     // letting the setter take care of it. However, that would
                     // result in a suspension of the render interval.
-                    this.zoomBox.render(null);
+                    this.zoomBox.erase();
                 }
             }
 
@@ -326,6 +331,7 @@ class Index {
         const zoomBox = new ZoomBox(this._controller.rootSpecification);
         zoomBox.spawnMargin = this._spawnMargin;
         zoomBox.renderHeightThreshold = this._renderHeightThreshold;
+        zoomBox.viewer = new Viewer(zoomBox, this._view);
 
         this._set_zoomBox_size(zoomBox);
 
