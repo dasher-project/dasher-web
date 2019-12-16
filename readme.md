@@ -10,6 +10,7 @@ Backlog
 -   Capital letters, numbers, punctuation, spaces, paragraph markers.
 -   Group boxes.
 -   Change box colours to be set by the CSS maybe.
+-   Change the message to be a list of Unicode code points.
 -   Tidy up the drawing of the text for boxes at the top and bottom edges of the
     window. A box whose middle is out of the window should float to its top,
     maybe.

@@ -17,6 +17,7 @@ import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
+import Predictor from './predictor.js';
 
 class Index {
     constructor(parent) {
@@ -173,8 +174,9 @@ class Index {
         this._pointer.multiplierLeftRight = 0.3;
         this._pointer.multiplierUpDown = 0.3;
 
+        const predictor = new Predictor();
         this._controllerPointer = new ControllerPointer(
-            this._pointer, "abcdefghijklmnopqrstuvwxyz".split(""));
+            this._pointer, predictor.get.bind(predictor));
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.

@@ -1,25 +1,61 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
-const _vowels = ["a", "e", "i", "o", "u"];
-
 export default class ControllerPointer {
-    constructor(pointer, texts) {
+    constructor(pointer, predictor) {
         this._pointer = pointer;
-        this._texts = texts;
+        this._predictor = predictor;
 
-        this._rootSpecification = {spawner:this, colour:"silver", message:""};
+        this._rootSpecification = {
+            "colour":"silver", "message":"",
+            "spawner":this, "prediction": null
+        };
     }
 
     get rootSpecification() {return this._rootSpecification;}
 
     child_specifications(zoomBox) {
-        return this._texts.map((character, index) => {
+        const predictions = this._predictor(
+            zoomBox.message, zoomBox.prediction);
+
+        return predictions.map((prediction, index) => {
+            const message = zoomBox.message + prediction.text;
+            const displayText = (
+                // Under-bracket displayed for space.
+                prediction.text === " " ? String.fromCodePoint(0x23b5) :
+
+                // Pilcrow displayed for newline.
+                prediction.text === "\n" ? String.fromCodePoint(0xb6) :
+
+                // TOTH:
+                // https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character
+
+                prediction.text
+            )
+            
+            let colour = "white";
+            if (prediction.group === null) {
+                prediction.ordinal = (
+                    zoomBox.prediction === null ? 0 :
+                    zoomBox.prediction.ordinal + 1
+                );
+                colour = ControllerPointer.sequenceColours[
+                    (index % 2) + ((prediction.ordinal % 2) * 2)];
+
+            }
+            else {
+                prediction.ordinal = 0;
+                if (prediction.group in ControllerPointer.groupColours) {
+                    colour = ControllerPointer.groupColours[prediction.group];
+                }
+            }
+
             return {
-                colour: index % 2 === 0 ? "lightblue" : "lightgreen",
-                text: character,
-                message: zoomBox.message + character,
-                weight: _vowels.includes(character) ? 2 : 1,
-                spawner: this
+                "prediction": prediction,
+                "colour": colour,
+                "message": message,
+                "text": displayText,
+                "weight": prediction.weight,
+                "spawner": this
             };
         });
     }
@@ -52,4 +88,16 @@ export default class ControllerPointer {
         rootBox.adjust_dimensions(undefined, this._pointer.y, true);
     }        
 
+}
+
+// See https://en.wikipedia.org/wiki/Web_colors
+ControllerPointer.sequenceColours = [
+    "LightBlue", "SkyBlue", "LightGreen", "PaleGreen"
+];
+ControllerPointer.groupColours = {
+    "capital": "Yellow",
+    "small": "SkyBlue",
+    "numeral": "Red",
+    "punctuation": "Azure",
+    "space": "LightGray"
 }

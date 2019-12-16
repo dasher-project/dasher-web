@@ -10,6 +10,9 @@ export default class ZoomBox {
             specification.colour === undefined ? null : specification.colour);
         this._text = (
             specification.text === undefined ? null : specification.text);
+        this._prediction = (
+            specification.prediction === undefined ? null :
+            specification.prediction);
 
         this._left = undefined;
         this._width = undefined;
@@ -43,6 +46,7 @@ export default class ZoomBox {
 
     get colour() {return this._colour;}
     get text() {return this._text;}
+    get prediction() {return this._prediction;}
 
     get trimmedIndex() {return this._trimmedIndex;}
     set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
