@@ -79,7 +79,6 @@ export default class Viewer {
         return true;
     }
 
-
     _render_group(after, limits, level) {
         if (this._group === null) {
             // Use an SVG group <g> element because its translate can be
@@ -96,9 +95,10 @@ export default class Viewer {
         const limitLeft = limits.left + (level * margin);
         const renderLeft = box.left < limitLeft ? limitLeft : box.left;
 
+        // ToDo: Change 5 on the next line to a constant.
         const limitTop = limits.top + (margin === 0 ? 0 : level * 5);
-        const renderMiddle = (
-            box.top < limitTop ? limitTop + margin : box.middle);
+        const [trimTop, trimBottom, renderMiddle] = this._trims(
+            limitTop, limits.bottom, margin);
         
         this._group.node.style.transform = 
             `translate(${renderLeft}px, ${renderMiddle}px)`;
@@ -123,15 +123,31 @@ export default class Viewer {
         }
 
         this._render_rect(
-            limitTop, limits.bottom, limits.width, box.middle - renderMiddle
-        );
+            trimTop, trimBottom, limits.width, box.middle - renderMiddle);
         this._render_text();
         this._render_diagnostics(
             limits.showDiagnostic, box.middle - renderMiddle);
-
     }
 
-    _render_rect(limitTop, limitBottom, width, renderOffset) {
+    _trims(limitTop, limitBottom, margin) {
+        const box = this._zoomBox;
+        const trimTop = (
+            box.top < limitTop ? limitTop - box.top : 0);
+        const trimBottom = (
+            box.bottom > limitBottom ? box.bottom - limitBottom : 0);
+        
+        const acrossOrigin = box.top < 0 && box.bottom >= 0;
+        
+        const renderMiddle = (
+            trimTop === 0 && trimBottom === 0 ? box.middle :
+            trimTop === 0 ? box.top + margin :
+            trimBottom === 0 && !acrossOrigin ? box.bottom - margin :
+            limitTop + margin
+        );
+        return [trimTop, trimBottom, renderMiddle];
+    }
+
+    _render_rect(trimTop, trimBottom, width, renderOffset) {
         const box = this._zoomBox;
         if (box.colour === null) {
             if (this._rect !== null) {
@@ -151,9 +167,6 @@ export default class Viewer {
             );
         }
 
-        const trimTop = (box.top < limitTop ? limitTop - box.top : 0);
-        const trimBottom = (
-            box.bottom > limitBottom ? box.bottom - limitBottom : 0);
         this._rect.node.classList.toggle('trim-top', trimTop !== 0);
         this._rect.node.classList.toggle('trim-bottom', trimBottom !== 0);
 

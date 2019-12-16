@@ -5,11 +5,10 @@ To run the proof of concept, go here:
 
 Backlog
 =======
--   Tidy up the drawing of the text for boxes at the top and bottom edges of the
-    window. A box whose middle is out of the window should float to its top,
-    maybe.
 -   Try a different zooming algorithm; somehow based on moving the box that
     holds the pointer, not the origin.
+-   Maybe shouldSpawn should be true if any part of the box is in view?
+-   See about fixing the text alignment on Firefox.
 -   Change box colours to be set by the CSS maybe.
 -   Maybe optimise origin_holder to have callbacks before and after descent.
 -   Change terminology of "origin holder" to maybe "delta target".
