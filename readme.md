@@ -5,7 +5,6 @@ To run the proof of concept, go here:
 
 Backlog
 =======
--   Change the message to be a list of Unicode code points.
 -   Tidy up the drawing of the text for boxes at the top and bottom edges of the
     window. A box whose middle is out of the window should float to its top,
     maybe.

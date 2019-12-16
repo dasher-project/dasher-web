@@ -1,7 +1,5 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
-const _vowels = ["a", "e", "i", "o", "u"];
-
 /*
 A predictor instance must have a `get` method that returns an array of objects
 each with the following properties.
@@ -13,33 +11,43 @@ each with the following properties.
 -   Other properties that the predictor requires next time around.
 */
 
+const codePointSpace = " ".codePointAt(0);
+const codePointStop = ".".codePointAt(0);
+
 export default class Predictor {
     // constructor() {
-    //     super();
     //     console.log(JSON.stringify(
     //         Predictor.characterGroups, undefined, 4));
     // }
 
     get(message, prediction) {
-        const weighted = (
-            (prediction === null || message.endsWith(". ")) ?
-            "capital" : null);
+        const lastIndex = message.length - 1;
+
+        // Check if the messages ends full stop, space.
+        const stopSpace = (
+            lastIndex > 1 && message[lastIndex - 1] === codePointStop &&
+            message[lastIndex] === codePointSpace
+        );
+        const weighted = (prediction === null || stopSpace) ? "capital" : null;
         const boosted = prediction === null ? null : prediction.boosted;
         const only = prediction === null ? null : prediction.group;
 
         const returning = [];
         for (const group of Predictor.characterGroups) {
             if (group.name === boosted || group.name === only) {
-                group.texts.forEach(text => returning.push({
-                    "text": text,
-                    "weight": _vowels.includes(text) ? 2 : 1,
+                group.codePoints.forEach(codePoint => returning.push({
+                    "codePoint": codePoint,
                     "group": null,
-                    "boosted": group.boost
+                    "boosted": group.boost,
+                    "weight":
+                        (Predictor.vowelCodePoints.includes(codePoint) ? 2 : 1)
                 }));
             }
             else if (only === null) {
                 returning.push({
-                    "text": "", "group": group.name, "boosted": group.name,
+                    "codePoint": null,
+                    "group": group.name,
+                    "boosted": group.name,
                     "weight": group.name === weighted ? 20 : 1
                 })
             }
@@ -80,4 +88,9 @@ Predictor.characterGroups.forEach(group => {
             group.texts.push(String.fromCodePoint(codePoint));
         }
     }
+    group.codePoints = group.texts.map(text => text.codePointAt(0));
 });
+
+Predictor.vowelTexts = ["a", "e", "i", "o", "u"];
+Predictor.vowelCodePoints = Predictor.vowelTexts.map(
+    text => text.codePointAt(0));

@@ -6,7 +6,7 @@ export default class ControllerPointer {
         this._predictor = predictor;
 
         this._rootSpecification = {
-            "colour":"silver", "message":"",
+            "colour":"silver", "message":[],
             "spawner":this, "prediction": null
         };
     }
@@ -18,19 +18,24 @@ export default class ControllerPointer {
             zoomBox.message, zoomBox.prediction);
 
         return predictions.map((prediction, index) => {
-            const message = zoomBox.message + prediction.text;
+            const codePoint = prediction.codePoint;
+
+            const message = zoomBox.messageCodePoints.slice();
+            if (codePoint !== null) {
+                message.push(codePoint);
+            }
+
+            const displayTextIndex = (
+                codePoint === null ? undefined :
+                ControllerPointer.displayTextLeft.indexOf(codePoint));
             const displayText = (
-                // Under-bracket displayed for space.
-                prediction.text === " " ? String.fromCodePoint(0x23b5) :
-
-                // Pilcrow displayed for newline.
-                prediction.text === "\n" ? String.fromCodePoint(0xb6) :
-
-                // TOTH:
-                // https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character
-
-                prediction.text
-            )
+                displayTextIndex === undefined ? null :
+                String.fromCodePoint(
+                    displayTextIndex >= 0 ?
+                    ControllerPointer.displayTextMap[displayTextIndex][1] :
+                    codePoint
+                )
+            );
             
             let colour = ControllerPointer.unsetColour;
             if (prediction.group === null) {
@@ -40,7 +45,6 @@ export default class ControllerPointer {
                 );
                 colour = ControllerPointer.sequenceColours[
                     (index % 2) + ((prediction.ordinal % 2) * 2)];
-
             }
             else {
                 prediction.ordinal = 0;
@@ -105,3 +109,12 @@ ControllerPointer.groupColours = {
     "punctuation": "LimeGreen",
     "space": "LightGray"
 }
+
+// TOTH:
+// https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character
+ControllerPointer.displayTextMap = [
+    [" ", 0x23b5], // Space mapped to under-bracket.
+    ["\n", 0xb6]   // Newline mapped to pilcrow.
+];
+ControllerPointer.displayTextLeft = ControllerPointer.displayTextMap.map(
+    pair => pair[0].codePointAt(0));

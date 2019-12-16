@@ -15,7 +15,7 @@ export default class ControllerRandom {
         const xChange = 1 - ((index % 2) * 2);
         return {
             colour: index % 2 === 0 ? "lightblue" : "lightgreen",
-            text: character, message: character,
+            text: character, message: [character.codePointAt(0)],
             weight: 1,
             controllerSettings: {"xChange":xChange, "yChange":xChange},
             spawner: null

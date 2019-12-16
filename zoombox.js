@@ -13,6 +13,10 @@ export default class ZoomBox {
         this._prediction = (
             specification.prediction === undefined ? null :
             specification.prediction);
+        
+        this._message = (
+            this.messageCodePoints === undefined ? undefined :
+            String.fromCodePoint(...this.messageCodePoints));
 
         this._left = undefined;
         this._width = undefined;
@@ -54,7 +58,8 @@ export default class ZoomBox {
     get trimmedParent() {return this._trimmedParent;}
     set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
 
-    get message() {return this._specification.message;}
+    get messageCodePoints() {return this._specification.message;}
+    get message() {return this._message;}
 
     get childBoxes() {return this._childBoxes;}
     get childCount() {return this._childCount;}
