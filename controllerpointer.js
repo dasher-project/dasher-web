@@ -32,7 +32,7 @@ export default class ControllerPointer {
                 prediction.text
             )
             
-            let colour = "white";
+            let colour = ControllerPointer.unsetColour;
             if (prediction.group === null) {
                 prediction.ordinal = (
                     zoomBox.prediction === null ? 0 :
@@ -91,13 +91,17 @@ export default class ControllerPointer {
 }
 
 // See https://en.wikipedia.org/wiki/Web_colors
+
+ControllerPointer.unsetColour = "LightSlateGray";
+
 ControllerPointer.sequenceColours = [
     "LightBlue", "SkyBlue", "LightGreen", "PaleGreen"
 ];
+
 ControllerPointer.groupColours = {
     "capital": "Yellow",
-    "small": "SkyBlue",
-    "numeral": "Red",
-    "punctuation": "Azure",
+    "small": "DeepSkyBlue",
+    "numeral": "LightCoral",
+    "punctuation": "LimeGreen",
     "space": "LightGray"
 }

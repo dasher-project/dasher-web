@@ -56,6 +56,9 @@ Predictor.characterGroups = [
         "name": "capital", "boost": "small",
         "firstPoint": "A".codePointAt(0), "lastPoint": "Z".codePointAt(0)
     }, {
+        "name": "numeral", "boost": "numeral",
+        "firstPoint": "0".codePointAt(0), "lastPoint": "9".codePointAt(0)
+    }, {
         "name": "punctuation", "boost": "space", "texts": [
             ",", ".", "&", "!", "?"
         ]

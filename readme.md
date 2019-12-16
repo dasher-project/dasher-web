@@ -5,22 +5,19 @@ To run the proof of concept, go here:
 
 Backlog
 =======
--   Maybe optimise origin_holder to have callbacks before and after descent.
--   Change terminology of "origin holder" to maybe "delta target".
--   Capital letters, numbers, punctuation, spaces, paragraph markers.
--   Group boxes.
--   Change box colours to be set by the CSS maybe.
 -   Change the message to be a list of Unicode code points.
 -   Tidy up the drawing of the text for boxes at the top and bottom edges of the
     window. A box whose middle is out of the window should float to its top,
     maybe.
+-   Change box colours to be set by the CSS maybe.
+-   Maybe optimise origin_holder to have callbacks before and after descent.
+-   Change terminology of "origin holder" to maybe "delta target".
 -   More use of built-in .append and .remove in piece.js module. See:
 
     -   https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
     
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
--   Change "render" terminology to "viewer" and "draw".
 -   Add UI by which Pointer tunable parameters can be set:
 
     -   multiplierLeftRight
