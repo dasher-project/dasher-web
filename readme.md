@@ -7,7 +7,6 @@ Backlog
 =======
 -   Try a different zooming algorithm; somehow based on moving the box that
     holds the pointer, not the origin.
--   Maybe shouldSpawn should be true if any part of the box is in view?
 -   See about fixing the text alignment on Firefox.
 -   Change box colours to be set by the CSS maybe.
 -   Maybe optimise origin_holder to have callbacks before and after descent.
