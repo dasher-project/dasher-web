@@ -36,6 +36,9 @@ export default class Pointer {
     get y() {return this._rawY * this.multiplierUpDown;}
     get going() {return this._rawX !== 0 || this._rawY !== 0;}
 
+    get rawX() {return this._rawX;}
+    get rawY() {return this._rawY;}
+
     get svgPiece() { return this._svgPiece; }
     set svgPiece(svgPiece) {
         this._svgPiece = svgPiece;

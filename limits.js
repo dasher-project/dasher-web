@@ -13,6 +13,7 @@ export default class Limits {
 
         this._ratios = null;
         this._showDiagnostic = false;
+        this._highlight = false;
 
         this._gradients = undefined;
 
@@ -38,6 +39,9 @@ export default class Limits {
         this._showDiagnostic = showDiagnostic;
         this._show_gradients();
     }
+
+    get highlight() {return this._highlight;}
+    set highlight(highlight) {this._highlight = highlight;}
 
     get svgPiece() {return this._svgPiece;}
     set svgPiece(svgPiece) {

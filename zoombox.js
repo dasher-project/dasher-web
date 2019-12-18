@@ -206,6 +206,102 @@ export default class ZoomBox {
         );
     }
 
+    /* Returns the leafiest child of this box that holds the specified point, or
+     * null if this box doesn't hold the point. If a `path` is passed, it will
+     * be populated with a list of the child index values used to reach the
+     * holder, and a -1 terminator.
+     */
+    holder(rawX, rawY, path) {
+        if (path === undefined) {
+            // If the caller didn't specify a path, create a path here. It gets
+            // discarded on return but makes the code easier to read.
+            path = [];
+        }
+
+        if (!this.holds(rawX, rawY)) {
+            // This box doesn't hold the point, so neither will any of its child
+            // boxes.
+            return null;
+        }
+
+        // This box holds the point; check its child boxes. The child array is
+        // sparse because it doesn't have instances for child boxes that are too
+        // small to spawn.
+        for(let index = this.childCount - 1; index >= 0; index--) {
+            const child = this.childBoxes[index];
+            if (child === null) { continue; }
+
+            // Recursive call.
+            const holder = child.holder(rawX, rawY, path);
+            if (holder === null) { continue; }
+
+            // If the code reaches here then a child holds the point, or
+            // returned `undefined`. Either way, finish here.
+            path.unshift(index);
+            return holder;
+        }
+
+        // If the code reaches here, this box holds the point, and none of its
+        // child boxes do.
+        path.push(-1);
+        return this;
+    }
+
+    holds(rawX, rawY) {
+        if (this.dimension_undefined()) {
+            return undefined;
+        }
+
+        // Box top and bottom are measured from the top of the window. This
+        // means that negative numbers represent points above the origin.
+        const negativeY = 0 - rawY;
+        return (
+            rawX >= this.left && rawX <= this.right &&
+            negativeY >= this.top && negativeY <= this.bottom
+        );
+    }
+
+    apply_move(moveX, moveY, path, limits, position) {
+        if (position === undefined) {
+            position = 0;
+        }
+        const index = path[position];
+
+        if (index === -1) {
+            // Apply the move here.
+            this.left += moveX;
+            this.width = limits.width - this.left;
+            this.height = limits.solve_height(this.left);
+            this.middle += moveY;
+            this.arrange_children(limits);
+            return;
+        }
+
+        // Apply the move to the specified child.
+        const target = this.childBoxes[index];
+        target.apply_move(moveX, moveY, path, limits, position + 1);
+        //
+        // Now adjust this box so that it is congruent to the new height of the
+        // target child. The following must become true:  
+        // this.child_weight(index) * unitHeight = target.height  
+        // Where:  
+        // unitHeight = this.height / this.totalWeight
+        // Therefore:
+        const height = (
+            (target.height / this.child_weight(index)) * this.totalWeight);
+        this.height = height;
+        //
+        // Arrange the child boxes, in two parts. First, push up everything
+        // above the target. Second, push down everything below the target.
+        const top = this.arrange_children(limits, true, index);
+        this.arrange_children(limits, false, index);
+        //
+        // Finalise the adjustment to this box.
+        this.left = limits.solve_left(height);
+        this.width = limits.width - this.left;
+        this.middle = top + (height / 2);
+    }
+
     // Solve application of a right-left movement.
     solve_x_move(delta, limits) {
         let candidateIndex = this.y_origin_index();
@@ -428,10 +524,10 @@ export default class ZoomBox {
     // The array of child boxes is sparse, so the origin might be in between two
     // child boxes, if the intervening child boxes are currently too small to
     // render.
-    zoom_to_height(newHeight, left, limits) {
+    zoom_to_height(height, left, limits) {
         const index = this.y_origin_index();
         if (index === -1) {
-            const halfHeightChange = (newHeight - this.height) / 2;
+            const halfHeightChange = (height - this.height) / 2;
             if (this.top > 0) {
                 this.middle += halfHeightChange;
             }
@@ -441,19 +537,19 @@ export default class ZoomBox {
             if (this.bottom <= 0) {
                 this.middle -= halfHeightChange;
             }
-            this.height = newHeight;
+            this.height = height;
             this.left = left;
             this.width = limits.width - left;
             this.arrange_children(limits)
         }
         else {
-            const unitHeight = newHeight / this.totalWeight;
+            const unitHeight = height / this.totalWeight;
             const holder = this.childBoxes[index];
             const childHeight = unitHeight * this.child_weight(index);
             holder.zoom_to_height(
                 childHeight, limits.solve_left(childHeight), limits);
 
-            this.height = newHeight;
+            this.height = height;
             this.left = left;
             this.width = limits.width - left;
 
@@ -461,7 +557,7 @@ export default class ZoomBox {
             // the holder.
             const top = this.arrange_children(limits, true, index);
             this.arrange_children(limits, false, index);
-            this.middle = top + (newHeight / 2);
+            this.middle = top + (height / 2);
         }
 
     }

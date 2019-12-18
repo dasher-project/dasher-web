@@ -5,8 +5,8 @@ To run the proof of concept, go here:
 
 Backlog
 =======
--   Try a different zooming algorithm; somehow based on moving the box that
-    holds the pointer, not the origin.
+-   Add layout options optimised for use as a custom keyboard. Message box
+    should be on the left, not at the top, for example.
 -   See about fixing the text alignment on Firefox.
 -   Change box colours to be set by the CSS maybe.
 -   Maybe optimise origin_holder to have callbacks before and after descent.

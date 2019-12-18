@@ -1,7 +1,5 @@
 // (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
 
-
-
 import Piece from "./piece.js";
 
 export default class Viewer {
@@ -155,6 +153,7 @@ export default class Viewer {
                 this._rect = null;
             }
             return;
+
         }
 
         if (this._rect === null) {
@@ -173,10 +172,10 @@ export default class Viewer {
         const drawY = (box.height / -2) + renderOffset + trimTop;
         const drawHeight = box.height - (trimTop + trimBottom);
 
-        if (drawHeight < 0) {
-            console.log(
-                'drawHeight', box.message, drawHeight, trimTop, trimBottom);
-        }
+        // if (drawHeight < 0) {
+        //     console.log(
+        //         'drawHeight', box.message, drawHeight, trimTop, trimBottom);
+        // }
 
         // console.log({
         //     offset:renderOffset, height: this.height,
@@ -268,7 +267,7 @@ export default class Viewer {
     erase() {
         if (this._group !== null) {
             this._group.remove();
-            console.log('erase', this._zoomBox.message);
+            // console.log('erase', this._zoomBox.message);
             this._clear();
         }
         this._zoomBox.each_childBox(child => child.erase());

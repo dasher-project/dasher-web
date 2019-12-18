@@ -96,6 +96,19 @@ class Index {
         if (this._messageDisplay === null) {
             return;
         }
+        if (this._limits.showDiagnostic) {
+            const description = (
+                message === "" ? "empty" :
+                message === undefined ? "undefined" :
+                message === null ? "null" :
+                null
+            );
+            const labels = ["Message:"];
+            if (description !== null) {
+                labels.push(" (", description, ")");
+            }
+            this._messageLabel.firstChild.nodeValue = labels.join("");
+        }
         this._messageDisplay.node.textContent = (
             message === undefined ? null : message);
     }
@@ -109,7 +122,8 @@ class Index {
         this._messageDiv = new Piece(
             'div', this._header, {'id':"message-holder"});
         const identifierMessage = "message";
-        this._messageDiv.create('label', {'for':identifierMessage}, "Message:");
+        this._messageLabel = this._messageDiv.create(
+            'label', {'for':identifierMessage}, "Message:");
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
             'rows':6, 'cols':24,
@@ -128,22 +142,23 @@ class Index {
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
 
         // Controls.
+        //
+        // Tick box to activate diagnostic display.
         const identifierShowDiagnostic = "show-diagnostic";
-        this._controlShowDiagnostic = this._header.create(
-            'input', {
-                'type':'checkbox',
-                'id':identifierShowDiagnostic,
-                'name':identifierShowDiagnostic,
-                'disabled': true
-            }
-        );
+        this._limits.showDiagnostic = false;
+        this._controlShowDiagnostic = this._header.create('input', {
+            'type':'checkbox', 'disabled': true,
+            'id':identifierShowDiagnostic, 'name':identifierShowDiagnostic
+            // Omit the `checked` attribute so that the check box starts clear.
+        });
         this._header.create('label', {
             'for':identifierShowDiagnostic
         }, "Show diagnostic");
         this._controlShowDiagnostic.addEventListener('change', (event) => 
             this._limits.showDiagnostic = event.target.checked
         );
-
+        //
+        // Buttons.
         this._buttonRandom = this._header.create(
             'button', {'type': 'button', 'disabled': true}, 'Go Random');
         this._buttonRandom.addEventListener(
@@ -153,6 +168,19 @@ class Index {
             'button', {'type': 'button', 'disabled': true}, 'Pointer');
         this._buttonPointer.addEventListener(
             'click', () => this.clicked_pointer());
+        //
+        // Tick box to activate highlighting.
+        const identifierHighlight = "highlight";
+        this._limits.highlight = true;
+        this._controlHighlight = this._header.create('input', {
+            'type':'checkbox', 'disabled': true,
+            'id':identifierHighlight, 'name':identifierHighlight,
+            'checked': this._limits.highlight
+        });
+        this._header.create('label', {'for':identifierHighlight}, "Highlight");
+        this._controlHighlight.addEventListener('change', (event) => 
+            this._limits.highlight = event.target.checked
+        );
 
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
@@ -210,7 +238,8 @@ class Index {
         // Activate intervals and controls.
         this._intervalRender = null;
         [
-            this._buttonRandom, this._buttonPointer, this._controlShowDiagnostic
+            this._buttonRandom, this._buttonPointer,
+            this._controlShowDiagnostic, this._controlHighlight
         ].forEach(control => control.removeAttribute('disabled'));
     }
 
@@ -223,13 +252,25 @@ class Index {
             // Process one control cycle.
             this._controller.control(this.zoomBox, this._limits);
             //
-            // Update diagnostic display.
+            // Update diagnostic display. The toLocalString method insert
+            // thousand separators.
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
             //
             // Update message to be the message of whichever box is across the
             // origin.
-            const originHolder = this.zoomBox.origin_holder();
+            const originHolder = this.zoomBox.holder(0, 0);
+            if (this._pointer.going && (
+                originHolder === undefined ||
+                originHolder === null ||
+                originHolder.message === null ||
+                originHolder.message === undefined
+            )) {
+                console.log(
+                    'No message', originHolder,
+                    (originHolder === null || originHolder === undefined) ?
+                    "N/A" : originHolder.message);
+            }
             this.message = (
                 originHolder === null ? undefined : originHolder.message);
 
