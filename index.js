@@ -53,6 +53,7 @@ class Index {
 
         this._message = undefined;
         this._messageDisplay = null;
+        this._divDiagnostic = null;
         this._controls = [];
 
         this._svgRect = undefined;
@@ -119,10 +120,13 @@ class Index {
         this._header.add_child(this._loading);
 
         this._load_message();
-        const diagnosticSpans = this._load_diagnostic();
-        this._load_controls();
+        // Next call also creates some divisions in the header.
         this._load_view();
+
+        this._load_controls();
+        const diagnosticSpans = this._load_diagnostic();
         this._load_pointer(diagnosticSpans);
+        this._load_settings();
 
         const predictor = new Predictor();
         this._controllerPointer = new ControllerPointer(
@@ -156,11 +160,103 @@ class Index {
         });
     }
 
+    _load_controls() {
+        this._load_input(
+            this._divControls, "checkbox", "show-diagnostic", "Show diagnostic",
+            checked => {
+                this._limits.showDiagnostic = checked;
+                this._diagnostic_div_display();
+            }, false);
+        this._buttonRandom = this._load_button(
+            "Go Random", () => this.clicked_random());
+        this._buttonPointer = this._load_button(
+            "Pointer", () => this.clicked_pointer());
+        this._load_input(
+            this._divControls, "checkbox", "highlight", "Highlight",
+            checked => this._limits.highlight = checked, true);
+    }
+
+    _diagnostic_div_display() {
+        const diagnosticDiv = this._divDiagnostic;
+        if (diagnosticDiv !== null) {
+            diagnosticDiv.node.classList.toggle(
+                '_hidden', !this._limits.showDiagnostic);
+        }
+    }
+
+    _load_input(parent, type, identifier, label, callback, initialValue) {
+        const attributes = {
+            'type':type, 'disabled': true,
+            'id':identifier, 'name':identifier
+        };
+
+        if (type === "checkbox" && initialValue) {
+            attributes.checked = true;
+            // else omit the `checked` attribute so that the check box starts
+            // clear.
+        }
+
+        // TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/UserInterface.js#L96
+        const isFloat = (
+            type === "number" && initialValue !== undefined &&
+            initialValue.includes("."));
+        const parseValue = isFloat ? parseFloat : parseInt;
+        if (initialValue !== undefined) {
+            attributes.value = parseValue(initialValue);
+        }
+        if (type === "number") {
+            attributes.step = isFloat ? 0.1 : 1;
+        }
+
+        const labelFirst = (type !== "checkbox" && type !== "number");
+        if (labelFirst) {
+            parent.create('label', {'for':identifier}, label);
+        }
+        const control = parent.create('input', attributes);
+        this._controls.push(control);
+        if (!labelFirst) {
+            parent.create('label', {'for':identifier}, label);
+        }
+
+        if (initialValue !== undefined) {
+            callback(initialValue);
+        }
+
+        if (type === "checkbox") {
+            control.addEventListener(
+                'change', (event) => callback(event.target.checked));
+        }
+        else {
+            control.addEventListener(
+                'change', (event) => callback(event.target.value));
+        }
+
+        return control;
+    }
+
+    _load_button(label, callback) {
+        const button = this._divControls.create(
+            'button', {'type': 'button', 'disabled': true}, label);
+        button.addEventListener('click', callback);
+        this._controls.push(button);
+        return button;
+    }
+
+    _load_settings() {
+        this._divSettings.create('span', {}, "Speed:");
+        this._load_input(
+            this._divSettings, "number", "multiplier-left-right", "Left-Right",
+            value => this._pointer.multiplierLeftRight = value, "0.3");
+        this._load_input(
+            this._divSettings, "number", "multiplier-up-down", "Up-Down",
+            value => this._pointer.multiplierUpDown = value, "0.3");
+        }
+
     _load_diagnostic() {
         // Diagnostic area in which to display various numbers. This is an array
         // so that the values can be updated.
-        const diagnosticDiv = new Piece('div', this._header);
-        const diagnosticSpans = diagnosticDiv.create('span', {}, [
+        this._diagnostic_div_display();
+        const diagnosticSpans = this._divDiagnostic.create('span', {}, [
             "loading sizes ...",
             " ", "pointer type", "(" , "X", ", ", "Y", ")", " height:", "Height"
         ]);
@@ -170,44 +266,11 @@ class Index {
         return diagnosticSpans;
     }
 
-    _load_controls() {
-        this._load_checkbox(
-            "show-diagnostic", "Show diagnostic", false,
-            checked => this._limits.showDiagnostic = checked);
-        this._buttonRandom = this._load_button(
-            "Go Random", () => this.clicked_random());
-        this._buttonPointer = this._load_button(
-            "Pointer", () => this.clicked_pointer());
-        this._load_checkbox("highlight", "Highlight", true,
-            checked => this._limits.highlight = checked);
-    }
-
-    _load_checkbox(identifier, label, initialValue, callback) {
-        const attributes = {
-            'type':'checkbox', 'disabled': true,
-            'id':identifier, 'name':identifier
-        };
-        if (initialValue) { attributes.checked = true; }
-        // else omit the `checked` attribute so that the check box starts clear.
-
-        const control = this._header.create('input', attributes);
-        this._header.create('label', {'for':identifier}, label);
-        control.addEventListener(
-            'change', (event) => callback(event.target.checked));
-        callback(initialValue);
-        this._controls.push(control);
-        return control;
-    }
-
-    _load_button(label, callback) {
-        const button = this._header.create(
-            'button', {'type': 'button', 'disabled': true}, label);
-        button.addEventListener('click', callback);
-        this._controls.push(button);
-        return button;
-    }
-
     _load_view() {
+        this._divControls = new Piece('div', this._header);
+        this._divSettings = new Piece('div', this._header);
+        this._divDiagnostic = new Piece('div', this._header);
+
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
         // screen, by default. Next line suppresses that. Reference:
@@ -227,8 +290,6 @@ class Index {
             this._pointer.touch ? "touch" : "mouse");
         this._pointer.xTextNode = diagnosticSpans[4].firstChild;
         this._pointer.yTextNode = diagnosticSpans[6].firstChild;
-        this._pointer.multiplierLeftRight = 0.3;
-        this._pointer.multiplierUpDown = 0.3;
     }
 
     _load1() {

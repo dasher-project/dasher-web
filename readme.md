@@ -17,10 +17,6 @@ Backlog
     
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
--   Add UI by which Pointer tunable parameters can be set:
-
-    -   multiplierLeftRight
-    -   multiplierUpDown
 
 Notes for developers
 ====================

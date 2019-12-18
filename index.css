@@ -52,6 +52,18 @@ body {
     right: 0px;
 }
 
+._hidden {
+    display: none;
+}
+
+/* TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/index.css#L22
+ */
+input[type="number"] {
+    width: 3em;
+    text-align: right;
+    margin-left: 1em;
+}
+
 /*
 The user interface is laid out as follows.
 
