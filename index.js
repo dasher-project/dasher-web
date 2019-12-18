@@ -53,6 +53,7 @@ class Index {
 
         this._message = undefined;
         this._messageDisplay = null;
+        this._controls = [];
 
         this._svgRect = undefined;
     }
@@ -87,7 +88,6 @@ class Index {
         }
     }
 
-
     get message() {
         return this._message;
     }
@@ -118,89 +118,11 @@ class Index {
         this._loading = new Piece(document.getElementById(loadingID));
         this._header.add_child(this._loading);
 
-        // Textarea in which the message is displayed.
-        this._messageDiv = new Piece(
-            'div', this._header, {'id':"message-holder"});
-        const identifierMessage = "message";
-        this._messageLabel = this._messageDiv.create(
-            'label', {'for':identifierMessage}, "Message:");
-        this._messageDisplay = new Piece('textarea', this._messageDiv, {
-            'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows':6, 'cols':24,
-            'placeholder':"Message will appear here ..."
-        });
-
-        // Diagnostic area in which to display various numbers. This is an array
-        // so that the values can be updated.
-        const diagnosticDiv = new Piece('div', this._header);
-        const diagnosticSpans = diagnosticDiv.create('span', {}, [
-            "loading sizes ...",
-            " ", "pointer type", "(" , "X", ", ", "Y", ")", " height:", "Height"
-        ]);
-        this._sizesTextNode = diagnosticSpans[0].firstChild;
-        this._heightTextNode = 
-            diagnosticSpans[diagnosticSpans.length - 1].firstChild;
-
-        // Controls.
-        //
-        // Tick box to activate diagnostic display.
-        const identifierShowDiagnostic = "show-diagnostic";
-        this._limits.showDiagnostic = false;
-        this._controlShowDiagnostic = this._header.create('input', {
-            'type':'checkbox', 'disabled': true,
-            'id':identifierShowDiagnostic, 'name':identifierShowDiagnostic
-            // Omit the `checked` attribute so that the check box starts clear.
-        });
-        this._header.create('label', {
-            'for':identifierShowDiagnostic
-        }, "Show diagnostic");
-        this._controlShowDiagnostic.addEventListener('change', (event) => 
-            this._limits.showDiagnostic = event.target.checked
-        );
-        //
-        // Buttons.
-        this._buttonRandom = this._header.create(
-            'button', {'type': 'button', 'disabled': true}, 'Go Random');
-        this._buttonRandom.addEventListener(
-            'click', () => this.clicked_random());
-
-        this._buttonPointer = this._header.create(
-            'button', {'type': 'button', 'disabled': true}, 'Pointer');
-        this._buttonPointer.addEventListener(
-            'click', () => this.clicked_pointer());
-        //
-        // Tick box to activate highlighting.
-        const identifierHighlight = "highlight";
-        this._limits.highlight = true;
-        this._controlHighlight = this._header.create('input', {
-            'type':'checkbox', 'disabled': true,
-            'id':identifierHighlight, 'name':identifierHighlight,
-            'checked': this._limits.highlight
-        });
-        this._header.create('label', {'for':identifierHighlight}, "Highlight");
-        this._controlHighlight.addEventListener('change', (event) => 
-            this._limits.highlight = event.target.checked
-        );
-
-        this._svg = new Piece('svg', this._parent);
-        // Touching and dragging in a mobile web view will scroll or pan the
-        // screen, by default. Next line suppresses that. Reference:
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-        this._svg.node.style['touch-action'] = 'none';
-
-        // Initialise the view first. It will insert an SVG group to hold what
-        // it draws.
-        this._view = Viewer.view(this._svg);
-        //
-        // Then instantiate the pointer. It will draw the cross hairs and
-        // pointer line, always in front of the zoombox as drawn by the viewer.
-        this._pointer = new Pointer(this._svg);
-        diagnosticSpans[2].firstChild.nodeValue = (
-            this._pointer.touch ? "touch" : "mouse");
-        this._pointer.xTextNode = diagnosticSpans[4].firstChild;
-        this._pointer.yTextNode = diagnosticSpans[6].firstChild;
-        this._pointer.multiplierLeftRight = 0.3;
-        this._pointer.multiplierUpDown = 0.3;
+        this._load_message();
+        const diagnosticSpans = this._load_diagnostic();
+        this._load_controls();
+        this._load_view();
+        this._load_pointer(diagnosticSpans);
 
         const predictor = new Predictor();
         this._controllerPointer = new ControllerPointer(
@@ -220,6 +142,95 @@ class Index {
         return this;
     }
 
+    _load_message() {
+        // Textarea in which the message is displayed.
+        this._messageDiv = new Piece(
+            'div', this._header, {'id':"message-holder"});
+        const identifierMessage = "message";
+        this._messageLabel = this._messageDiv.create(
+            'label', {'for':identifierMessage}, "Message:");
+        this._messageDisplay = new Piece('textarea', this._messageDiv, {
+            'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
+            'rows':6, 'cols':24,
+            'placeholder':"Message will appear here ..."
+        });
+    }
+
+    _load_diagnostic() {
+        // Diagnostic area in which to display various numbers. This is an array
+        // so that the values can be updated.
+        const diagnosticDiv = new Piece('div', this._header);
+        const diagnosticSpans = diagnosticDiv.create('span', {}, [
+            "loading sizes ...",
+            " ", "pointer type", "(" , "X", ", ", "Y", ")", " height:", "Height"
+        ]);
+        this._sizesTextNode = diagnosticSpans[0].firstChild;
+        this._heightTextNode = 
+            diagnosticSpans[diagnosticSpans.length - 1].firstChild;
+        return diagnosticSpans;
+    }
+
+    _load_controls() {
+        this._load_checkbox(
+            "show-diagnostic", "Show diagnostic", false,
+            checked => this._limits.showDiagnostic = checked);
+        this._buttonRandom = this._load_button(
+            "Go Random", () => this.clicked_random());
+        this._buttonPointer = this._load_button(
+            "Pointer", () => this.clicked_pointer());
+        this._load_checkbox("highlight", "Highlight", true,
+            checked => this._limits.highlight = checked);
+    }
+
+    _load_checkbox(identifier, label, initialValue, callback) {
+        const attributes = {
+            'type':'checkbox', 'disabled': true,
+            'id':identifier, 'name':identifier
+        };
+        if (initialValue) { attributes.checked = true; }
+        // else omit the `checked` attribute so that the check box starts clear.
+
+        const control = this._header.create('input', attributes);
+        this._header.create('label', {'for':identifier}, label);
+        control.addEventListener(
+            'change', (event) => callback(event.target.checked));
+        callback(initialValue);
+        this._controls.push(control);
+        return control;
+    }
+
+    _load_button(label, callback) {
+        const button = this._header.create(
+            'button', {'type': 'button', 'disabled': true}, label);
+        button.addEventListener('click', callback);
+        this._controls.push(button);
+        return button;
+    }
+
+    _load_view() {
+        this._svg = new Piece('svg', this._parent);
+        // Touching and dragging in a mobile web view will scroll or pan the
+        // screen, by default. Next line suppresses that. Reference:
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
+        this._svg.node.style['touch-action'] = 'none';
+
+        // Initialise the view first. It will insert an SVG group to hold what
+        // it draws.
+        this._view = Viewer.view(this._svg);
+    }
+
+    _load_pointer(diagnosticSpans) {
+        // Instantiate the pointer. It will draw the cross hairs and pointer
+        // line, always in front of the zoombox as drawn by the viewer.
+        this._pointer = new Pointer(this._svg);
+        diagnosticSpans[2].firstChild.nodeValue = (
+            this._pointer.touch ? "touch" : "mouse");
+        this._pointer.xTextNode = diagnosticSpans[4].firstChild;
+        this._pointer.yTextNode = diagnosticSpans[6].firstChild;
+        this._pointer.multiplierLeftRight = 0.3;
+        this._pointer.multiplierUpDown = 0.3;
+    }
+
     _load1() {
         this._limits.svgPiece = this._svg;
         this._on_resize();
@@ -237,10 +248,7 @@ class Index {
 
         // Activate intervals and controls.
         this._intervalRender = null;
-        [
-            this._buttonRandom, this._buttonPointer,
-            this._controlShowDiagnostic, this._controlHighlight
-        ].forEach(control => control.removeAttribute('disabled'));
+        this._controls.forEach(control => control.removeAttribute('disabled'));
     }
 
     _start_render() {
