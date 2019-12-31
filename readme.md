@@ -1,7 +1,7 @@
 Proofs of Concept
 =================
 To run the proof of concept, go here:
-[https://sjjhsjjh.github.io/dasher-poc/](https://sjjhsjjh.github.io/dasher-poc/)
+[https://sjjhsjjh.github.io/dasher-poc/browser/](https://sjjhsjjh.github.io/dasher-poc/browser/)
 
 Backlog
 =======
@@ -27,7 +27,7 @@ especially importing modules, from file:// URLs.
 Python version 3 comes with an HTTP server that is suitable for this purpose. It
 could be started like this.
 
-    cd /path/where/you/cloned/dasher-poc/
+    cd /path/where/you/cloned/dasher-poc/browser/
     python3 -m http.server -b localhost
 
 You can then run the code in the browser on your desktop, by entering
