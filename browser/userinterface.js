@@ -17,6 +17,8 @@ import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 import Predictor from './predictor.js';
 
+const messageLabelText = "Message:";
+
 export default class UserInterface {
     constructor(parent) {
         this._parent = parent;
@@ -102,7 +104,7 @@ export default class UserInterface {
                 message === null ? "null" :
                 null
             );
-            const labels = ["Message:"];
+            const labels = [messageLabelText];
             if (description !== null) {
                 labels.push(" (", description, ")");
             }
@@ -150,7 +152,7 @@ export default class UserInterface {
             'div', this._header, {'id':"message-holder"});
         const identifierMessage = "message";
         this._messageLabel = this._messageDiv.create(
-            'label', {'for':identifierMessage}, "Message:");
+            'label', {'for':identifierMessage}, messageLabelText);
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
             'rows':6, 'cols':24,
@@ -164,6 +166,9 @@ export default class UserInterface {
             checked => {
                 this._limits.showDiagnostic = checked;
                 this._diagnostic_div_display();
+                if (!checked) {
+                    this._messageLabel.firstChild.nodeValue = messageLabelText;
+                }
             }, false);
         this._buttonRandom = this._load_button(
             "Go Random", () => this.clicked_random());
