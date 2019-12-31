@@ -6,18 +6,31 @@
 // Import the Captive Web View simple page builder.
 import PageBuilder from "./pagebuilder.js";
 
-class Main {
+import UserInterface from "./userinterface.js"
+
+class Keyboard {
     constructor(bridge) {
         this._bridge = bridge;
         const loading = document.getElementById('loading');
 
         this._builder = new PageBuilder('div', undefined, document.body);
+        this._builder.node.setAttribute('id', "user-interface");
+        this._builder.node.classList.add('keyboard');
         this._transcript = PageBuilder.add_transcript(document.body, true);
 
         bridge.receiveObjectCallback = command => {
             this._transcribe(command);
             return Object.assign(command, {"confirm": "Keyboard"});
         };
+        this._transcribe({"step": "constructing"});
+        const ui = new UserInterface(this._builder.node).load(null, null);
+        ui.stopCallback = () => {
+            if (ui.message !== "") {
+                this._send({"command": "insert", "text": ui.message})
+                .then(() => ui.reset());
+            }
+        };
+        this._transcribe({"step": "constructed"});
         
         // Unicode 127760 is the globe emoji, aka globe with meridians. It's
         // used by the Apple keyboard, but with a changed colour. It could be
@@ -36,7 +49,7 @@ class Main {
         keyboardButton.addEventListener(
             'click', () => this._send({"command": "nextKeyboard"}));
 
-        loading.firstChild.textContent = "ACE Keyboard Itself";
+        loading.remove();
 
         this._send({"command": "ready"});
     }
@@ -63,6 +76,6 @@ class Main {
 }
 
 export default function(bridge) {
-    new Main(bridge);
+    new Keyboard(bridge);
     return null;
 }

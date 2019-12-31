@@ -18,6 +18,8 @@ export default class Pointer {
         this._yTextNode = null;
         this._pointerLine = null;
 
+        this._activateCallback = null;
+
         // Setter invocation.
         this.svgPiece = svgPiece;
     }
@@ -35,6 +37,11 @@ export default class Pointer {
     get x() {return this._rawX * this.multiplierLeftRight;}
     get y() {return this._rawY * this.multiplierUpDown;}
     get going() {return this._rawX !== 0 || this._rawY !== 0;}
+
+    get activateCallback() {return this._activateCallback;}
+    set activateCallback(activateCallback) {
+        this._activateCallback = activateCallback;
+    }
 
     get rawX() {return this._rawX;}
     get rawY() {return this._rawY;}
@@ -144,6 +151,9 @@ export default class Pointer {
             (clientX >= this.svgBoundingBox.x) &&
             (clientX <= this.svgBoundingBox.x + this.svgBoundingBox.width)
         ) {
+            if (this.activateCallback !== null) {
+                this.activateCallback();
+            }
             return this._update_pointer_raw(
                 clientX - (
                     this.svgBoundingBox.x + (this.svgBoundingBox.width * 0.5)

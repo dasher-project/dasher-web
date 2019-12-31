@@ -9,14 +9,14 @@
 /* Begin PBXBuildFile section */
 		0400FFF123BB5788009AF4A0 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FFF023BB5788009AF4A0 /* KeyboardViewController.swift */; };
 		0400FFF523BB5788009AF4A0 /* ACE.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* ACE.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0493224123BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
+		0493224223BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
 		049D59BF23BB5DBE00C0171B /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04D77CBA23BB56B500C25698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D77CB923BB56B500C25698 /* AppDelegate.swift */; };
 		04D77CBC23BB56B500C25698 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D77CBB23BB56B500C25698 /* MainViewController.swift */; };
 		04D77CC123BB56B700C25698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D77CC023BB56B700C25698 /* Assets.xcassets */; };
 		04D77CC423BB56B700C25698 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D77CC223BB56B700C25698 /* LaunchScreen.storyboard */; };
-		04DFAA1F23BB611D00AA836C /* UserInterface in Resources */ = {isa = PBXBuildFile; fileRef = 04DFAA1E23BB611D00AA836C /* UserInterface */; };
-		04DFAA2023BB611D00AA836C /* UserInterface in Resources */ = {isa = PBXBuildFile; fileRef = 04DFAA1E23BB611D00AA836C /* UserInterface */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +58,7 @@
 		0400FFEE23BB5788009AF4A0 /* ACE.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACE.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0400FFF023BB5788009AF4A0 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		0400FFF223BB5788009AF4A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0493224023BBA79C00A17898 /* browser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = browser; path = ../../../browser; sourceTree = "<group>"; };
 		049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CaptiveWebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D77CB623BB56B500C25698 /* Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keyboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D77CB923BB56B500C25698 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		04D77CC023BB56B700C25698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04D77CC323BB56B700C25698 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04D77CC523BB56B700C25698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04DFAA1E23BB611D00AA836C /* UserInterface */ = {isa = PBXFileReference; lastKnownFileType = folder; path = UserInterface; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +107,7 @@
 		04D77CAD23BB56B500C25698 = {
 			isa = PBXGroup;
 			children = (
-				04DFAA1E23BB611D00AA836C /* UserInterface */,
+				0493224023BBA79C00A17898 /* browser */,
 				04D77CB823BB56B500C25698 /* ContainingApplication */,
 				0400FFEF23BB5788009AF4A0 /* Extension */,
 				04D77CB723BB56B500C25698 /* Products */,
@@ -219,7 +219,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04DFAA2023BB611D00AA836C /* UserInterface in Resources */,
+				0493224223BBA79C00A17898 /* browser in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,8 +228,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D77CC423BB56B700C25698 /* LaunchScreen.storyboard in Resources */,
-				04DFAA1F23BB611D00AA836C /* UserInterface in Resources */,
 				04D77CC123BB56B700C25698 /* Assets.xcassets in Resources */,
+				0493224123BBA79C00A17898 /* browser in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

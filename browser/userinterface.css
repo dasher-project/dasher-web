@@ -10,6 +10,8 @@ button { margin: 0.25rem; }
 #message-holder { float: right;}
 #message-holder label {display: block;}
 
+#user-interface.keyboard #message-holder { float: left;}
+
 svg {
     border: 1px black solid;
 }
@@ -65,7 +67,17 @@ input[type="number"] {
 }
 
 /*
-The user interface is laid out as follows.
+If the user clicks on an input control that is inside a custom keyboard, and the
+input itself requires a keyboard to set values, that seems to be a catastrophe.
+
+Make sure that can't happen by not showing any such controls.
+*/
+#user-interface.keyboard input[type="number"] {
+    display: none;
+}
+
+/*
+The user interface is laid out as follows, in a browser.
 
 -   There's an overall holder element, identified by id:user-interface.
 -   There are expected to be three child nodes within the holder.
@@ -91,3 +103,12 @@ The user interface is laid out as follows.
     /* background-color: aqua; */
     flex: none;
 }
+
+#user-interface.keyboard {
+    /* background-color: lightgreen; */
+
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+

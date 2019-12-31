@@ -65,6 +65,10 @@ UIInputViewController, CaptiveWebViewCommandHandler
         var returning = commandDictionary
         let command = commandDictionary["command"] as! String
         switch command {
+        case "insert":
+            self.textDocumentProxy.insertText(
+                commandDictionary["text"] as! String)
+            
         case "nextKeyboard":
             self.advanceToNextInputMode()
             // Advancing will bin the web view so the return won't happen,
@@ -73,7 +77,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
         default:
             returning["failed"] = "Unknown command \"\(command)\"."
         }
-        
         
         returning["confirm"] = String(describing: type(of: self)) + " bridge OK."
         return returning

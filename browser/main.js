@@ -3,6 +3,8 @@
 // Some code copied from a Captive Web View template. See:  
 // https://github.com/vmware/captive-web-view/blob/master/foriOS/readme.md
 
+import UserInterface from "./userinterface.js"
+
 class Main {
     constructor(bridge) {
         const loading = document.getElementById('loading');

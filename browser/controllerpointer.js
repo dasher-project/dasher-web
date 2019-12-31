@@ -13,6 +13,8 @@ export default class ControllerPointer {
 
     get rootSpecification() {return this._rootSpecification;}
 
+    get going() {return this._pointer.going;}
+
     child_specifications(zoomBox) {
         const predictions = this._predictor(
             zoomBox.message, zoomBox.prediction);

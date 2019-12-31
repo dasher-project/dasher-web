@@ -25,6 +25,10 @@ Notes
 
     https://stackoverflow.com/a/48863451/7657675
 
+-   ToDo: Maybe add support for directory hierarchy in the Bundle but shared so
+    that the iOS keyboard JS can import from its browser/ directory without
+    having to be in the same directory.
+
 -   Instructions for custom keyboards for iOS are in the Apple developer
     documentation archive here:  
     [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)

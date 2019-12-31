@@ -24,6 +24,8 @@ export default class UserInterface {
         this._parent = parent;
         this._intervalRender = undefined;
 
+        this._keyboardMode = parent.classList.contains("keyboard");
+
         this._zoomBox = null;
 
         this._controllerRandom = new ControllerRandom(
@@ -57,7 +59,17 @@ export default class UserInterface {
         this._controls = [];
 
         this._svgRect = undefined;
+        this._header = undefined;
+
+        this._stopCallback = null;
     }
+
+    get header() {
+        return this._header === undefined ? undefined : this._header.node;
+    }
+
+    get stopCallback() { return this._stopCallback; }
+    set stopCallback(stopCallback) { this._stopCallback = stopCallback;}
 
     get zoomBox() {
         return this._zoomBox;
@@ -79,12 +91,6 @@ export default class UserInterface {
 
             if (oldBox !== null) {
                 oldBox.erase();
-            }
-        }
-        else {
-            if (oldBox === null) {
-                // Transition from null to non-null, start the render interval.
-                this._start_render();
             }
         }
     }
@@ -116,8 +122,13 @@ export default class UserInterface {
 
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
-        this._loading = new Piece(document.getElementById(loadingID));
-        this._header.add_child(this._loading);
+        this._loading = (
+            loadingID === null ? null :
+            new Piece(document.getElementById(loadingID))
+        );
+        if (this._loading !== null) {
+            this._header.add_child(this._loading);
+        }
 
         this._load_message();
         // Next call also creates some divisions in the header.
@@ -134,12 +145,14 @@ export default class UserInterface {
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
-        const footer = document.getElementById(footerID);
-        this._parent.appendChild(footer);
+        if (footerID !== null) {
+            const footer = document.getElementById(footerID);
+            this._parent.appendChild(footer);
+        }
 
         // Next part of loading is after a time out so that the browser gets an
         // opportunity to render the layout first.
-        setTimeout(() => this._load1(footerID), 0);
+        setTimeout(() => this._load1(), 0);
 
         // To-do: should be an async function that returns a promise that
         // resolves to this.
@@ -161,6 +174,11 @@ export default class UserInterface {
     }
 
     _load_controls() {
+        if (this._keyboardMode) {
+            this._limits.showDiagnostic = false;
+            this._limits.highlight = true;
+            return;
+        }
         this._load_input(
             this._divControls, "checkbox", "show-diagnostic", "Show diagnostic",
             checked => {
@@ -246,6 +264,14 @@ export default class UserInterface {
     }
 
     _load_settings() {
+        if (this._keyboardMode) {
+            // Can't show settings in input controls in keyboard mode. The input
+            // would itself require a keyboard. Set some slower default values.
+            this._pointer.multiplierLeftRight = 0.2;
+            this._pointer.multiplierUpDown = 0.2;
+            return;
+        }
+
         this._divSettings.create('span', {}, "Speed:");
         this._load_input(
             this._divSettings, "number", "multiplier-left-right", "Left-Right",
@@ -253,7 +279,7 @@ export default class UserInterface {
         this._load_input(
             this._divSettings, "number", "multiplier-up-down", "Up-Down",
             value => this._pointer.multiplierUpDown = value, "0.3");
-        }
+    }
 
     _load_diagnostic() {
         // Diagnostic area in which to display various numbers. This is an array
@@ -261,10 +287,13 @@ export default class UserInterface {
         this._diagnostic_div_display();
         const diagnosticSpans = this._divDiagnostic.create('span', {}, [
             "loading sizes ...",
-            " ", "pointer type", "(" , "X", ", ", "Y", ")", " height:", "Height"
+            " ", "pointer type", "(" , "X", ", ", "Y", ")",
+            " height:", "Height", " ", "Go"
         ]);
         this._sizesTextNode = diagnosticSpans[0].firstChild;
         this._heightTextNode = 
+            diagnosticSpans[diagnosticSpans.length - 3].firstChild;
+        this._stopGoTextNode = 
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
         return diagnosticSpans;
     }
@@ -293,6 +322,8 @@ export default class UserInterface {
             this._pointer.touch ? "touch" : "mouse");
         this._pointer.xTextNode = diagnosticSpans[4].firstChild;
         this._pointer.yTextNode = diagnosticSpans[6].firstChild;
+
+        this._pointer.activateCallback = this.activate_render.bind(this);
     }
 
     _load1() {
@@ -302,20 +333,28 @@ export default class UserInterface {
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
-        this._loading.remove();
-        const h1 = Piece.create('h1', undefined, undefined, "Proof of Concept");
-        this._messageDiv.node.insertAdjacentElement('afterend', h1);
+        if (this._loading !== null) {
+            this._loading.remove();
+            const h1 = Piece.create(
+                'h1', undefined, undefined, "Proof of Concept");
+            this._messageDiv.node.insertAdjacentElement('afterend', h1);
+        }
 
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
-        setTimeout( () => this._on_resize(), 0);
+        setTimeout(() => {
+            this._on_resize();
+            if (this._keyboardMode) {
+                this.clicked_pointer();
+            }
+        }, 0);
 
         // Activate intervals and controls.
         this._intervalRender = null;
         this._controls.forEach(control => control.removeAttribute('disabled'));
     }
 
-    _start_render() {
+    _start_render(continuous) {
         const render_one = () => {
             if (this.zoomBox === null || this._controller === null) {
                 return false;
@@ -368,10 +407,14 @@ export default class UserInterface {
                 this.zoomBox = root;
             }
 
+            if (!this._controller.going) {
+                this._stop_render();
+            }
             return true;
         };
 
-        if (render_one()) {
+        if (render_one() && continuous) {
+            this._stopGoTextNode.nodeValue = "Started";
             this._intervalRender = setInterval(
                 render_one, this._transitionMillis);
         }
@@ -389,6 +432,19 @@ export default class UserInterface {
         if (this._intervalRender !== null) {
             clearInterval(this._intervalRender);
             this._intervalRender = null;
+            this._stopGoTextNode.nodeValue = "Stopped";
+            if (this.stopCallback !== null) {
+                this.stopCallback();
+            }
+        }
+    }
+    activate_render() {
+        if (this._intervalRender === undefined) {
+            return;
+        }
+
+        if (this._intervalRender === null && this.zoomBox !== null) {
+            this._start_render(true);
         }
     }
 
@@ -402,13 +458,14 @@ export default class UserInterface {
             // Consecutive clicks on this button stop and resume the random
             // movement.
             this._controllerRandom.going = !this._controllerRandom.going;
+            this.activate_render();
         }
         else {
             // First click or click after clicking the pointer button. Set up
             // the random moving boxes.
             this._controllerRandom.going = true;
             this._controller = this._controllerRandom;
-            this._new_ZoomBox();
+            this._new_ZoomBox(true);
         }
 
         // The other button will switch to pointer mode.
@@ -427,19 +484,23 @@ export default class UserInterface {
         if (!Object.is(this._controller, this._controllerPointer)) {
             // Current mode is random. Change this button's label to indicate
             // what it does if clicked again.
-            this._buttonPointer.textContent = "Reset";
+            if (!this._keyboardMode) {
+                this._buttonPointer.textContent = "Reset";
+            }
         }
 
         this._controller = this._controllerPointer;
         // Next line will discard the current zoom box, which will effect a
         // reset, if the mode was already pointer.
-        this._new_ZoomBox();
+        this._new_ZoomBox(false);
 
         // The other button will switch to random mode.
-        this._buttonRandom.textContent = "Go Random";
+        if (!this._keyboardMode) {
+            this._buttonRandom.textContent = "Go Random";
+        }
     }
 
-    _new_ZoomBox() {
+    _new_ZoomBox(startRender) {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
 
@@ -453,6 +514,11 @@ export default class UserInterface {
         this._controller.populate(zoomBox, this._limits);
 
         this.zoomBox = zoomBox;
+        this._start_render(startRender);
+    }
+
+    reset() {
+        this._new_ZoomBox(false);
     }
 
     static bbox_text(boundingBox, label) {
