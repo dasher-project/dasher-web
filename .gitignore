@@ -1,0 +1,4 @@
+# (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+
+# That macOS file it puts everywhere.
+.DS_Store
