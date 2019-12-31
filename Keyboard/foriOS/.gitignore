@@ -1,0 +1,13 @@
+# Copied from Captive Web View project.
+#
+# Copyright 2019 VMware, Inc.  
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Xcode project files
+*/*.xcodeproj/project.xcworkspace/
+*/*.xcodeproj/xcshareddata/
+*/*.xcodeproj/xcuserdata/
+
+# Xcode workspace files
+*.xcworkspace/xcshareddata/
+*.xcworkspace/xcuserdata/

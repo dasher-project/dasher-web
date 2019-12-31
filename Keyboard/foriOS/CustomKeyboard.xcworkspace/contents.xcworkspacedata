@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Keyboard/Keyboard.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../captive-web-view/foriOS/CaptiveWebView/CaptiveWebView.xcodeproj">
+   </FileRef>
+</Workspace>
