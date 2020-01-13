@@ -25,6 +25,12 @@ Notes
 
     https://stackoverflow.com/a/48863451/7657675
 
+-   ToDo: Fix the defect that the keyboard renders blank when returning to the
+    device after a time-out screen lock and a couple of minutes.
+
+-   ToDo: Maybe change the Captive Web View load() return value in case the
+    underlying load returns a null WKNavigation.
+
 -   ToDo: Maybe add support for directory hierarchy in the Bundle but shared so
     that the iOS keyboard JS can import from its browser/ directory without
     having to be in the same directory.
