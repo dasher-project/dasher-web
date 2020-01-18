@@ -25,15 +25,15 @@ Notes
 
     https://stackoverflow.com/a/48863451/7657675
 
--   ToDo: Fix the defect that the keyboard renders blank when returning to the
-    device after a time-out screen lock and a couple of minutes.
-
--   ToDo: Fix the defect that the keyboard doesn't change size when the device
-    changes orientation.
-
 -   ToDo: Add the equivalent of the following code from the Xcode sample.
 
         self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
+    
+    The sample code sets the flag in the `viewWillLayoutSubviews` but that's
+    questionable.
+
+-   ToDo: Raise an issue on Captive Web View about the retain cycle and message
+    handler.
 
 -   ToDo: Maybe change the Captive Web View load() return value in case the
     underlying load returns a null WKNavigation.
