@@ -1,7 +1,8 @@
 //
 //  KeyboardViewController.swift
 //
-// (c) 2020 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
 //
 
 import UIKit
@@ -143,14 +144,21 @@ UIInputViewController, CaptiveWebViewCommandHandler
             CaptiveWebView.sendObject(to: webView, ["log": log])
         }
         if let uiLabel = self.logLabel {
-            uiLabel.text = log.map({any in
-                guard let dict = any as? Dictionary<String, Any> else {
-                    return "unconverted"
+            uiLabel.text = log.map({
+                guard let dict = $0 as? Dictionary<String, Any> else {
+                    return String(describing: $0)
                 }
-                return [
-                    "\(dict["index"] as! Int) ", dict["time"] as! String, " ",
-                    dict["message"] as! String
-                ].joined()
+                if
+                    let index = dict["index"] as? Int,
+                    let entryTime = dict["time"] as? String,
+                    let entryMessage = dict["message"] as? String
+                {
+                    return [
+                        "\(index) ", entryTime, " ", entryMessage].joined()
+                }
+                else {
+                    return String(describing: dict)
+                }
             }).joined(separator: "\n")
         }
         let fileData = try! JSONSerialization.data(withJSONObject:log)
