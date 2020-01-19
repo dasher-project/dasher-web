@@ -1,4 +1,5 @@
-// (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
 
 // This is a utility class that wraps creation of HTML and SVG nodes. The class
 // takes care of setting the required namespace (NS), by having a static map of

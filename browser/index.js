@@ -1,4 +1,5 @@
-// (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
 
 /*
 This script gets run by inclusion in a script tag in the index.html file. It has

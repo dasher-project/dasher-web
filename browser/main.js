@@ -1,4 +1,5 @@
-// (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
 //
 // Some code copied from a Captive Web View template. See:  
 // https://github.com/vmware/captive-web-view/blob/master/foriOS/readme.md

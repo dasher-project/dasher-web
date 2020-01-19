@@ -1,4 +1,5 @@
-// (c) 2019 Jim Hawkins. MIT licensed, see https://opensource.org/licenses/MIT
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
 
 /*
 A predictor instance must have a `get` method that returns an array of objects

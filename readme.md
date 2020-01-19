@@ -1,15 +1,21 @@
-Proofs of Concept
-=================
-To run the proof of concept, go here:
-[https://sjjhsjjh.github.io/dasher-poc/browser/](https://sjjhsjjh.github.io/dasher-poc/browser/)
+Dasher in Web Technologies
+==========================
+Proofs of concept for Dasher zooming text entry implemented in web technologies.
+
+-   Browser.
+
+    To run the browser proof of concept, go here:
+    [https://dasher-project.github.io/redash/browser/](https://dasher-project.github.io/redash/browser/)
+
+-   Keyboard:
+
+    There is an Xcode project for a functional custom keyboard for iOS in the
+    [Keyboard](Keyboard) sub-directory.
 
 Backlog
 =======
--   Add layout options optimised for use as a custom keyboard. Message box
-    should be on the left, not at the top, for example.
 -   See about fixing the text alignment on Firefox.
 -   Change box colours to be set by the CSS maybe.
--   Maybe optimise origin_holder to have callbacks before and after descent.
 -   Change terminology of "origin holder" to maybe "delta target".
 -   More use of built-in .append and .remove in piece.js module. See:
 
@@ -27,7 +33,7 @@ especially importing modules, from file:// URLs.
 Python version 3 comes with an HTTP server that is suitable for this purpose. It
 could be started like this.
 
-    cd /path/where/you/cloned/dasher-poc/browser/
+    cd /path/where/you/cloned/redash/browser/
     python3 -m http.server -b localhost
 
 You can then run the code in the browser on your desktop, by entering
@@ -48,11 +54,12 @@ The mobile browser will then send requests to your local HTTP server. If the
 browser is Chrome, and maybe anything based on a WebView, it will appear in the
 chrome://inspect list and the Chrome developer tools can be used.
 
-Jim isn't aware of any way to do this with an iOS device, although it can be
-done on the simulator by entering the same address. An alternative may be to set
-up an intranet that is accessible to the mobile browser.
+There doesn't seem to be any way to do this with an iOS device, although it can
+be done on the simulator by entering the same address. An alternative may be to
+set up an intranet that is accessible to the mobile browser.
 
 License
 =======
-Copyright (c) 2019 Jim Hawkins. MIT licensed, see
+Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313. MIT
+licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
