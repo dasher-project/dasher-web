@@ -46,7 +46,7 @@ Notes
     documentation archive here:  
     [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)
 
--   Jim found that the Xcode debugger always crashes a second or two after the
+-   It seems like the Xcode debugger always crashes a second or two after the
     custom keyboard opens. If the keyboard is re-opened then it runs OK but you
     can't, for example, get any logging output in the Xcode console.
 
@@ -61,5 +61,6 @@ Notes
 
 License
 =======
-Copyright (c) 2019 Jim Hawkins. MIT licensed, see
+Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313. MIT
+licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).

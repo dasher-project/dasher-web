@@ -184,7 +184,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = "Jim Hawkins";
+				ORGANIZATIONNAME = "ACE Centre-North";
 				TargetAttributes = {
 					0400FFED23BB5788009AF4A0 = {
 						CreatedOnToolsVersion = 10.1;
