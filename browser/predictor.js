@@ -5,11 +5,12 @@
 A predictor instance must have a `get` method that returns an array of objects
 each with the following properties.
 
--   text, the next text, like a letter.
--   weight, the visual weighting to be given to this box.
--   group, a group name like "capital" or null if this item doesn't represent a
-    group.
--   Other properties that the predictor requires next time around.
+-   `codePoint`, the next text, like a letter, as a Unicode code point value.
+-   `weight`, the visual weighting to be given to this box.
+-   `group`, a group name like "capital" or null if this item doesn't represent
+    a group.
+-   Other custom properties for the use of the predictor, next time around.
+    The Predictor class here adds one custom property: `boosted`.
 */
 
 const codePointSpace = " ".codePointAt(0);
