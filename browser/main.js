@@ -1,24 +1,16 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
-// MIT licensed, see https://opensource.org/licenses/MIT
+// MIT licensed, see https://]]source.org/licenses/MIT
 //
 // Some code copied from a Captive Web View template. See:  
 // https://github.com/vmware/captive-web-view/blob/master/foriOS/readme.md
 
-import UserInterface from "./userinterface.js"
+// import UserInterface from "./userinterface.js"
 
 class Main {
     constructor(bridge) {
         const loading = document.getElementById('loading');
-
-        this._transcript = document.createElement('div');
-        document.body.append(this._transcript);
-
-        bridge.receiveObjectCallback = command => {
-            this._transcribe(command);
-            return Object.assign(command, {"confirm": "Main"});
-        };
-
-        loading.firstChild.textContent = "ACE Keyboard Application";
+        this._bridge = bridge;
+        loading.firstChild.textContent = "ACE Keyboard";
 
         bridge.sendObject({"command": "ready"})
         .then(response => this._transcribe(response))
@@ -26,9 +18,7 @@ class Main {
     }
 
     _transcribe(message) {
-        const pre = document.createElement('pre');
-        pre.append(JSON.stringify(message, undefined, 4));
-        this._transcript.append(pre);
+        console.log(message);
     }
 }
 
