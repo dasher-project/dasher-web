@@ -8,6 +8,7 @@
 import PageBuilder from "./pagebuilder.js";
 
 import UserInterface from "./userinterface.js"
+import PredictorCompletions from "./predictor_completions.js"
 
 class CaptiveDasher {
     constructor(bridge) {
@@ -33,7 +34,9 @@ class CaptiveDasher {
             return Object.assign(command, {"confirm": "CaptiveDasher"});
         };
         this._transcribe({"step": "constructing"});
-        const ui = new UserInterface(this._builder.node).load(null, footerID);
+        const ui = new UserInterface(this._builder.node);
+        ui.predictor = new PredictorCompletions(bridge);
+        ui.load(null, footerID);
 
         // ui.stopCallback = () => {
         //     if (ui.message !== "") {

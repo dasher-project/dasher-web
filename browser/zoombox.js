@@ -33,22 +33,39 @@ export default class ZoomBox {
 
         this._controllerSettings = specification.controllerSettings;
         this._viewer = null;
-
-        this._childSpecifications = (
-            this._specification.spawner ?
-            this._specification.spawner.child_specifications(this) :
-            []
-        );
-        this._childCount = this._childSpecifications.length;
+        
+        this._childSpecifications = [];
+        this._childCount = 0;
         this._totalWeight = this._childSpecifications.reduce(
             (accumulator, specification) => accumulator + specification.weight,
             0
         );
-
-        // childBoxes is a sparse array.
         this._childBoxes = Array(this._childSpecifications.length).fill(null);
+        
+        var instance = this;
+        this._ready = new Promise(function(resolve, reject) {
+            if (instance._specification.spawner === null) {
+                resolve(true);
+            }
+            else {
+                instance._specification.spawner.child_specifications(instance)
+                .then(specifications => {
+                    instance._childSpecifications = specifications;
+                    instance._childCount = instance._childSpecifications.length;
+                    instance._totalWeight = instance._childSpecifications.reduce(
+                        (accumulator, specification) => accumulator + specification.weight,
+                        0
+                    );
+
+                    instance._childBoxes = Array(instance._childSpecifications.length).fill(null);
+                    resolve(true);
+                })
+                .catch(error => reject(error));
+            }
+        });
     }
 
+    get ready() { return this._ready; }
     get colour() {return this._colour;}
     get text() {return this._text;}
     get prediction() {return this._prediction;}
