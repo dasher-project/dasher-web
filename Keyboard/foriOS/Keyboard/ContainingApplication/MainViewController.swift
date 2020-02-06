@@ -17,12 +17,27 @@ class MainViewController: CaptiveWebView.DefaultViewController {
         ) throws -> Dictionary<String, Any>
     {
         switch command {
-        case "ready":
+        case Commands.Ready.name:
             return [:]
+        case Commands.Predict.name:
+            return predict(args: commandDictionary)
         default:
             return try super.response(to: command, in: commandDictionary)
         }
     }
-
+    
+    /// Handle the 'predict' command.
+    /// - Parameter args: Command arguments.
+    func predict(args: Dictionary<String, Any>) -> Dictionary<String, Any> {
+        guard let input = args[Commands.Predict.Args.input] as? String else {
+            return [:]
+        }
+        
+        if input.count > 0, let predictions = Predictor.predictions(for: input) {
+            return [Commands.Predict.Ret.predictions: predictions]
+        }
+        
+        return [:]
+    }
 }
 

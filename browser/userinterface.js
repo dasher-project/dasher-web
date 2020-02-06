@@ -28,6 +28,7 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
+        this._predictor = null;
 
         this._controllerRandom = new ControllerRandom(
             "abcdefghijklmnopqrstuvwxyz".split(""));
@@ -120,6 +121,13 @@ export default class UserInterface {
         this._messageDisplay.node.textContent = (
             message === undefined ? null : message);
     }
+    
+    get predictor() {
+        return this._predictor;
+    }
+    set predictor(predictor) {
+        this._predictor = predictor;
+    }
 
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
@@ -140,9 +148,10 @@ export default class UserInterface {
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
-        const predictor = new Predictor();
+        this._load_predictor();
+        
         this._controllerPointer = new ControllerPointer(
-            this._pointer, predictor.get.bind(predictor));
+            this._pointer, this._predictor.get.bind(this._predictor));
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -158,6 +167,12 @@ export default class UserInterface {
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
+    }
+    
+    _load_predictor() {
+        if (this._predictor === null) {
+            this._predictor = new Predictor();
+        }
     }
 
     _load_message() {
@@ -515,7 +530,12 @@ export default class UserInterface {
         this._controller.populate(zoomBox, this._limits);
 
         this.zoomBox = zoomBox;
-        this._start_render(startRender);
+        
+        var instance = this;
+        
+        this.zoomBox.ready
+        .then(result => instance._start_render(startRender) )
+        .catch(error => console.log("ZoomBox is not ready and an error occurred: " + error) );
     }
 
     reset() {
