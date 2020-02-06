@@ -18,6 +18,8 @@ import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 import Predictor from './predictor.js';
 
+import Speech from './speech.js';
+
 const messageLabelText = "Message:";
 
 export default class UserInterface {
@@ -28,6 +30,9 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
+
+        this._speakOnStop = false;
+        this._speech = null;
 
         this._controllerRandom = new ControllerRandom(
             "abcdefghijklmnopqrstuvwxyz".split(""));
@@ -196,6 +201,38 @@ export default class UserInterface {
         this._load_input(
             this._divControls, "checkbox", "highlight", "Highlight",
             checked => this._limits.highlight = checked, true);
+        
+        new Speech().initialise(speech => {
+            if (this._speech === null) {
+                this._speech = speech;
+                this._speakCheckbox = this._load_input(
+                    this._divControls, "checkbox", "speak", "Speak on stop",
+                    checked => {
+                        if (checked && !this._speakOnStop) {
+                            speech.speak("Speech is now active.");
+                        }
+                        this._speakOnStop = checked;
+                    }, false);
+                this._voiceSelect = new Piece(
+                    this._divControls.create('select'));
+                this._voiceSelect.node.addEventListener('input', () => {
+                    if (this._speakOnStop) {
+                        speech.speak(
+                            "Speech is now active.",
+                            this._voiceSelect.node.selectedIndex);
+                    }
+                });
+            }
+            
+            if (speech.available) {
+                this._speakCheckbox.removeAttribute('disabled');
+                this._voiceSelect.remove_childs();
+                speech.voices.forEach(voice => {
+                    this._voiceSelect.create(
+                        'option', undefined, `${voice.name} (${voice.lang})`);
+                });
+            }
+        });
     }
 
     _diagnostic_div_display() {
@@ -319,6 +356,16 @@ export default class UserInterface {
         // Instantiate the pointer. It will draw the cross hairs and pointer
         // line, always in front of the zoombox as drawn by the viewer.
         this._pointer = new Pointer(this._svg);
+        this._pointer.touchEndCallback = (() => {
+            if (
+                this._speakOnStop &&
+                this.message !== undefined &&
+                this.message !== null
+            ) {
+                this._speech.speak(
+                    this.message, this._voiceSelect.node.selectedIndex);
+            }
+        });
         diagnosticSpans[2].firstChild.nodeValue = (
             this._pointer.touch ? "touch" : "mouse");
         this._pointer.xTextNode = diagnosticSpans[4].firstChild;
