@@ -20,6 +20,7 @@ export default class Pointer {
         this._pointerLine = null;
 
         this._activateCallback = null;
+        this._touchEndCallback = null;
 
         // Setter invocation.
         this.svgPiece = svgPiece;
@@ -42,6 +43,14 @@ export default class Pointer {
     get activateCallback() {return this._activateCallback;}
     set activateCallback(activateCallback) {
         this._activateCallback = activateCallback;
+    }
+
+    // Purpose of the touch-end callback is to get into some other code from
+    // within a user interaction handler. That supports, for example speech
+    // synthesis, which is sometimes blocked outside a user interaction.
+    get touchEndCallback() {return this._touchEndCallback;}
+    set touchEndCallback(touchEndCallback) {
+        this._touchEndCallback = touchEndCallback;
     }
 
     get rawX() {return this._rawX;}
@@ -213,6 +222,9 @@ export default class Pointer {
     }
     _on_touch_leave(touchEvent) {
         touchEvent.preventDefault();
+        if (this.touchEndCallback !== null) {
+            this.touchEndCallback();
+        }
         return this._update_pointer_raw(0, 0);
     }
 
