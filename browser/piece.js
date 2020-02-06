@@ -82,6 +82,22 @@ export default class Piece {
         }
         const clone = this.node.cloneNode(false);
         parent.replaceChild(clone, this.node);
+        this._node = clone;
+    }
+
+    // TOTH: https://github.com/vmware/captive-web-view/blob/master/forAndroid/captivewebview/src/main/assets/library/pagebuilder.js#L131
+    static remove_childs(parent, beforeChild) {
+        let child = parent.firstChild;
+        if (beforeChild === undefined) {
+            beforeChild = null;
+        }
+        while(child !== beforeChild ) {
+            parent.removeChild(child);
+            child = parent.firstChild;
+        }
+    }
+    remove_childs(beforeChild) {
+        return Piece.remove_childs(this.node, beforeChild);
     }
 
     static set_attributes(element, attributes) {
@@ -124,7 +140,10 @@ export default class Piece {
 Piece.nameSpaces = {
     'html': {
         'url': 'http://www.w3.org/1999/xhtml',
-        'tags': ['div', 'span', 'button', 'h1', 'input', 'label', 'textarea']
+        'tags': [
+            'div', 'span', 'button', 'h1', 'input', 'label', 'option', 'select',
+            'textarea'
+        ]
     },
     'svg': {
         'url': 'http://www.w3.org/2000/svg',
