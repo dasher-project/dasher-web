@@ -201,6 +201,9 @@ export default class Pointer {
         // Mouse Leave events are posted for child nodes too.
         if (Object.is(mouseEvent.target, this._svgPiece.node)) {
             mouseEvent.preventDefault();
+            if (this.touchEndCallback !== null) {
+                this.touchEndCallback();
+            }
             return this._update_pointer_raw(0, 0);
         }
     }
