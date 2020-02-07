@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Dasher Keyboard</string>
+    <string name="dasherinputmethodservice">Dasher Keyboard</string>
+    <string name="webview">webview</string>
+</resources>

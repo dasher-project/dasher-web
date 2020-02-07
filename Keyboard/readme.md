@@ -8,6 +8,9 @@ repository as a Git submodule.
 
 Notes
 =====
+
+## iOS Custom Keyboard
+
 -   The iOS project has a workspace. This means that you should in general
     **always open the workspace** CustomKeyboard.xcworkspace file, and **never
     open the project**.
@@ -58,6 +61,14 @@ Notes
 
     You might have to build the Captive Web View target separately before you
     can build the custom keyboard.
+
+## Android Custom Keyboard 
+
+- There is a dependency on the captive-web-view subproject. First run the Gradle task 'forAndroid -> Tasks -> upload -> uploadArchives' in the 'captive-web-view' subproject to generate a local maven repo to satisfy the dependency.
+
+- To make the Dasher keyboard available on a device or simulator, open Android settings on the device (ususally by swiping down from the top and tapping the cog icon), and then search for 'Virtual Keyboard'. Tap 'Manage keyboards' and enable the 'Dasher Keyboard'.
+
+- You can switch to the Dasher custom keyboard by tapping a text field to present a standard keyboard and then tap the keyboard icon in the bottom right. Select 'Dasher Keyboard' in the alert.
 
 License
 =======
