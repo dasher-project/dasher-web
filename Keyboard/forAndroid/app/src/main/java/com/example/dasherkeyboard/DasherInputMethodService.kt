@@ -39,7 +39,7 @@ class DasherInputMethodService : InputMethodService(), WebViewBridge{
             private val map = values().associateBy(Dasher::command)
 
             /**
-             * Convenience method to create a SkycapSetting instance from a schema string
+             * Convenience method to create a Dasher Command instance from a command string
              */
             fun fromCommand(command: String) = map[command]
 
