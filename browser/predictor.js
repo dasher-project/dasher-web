@@ -17,45 +17,44 @@ const codePointSpace = " ".codePointAt(0);
 const codePointStop = ".".codePointAt(0);
 
 export default class Predictor {
-    get(message, prediction) {
-        
-        return new Promise(function(resolve, reject) {
-                           
-            const lastIndex = message.length - 1;
+    // Next line uses the Promise constructor with an arrow function. This is to
+    // make it a useful template for other Predictor classes.  
+    // The code here would be better as a Promise.resolve(returning).
+    get(message, prediction) { return new Promise((resolve, reject) => {
+        const lastIndex = message.length - 1;
 
-            // Check if the messages ends full stop, space.
-            const stopSpace = (
-                lastIndex > 1 && message[lastIndex - 1] === codePointStop &&
-                message[lastIndex] === codePointSpace
-            );
-            const weighted = (prediction === null || stopSpace) ? "capital" : null;
-            const boosted = prediction === null ? null : prediction.boosted;
-            const only = prediction === null ? null : prediction.group;
+        // Check if the messages ends full stop, space.
+        const stopSpace = (
+            lastIndex > 1 && message[lastIndex - 1] === codePointStop &&
+            message[lastIndex] === codePointSpace
+        );
+        const weighted = (prediction === null || stopSpace) ? "capital" : null;
+        const boosted = prediction === null ? null : prediction.boosted;
+        const only = prediction === null ? null : prediction.group;
 
-            const returning = [];
-            for (const group of Predictor.characterGroups) {
-                if (group.name === boosted || group.name === only) {
-                    group.codePoints.forEach(codePoint => returning.push({
-                        "codePoint": codePoint,
-                        "group": null,
-                        "boosted": group.boost,
-                        "weight":
-                            (Predictor.vowelCodePoints.includes(codePoint) ? 2 : 1)
-                    }));
-                }
-                else if (only === null) {
-                    returning.push({
-                        "codePoint": null,
-                        "group": group.name,
-                        "boosted": group.name,
-                        "weight": group.name === weighted ? 20 : 1
-                    })
-                }
+        const returning = [];
+        for (const group of Predictor.characterGroups) {
+            if (group.name === boosted || group.name === only) {
+                group.codePoints.forEach(codePoint => returning.push({
+                    "codePoint": codePoint,
+                    "group": null,
+                    "boosted": group.boost,
+                    "weight":
+                        (Predictor.vowelCodePoints.includes(codePoint) ? 2 : 1)
+                }));
             }
+            else if (only === null) {
+                returning.push({
+                    "codePoint": null,
+                    "group": group.name,
+                    "boosted": group.name,
+                    "weight": group.name === weighted ? 20 : 1
+                })
+            }
+        }
 
-            resolve(returning);
-        });
-    }
+        resolve(returning);
+    });}
 }
 
 Predictor.characterGroups = [
