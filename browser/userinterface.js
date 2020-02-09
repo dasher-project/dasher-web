@@ -426,7 +426,7 @@ export default class UserInterface {
             // Process one control cycle.
             this._controller.control(this.zoomBox, this._limits);
             //
-            // Update diagnostic display. The toLocalString method insert
+            // Update diagnostic display. The toLocaleString method will insert
             // thousand separators.
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
