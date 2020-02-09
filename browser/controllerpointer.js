@@ -16,62 +16,61 @@ export default class ControllerPointer {
 
     get going() {return this._pointer.going;}
 
-    child_specifications(zoomBox) {
-        var instance = this;
-        return new Promise(function(resolve, reject) {
-                           
-               instance._predictor(zoomBox.message, zoomBox.prediction).then(predictions => {
-                 var ret = predictions.map((prediction, index) => {
-                     const codePoint = prediction.codePoint;
+    child_specifications(zoomBox) { return new Promise((resolve, reject) => {
+        this._predictor(
+            zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
+        ).then(predictions => {
+            const returning = predictions.map((prediction, index) => {
+                const codePoint = prediction.codePoint;
 
-                     const message = zoomBox.messageCodePoints.slice();
-                     if (codePoint !== null) {
-                         message.push(codePoint);
-                     }
+                const message = zoomBox.messageCodePoints.slice();
+                if (codePoint !== null) {
+                    message.push(codePoint);
+                }
 
-                     const displayTextIndex = (
-                         codePoint === null ? undefined :
-                         ControllerPointer.displayTextLeft.indexOf(codePoint));
-                     const displayText = (
-                         displayTextIndex === undefined ? null :
-                         String.fromCodePoint(
-                             displayTextIndex >= 0 ?
-                             ControllerPointer.displayTextMap[displayTextIndex][1] :
-                             codePoint
-                         )
-                     );
+                const displayTextIndex = (
+                    codePoint === null ? undefined :
+                    ControllerPointer.displayTextLeft.indexOf(codePoint));
+                const displayText = (
+                    displayTextIndex === undefined ? null :
+                    String.fromCodePoint(
+                        displayTextIndex >= 0 ?
+                        ControllerPointer.displayTextMap[displayTextIndex][1] :
+                        codePoint
+                    )
+                );
                      
-                     let colour = ControllerPointer.unsetColour;
-                     if (prediction.group === null) {
-                         prediction.ordinal = (
-                             zoomBox.prediction === null ? 0 :
-                             zoomBox.prediction.ordinal + 1
-                         );
-                         colour = ControllerPointer.sequenceColours[
-                             (index % 2) + ((prediction.ordinal % 2) * 2)];
-                     }
-                     else {
-                         prediction.ordinal = 0;
-                         if (prediction.group in ControllerPointer.groupColours) {
-                             colour = ControllerPointer.groupColours[prediction.group];
-                         }
-                     }
+                let colour = ControllerPointer.unsetColour;
+                if (prediction.group === null) {
+                    prediction.ordinal = (
+                        zoomBox.prediction === null ? 0 :
+                        zoomBox.prediction.ordinal + 1
+                    );
+                    colour = ControllerPointer.sequenceColours[
+                        (index % 2) + ((prediction.ordinal % 2) * 2)];
+                }
+                else {
+                    prediction.ordinal = 0;
+                    if (prediction.group in ControllerPointer.groupColours) {
+                        colour = ControllerPointer.groupColours[
+                            prediction.group];
+                    }
+                }
 
-                     return {
-                         "prediction": prediction,
-                         "colour": colour,
-                         "message": message,
-                         "text": displayText,
-                         "weight": prediction.weight,
-                         "spawner": instance
-                     };
-                 });
+                return {
+                    "prediction": prediction,
+                    "colour": colour,
+                    "message": message,
+                    "text": displayText,
+                    "weight": prediction.weight,
+                    "spawner": this
+                };
+            });
                                                                          
-                 resolve(ret);
-               })
-               .catch(error => reject(error));
-        });
-    }
+            resolve(returning);
+        })
+        .catch(error => reject(error));
+    }); }
 
     populate(rootBox, limits) {
         rootBox.arrange_children(limits);
