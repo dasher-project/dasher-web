@@ -52,7 +52,7 @@ export default class UserInterface {
             {left:1 / 2, height: 0.01},
             {left:1 / 5, height: 0.05},
             {left:1 / -6, height: 0.5},
-            {left:1 / -3, height: 1}            
+            {left:1 / -3, height: 1}
         ];
 
         // This value also appears in the userinterface.css file, in the
@@ -68,6 +68,9 @@ export default class UserInterface {
         this._header = undefined;
 
         this._stopCallback = null;
+
+        //Second screen
+        this._opener = null;
     }
 
     get header() {
@@ -148,7 +151,7 @@ export default class UserInterface {
         const predictor = new Predictor();
         this._controllerPointer = new ControllerPointer(
             this._pointer, predictor.get.bind(predictor));
-    
+
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
         if (footerID !== null) {
@@ -198,10 +201,12 @@ export default class UserInterface {
             "Go Random", () => this.clicked_random());
         this._buttonPointer = this._load_button(
             "Pointer", () => this.clicked_pointer());
+        this._buttonPointer = this._load_button(
+            "Popup", () => this.clicked_popup());
         this._load_input(
             this._divControls, "checkbox", "highlight", "Highlight",
             checked => this._limits.highlight = checked, true);
-        
+
         new Speech().initialise(speech => {
             if (this._speech === null) {
                 this._speech = speech;
@@ -223,7 +228,7 @@ export default class UserInterface {
                     }
                 });
             }
-            
+
             if (speech.available) {
                 this._speakCheckbox.removeAttribute('disabled');
                 this._voiceSelect.remove_childs();
@@ -329,9 +334,9 @@ export default class UserInterface {
             " height:", "Height", " ", "Go"
         ]);
         this._sizesTextNode = diagnosticSpans[0].firstChild;
-        this._heightTextNode = 
+        this._heightTextNode =
             diagnosticSpans[diagnosticSpans.length - 3].firstChild;
-        this._stopGoTextNode = 
+        this._stopGoTextNode =
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
         return diagnosticSpans;
     }
@@ -430,8 +435,9 @@ export default class UserInterface {
                     (originHolder === null || originHolder === undefined) ?
                     "N/A" : originHolder.message);
             }
-            this.message = (
-                originHolder === null ? undefined : originHolder.message);
+
+            //Process the current input
+            this._process_input(originHolder);
 
             // Process one draw cycle.
             this.zoomBox.viewer.draw(this._limits);
@@ -494,8 +500,20 @@ export default class UserInterface {
         if (this._intervalRender === null && this.zoomBox !== null) {
             this._start_render(true);
         }
-    }
 
+    }
+    _process_input(originHolder){
+      if(originHolder !== null && this._opener !== null){
+        var html = "<html><head></head><body>"+originHolder.message+"</body></html>";
+        this._opener.document.open();
+        this._opener.document.write(html);
+        this._opener.document.close();
+      }
+
+      //Update the ui element
+      this.message = (
+          originHolder === null ? undefined : originHolder.message);
+    }
     // Go-Random button was clicked.
     clicked_random() {
         if (this._intervalRender === undefined) {
@@ -522,6 +540,9 @@ export default class UserInterface {
         // This button will either stop or go.
         this._buttonRandom.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
+    }
+    clicked_popup() {
+       this._opener = window.open("","wildebeast","width=300,height=300,scrollbars=1,resizable=1");
     }
 
     clicked_pointer() {
