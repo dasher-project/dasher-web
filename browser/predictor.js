@@ -17,10 +17,7 @@ const codePointSpace = " ".codePointAt(0);
 const codePointStop = ".".codePointAt(0);
 
 export default class Predictor {
-    // Next line uses the Promise constructor with an arrow function. This is to
-    // make it a useful template for other Predictor classes.  
-    // The code here would be better as a Promise.resolve(returns).
-    get(points, text, prediction) { return new Promise((resolve, reject) => {
+    async get(points, text, prediction) {
         const boosted = prediction === null ? null : prediction.boosted;
         const only = prediction === null ? null : prediction.group;
 
@@ -51,14 +48,16 @@ export default class Predictor {
         }
 
         // This is order n-squared which isn't good but proves the approach.
-        const characterWeights = this.get_character_weights(
+        const characterWeights = await this.get_character_weights(
             points, text, prediction);
-        for (const {codePoint, weight} of characterWeights) {
+        characterWeights.forEach((weight, codePoint) => {
+            let found = false;
             for (const [index, returning] of returns.entries()) {
                 const returnGroup = returnGroups[index];
                 if (returnGroup === null) {
                     if (returning.codePoint === codePoint) {
                         returning.weight = weight;
+                        found = true;
                         break;
                     }
                 }
@@ -66,18 +65,33 @@ export default class Predictor {
                     // Optimise if returnGroup has firstPoint and lastPoint
                     if (returnGroup.codePoints.includes(codePoint)) {
                         returning.weight += (weight - 1);
+                        found = true;
                         break;
                     }
                 }
             }
-        }
 
-        resolve(returns);
-    });}
+            if (!found) {
+                for(const checkGroup of Predictor.characterGroups) {
+                    if (checkGroup.codePoints.includes(codePoint)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found) {
+                throw new Error(
+                    `Code point with weight not found: ${codePoint}` +
+                    ` "${String.fromCodePoint(codePoint)}".`);
+            }
+        });
+
+        return returns;
+    }
 
     // Base class get... doesn't use the `text` parameter but subclass
     // implementations might.
-    get_character_weights(points, text, prediction) {
+    async get_character_weights(points, text, prediction) {
         const lastIndex = points.length - 1;
 
         // Check if the message ends full stop, space.
@@ -97,6 +111,10 @@ export default class Predictor {
 
         return Predictor.characterGroupMap[weightGroup].weights;
     }
+
+    static is_space(codePoint) {
+        return Predictor.characterGroupMap.space.codePoints.includes(codePoint);
+    }
 }
 
 const vowelTexts = ["a", "e", "i", "o", "u"];
@@ -113,6 +131,10 @@ Predictor.characterGroups = [
         "name": "numeral", "boost": "numeral",
         "firstPoint": "0".codePointAt(0), "lastPoint": "9".codePointAt(0)
     }, {
+        "name": "contraction", "boost": "small", "texts": [
+            "'", "-"
+        ]
+    }, {
         "name": "punctuation", "boost": "space", "texts": [
             ",", ".", "&", "!", "?"
         ]
@@ -128,6 +150,7 @@ Predictor.characterGroupMap = {};
 Predictor.characterGroups.forEach(group => {
     Predictor.characterGroupMap[group.name] = group;
 });
+Predictor.characterGroupMap.space = Predictor.characterGroupMap.space;
 
 // Fill in basic attributes for groups: texts and codePoints.
 Predictor.characterGroups.forEach(group => {
@@ -153,39 +176,27 @@ Predictor.characterGroups.forEach(group => {
 
     // Start with a big weight for anything in the boosted group under this
     // group.
-    group.weights = boosted.codePoints.map(point => {return {
-        "codePoint": point, "weight": boostWeight
-    }});
+    group.weights = new Map();
+    boosted.codePoints.forEach(point => group.weights.set(point, boostWeight));
 
     // Utility function.
     function adjust(codePoints, factor) {
         codePoints.forEach(adjustPoint => {
-            let found = false;
-            for(const weighting of group.weights) {
-                if (weighting.codePoint === adjustPoint) {
-                    found = true;
-                    weighting.weight *= factor;
-                    break;
-                }
-            }
-            if (!found) {
-                group.weights.push({
-                    "codePoint": adjustPoint, "weight": factor
-                });
-            }
+            const weighting = group.weights.get(adjustPoint);
+            group.weights.set(
+                adjustPoint,
+                weighting === undefined ? factor : weighting * factor
+            );
         });
     }
 
     // Add weights for vowels and spaces.
     adjust(vowelCodePoints, vowelWeight);
-    adjust(Predictor.characterGroupMap["space"].codePoints, spaceWeight);
+    adjust(Predictor.characterGroupMap.space.codePoints, spaceWeight);
 });
 
-const capitalWeights = Predictor.characterGroupMap[
-    "capital"
-].codePoints.map(
-    point => {return {"codePoint": point, "weight": 15};}
+const capitalWeights = new Map();
+Predictor.characterGroupMap.capital.codePoints.forEach(
+    point => capitalWeights.set(point, 15)
 );
-capitalWeights.push({
-    "codePoint": codePointSpace, "weight": spaceWeight
-});
+capitalWeights.set(codePointSpace, spaceWeight);

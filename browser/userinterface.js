@@ -582,7 +582,12 @@ export default class UserInterface {
         
         this.zoomBox.ready
         .then(result => instance._start_render(startRender) )
-        .catch(error => console.log("ZoomBox is not ready and an error occurred: " + error) );
+        .catch(error => {
+            // The thrown error mightn't be noticed, if the console isn't
+            // visible. So, set it into the message too.
+            this.message = `ZoomBox couldn't be made ready.\n${error}`;
+            throw error;
+        });
     }
 
     reset() {
