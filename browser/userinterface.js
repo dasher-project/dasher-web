@@ -191,9 +191,8 @@ export default class UserInterface {
         return predictor.get.bind(predictor);
     }
 
-
     _load_message() {
-        // Textarea in which the message is displayed.
+        // Textarea in which the message is displayed, and surrounding div.
         this._messageDiv = new Piece(
             'div', this._header, {'id':"message-holder"});
         const identifierMessage = "message";
@@ -210,6 +209,9 @@ export default class UserInterface {
         if (this._keyboardMode) {
             this._limits.showDiagnostic = false;
             this._limits.highlight = true;
+
+            // this._header.create('div', undefined, "Hihjo");
+            this._load_predictor_controls(this._header);
             return;
         }
         this._load_input(
@@ -229,7 +231,7 @@ export default class UserInterface {
             this._divControls, "checkbox", "highlight", "Highlight",
             checked => this._limits.highlight = checked, true);
         
-        this._load_predictor_controls();
+        this._load_predictor_controls(this._divControls);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -332,10 +334,9 @@ export default class UserInterface {
         }
     }
 
-    _load_predictor_controls() {
+    _load_predictor_controls(parentPiece) {
         if (this._predictorSelect === null) {
-            this._predictorSelect = new Piece(
-                this._divControls.create('select'));
+            this._predictorSelect = new Piece(parentPiece.create('select'));
             this._predictorSelect.node.addEventListener('input', event => {
                 if (this._controllerPointer !== undefined) {
                     this._controllerPointer.predictor = this._get_predictor(

@@ -299,6 +299,13 @@ UIInputViewController, CaptiveWebViewCommandHandler
             self.advanceToNextInputMode()
             // Advancing should bin the web view so the return won't happen,
             // unless something goes wrong.
+        
+        case "ready":
+            returning["predictorCommands"] = ["predict"]
+        
+        case "predict":
+            returning["replacements"] = []
+            returning["replacedLength"] = 0
             
         default:
             returning["failed"] = "Unknown command \"\(command)\"."
