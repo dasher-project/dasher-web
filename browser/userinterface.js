@@ -30,7 +30,8 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
-        this._predictor = null;
+        this._predictors = null;
+        this._predictorSelect = null;
 
         this._speakOnStop = false;
         this._speech = null;
@@ -81,7 +82,6 @@ export default class UserInterface {
     get zoomBox() {
         return this._zoomBox;
     }
-
     set zoomBox(newBox) {
         const oldBox = this._zoomBox;
 
@@ -127,11 +127,14 @@ export default class UserInterface {
             message === undefined ? null : message);
     }
     
-    get predictor() {
-        return this._predictor;
+    get predictors() {
+        return this._predictors;
     }
-    set predictor(predictor) {
-        this._predictor = predictor;
+    set predictors(predictors) {
+        this._predictors = predictors;
+        if (this._predictorSelect !== null) {
+            this._load_predictor_controls();
+        }
     }
 
     load(loadingID, footerID) {
@@ -148,15 +151,15 @@ export default class UserInterface {
         // Next call also creates some divisions in the header.
         this._load_view();
 
+        this._load_predictors();
+        
         this._load_controls();
         const diagnosticSpans = this._load_diagnostic();
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
-        this._load_predictor();
-        
         this._controllerPointer = new ControllerPointer(
-            this._pointer, this._predictor.get.bind(this._predictor));
+            this._pointer, this._get_predictor(0));
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -174,11 +177,20 @@ export default class UserInterface {
         return this;
     }
     
-    _load_predictor() {
-        if (this._predictor === null) {
-            this._predictor = new Predictor();
+    _load_predictors() {
+        if (this.predictors === null || this.predictors.length <= 0) {
+            this.predictors = [{
+                "label": "Basic prediction", "item": new Predictor()
+            // }, {
+            //     "label": "Delete me", "item": new Predictor()
+            }];
         }
     }
+    _get_predictor(index) {
+        const predictor = this.predictors[index].item;
+        return predictor.get.bind(predictor);
+    }
+
 
     _load_message() {
         // Textarea in which the message is displayed.
@@ -217,37 +229,9 @@ export default class UserInterface {
             this._divControls, "checkbox", "highlight", "Highlight",
             checked => this._limits.highlight = checked, true);
         
-        new Speech().initialise(speech => {
-            if (this._speech === null) {
-                this._speech = speech;
-                this._speakCheckbox = this._load_input(
-                    this._divControls, "checkbox", "speak", "Speak on stop",
-                    checked => {
-                        if (checked && !this._speakOnStop) {
-                            speech.speak("Speech is now active.");
-                        }
-                        this._speakOnStop = checked;
-                    }, false);
-                this._voiceSelect = new Piece(
-                    this._divControls.create('select'));
-                this._voiceSelect.node.addEventListener('input', () => {
-                    if (this._speakOnStop) {
-                        speech.speak(
-                            "Speech is now active.",
-                            this._voiceSelect.node.selectedIndex);
-                    }
-                });
-            }
-            
-            if (speech.available) {
-                this._speakCheckbox.removeAttribute('disabled');
-                this._voiceSelect.remove_childs();
-                speech.voices.forEach(voice => {
-                    this._voiceSelect.create(
-                        'option', undefined, `${voice.name} (${voice.lang})`);
-                });
-            }
-        });
+        this._load_predictor_controls();
+
+        new Speech().initialise(this._load_speech.bind(this));
     }
 
     _diagnostic_div_display() {
@@ -314,6 +298,56 @@ export default class UserInterface {
         button.addEventListener('click', callback);
         this._controls.push(button);
         return button;
+    }
+
+    _load_speech(speech) {
+        if (this._speech === null) {
+            this._speech = speech;
+            this._speakCheckbox = this._load_input(
+                this._divControls, "checkbox", "speak", "Speak on stop",
+                checked => {
+                    if (checked && !this._speakOnStop) {
+                        speech.speak("Speech is now active.");
+                    }
+                    this._speakOnStop = checked;
+                }, false);
+            this._voiceSelect = new Piece(
+                this._divControls.create('select'));
+            this._voiceSelect.node.addEventListener('input', () => {
+                if (this._speakOnStop) {
+                    speech.speak(
+                        "Speech is now active.",
+                        this._voiceSelect.node.selectedIndex);
+                }
+            });
+        }
+        
+        if (speech.available) {
+            this._speakCheckbox.removeAttribute('disabled');
+            this._voiceSelect.remove_childs();
+            speech.voices.forEach(voice => {
+                this._voiceSelect.create(
+                    'option', undefined, `${voice.name} (${voice.lang})`);
+            });
+        }
+    }
+
+    _load_predictor_controls() {
+        if (this._predictorSelect === null) {
+            this._predictorSelect = new Piece(
+                this._divControls.create('select'));
+            this._predictorSelect.node.addEventListener('input', event => {
+                if (this._controllerPointer !== undefined) {
+                    this._controllerPointer.predictor = this._get_predictor(
+                        event.target.selectedIndex);
+                }
+            });
+        }
+
+        this._predictorSelect.remove_childs();
+        this.predictors.forEach(predictor =>
+            this._predictorSelect.node.add(new Option(predictor.label))
+        );
     }
 
     _load_settings() {

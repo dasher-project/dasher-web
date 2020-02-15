@@ -10,6 +10,9 @@ import Foundation
 struct Commands {
     struct Ready {
         static let name = "ready"
+        struct Ret {
+            static let predictorCommands = "predictorCommands"
+        }
     }
     struct Predict {
         static let name = "predict"

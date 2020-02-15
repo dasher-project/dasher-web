@@ -9,6 +9,7 @@ import PageBuilder from "./pagebuilder.js";
 
 import UserInterface from "./userinterface.js"
 import PredictorCompletions from "./predictor_completions.js"
+import Predictor from "./predictor.js";
 
 class CaptiveDasher {
     constructor(bridge) {
@@ -35,8 +36,6 @@ class CaptiveDasher {
         };
         this._transcribe({"step": "constructing"});
         const ui = new UserInterface(this._builder.node);
-        ui.predictor = new PredictorCompletions(bridge);
-        ui.load(null, footerID);
 
         // ui.stopCallback = () => {
         //     if (ui.message !== "") {
@@ -48,7 +47,23 @@ class CaptiveDasher {
         
         loading.remove();
 
-        this._send({"command": "ready"});
+        this._send({"command": "ready"})
+        .then(response => {
+            const commands = response.predictorCommands;
+            if (commands !== undefined && commands.length > 0) {
+                // In this version, the commands are ignored. Just the presence
+                // of the list in the response indicates that
+                // PredictorCompletions can be used.
+                ui.predictors = [{
+                    "label": "Auto-complete",
+                    "item": new PredictorCompletions(bridge)
+                }, {
+                    "label": "No prediction",
+                    "item": new Predictor()
+                }];
+            }
+            ui.load(null, footerID);
+        });
     }
 
     _transcribe(message) {

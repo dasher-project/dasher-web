@@ -19,7 +19,10 @@ class MainViewController: CaptiveWebView.DefaultViewController {
         switch command {
         case Commands.Ready.name:
             Predictor.tests()
-            return [:]
+            return [
+                // Return a single-element array.
+                Commands.Ready.Ret.predictorCommands: [Commands.Predict.name]
+            ]
         case Commands.Predict.name:
             // Uncomment the following to force an error.
             // var duffDictionary = commandDictionary

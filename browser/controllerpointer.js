@@ -12,12 +12,15 @@ export default class ControllerPointer {
         };
     }
 
+    get predictor() {return this._predictor;}
+    set predictor(predictor) {this._predictor = predictor;}
+
     get rootSpecification() {return this._rootSpecification;}
 
     get going() {return this._pointer.going;}
 
     child_specifications(zoomBox) { return new Promise((resolve, reject) => {
-        this._predictor(
+        this.predictor(
             zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
         ).then(predictions => {
             const returning = predictions.map((prediction, index) => {
