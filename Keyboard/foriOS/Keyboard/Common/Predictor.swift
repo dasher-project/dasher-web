@@ -102,4 +102,41 @@ class Predictor {
         )
         return (lastWordLength, returning)
     }
+    
+    struct Command {
+        static let name = "predict"
+        struct Args {
+            static let input = "input"
+        }
+        struct Ret {
+            static let replacements = "replacements"
+            static let replacedLength = "replacedLength"
+        }
+    }
+    
+    /// Handle the 'predict' command.
+    /// - Parameter command: Command dictionary.
+    static func response(
+        to command: Dictionary<String, Any>
+    ) throws -> Dictionary<String, Any>
+    {
+        guard let input = command[Command.Args.input] as? String else {
+            throw ErrorMessage.message(
+                "Missing `\(Command.Args.input)` parameter in \(command).")
+        }
+        
+        let result = Predictor.completeLastWord(of: input)
+
+        return [
+            Command.Ret.replacements: result.replacements ?? [],
+            Command.Ret.replacedLength: result.replacedLength
+        ]
+    }
+
+}
+
+// See note in DefaultViewController.swift file, in the Captive Web View project
+// for a discussion of why this is here.
+private enum ErrorMessage: Error {
+    case message(_ message:String)
 }

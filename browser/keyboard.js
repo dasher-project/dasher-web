@@ -25,7 +25,6 @@ class Keyboard {
             this._transcribe(command);
             return Object.assign(command, {"confirm": "Keyboard"});
         };
-        this._transcribe({"step": "constructing"});
         const ui = new UserInterface(this._builder.node);
         ui.stopCallback = () => {
             if (ui.message !== "") {
@@ -33,9 +32,8 @@ class Keyboard {
                 .then(() => ui.reset());
             }
         };
-        this._transcribe({"step": "constructed"});
         
-        this._send({"command": "ready"})
+        this._send({"command": "ready"}, true)
         .then(response => {
             const commands = response.predictorCommands;
             if (commands !== undefined && commands.length > 0) {
@@ -44,7 +42,7 @@ class Keyboard {
                 // PredictorCompletions can be used.
                 ui.predictors = [{
                     "label": "Auto-complete",
-                    "item": new PredictorCompletions(bridge)
+                    "item": new PredictorCompletions(this._send.bind(this))
                 }, {
                     "label": "No prediction",
                     "item": new Predictor()
@@ -62,13 +60,15 @@ class Keyboard {
         this._transcript.add(JSON.stringify(message, undefined, 4), 'pre');
     }
 
-    _send(object_) {
+    _send(object_, verbose=false) {
         return (
             this._bridge ?
             this._bridge.sendObject(object_) :
             Promise.reject(new Error("No Bridge!"))
         ).then(response => {
-            this._transcribe(response);
+            if (verbose || response.failed !== undefined) {
+                this._transcribe(response);
+            }
             return response;
         })
         .catch(error => {

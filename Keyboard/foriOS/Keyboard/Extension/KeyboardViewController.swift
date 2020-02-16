@@ -303,10 +303,15 @@ UIInputViewController, CaptiveWebViewCommandHandler
         case "ready":
             returning["predictorCommands"] = ["predict"]
         
-        case "predict":
-            returning["replacements"] = []
-            returning["replacedLength"] = 0
-            
+        case Predictor.Command.name:
+            do {
+                let response = try Predictor.response(to: commandDictionary)
+                returning.merge(response) {(_, new) in new}
+            }
+            catch {
+                returning["failed"] = error.localizedDescription
+            }
+
         default:
             returning["failed"] = "Unknown command \"\(command)\"."
         }

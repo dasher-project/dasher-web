@@ -13,6 +13,7 @@
 		0493224223BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
 		049D59BF23BB5DBE00C0171B /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04C4248923F9484300CCC4E4 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
 		04D77CBA23BB56B500C25698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D77CB923BB56B500C25698 /* AppDelegate.swift */; };
 		04D77CBC23BB56B500C25698 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D77CBB23BB56B500C25698 /* MainViewController.swift */; };
 		04D77CC123BB56B700C25698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D77CC023BB56B700C25698 /* Assets.xcassets */; };
@@ -108,12 +109,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		04C4248A23F9489E00CCC4E4 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				26F46D3B23EBE32C00B00168 /* Predictor.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		04D77CAD23BB56B500C25698 = {
 			isa = PBXGroup;
 			children = (
 				0493224023BBA79C00A17898 /* browser */,
 				04D77CB823BB56B500C25698 /* ContainingApplication */,
 				0400FFEF23BB5788009AF4A0 /* Extension */,
+				04C4248A23F9489E00CCC4E4 /* Common */,
 				04D77CB723BB56B500C25698 /* Products */,
 				049D59BB23BB5DAC00C0171B /* Frameworks */,
 			);
@@ -136,7 +146,6 @@
 				04D77CC023BB56B700C25698 /* Assets.xcassets */,
 				04D77CC223BB56B700C25698 /* LaunchScreen.storyboard */,
 				04D77CC523BB56B700C25698 /* Info.plist */,
-				26F46D3B23EBE32C00B00168 /* Predictor.swift */,
 				26F46D3D23EBE62A00B00168 /* Commands.swift */,
 			);
 			path = ContainingApplication;
@@ -246,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C4248923F9484300CCC4E4 /* Predictor.swift in Sources */,
 				0400FFF123BB5788009AF4A0 /* KeyboardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,6 +455,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/ContainingApplication/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -464,6 +475,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/ContainingApplication/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

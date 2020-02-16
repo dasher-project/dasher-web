@@ -12,15 +12,15 @@ import Predictor from './predictor.js'
 
 export default class PredictorCompletions extends Predictor {
 
-     constructor(bridge) {
+     constructor(bridge_send) {
          super();
-         this._bridge = bridge;
+         this._bridge_send = bridge_send;
      }
 
     // Override.
     async get_character_weights(points, text, prediction) {
 
-        let response = await this._bridge.sendObject({
+        let response = await this._bridge_send({
             "command": "predict", "input" : text === undefined ? "" : text
         });
 
@@ -28,7 +28,10 @@ export default class PredictorCompletions extends Predictor {
         // returned, in the JS console.
         // console.log(text, response);
 
-        if (response.replacements.length <= 0) {
+        if (
+            response.replacements === undefined ||
+            response.replacements.length <= 0
+        ) {
             // No suggested replacements, fall back to the base predictor.
             return super.get_character_weights(points, text, prediction);
         }

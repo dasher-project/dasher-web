@@ -23,37 +23,17 @@ class MainViewController: CaptiveWebView.DefaultViewController {
                 // Return a single-element array.
                 Commands.Ready.Ret.predictorCommands: [Commands.Predict.name]
             ]
-        case Commands.Predict.name:
+            
+        case Predictor.Command.name:
             // Uncomment the following to force an error.
             // var duffDictionary = commandDictionary
-            // duffDictionary.removeValue(forKey: Commands.Predict.Args.input)
-            // return try predict(args: duffDictionary)
-            return try predict(args: commandDictionary)
+            // duffDictionary.removeValue(forKey: Predictor.Command.Args.input)
+            // return try Predictor.handlePredictCommand(args: duffDictionary)
+            return try Predictor.response(to: commandDictionary)
+            
         default:
             return try super.response(to: command, in: commandDictionary)
         }
     }
     
-    /// Handle the 'predict' command.
-    /// - Parameter args: Command arguments.
-    func predict(
-        args: Dictionary<String, Any>
-    ) throws -> Dictionary<String, Any>
-    {
-        guard let input = args[Commands.Predict.Args.input] as? String else {
-            throw ErrorMessage.message("Missing `input` parameter in \(args).")
-        }
-        
-        let result = Predictor.completeLastWord(of: input)
-        return [
-            "replacements": result.replacements ?? [],
-            "replacedLength": result.replacedLength
-        ]
-    }
-}
-
-// See note in DefaultViewController.swift file, in the Captive Web View project
-// for a discussion of why this is here.
-private enum ErrorMessage: Error {
-    case message(_ message:String)
 }
