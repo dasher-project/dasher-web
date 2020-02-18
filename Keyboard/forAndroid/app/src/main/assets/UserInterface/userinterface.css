@@ -1,0 +1,117 @@
+/*
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.
+MIT licensed, see https://opensource.org/licenses/MIT
+*/
+
+html {font-family: sans-serif;}
+p.small-print {font-size: 0.7rem;}
+p.small-print a {text-decoration: none;}
+
+h1 {margin-top: 0.5rem; margin-bottom: 0.5rem;}
+button { margin: 0.25rem; }
+#message-holder { float:right; width 100%;}
+#message-holder textarea: {width 100%;}
+#message-holder label {/*display: block;*/ display: none;}
+
+#user-interface.keyboard #message-holder { /*float: right;*/ }
+
+svg {
+    border: 1px black solid;
+}
+
+:root {
+    /* This value also appears in the index.js file, in the _transitionMillis
+     * property, and it's good if they're the same.
+     */
+    --transition: 0.4s;
+}
+
+svg rect {
+    transition: y var(--transition) linear, height var(--transition) linear;
+    stroke-width: 1px;
+    stroke: black;
+    /* stroke-dasharray: 3; */
+}
+svg rect#catcher {
+    stroke-width: 0;
+}
+
+svg text {
+    /* Making text.x transition doesn't work. For an explanation and solution
+     * see: https://stackoverflow.com/a/53452940
+     * transition: x 0.2s linear;
+     *
+     * text.font-size will make a transition no problem.
+     */
+    transition: font-size var(--transition) linear;
+}
+svg g {
+    transition: var(--transition) linear;
+}
+
+body {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+._hidden {
+    display: none;
+}
+
+/* TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/index.css#L22
+ */
+input[type="number"] {
+    width: 3em;
+    text-align: right;
+    margin-left: 1em;
+}
+
+/*
+If the user clicks on an input control that is inside a custom keyboard, and the
+input itself requires a keyboard to set values, that seems to be a catastrophe.
+
+Make sure that can't happen by not showing any such controls.
+*/
+#user-interface.keyboard input[type="number"] {
+    display: none;
+}
+
+/*
+The user interface is laid out as follows, in a browser.
+
+-   There's an overall holder element, identified by id:user-interface.
+-   There are expected to be three child nodes within the holder.
+-   The child nodes are laid out in a column.
+-   The first and third elements are each as tall as their content requires.
+-   The second element occupies all the remaining vertical space.
+*/
+#user-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#user-interface > *:nth-child(1) {
+    /* background-color: aquamarine; */
+    flex: none;
+}
+#user-interface > *:nth-child(2) {
+    /* background-color: cornflowerblue; */
+    flex: auto;
+}
+#user-interface > *:nth-child(3) {
+    /* background-color: aqua; */
+    flex: none;
+}
+
+#user-interface.keyboard {
+    /* background-color: lightgreen; */
+
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*width: 100%;*/
+}
+
