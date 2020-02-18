@@ -1,3 +1,6 @@
+// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// MIT licensed, see https://opensource.org/licenses/MIT
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
