@@ -20,11 +20,6 @@ Notes
         -   Extension, the actual custom keyboard code.
     -   CaptiveWebView, reference to the submodule.
 
--   ToDo: Address the warning about Captive Web View being unsafe for
-    extensions.
-
-    https://stackoverflow.com/a/48863451/7657675
-
 -   ToDo: Add the equivalent of the following code from the Xcode sample.
 
         self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
