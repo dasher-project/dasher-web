@@ -64,7 +64,7 @@ Notes
 
     1.  Open Android Studio.
     2.  Close any open projects, to avoid accidents.
-    3.  Open as a new project this location:
+    3.  Open as an existing project this location:
 
             /where/you/cloned/redash/captive-web-view/forAndroid/
         
@@ -80,6 +80,26 @@ Notes
 
     The repository will contain the dependency and it can be included in the
     custom keyboard project.
+
+-   To build the keyboard itself:
+
+    1.  Open Android Studio.
+    2.  Close any open projects, to avoid accidents.
+    3.  Open as an existing project this location:
+
+            /where/you/cloned/redash/Keyboard/forAndroid/
+        
+        Note: Don't select any file under that directory.
+    
+    4.  Android Studio prompts you to Gradle Sync because it is unable to get
+        Gradle wrapper properties. Select OK and the project will synchronise
+        and configure its build. It might take a minute or two first time.
+
+-   To install the keyboard via adb, execute the Gradle task:  
+    DasherKeyboard/DasherKeyboard (root)/Tasks/install/installDebug
+
+    Gradle tasks can be accessed from the Gradle assistant tab sidebar, which
+    by default is at the top right of the Android Studio window.
 
 -   To make the Dasher keyboard available on a device or simulator:
 
