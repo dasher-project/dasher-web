@@ -9,7 +9,14 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
+
+    sourceSets {
+        main.assets.srcDirs += new File(new File(
+                rootDir.getParent()).getParent(), "browser")
+    }
+
     buildToolsVersion "29.0.2"
+
     defaultConfig {
         applicationId "com.example.dasherkeyboard"
         minSdkVersion 26
@@ -21,7 +28,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 

@@ -23,13 +23,6 @@ Notes
         -   Extension, the actual custom keyboard code.
     -   CaptiveWebView, reference to the submodule.
 
--   ToDo: Add the equivalent of the following code from the Xcode sample.
-
-        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
-    
-    The sample code sets the flag in the `viewWillLayoutSubviews` but that's
-    questionable.
-
 -   ToDo: Raise an issue on Captive Web View about the retain cycle and message
     handler.
 

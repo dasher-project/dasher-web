@@ -302,6 +302,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
         
         case "ready":
             returning["predictorCommands"] = ["predict"]
+            returning["showNextKeyboard"] = self.needsInputModeSwitchKey
+            returning["showLog"] = true
         
         case Predictor.Command.name:
             do {
