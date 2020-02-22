@@ -71,15 +71,15 @@ class DasherInputMethodService : InputMethodService(), WebViewBridge{
 
     // HANDLE COMMANDS
     override fun handleCommand(jsonObject: JSONObject): JSONObject {
-
-        var returning = jsonObject
-
-        try {
-
-            // Switch on each command
-            when (Dasher.fromCommand(jsonObject.opt(Dasher.COMMAND.command) as String)) {
+        // Switch on each command
+        return try {
+            when (Dasher.fromCommand(jsonObject.opt(
+                Dasher.COMMAND.command
+            ) as String))
+            {
                 Dasher.INSERT -> {
-                    val text : CharSequence = jsonObject.opt(Dasher.TEXT.command) as CharSequence
+                    val text : CharSequence = jsonObject.opt(
+                        Dasher.TEXT.command) as CharSequence
 
                     // TODO HANDLE DELETE KEY
 
@@ -87,29 +87,28 @@ class DasherInputMethodService : InputMethodService(), WebViewBridge{
                     currentInputConnection.commitText(text, text.length)
 
                     // Adds a trailing space if more than a single character was sent
-                    if(text.length > 1) {
+                    if (text.length > 1) {
                         currentInputConnection.commitText(" ", 1)
                     }
+                    jsonObject.put("entered", text)
                 }
-                Dasher.READY -> {
-                    return JSONObject()
-                }
-                else -> {
-                    // Ignore all others
-                }
+
+                Dasher.READY -> jsonObject
+                    .put("heightPixels", 400)
+                    .put("showNextKeyboard", false)
+                    .put("showLog", false)
+
+                else -> throw Exception(
+                    "Unknown command in ${jsonObject.toString(2)}.")
             }
 
             // confirm
-            returning.put(Dasher.CONFIRM.command, "${this.javaClass.simpleName} bridge OK.")
+            jsonObject.put(
+                Dasher.CONFIRM.command,
+                "${this.javaClass.simpleName} bridge OK.")
 
-        } catch (e : Exception) {
-
-            // Error
-            returning.put(Dasher.EXCEPTION.command, e.message)
-        } finally {
-
-            //Send confirmation
-            return returning
+        } catch (exception : Exception) {
+            jsonObject.put(Dasher.EXCEPTION.command, "$exception")
         }
     }
 }

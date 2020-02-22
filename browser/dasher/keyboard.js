@@ -19,7 +19,7 @@ class Keyboard {
         this._builder = new PageBuilder('div', undefined, document.body);
         this._builder.node.setAttribute('id', "user-interface");
         this._builder.node.classList.add('keyboard');
-        this._transcript = PageBuilder.add_transcript(document.body, true);
+        this._transcript = PageBuilder.add_transcript(undefined, true);
 
         bridge.receiveObjectCallback = command => {
             this._transcribe(command);
@@ -32,32 +32,17 @@ class Keyboard {
                 .then(() => ui.reset());
             }
         };
-        
-        this._send({"command": "ready"}, true)
-        .then(response => {
-            const commands = response.predictorCommands;
-            if (commands !== undefined && commands.length > 0) {
-                // In this version, the commands are ignored. Just the presence
-                // of the list in the response indicates that
-                // PredictorCompletions can be used.
-                ui.predictors = [{
-                    "label": "Auto-complete",
-                    "item": new PredictorCompletions(this._send.bind(this))
-                }, {
-                    "label": "No prediction",
-                    "item": new Predictor()
-                }];
-            }
-
-            loading.remove();
-            ui.load(null, null);
-            this._add_keyboard_button();
-        })
-        .catch(error => this._transcribe({"error": `${error}`}));
+        this._ready(loading, ui);
     }
 
-    _transcribe(message) {
-        this._transcript.add(JSON.stringify(message, undefined, 4), 'pre');
+    _transcribe(messageObject) {
+        const message = JSON.stringify(messageObject, undefined, 4);
+        if (this._transcript === null) {
+            console.log(message)
+        }
+        else {
+            this._transcript.add(message, 'pre');
+        }
     }
 
     _send(object_, verbose=false) {
@@ -75,6 +60,50 @@ class Keyboard {
             this._transcribe(error);
             return error;
         });
+    }
+
+    _ready(loading, ui) {
+        this._send({"command": "ready"}, true)
+        .then(response => {
+
+            const showLog = response.showLog;
+            if (showLog === undefined || showLog) {
+                PageBuilder.into(document.body, this._transcript.node);
+            }
+            else {
+                this._transcript = null;
+                this._transcribe(response);
+            }
+
+            const commands = response.predictorCommands;
+            if (commands !== undefined && commands.length > 0) {
+                // In this version, the commands are ignored. Just the presence
+                // of the list in the response indicates that
+                // PredictorCompletions can be used.
+                ui.predictors = [{
+                    "label": "Auto-complete",
+                    "item": new PredictorCompletions(this._send.bind(this))
+                }, {
+                    "label": "No prediction",
+                    "item": new Predictor()
+                }];
+            }
+
+            const heightPixels = response.heightPixels;
+            if (heightPixels !== undefined) {
+                document.body.style.height = `${heightPixels}px`;
+            }
+
+            ui.load(null, null);
+
+            const showNextKeyboard = response.showNextKeyboard;
+            if (showNextKeyboard === undefined || showNextKeyboard) {
+                this._add_keyboard_button();
+            }
+
+            loading.remove();
+        })
+        .catch(error => this._transcribe({"error": `${error}`}));
     }
 
     _add_keyboard_button() {

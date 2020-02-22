@@ -200,7 +200,7 @@ export default class UserInterface {
             'label', {'for':identifierMessage}, messageLabelText);
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows':6, 'cols':24,
+            'rows': this._keyboardMode ? 1 : 6, 'cols':24,
             'placeholder':"Message will appear here ..."
         });
     }
