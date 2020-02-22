@@ -29,9 +29,14 @@ Notes
 -   ToDo: Maybe change the Captive Web View load() return value in case the
     underlying load returns a null WKNavigation.
 
--   ToDo: Maybe add support for directory hierarchy in the Bundle but shared so
-    that the iOS keyboard JS can import from its browser/ directory without
-    having to be in the same directory.
+-   ToDo: Add an option for automatically appending a space on stop.
+
+-   ToDo: Increase keyboard size on iOS.
+
+-   ToDo: Add some way for the user to increase and decrease the size of the
+    keyboard.
+
+-   ToDo: Fix Go Random to work again.
 
 -   Instructions for custom keyboards for iOS are in the Apple developer
     documentation archive here:  

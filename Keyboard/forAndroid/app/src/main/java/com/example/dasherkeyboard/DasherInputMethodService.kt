@@ -94,7 +94,7 @@ class DasherInputMethodService : InputMethodService(), WebViewBridge{
                 }
 
                 Dasher.READY -> jsonObject
-                    .put("heightPixels", 200)
+                    .put("heightPixels", 400)
                     .put("showNextKeyboard", false)
                     .put("showLog", false)
 
