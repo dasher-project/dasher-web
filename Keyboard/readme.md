@@ -31,8 +31,6 @@ Notes
 
 -   ToDo: Add an option for automatically appending a space on stop.
 
--   ToDo: Increase keyboard size on iOS.
-
 -   ToDo: Add some way for the user to increase and decrease the size of the
     keyboard.
 
