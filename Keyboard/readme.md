@@ -34,8 +34,6 @@ Notes
 -   ToDo: Add some way for the user to increase and decrease the size of the
     keyboard.
 
--   ToDo: Fix Go Random to work again.
-
 -   Instructions for custom keyboards for iOS are in the Apple developer
     documentation archive here:  
     [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)

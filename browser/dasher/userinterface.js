@@ -609,14 +609,18 @@ export default class UserInterface {
 
         this._set_zoomBox_size(zoomBox);
 
-        this._controller.populate(zoomBox, this._limits);
-
         this.zoomBox = zoomBox;
         
-        var instance = this;
-        
         this.zoomBox.ready
-        .then(result => instance._start_render(startRender) )
+        .then(ready => {
+            if (ready) {
+                this._controller.populate(zoomBox, this._limits);
+                this._start_render(startRender);
+            }
+            else {
+                throw new Error("ZoomBox ready false.")
+            }
+         })
         .catch(error => {
             // The thrown error mightn't be noticed, if the console isn't
             // visible. So, set it into the message too.

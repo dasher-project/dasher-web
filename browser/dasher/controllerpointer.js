@@ -19,61 +19,57 @@ export default class ControllerPointer {
 
     get going() {return this._pointer.going;}
 
-    child_specifications(zoomBox) { return new Promise((resolve, reject) => {
-        this.predictor(
+    async child_specifications(zoomBox) {
+        const predictions = await this.predictor(
             zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
-        ).then(predictions => {
-            const returning = predictions.map((prediction, index) => {
-                const codePoint = prediction.codePoint;
+        );
+        return predictions.map((prediction, index) => {
+            const codePoint = prediction.codePoint;
 
-                const message = zoomBox.messageCodePoints.slice();
-                if (codePoint !== null) {
-                    message.push(codePoint);
-                }
+            const message = zoomBox.messageCodePoints.slice();
+            if (codePoint !== null) {
+                message.push(codePoint);
+            }
 
-                const displayTextIndex = (
-                    codePoint === null ? undefined :
-                    ControllerPointer.displayTextLeft.indexOf(codePoint));
-                const displayText = (
-                    displayTextIndex === undefined ? null :
-                    String.fromCodePoint(
-                        displayTextIndex >= 0 ?
-                        ControllerPointer.displayTextMap[displayTextIndex][1] :
-                        codePoint
-                    )
+            const displayTextIndex = (
+                codePoint === null ? undefined :
+                ControllerPointer.displayTextLeft.indexOf(codePoint));
+            const displayText = (
+                displayTextIndex === undefined ? null :
+                String.fromCodePoint(
+                    displayTextIndex >= 0 ?
+                    ControllerPointer.displayTextMap[displayTextIndex][1] :
+                    codePoint
+                )
+            );
+                    
+            let colour = ControllerPointer.unsetColour;
+            if (prediction.group === null) {
+                prediction.ordinal = (
+                    zoomBox.prediction === null ? 0 :
+                    zoomBox.prediction.ordinal + 1
                 );
-                     
-                let colour = ControllerPointer.unsetColour;
-                if (prediction.group === null) {
-                    prediction.ordinal = (
-                        zoomBox.prediction === null ? 0 :
-                        zoomBox.prediction.ordinal + 1
-                    );
-                    colour = ControllerPointer.sequenceColours[
-                        (index % 2) + ((prediction.ordinal % 2) * 2)];
+                colour = ControllerPointer.sequenceColours[
+                    (index % 2) + ((prediction.ordinal % 2) * 2)];
+            }
+            else {
+                prediction.ordinal = 0;
+                if (prediction.group in ControllerPointer.groupColours) {
+                    colour = ControllerPointer.groupColours[
+                        prediction.group];
                 }
-                else {
-                    prediction.ordinal = 0;
-                    if (prediction.group in ControllerPointer.groupColours) {
-                        colour = ControllerPointer.groupColours[
-                            prediction.group];
-                    }
-                }
+            }
 
-                return {
-                    "prediction": prediction,
-                    "colour": colour,
-                    "message": message,
-                    "text": displayText,
-                    "weight": prediction.weight,
-                    "spawner": this
-                };
-            });
-                                                                         
-            resolve(returning);
-        })
-        .catch(error => reject(error));
-    }); }
+            return {
+                "prediction": prediction,
+                "colour": colour,
+                "message": message,
+                "text": displayText,
+                "weight": prediction.weight,
+                "spawner": this
+            };
+        });
+    }
 
     populate(rootBox, limits) {
         rootBox.arrange_children(limits);

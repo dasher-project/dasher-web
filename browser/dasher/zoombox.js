@@ -42,27 +42,32 @@ export default class ZoomBox {
         );
         this._childBoxes = Array(this._childSpecifications.length).fill(null);
         
-        var instance = this;
-        this._ready = new Promise(function(resolve, reject) {
-            if (instance._specification.spawner === null) {
+        this._ready = new Promise((resolve, reject) => {
+            const spawner = this._specification.spawner;
+            if (spawner === null) {
                 resolve(true);
             }
             else {
-                instance._specification.spawner.child_specifications(instance)
+                spawner.child_specifications(this)
                 .then(specifications => {
-                    instance._childSpecifications = specifications;
-                    instance._childCount = instance._childSpecifications.length;
-                    instance._totalWeight = instance._childSpecifications.reduce(
-                        (accumulator, specification) => accumulator + specification.weight,
-                        0
-                    );
-
-                    instance._childBoxes = Array(instance._childSpecifications.length).fill(null);
+                    this._set_child_specifications(specifications);
                     resolve(true);
                 })
                 .catch(error => reject(error));
             }
         });
+    }
+
+    _set_child_specifications(specifications) {
+        this._childSpecifications = specifications;
+        this._childCount = this._childSpecifications.length;
+        this._totalWeight = this._childSpecifications.reduce(
+            (accumulator, specification) => accumulator + specification.weight,
+            0
+        );
+
+        this._childBoxes = Array(this._childSpecifications.length).fill(null);
+        return true;
     }
 
     get ready() { return this._ready; }
