@@ -208,9 +208,6 @@ export default class UserInterface {
     _load_controls() {
         if (this._keyboardMode) {
             this._limits.showDiagnostic = false;
-            this._limits.highlight = true;
-
-            // this._header.create('div', undefined, "Hihjo");
             this._load_predictor_controls(this._header);
             return;
         }
@@ -227,9 +224,6 @@ export default class UserInterface {
             "Go Random", () => this.clicked_random());
         this._buttonPointer = this._load_button(
             "Pointer", () => this.clicked_pointer());
-        this._load_input(
-            this._divControls, "checkbox", "highlight", "Highlight",
-            checked => this._limits.highlight = checked, true);
         
         this._load_predictor_controls(this._divControls);
 
