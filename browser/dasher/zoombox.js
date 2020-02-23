@@ -29,8 +29,6 @@ export default class ZoomBox {
 
         this._spawnMargin = undefined;
 
-        this._renderHeightThreshold = undefined;
-
         this._controllerSettings = specification.controllerSettings;
         this._viewer = null;
         
@@ -113,6 +111,11 @@ export default class ZoomBox {
             (child, index) => child !== null && callback(child, index));
     }
 
+    /*
+
+
+    Moved to the limits object.
+
     // Height at which this box is considered big enough to render. If the box
     // gets zoomed below this height, it is de-rendered.
     get renderHeightThreshold() {
@@ -124,6 +127,7 @@ export default class ZoomBox {
             child.renderHeightThreshold = renderHeightThreshold
         );
     }
+    */
 
     // Principal properties that define the location and size of the box. The
     // update() method is always a no-op in the current version but could be
@@ -205,7 +209,7 @@ export default class ZoomBox {
 
     inherit(parent) {
         [
-            "spawnMargin", "renderHeightThreshold"
+            "spawnMargin" //, "renderHeightThreshold"
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
@@ -359,8 +363,8 @@ export default class ZoomBox {
             }
 
             const shouldSpawn = (
-                this.renderHeightThreshold === undefined ||
-                childHeight >= this.renderHeightThreshold) &&
+                limits.spawnThreshold === undefined ||
+                childHeight >= limits.spawnThreshold) &&
                 childBottom > limits.top && childTop < limits.bottom;
 
             if (shouldSpawn) {
@@ -381,6 +385,9 @@ export default class ZoomBox {
             }
             else {
                 if (this.childBoxes[index] !== null) {
+                    // console.log(
+                    //     `Arrange spawn "${this.childBoxes[index].message}".`
+                    // );
                     this.childBoxes[index].erase();
                     this.childBoxes[index] = null;
                 }

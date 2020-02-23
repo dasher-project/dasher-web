@@ -15,6 +15,11 @@ export default class Limits {
         this._ratios = null;
         this._showDiagnostic = false;
 
+        this._minimumFontSizePixels = undefined;
+        this._maximumFontSizePixels = undefined;
+        this._drawThresholdRect = undefined;
+        this._spawnThreshold = undefined;
+
         this._gradients = undefined;
 
         this._svgPiece = null;
@@ -105,6 +110,26 @@ export default class Limits {
             (accumulated, {left, height}) => `${accumulated} ${left},${height}`,
             "")
         });
+    }
+
+    get minimumFontSizePixels() {return this._minimumFontSizePixels;}
+    set minimumFontSizePixels(minimumFontSizePixels) {
+        this._minimumFontSizePixels = minimumFontSizePixels;
+    }
+
+    get maximumFontSizePixels() {return this._maximumFontSizePixels;}
+    set maximumFontSizePixels(maximumFontSizePixels) {
+        this._maximumFontSizePixels = maximumFontSizePixels;
+    }
+
+    get drawThresholdRect() {return this._drawThresholdRect;}
+    set drawThresholdRect(drawThresholdRect) {
+        this._drawThresholdRect = drawThresholdRect;
+    }
+
+    get spawnThreshold() {return this._spawnThreshold;}
+    set spawnThreshold(spawnThreshold) {
+        this._spawnThreshold = spawnThreshold;
     }
 
     // Calculate height, given left position.

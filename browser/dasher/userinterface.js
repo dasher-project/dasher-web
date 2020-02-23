@@ -47,15 +47,18 @@ export default class UserInterface {
 
         // Spawn and render parameters in mystery SVG units.
         this._spawnMargin = 30;
-        this._renderHeightThreshold = 20;
 
         this._limits = new Limits();
         this._limits.ratios = [
             {left:1 / 2, height: 0.01},
             {left:1 / 5, height: 0.05},
             {left:1 / -6, height: 0.5},
-            {left:1 / -3, height: 1}            
+            {left:1 / -3, height: 1}
         ];
+        this._limits.minimumFontSizePixels = 40;
+        this._limits.maximumFontSizePixels = 80;
+        this._limits.drawThresholdRect = 40;
+        this._limits.spawnThreshold = 5;
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
@@ -598,7 +601,6 @@ export default class UserInterface {
 
         const zoomBox = new ZoomBox(this._controller.rootSpecification);
         zoomBox.spawnMargin = this._spawnMargin;
-        zoomBox.renderHeightThreshold = this._renderHeightThreshold;
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
         this._set_zoomBox_size(zoomBox);

@@ -80,7 +80,6 @@ export default class ControllerRandom {
     populate(rootBox) {
         this._rectHeight = (rootBox.height / rootBox.childCount) * 0.75;
         rootBox.spawnMargin = undefined;
-        rootBox.renderHeightThreshold = undefined;
 
         let top = rootBox.top;
         const width = this._rectHeight * 2;

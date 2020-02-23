@@ -41,7 +41,7 @@ export default class Viewer {
             });
         }
         else {
-            this.erase();            
+            this.erase();
         }
     }
 
@@ -65,11 +65,18 @@ export default class Viewer {
         if (this._zoomBox.top > limits.bottom) {
             return false;
         }
+        /*
+
+        This check seems unnecessary here. Small boxes get erased in
+        arrange_children anyway.
+
         if (this._zoomBox.renderHeightThreshold !== undefined) {
             if (this._zoomBox.height < this._zoomBox.renderHeightThreshold) {
-                return false;
+                // return false;
+                console.log(`Viewer RHT "${this._zoomBox.message}".`);
             }
         }
+        */
 
         if (this._zoomBox.width <= 0) {
             return false;
@@ -122,8 +129,12 @@ export default class Viewer {
         }
 
         this._render_rect(
-            trimTop, trimBottom, limits.width, box.middle - renderMiddle);
-        this._render_text();
+            trimTop, trimBottom,
+            limits.drawThresholdRect, limits.width,
+            box.middle - renderMiddle
+        );
+        this._render_text(
+            limits.minimumFontSizePixels, limits.maximumFontSizePixels);
         this._render_diagnostics(
             limits.showDiagnostic, box.middle - renderMiddle);
     }
@@ -146,21 +157,24 @@ export default class Viewer {
         return [trimTop, trimBottom, renderMiddle];
     }
 
-    _render_rect(trimTop, trimBottom, width, renderOffset) {
+    _render_rect(trimTop, trimBottom, threshold, width, renderOffset) {
         const box = this._zoomBox;
-        if (box.colour === null) {
+        if (
+            box.colour === null ||
+            (threshold !== undefined && box.height < threshold)
+        ) {
             if (this._rect !== null) {
                 this._rect.remove();
                 this._rect = null;
             }
             return;
-
         }
 
         if (this._rect === null) {
-            this._rect = new Piece('rect', this._group, {
+            this._rect = new Piece('rect', undefined, {
                 "x": 0, "fill": box.colour
             });
+            this._group.add_child(this._rect, false);
 
             this._rect.node.addEventListener('click', event =>
                 console.log('rect', 'click', box, event)
@@ -191,7 +205,7 @@ export default class Viewer {
         });
     }
 
-    _render_text() {
+    _render_text(minimumFontSizePixels, maximumFontSizePixels) {
         const box = this._zoomBox;
         if (box.text === null) {
             if (this._text !== null) {
@@ -208,10 +222,23 @@ export default class Viewer {
             }, box.text);
         }
 
-        const fontSize = (
-            box.spawnMargin !== undefined && box.height > box.spawnMargin ?
-            box.spawnMargin : box.height
-        ) * 0.9;
+        let fontSize = box.height * 0.9;
+        if (
+            minimumFontSizePixels !== undefined &&
+            fontSize < minimumFontSizePixels
+        ) {
+            fontSize = minimumFontSizePixels;
+        }
+        if (
+            maximumFontSizePixels !== undefined &&
+            fontSize > maximumFontSizePixels
+        ) {
+            fontSize = maximumFontSizePixels;
+        }
+        // const fontSize = (
+        //     box.spawnMargin !== undefined && box.height > box.spawnMargin ?
+        //     box.spawnMargin : box.height
+        // ) * 0.9;
         this._text.node.setAttribute('font-size', `${fontSize}px`);
     }
 
