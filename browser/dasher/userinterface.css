@@ -11,8 +11,7 @@ h1 {margin-top: 0.5rem; margin-bottom: 0.5rem;}
 button { margin: 0.25rem; }
 #message-holder { float: right;}
 #message-holder label {display: block;}
-
-#user-interface.keyboard #message-holder { float: left;}
+#user-interface.keyboard #message-holder label {display: none;}
 
 svg {
     border: 1px black solid;
@@ -105,12 +104,3 @@ The user interface is laid out as follows, in a browser.
     /* background-color: aqua; */
     flex: none;
 }
-
-#user-interface.keyboard {
-    /* background-color: lightgreen; */
-
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-

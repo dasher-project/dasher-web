@@ -14,14 +14,13 @@ UIInputViewController, CaptiveWebViewCommandHandler
 {
     var wkWebView: WKWebView?
     let dateFormatter = DateFormatter()
-    
-    var didAppearWidth:CGFloat?
-    var didAppearHeight:CGFloat?
 
     // Just in case the web view doesn't load, there's a safety button to select
     // the next keyboard.
     @IBOutlet var safetyButton: UIButton!
     var logLabel: UILabel!
+    
+    var heightConstraint: NSLayoutConstraint? = nil
 
     override func updateViewConstraints() {
         // self.log("updateViewConstraints")
@@ -40,8 +39,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
 
         self.dateFormatter.dateStyle = .short
         self.dateFormatter.timeStyle = .long
-        self.didAppearWidth = nil
-        self.didAppearHeight = nil
 
         // Uncomment the next line to delete the log file on load. It's been
         // better to delete just before the view disappears, so that the log
@@ -74,9 +71,15 @@ UIInputViewController, CaptiveWebViewCommandHandler
         self.safetyButton.rightAnchor.constraint(
             equalTo: self.view.rightAnchor).isActive = true
 
-        // Give the log label an arbitrary frame just so that it can be
-        // constructed. It gets resized later, and whenever the keyboard changes
-        // orientation.
+        // The log label and web view are each required to fill the whole view.
+        // This is done by constraining all their anchors to be the same as the
+        // view's anchors.
+        // To be constructed, each of them needs a frame, but the view frame
+        // will be all zeros at this point. So the log label and web view each
+        // get an arbitrary frame just for construction purposes, and then
+        // immediately get constrained.
+        // The view and inputView don't get proper frames until viewDidAppear.
+
         self.logLabel = UILabel(frame: CGRect(
             x: 0, y: 100, width: 400, height: 100))
         self.logLabel.text = "viewDidLoad"
@@ -91,18 +94,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
         // Hide it until it can be shown at the correct size.
         self.logLabel.isHidden = true
         self.view.insertSubview(self.logLabel, at:0)
+        self.constrain(view: self.logLabel, to: self.view)
 
-        // Following code seems to do nothing; you can't use constraints to size
-        // a UILabel, is the conclusion.
-        // self.logLabel.topAnchor.constraint(
-        //    equalTo: self.view.topAnchor).isActive = true
-        // self.logLabel.rightAnchor.constraint(
-        //    equalTo: self.view.rightAnchor).isActive = true
-        // self.logLabel.leftAnchor.constraint(
-        //    equalTo: self.view.leftAnchor).isActive = true
-
-        // The view and inputView frames are all zeros here. They seem to get
-        // created properly in the viewDidAppear. Set an arbitrary frame here.
         self.wkWebView = CaptiveWebView.makeWebView(
             frame:CGRect(x: 0, y: 0, width: 400, height: 100),
             commandHandler: self)
@@ -121,8 +114,31 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // Apple documentation seems to say `inputView` but `view` is used
             // in the Xcode sample code for a keyboard extension.
             self.view.addSubview(webView)
+            
+            self.constrain(view: webView, to: self.view)
+            // Line below instead of the line above will make the web view
+            // occupy the left half of the view, which can be useful in
+            // development. The log and safety button will then be visible,
+            // not behind it.
+            // self.constrain(view: webView, to: self.view, leftSide: true)
         }
+
         self.log("viewDidLoad")
+    }
+    
+    private func constrain(
+        view left: UIView, to right: UIView, leftSide:Bool = false
+    ) {
+        left.translatesAutoresizingMaskIntoConstraints = false
+        left.topAnchor.constraint(
+            equalTo: right.topAnchor).isActive = true
+        left.bottomAnchor.constraint(
+            equalTo: right.bottomAnchor).isActive = true
+        left.leftAnchor.constraint(
+            equalTo: right.leftAnchor).isActive = true
+        left.rightAnchor.constraint(
+            equalTo: leftSide ? right.centerXAnchor : right.rightAnchor
+        ).isActive = true
     }
     
     private func log(_ message: String) {
@@ -188,38 +204,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
         }
     }
     
-    override func viewWillLayoutSubviews() {
-        // This method is invoked when device orientation changes, and after
-        // viewDidAppear. There seem to be two invocations after an orientation
-        // change. One with new height, one with new width. This method calls
-        // setFrame(..., false) so that the frames is only resized after the
-        // second change.
-
-        let frameSet = self.setFrame(self.logLabel, false)
-        _ = self.setFrame(self.wkWebView, false)
-        self.logFrames("viewWillLayoutSubviews \(frameSet)")
-
-        super.viewWillLayoutSubviews()
-    }
-    
-    private func setFrame(_ setView:UIView?, _ always:Bool) -> Bool {
-        guard let setFrame = setView?.frame else {
-            return false
-        }
-        guard let fromFrame = self.framingView?.frame else {
-            return false
-        }
-        if (always || (
-                // Set if both are different.
-                setFrame.width != fromFrame.width &&
-                setFrame.height != fromFrame.height
-        )) {
-            setView?.frame = fromFrame
-            return true
-        }
-        return false
-    }
-    
     override func textWillChange(_ textInput: UITextInput?) {
         // The app is about to change the document's contents. Perform any preparation here.
         // self.log("textWillChange")
@@ -232,39 +216,51 @@ UIInputViewController, CaptiveWebViewCommandHandler
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
+        let heightSet = self.setHeight(400)
+
         var dimensionsMessage = "Dimensions not set"
         if let uiView = self.framingView {
-            self.didAppearWidth = uiView.frame.width
-            self.didAppearHeight = uiView.frame.height
-            dimensionsMessage =
-            "w:\(uiView.frame.width) h:\(uiView.frame.height)"
-            self.logLabel?.frame = uiView.frame
+            dimensionsMessage = "y:\(uiView.frame.minY)" +
+            " w:\(uiView.frame.width) h:\(uiView.frame.height)"
         }
-
-        let frameSet = self.setFrame(self.logLabel, true)
-        _ = self.setFrame(self.wkWebView, true)
         if let webView = self.wkWebView {
             webView.layer.borderColor = nil
             webView.layer.borderWidth = 0
             let loaded = CaptiveWebView.load(
                 in: webView, scheme: "local", file: "Keyboard.html")
-            self.log("viewDidAppear \(loaded) \(dimensionsMessage) \(frameSet)")
+            self.log("viewDidAppear \(loaded) \(dimensionsMessage) \(heightSet)")
         }
         else {
-            self.log("viewDidAppear null \(dimensionsMessage) \(frameSet)")
+            self.log("viewDidAppear null \(dimensionsMessage) \(heightSet)")
         }
     }
     
+    private func setHeight(_ height:CGFloat) -> Bool {
+        guard let uiView = self.framingView else {
+            return false
+        }
+        // Discard the current constraint, if there is one.
+        if let constraint = self.heightConstraint {
+            uiView.removeConstraint(constraint)
+            self.heightConstraint = nil
+        }
+        // Create, apply, and retain a new constraint.
+        let constraint = NSLayoutConstraint(
+            item: uiView, attribute: .height, relatedBy: .equal,
+            toItem: nil, attribute: .notAnAttribute,
+            multiplier: 0, constant: height
+        )
+        uiView.addConstraint(constraint)
+        self.heightConstraint = constraint
+        return true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
-        // Frame sizes won't be final here but it's harmless to set the sizes of
-        // UI elements because they haven't been rendered yet.
         super.viewWillAppear(animated)
-        let frameSet = self.setFrame(self.logLabel, true)
         self.logLabel.isHidden = false
-        _ = self.setFrame(self.wkWebView, true)
         self.wkWebView?.isHidden = false
-        self.logFrames("viewWillAppear \(frameSet)")
+        self.logFrames("viewWillAppear")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -299,7 +295,21 @@ UIInputViewController, CaptiveWebViewCommandHandler
             self.advanceToNextInputMode()
             // Advancing should bin the web view so the return won't happen,
             // unless something goes wrong.
-            
+        
+        case "ready":
+            returning["predictorCommands"] = ["predict"]
+            returning["showNextKeyboard"] = self.needsInputModeSwitchKey
+            returning["showLog"] = true
+        
+        case Predictor.Command.name:
+            do {
+                let response = try Predictor.response(to: commandDictionary)
+                returning.merge(response) {(_, new) in new}
+            }
+            catch {
+                returning["failed"] = error.localizedDescription
+            }
+
         default:
             returning["failed"] = "Unknown command \"\(command)\"."
         }

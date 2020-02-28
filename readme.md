@@ -7,10 +7,15 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
     To run the browser proof of concept, go here:
     [https://dasher-project.github.io/redash/browser/](https://dasher-project.github.io/redash/browser/)
 
--   Keyboard:
+-   Keyboard for iOS.
 
     There is an Xcode project for a functional custom keyboard for iOS in the
     [Keyboard](Keyboard) sub-directory.
+
+-   Keyboard for Android.
+
+    There is a Android Studio project for a functional custom keyboard for
+    Android in the [Keyboard](Keyboard) sub-directory.
 
 Backlog
 =======

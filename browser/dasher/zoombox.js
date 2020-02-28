@@ -33,22 +33,44 @@ export default class ZoomBox {
 
         this._controllerSettings = specification.controllerSettings;
         this._viewer = null;
-
-        this._childSpecifications = (
-            this._specification.spawner ?
-            this._specification.spawner.child_specifications(this) :
-            []
+        
+        this._childSpecifications = [];
+        this._childCount = 0;
+        this._totalWeight = this._childSpecifications.reduce(
+            (accumulator, specification) => accumulator + specification.weight,
+            0
         );
+        this._childBoxes = Array(this._childSpecifications.length).fill(null);
+        
+        this._ready = new Promise((resolve, reject) => {
+            const spawner = this._specification.spawner;
+            if (spawner === null) {
+                resolve(true);
+            }
+            else {
+                spawner.child_specifications(this)
+                .then(specifications => {
+                    this._set_child_specifications(specifications);
+                    resolve(true);
+                })
+                .catch(error => reject(error));
+            }
+        });
+    }
+
+    _set_child_specifications(specifications) {
+        this._childSpecifications = specifications;
         this._childCount = this._childSpecifications.length;
         this._totalWeight = this._childSpecifications.reduce(
             (accumulator, specification) => accumulator + specification.weight,
             0
         );
 
-        // childBoxes is a sparse array.
         this._childBoxes = Array(this._childSpecifications.length).fill(null);
+        return true;
     }
 
+    get ready() { return this._ready; }
     get colour() {return this._colour;}
     get text() {return this._text;}
     get prediction() {return this._prediction;}
@@ -178,19 +200,6 @@ export default class ZoomBox {
         this.update();
     }
 
-    adjust_dimensions(xDelta, middleDelta, cascade=false) {
-        if (xDelta !== undefined) {
-            this._left += xDelta;
-            this._width -= xDelta;    
-        }
-        this._middle += middleDelta;
-        this.update();
-        if (cascade) {
-            this.each_childBox(zoomBox => 
-                zoomBox.adjust_dimensions(xDelta, middleDelta, true));
-        }
-    }
-
     update() {
     }
 
@@ -303,133 +312,6 @@ export default class ZoomBox {
         this.middle = top + (height / 2);
     }
 
-    // Solve application of a right-left movement.
-    solve_x_move(delta, limits) {
-        let candidateIndex = this.y_origin_index();
-        let solvedHeight;
-        let target;
-
-        if (candidateIndex !== -1) {
-            // There's a candidate child. Do half the calculation, then make
-            // some checks. Consequence of the checks may be to discard the
-            // candidate.
-            const candidate = this.childBoxes[candidateIndex];
-            const originalHeight = candidate.height;
-            const solved = candidate.solve_x_move(delta, limits);
-            solvedHeight = solved.height;
-            target = solved.target;
-            if (solvedHeight === originalHeight) {
-                console.log('Stationary holder', candidate.message);
-                candidateIndex = -1;
-            }
-            else if (solved.left > limits.right) {
-                console.log('Off holder', candidate.message);
-                candidateIndex = -1;
-            }
-        }
-
-        if (candidateIndex === -1) {
-            // No child to consider; solve height for this parent.
-            const left = this.left + delta;
-            return {
-                "left": left, "height": limits.solve_height(left),
-                "target": this
-            };
-        }
-        else {
-            // Solve this box's height from the unitHeight.
-            const unitHeight = solvedHeight / this.child_weight(candidateIndex);
-            const height = unitHeight * this.totalWeight;
-            return {
-                "left": limits.solve_left(height), "height": height,
-                "target": target
-            };
-        }
-    }
-
-    // Returns a value indicating the vertical position of this box in relation
-    // to the origin.
-    //
-    // -   null if any properties involved in the determination aren't defined.
-    // -   0 if this box is across the origin.
-    // -   1 if this box is below the origin.
-    // -   -1 if this box is above the origin.
-    across_y_origin() {
-        if (this.dimension_undefined()) {
-            return null;
-        }
-        if (this.renderHeightThreshold !== undefined) {
-            if (this.height < this.renderHeightThreshold) {
-                return null;
-            }
-        }
-
-        // If the top of box is below the origin, then the whole box is below
-        // the origin.
-        if (this.top > 0) {
-            return 1;
-        }
-        // If the bottom of the box is above the origin, then the whole box is
-        // above the origin.
-        // Exactly one of the checks has to be or-equals.
-        if (this.bottom <= 0) {
-            return -1;
-        }
-        return 0;
-    }
-
-    // If this box or a child of this box holds the origin, returns a reference
-    // to the holder. Otherwise returns null.
-    origin_holder() {
-        if (this.across_y_origin() !== 0 || this.left > 0 || this.right <= 0) {
-            return null;
-        }
-        let childHolder = null;
-        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
-            const zoomBox = this.childBoxes[index];
-            if (zoomBox === null) {
-                continue;
-            }
-            const across = zoomBox.across_y_origin();
-            if (across === 0 && zoomBox.left <= 0 && zoomBox.right > 0) {
-                childHolder = zoomBox.origin_holder();
-                break;
-            }
-            if (across === -1) {
-                // Found a child above the origin. All remaining child boxes
-                // will be above this one, so stop checking.
-                break;
-            }
-        }
-        return childHolder === null ? this : childHolder;
-    }
-
-    // Returns the index of the immediate child box that is across the Y origin,
-    // if there is one, or -1 otherwise. Doesn't descend recursively into child
-    // boxes.
-    y_origin_index() {
-        if (this.across_y_origin() !== 0) {
-            return -1;
-        }
-        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
-            const zoomBox = this.childBoxes[index];
-            if (zoomBox === null) {
-                continue;
-            }
-            const across = zoomBox.across_y_origin();
-            if (across === 0) {
-                return index;
-            }
-            if (across === -1) {
-                // Found a child above the origin. All remaining child boxes
-                // will be above this one, so stop checking.
-                return -1;
-            }
-        }
-        // Didn't find any child that holds the origin.
-        return -1;
-    }
-
     // Arrange some or all child boxes. There are three procedures, selected by
     // the `up` parameter:
     //
@@ -512,55 +394,6 @@ export default class ZoomBox {
             }
         }
         return up ? childBottom : childTop;
-    }
-
-    // Zoom this box to a specified new height, as follows.
-    //
-    // If this box has a child box that is across the origin, recursively call
-    // its zoom_to_height, then shuffle all the other child boxes in this box,
-    // then set this box to hold all its child boxes.  
-    // Otherwise, move this box up or down, if it isn't across the origin, set
-    // its height, then arrange its child boxes.
-    //
-    // The array of child boxes is sparse, so the origin might be in between two
-    // child boxes, if the intervening child boxes are currently too small to
-    // render.
-    zoom_to_height(height, left, limits) {
-        const index = this.y_origin_index();
-        if (index === -1) {
-            const halfHeightChange = (height - this.height) / 2;
-            if (this.top > 0) {
-                this.middle += halfHeightChange;
-            }
-            // If the bottom of the box is above the origin, then the whole box
-            // is above the origin.
-            // Exactly one of the checks has to be or-equals.
-            if (this.bottom <= 0) {
-                this.middle -= halfHeightChange;
-            }
-            this.height = height;
-            this.left = left;
-            this.width = limits.width - left;
-            this.arrange_children(limits)
-        }
-        else {
-            const unitHeight = height / this.totalWeight;
-            const holder = this.childBoxes[index];
-            const childHeight = unitHeight * this.child_weight(index);
-            holder.zoom_to_height(
-                childHeight, limits.solve_left(childHeight), limits);
-
-            this.height = height;
-            this.left = left;
-            this.width = limits.width - left;
-
-            // push up everything above the holder; push down everything below
-            // the holder.
-            const top = this.arrange_children(limits, true, index);
-            this.arrange_children(limits, false, index);
-            this.middle = top + (height / 2);
-        }
-
     }
 
     get spawnMargin() {

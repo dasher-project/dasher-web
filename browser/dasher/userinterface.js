@@ -30,6 +30,8 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
+        this._predictors = null;
+        this._predictorSelect = null;
 
         this._speakOnStop = false;
         this._speech = null;
@@ -83,7 +85,6 @@ export default class UserInterface {
     get zoomBox() {
         return this._zoomBox;
     }
-
     set zoomBox(newBox) {
         const oldBox = this._zoomBox;
 
@@ -129,6 +130,16 @@ export default class UserInterface {
             message === undefined ? null : message);
     }
 
+    get predictors() {
+        return this._predictors;
+    }
+    set predictors(predictors) {
+        this._predictors = predictors;
+        if (this._predictorSelect !== null) {
+            this._load_predictor_controls();
+        }
+    }
+
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
         this._loading = (
@@ -143,14 +154,15 @@ export default class UserInterface {
         // Next call also creates some divisions in the header.
         this._load_view();
 
+        this._load_predictors();
+
         this._load_controls();
         const diagnosticSpans = this._load_diagnostic();
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
-        const predictor = new Predictor();
         this._controllerPointer = new ControllerPointer(
-            this._pointer, predictor.get.bind(predictor));
+        this._pointer, this._get_predictor(0));
 
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -168,8 +180,22 @@ export default class UserInterface {
         return this;
     }
 
+    _load_predictors() {
+        if (this.predictors === null || this.predictors.length <= 0) {
+            this.predictors = [{
+                "label": "Basic prediction", "item": new Predictor()
+            // }, {
+            //     "label": "Delete me", "item": new Predictor()
+            }];
+        }
+    }
+    _get_predictor(index) {
+        const predictor = this.predictors[index].item;
+        return predictor.get.bind(predictor);
+    }
+
     _load_message() {
-        // Textarea in which the message is displayed.
+        // Textarea in which the message is displayed, and surrounding div.
         this._messageDiv = new Piece(
             'div', this._header, {'id':"message-holder"});
         const identifierMessage = "message";
@@ -177,7 +203,7 @@ export default class UserInterface {
             'label', {'for':identifierMessage}, messageLabelText);
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows':6, 'cols':24,
+            'rows': this._keyboardMode ? 1 : 6, 'cols':24,
             'placeholder':"Message will appear here ..."
         });
     }
@@ -185,7 +211,7 @@ export default class UserInterface {
     _load_controls() {
         if (this._keyboardMode) {
             this._limits.showDiagnostic = false;
-            this._limits.highlight = true;
+            this._load_predictor_controls(this._header);
             return;
         }
         this._load_input(
@@ -203,41 +229,10 @@ export default class UserInterface {
             "Pointer", () => this.clicked_pointer());
         this._buttonPointer = this._load_button(
             "Popup", () => this.clicked_popup());
-        this._load_input(
-            this._divControls, "checkbox", "highlight", "Highlight",
-            checked => this._limits.highlight = checked, true);
 
-        new Speech().initialise(speech => {
-            if (this._speech === null) {
-                this._speech = speech;
-                this._speakCheckbox = this._load_input(
-                    this._divControls, "checkbox", "speak", "Speak on stop",
-                    checked => {
-                        if (checked && !this._speakOnStop) {
-                            speech.speak("Speech is now active.");
-                        }
-                        this._speakOnStop = checked;
-                    }, false);
-                this._voiceSelect = new Piece(
-                    this._divControls.create('select'));
-                this._voiceSelect.node.addEventListener('input', () => {
-                    if (this._speakOnStop) {
-                        speech.speak(
-                            "Speech is now active.",
-                            this._voiceSelect.node.selectedIndex);
-                    }
-                });
-            }
+        this._load_predictor_controls(this._divControls);
 
-            if (speech.available) {
-                this._speakCheckbox.removeAttribute('disabled');
-                this._voiceSelect.remove_childs();
-                speech.voices.forEach(voice => {
-                    this._voiceSelect.create(
-                        'option', undefined, `${voice.name} (${voice.lang})`);
-                });
-            }
-        });
+        new Speech().initialise(this._load_speech.bind(this));
     }
 
     _diagnostic_div_display() {
@@ -304,6 +299,55 @@ export default class UserInterface {
         button.addEventListener('click', callback);
         this._controls.push(button);
         return button;
+    }
+
+    _load_speech(speech) {
+        if (this._speech === null) {
+            this._speech = speech;
+            this._speakCheckbox = this._load_input(
+                this._divControls, "checkbox", "speak", "Speak on stop",
+                checked => {
+                    if (checked && !this._speakOnStop) {
+                        speech.speak("Speech is now active.");
+                    }
+                    this._speakOnStop = checked;
+                }, false);
+            this._voiceSelect = new Piece(
+                this._divControls.create('select'));
+            this._voiceSelect.node.addEventListener('input', () => {
+                if (this._speakOnStop) {
+                    speech.speak(
+                        "Speech is now active.",
+                        this._voiceSelect.node.selectedIndex);
+                }
+            });
+        }
+
+        if (speech.available) {
+            this._speakCheckbox.removeAttribute('disabled');
+            this._voiceSelect.remove_childs();
+            speech.voices.forEach(voice => {
+                this._voiceSelect.create(
+                    'option', undefined, `${voice.name} (${voice.lang})`);
+            });
+        }
+    }
+
+    _load_predictor_controls(parentPiece) {
+        if (this._predictorSelect === null) {
+            this._predictorSelect = new Piece(parentPiece.create('select'));
+            this._predictorSelect.node.addEventListener('input', event => {
+                if (this._controllerPointer !== undefined) {
+                    this._controllerPointer.predictor = this._get_predictor(
+                        event.target.selectedIndex);
+                }
+            });
+        }
+
+        this._predictorSelect.remove_childs();
+        this.predictors.forEach(predictor =>
+            this._predictorSelect.node.add(new Option(predictor.label))
+        );
     }
 
     _load_settings() {
@@ -416,7 +460,7 @@ export default class UserInterface {
             // Process one control cycle.
             this._controller.control(this.zoomBox, this._limits);
             //
-            // Update diagnostic display. The toLocalString method insert
+            // Update diagnostic display. The toLocaleString method will insert
             // thousand separators.
             this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
                 undefined, {maximumFractionDigits:0});
@@ -580,10 +624,24 @@ export default class UserInterface {
 
         this._set_zoomBox_size(zoomBox);
 
-        this._controller.populate(zoomBox, this._limits);
-
         this.zoomBox = zoomBox;
-        this._start_render(startRender);
+
+        this.zoomBox.ready
+        .then(ready => {
+            if (ready) {
+                this._controller.populate(zoomBox, this._limits);
+                this._start_render(startRender);
+            }
+            else {
+                throw new Error("ZoomBox ready false.")
+            }
+         })
+        .catch(error => {
+            // The thrown error mightn't be noticed, if the console isn't
+            // visible. So, set it into the message too.
+            this.message = `ZoomBox couldn't be made ready.\n${error}`;
+            throw error;
+        });
     }
 
     reset() {

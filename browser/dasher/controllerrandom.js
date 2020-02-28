@@ -12,7 +12,7 @@ export default class ControllerRandom {
 
     get rootSpecification() {return this._rootSpecification;}
 
-    child_specifications() {return this._texts.map((character, index) => {
+    async child_specifications() {return this._texts.map((character, index) => {
         const xChange = 1 - ((index % 2) * 2);
         return {
             colour: index % 2 === 0 ? "lightblue" : "lightgreen",

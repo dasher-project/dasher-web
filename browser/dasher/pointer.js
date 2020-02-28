@@ -105,6 +105,16 @@ export default class Pointer {
             // for a touch-move, or doesn't work on Android. A related point is
             // that the scrolling action is prevented by use of the touch-action
             // CSS feature, called when the SVG node is created.
+            //
+            // Without the "passive" declaration, there is a Chrome warning
+            // like:
+            //
+            //     [Violation] Added non-passive event listener to a
+            //     scroll-blocking 'touchstart' event.
+            //
+            // However, with the declaration, the listener cannot call
+            // preventDefault(). Preventing the default is necessary to stop the
+            // characters in the zooming UI being selected as text.
             this._svgPiece.node.addEventListener(
                 'touchstart', this._on_touch.bind(this), {capture:true});
             this._svgPiece.node.addEventListener(
