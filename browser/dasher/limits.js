@@ -19,6 +19,7 @@ export default class Limits {
         this._maximumFontSizePixels = undefined;
         this._drawThresholdRect = undefined;
         this._spawnThreshold = undefined;
+        this._textLeft = 5;
 
         this._gradients = undefined;
         this._solverRight = undefined;
@@ -137,6 +138,11 @@ export default class Limits {
     get spawnThreshold() {return this._spawnThreshold;}
     set spawnThreshold(spawnThreshold) {
         this._spawnThreshold = spawnThreshold;
+    }
+
+    get textLeft() {return this._textLeft;}
+    set textLeft(textLeft) {
+        this._textLeft = textLeft;
     }
 
     // Calculate height, given left position.

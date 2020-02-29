@@ -56,10 +56,11 @@ export default class UserInterface {
             {left:1 / -6, height: 0.5},
             {left:1 / -3, height: 1}
         ];
-        this._limits.minimumFontSizePixels = 40;
+        this._limits.minimumFontSizePixels = 30;
         this._limits.maximumFontSizePixels = 80;
-        this._limits.drawThresholdRect = 40;
-        this._limits.spawnThreshold = 5;
+        this._limits.drawThresholdRect = 10;
+        this._limits.spawnThreshold = 10;
+        this._limits.textLeft = 5;
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
