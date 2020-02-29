@@ -17,7 +17,8 @@ export default class Viewer {
 
     _clear() {
         // Principal graphics.
-        this._group = null;
+        this._groupLower = null;
+        this._groupUpper = null;
         this._rect = null;
         this._text = null;
 
@@ -37,7 +38,8 @@ export default class Viewer {
                 if (child.viewer === null) {
                     child.viewer = new Viewer(child, this._view);
                 }
-                child.viewer._draw_one(this._group.node, limits, level + 1);
+                child.viewer._draw_one(
+                    this._groupLower.node, limits, level + 1);
             });
         }
         else {
@@ -86,14 +88,15 @@ export default class Viewer {
     }
 
     _render_group(after, limits, level) {
-        if (this._group === null) {
+        if (this._groupLower === null) {
             // Use an SVG group <g> element because its translate can be
             // smoothed with a CSS transition, which a <text> element's x and y
             // attributes cannot. TOTH https://stackoverflow.com/a/53452940
             // Reference:
             // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
 
-            this._group = new Piece('g');
+            this._groupLower = new Piece('g');
+            this._groupUpper = new Piece('g');
         }
 
         const box = this._zoomBox;
@@ -106,7 +109,7 @@ export default class Viewer {
         const [trimTop, trimBottom, renderMiddle] = this._trims(
             limitTop, limits.bottom, margin);
         
-        this._group.node.style.transform = 
+        this._groupLower.node.style.transform = 
             `translate(${renderLeft}px, ${renderMiddle}px)`;
         // ToDo: Try changing the above to a transform list, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
@@ -115,17 +118,21 @@ export default class Viewer {
         //     console.log(
         //         this.message, renderMiddle, limitTop, margin, limits.top);
         // }
+        this._groupUpper.node.style.transform = (
+            this._groupLower.node.style.transform);
 
-        const parent = this._group.node.parentElement;
+        const parent = this._groupLower.node.parentElement;
         const viewerNode = this._view.node
         if (!Object.is(parent, viewerNode)) {
             if (after === null) {
                 viewerNode.insertBefore(
-                    this._group.node, viewerNode.firstChild);
+                    this._groupLower.node, viewerNode.firstChild);
             }
             else {
-                after.insertAdjacentElement('afterend', this._group.node);
+                after.insertAdjacentElement('afterend', this._groupLower.node);
             }
+            this._groupLower.node.insertAdjacentElement(
+                'afterend', this._groupUpper.node);
         }
 
         this._render_rect(
@@ -174,7 +181,7 @@ export default class Viewer {
             this._rect = new Piece('rect', undefined, {
                 "x": 0, "fill": box.colour
             });
-            this._group.add_child(this._rect, false);
+            this._groupLower.add_child(this._rect, false);
 
             this._rect.node.addEventListener('click', event =>
                 console.log('rect', 'click', box, event)
@@ -216,7 +223,7 @@ export default class Viewer {
         }
 
         if (this._text === null) {
-            this._text = new Piece('text', this._group, {
+            this._text = new Piece('text', this._groupUpper, {
                 "x": 5, "y": 0, "fill": "black",
                 "alignment-baseline": "middle"
             }, box.text);
@@ -248,7 +255,7 @@ export default class Viewer {
         const y2 = renderOffset + (box.height / 2);
 
         this._width = Piece.toggle(
-            this._width, show, () => new Piece('line',  this._group, {
+            this._width, show, () => new Piece('line',  this._groupLower, {
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4",
                 "class": 'diagnostic-width'
@@ -263,7 +270,7 @@ export default class Viewer {
 
         this._spawnMargin = Piece.toggle(
             this._spawnMargin, show && (box.spawnMargin !== undefined),
-            () => new Piece('line', this._group, {
+            () => new Piece('line', this._groupLower, {
                 x1:"0", x2:`${box.spawnMargin}`,
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
@@ -293,8 +300,9 @@ export default class Viewer {
     }
 
     erase() {
-        if (this._group !== null) {
-            this._group.remove();
+        if (this._groupLower !== null) {
+            this._groupLower.remove();
+            this._groupUpper.remove();
             // console.log('erase', this._zoomBox.message);
             this._clear();
         }
