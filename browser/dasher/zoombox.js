@@ -280,21 +280,22 @@ export default class ZoomBox {
             position = 0;
         }
         const index = path[position];
+        const rootBox = position === 0;
 
         if (index === -1) {
-            // Apply the move here.
-            this.left += moveX;
-            this.width = limits.width - this.left;
-            this.height = limits.solve_height(this.left);
-            this.middle += moveY;
-            this.arrange_children(limits);
-            return;
+            // End of the path; attempt to apply the move here.
+            return this._apply_move_here(moveX, moveY, limits, rootBox);
         }
 
-        // Apply the move to the specified child.
+        // Attempt to apply the move to the specified child.
         const target = this.childBoxes[index];
-        target.apply_move(moveX, moveY, path, limits, position + 1);
-        //
+        const applied = target.apply_move(
+            moveX, moveY, path, limits, position + 1);
+        if (!applied) {
+            // If it wasn't applied to a child, attempt to apply here instead.
+            return this._apply_move_here(moveX, moveY, limits, rootBox);
+        }
+
         // Now adjust this box so that it is congruent to the new height of the
         // target child. The following must become true:  
         // this.child_weight(index) * unitHeight = target.height  
@@ -303,6 +304,16 @@ export default class ZoomBox {
         // Therefore:
         const height = (
             (target.height / this.child_weight(index)) * this.totalWeight);
+        
+        // Unless this is the root box and adjusting its size would cause its
+        // rect to be erased. In that case, undo the move by arranging the child
+        // boxes based on this box's current height and position.
+        if (rootBox && height <= limits.drawThresholdRect) {
+            console.log('Undo height', height, limits.drawThresholdRect);
+            this.arrange_children(limits);
+            return false;
+        }
+
         this.height = height;
         //
         // Arrange the child boxes, in two parts. First, push up everything
@@ -314,6 +325,37 @@ export default class ZoomBox {
         this.left = limits.solve_left(height);
         this.width = limits.width - this.left;
         this.middle = top + (height / 2);
+        return true;
+    }
+
+    _apply_move_here(moveX, moveY, limits, rootBox) {
+        const movedLeft = this.left + moveX;
+        // At any point to the right of the last gradient, the solver will
+        // return a minimum height. This has some undesirable side effects.
+        // These can be avoided by rejecting the move if it would put this box
+        // into that zone.
+        if (movedLeft >= limits.solverRight) {
+            if (rootBox) {
+                console.log('AMH left', movedLeft, limits.solverRight);
+            }
+            return false;
+        }
+
+        const solvedHeight = limits.solve_height(movedLeft);
+        // The root box shouldn't ever have its rect erased. If this move is
+        // being applied to the root box, and would result in erasure, reject
+        // the move.
+        if (rootBox && solvedHeight <= limits.drawThresholdRect) {
+            console.log('AMH height', solvedHeight, limits.drawThresholdRect);
+            return false;
+        }
+
+        this.left = movedLeft;
+        this.width = limits.width - this.left;
+        this.height = solvedHeight;
+        this.middle += moveY;
+        this.arrange_children(limits);
+        return true;
     }
 
     // Arrange some or all child boxes. There are three procedures, selected by

@@ -17,6 +17,7 @@ import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 import Predictor from './predictor.js';
+import PredictorTest from './predictor_test.js';
 
 import Speech from './speech.js';
 
@@ -50,7 +51,7 @@ export default class UserInterface {
 
         this._limits = new Limits();
         this._limits.ratios = [
-            {left:1 / 2, height: 0.01},
+            {left:1 / 3, height: 0.01},
             {left:1 / 5, height: 0.05},
             {left:1 / -6, height: 0.5},
             {left:1 / -3, height: 1}
@@ -183,9 +184,9 @@ export default class UserInterface {
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
+                "label": "Tester", "item": new PredictorTest()
+            }, {
                 "label": "Basic prediction", "item": new Predictor()
-            // }, {
-            //     "label": "Delete me", "item": new Predictor()
             }];
         }
     }
@@ -228,7 +229,20 @@ export default class UserInterface {
         this._buttonPointer = this._load_button(
             "Pointer", () => this.clicked_pointer());
         
-        this._load_predictor_controls(this._divControls);
+        this._load_input(
+            this._divControls, "checkbox", "frozen", "Frozen",
+            checked => {
+                if (this._controllerPointer === undefined) {
+                    return;
+                }
+                this._controllerPointer.frozen = (
+                    checked ?
+                    zoomBox => console.log("Frozen", zoomBox.message) :
+                    null
+                );
+            }, false);
+
+            this._load_predictor_controls(this._divControls);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -360,10 +374,10 @@ export default class UserInterface {
         this._divSettings.create('span', {}, "Speed:");
         this._load_input(
             this._divSettings, "number", "multiplier-left-right", "Left-Right",
-            value => this._pointer.multiplierLeftRight = value, "0.3");
+            value => this._pointer.multiplierLeftRight = value, "0.1");
         this._load_input(
             this._divSettings, "number", "multiplier-up-down", "Up-Down",
-            value => this._pointer.multiplierUpDown = value, "0.3");
+            value => this._pointer.multiplierUpDown = value, "0.2");
     }
 
     _load_diagnostic() {
@@ -467,10 +481,12 @@ export default class UserInterface {
             // origin.
             const originHolder = this.zoomBox.holder(0, 0);
             if (this._pointer.going && (
-                originHolder === undefined ||
-                originHolder === null ||
-                originHolder.message === null ||
-                originHolder.message === undefined
+                originHolder === undefined || (
+                    originHolder !== null && (
+                        originHolder.message === null ||
+                        originHolder.message === undefined
+                    )
+                )
             )) {
                 console.log(
                     'No message', originHolder,

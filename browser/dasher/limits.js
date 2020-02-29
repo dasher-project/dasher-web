@@ -21,6 +21,7 @@ export default class Limits {
         this._spawnThreshold = undefined;
 
         this._gradients = undefined;
+        this._solverRight = undefined;
 
         this._svgPiece = null;
         this._heightGradientPolyline = null;
@@ -44,6 +45,8 @@ export default class Limits {
         this._showDiagnostic = showDiagnostic;
         this._show_gradients();
     }
+
+    get solverRight() {return this._solverRight;}
 
     get svgPiece() {return this._svgPiece;}
     set svgPiece(svgPiece) {
@@ -77,6 +80,10 @@ export default class Limits {
         }).sort((first, second) => first.left - second.left);
         // Previous line will sort from lowest to highest. In practice, lowest
         // means most negative. The left-most will be gradients[0].
+        this._solverRight = (
+            this._gradients === undefined ? undefined :
+            this._gradients[this._gradients.length - 1].left
+        );
 
         this._show_gradients();
     }

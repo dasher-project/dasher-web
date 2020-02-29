@@ -174,6 +174,7 @@ Predictor.characterGroups.forEach(group => {
 Predictor.characterGroupMap.space = Predictor.characterGroupMap.space;
 
 // Fill in basic attributes for groups: texts and codePoints.
+const characters = [];
 Predictor.characterGroups.forEach(group => {
     if (!("texts" in group)) {
         group.texts = [];
@@ -186,7 +187,9 @@ Predictor.characterGroups.forEach(group => {
         }
     }
     group.codePoints = group.texts.map(text => text.codePointAt(0));
+    characters.push(...group.codePoints);
 });
+Predictor.characters = characters;
 
 // Compute additional attributes for groups: weights under this group.
 const vowelWeight = 2;

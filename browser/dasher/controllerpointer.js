@@ -6,6 +6,9 @@ export default class ControllerPointer {
         this._pointer = pointer;
         this._predictor = predictor;
 
+        this._frozen = null;
+        this._frozenTarget = null;
+
         this._rootSpecification = {
             "colour":"silver", "message":[],
             "spawner":this, "prediction": null
@@ -14,6 +17,14 @@ export default class ControllerPointer {
 
     get predictor() {return this._predictor;}
     set predictor(predictor) {this._predictor = predictor;}
+
+    get frozen() {return this._frozen;}
+    set frozen(frozen) {
+        if (frozen !== null && this._frozen === null) {
+            this._frozenTarget = null;
+        }
+        this._frozen = frozen;
+    }
 
     get rootSpecification() {return this._rootSpecification;}
 
@@ -76,11 +87,22 @@ export default class ControllerPointer {
     }
 
     control(rootBox, limits) {
-        if (!this._pointer.going) {
+        if (!this.going) {
             return;
         }
 
         const path = [];
+
+        if (this.frozen !== null) {
+            const target = rootBox.holder(
+                this._pointer.rawX, this._pointer.rawY, path);
+            if (target === null || target === this._frozenTarget) {
+                return;
+            }
+            this._frozenTarget = target;
+            this._frozen(target);
+            return;
+        }
 
         // Select a target to which the move will be applied.  
         // Target is the box at the right-hand edge of the window and at the
@@ -88,7 +110,8 @@ export default class ControllerPointer {
         // Subtract one from the limit because boxes extend exactly to the
         // edge.
         const target = rootBox.holder(
-            limits.right - 1, this._pointer.rawY, path);
+            limits.solverRight // limits.right - 1
+            , this._pointer.rawY, path);
         if (target === null) {
             // If the pointer is outside even the root box, apply the move
             // to the root box anyway.
@@ -105,8 +128,11 @@ export default class ControllerPointer {
         //     );    
         // }
 
-        rootBox.apply_move(
+        const applied = rootBox.apply_move(
             0 - this._pointer.x, this._pointer.y, path, limits);
+        if (!applied) {
+            console.log('Not applied.');
+        }
     }        
 
 }
