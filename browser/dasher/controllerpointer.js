@@ -110,8 +110,7 @@ export default class ControllerPointer {
         // Subtract one from the limit because boxes extend exactly to the
         // edge.
         const target = rootBox.holder(
-            limits.solverRight // limits.right - 1
-            , this._pointer.rawY, path);
+            limits.solverRight, this._pointer.rawY, path);
         if (target === null) {
             // If the pointer is outside even the root box, apply the move
             // to the root box anyway.

@@ -2,7 +2,7 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 export default class Pointer {
-    constructor(svgPiece) {
+    constructor() {
         this._svgBoundingBox = undefined;
 
         // TOTH https://github.com/patrickhlauke/touch
@@ -21,9 +21,6 @@ export default class Pointer {
 
         this._activateCallback = null;
         this._touchEndCallback = null;
-
-        // Setter invocation.
-        this.svgPiece = svgPiece;
     }
 
     get multiplierLeftRight() {return this._multiplierLeftRight;}

@@ -56,10 +56,10 @@ export default class UserInterface {
             {left:1 / -6, height: 0.5},
             {left:1 / -3, height: 1}
         ];
-        this._limits.minimumFontSizePixels = 30;
+        this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 80;
         this._limits.drawThresholdRect = 10;
-        this._limits.spawnThreshold = 10;
+        this._limits.spawnThreshold = 4;
         this._limits.textLeft = 5;
 
         // This value also appears in the userinterface.css file, in the
@@ -185,7 +185,7 @@ export default class UserInterface {
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
-                "label": "Tester", "item": new PredictorTest()
+                "label": "Random prediction", "item": new PredictorTest()
             }, {
                 "label": "Basic prediction", "item": new Predictor()
             }];
@@ -403,21 +403,18 @@ export default class UserInterface {
         this._divSettings = new Piece('div', this._header);
         this._divDiagnostic = new Piece('div', this._header);
 
+        // This element is the root of the whole zooming area.
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
         // screen, by default. Next line suppresses that. Reference:
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
         this._svg.node.style['touch-action'] = 'none';
-
-        // Initialise the view first. It will insert an SVG group to hold what
-        // it draws.
-        this._view = Viewer.view(this._svg);
     }
 
     _load_pointer(diagnosticSpans) {
         // Instantiate the pointer. It will draw the cross hairs and pointer
         // line, always in front of the zoombox as drawn by the viewer.
-        this._pointer = new Pointer(this._svg);
+        this._pointer = new Pointer();
         this._pointer.touchEndCallback = (() => {
             if (
                 this._speakOnStop &&
@@ -440,6 +437,14 @@ export default class UserInterface {
         this._limits.svgPiece = this._svg;
         this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
+
+        // Initialise the view. It will insert a couple of SVG groups, and some
+        // other business.
+        this._view = Viewer.view(this._svg, this._limits);
+        //
+        // Set the pointer's SVG so it can draw the cross hairs and pointer.
+        // Those go last so that they are on top of everything else.
+        this._pointer.svgPiece = this._svg;
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
@@ -664,6 +669,10 @@ export default class UserInterface {
         this._svgRect = boundingClientRect;
         this._pointer.svgBoundingBox = boundingClientRect;
         this._limits.set(boundingClientRect.width, boundingClientRect.height);
+        if (this._view !== undefined) {
+            // Redraw the solver-right mask and border.
+            Viewer.configure_view(this._view, this._limits);
+        }
     }
 
     _on_resize() {

@@ -30,7 +30,7 @@ svg rect {
     stroke: black;
     /* stroke-dasharray: 3; */
 }
-svg rect#catcher {
+svg rect#catcher, svg rect#solver-right-mask {
     stroke-width: 0;
 }
 

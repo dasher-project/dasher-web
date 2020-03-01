@@ -4,9 +4,30 @@
 import Piece from "./piece.js";
 
 export default class Viewer {
-    static view(svgPiece) {
-        // Add an SVG group to hold the root zoom box.
-        return new Piece('g', svgPiece);
+    static view(svgPiece, limits) {
+        const return_ = {
+            "lower": new Piece('g', svgPiece, {"id": "view-lower"})
+        };
+        return_.rect = new Piece('rect', svgPiece, {
+            "y": "-50%", "height": "100%", "fill": "white",
+            "id": 'solver-right-mask'
+        });
+        return_.line = new Piece('line', svgPiece, {
+            "y1": "-50%", "y2": "50%", "stroke": "black", "stroke-width":"1px",
+            "id": 'solver-right-border'
+        });
+        Viewer.configure_view(return_, limits);
+        return_.upper = new Piece('g', svgPiece, {"id": "view-upper"});
+        return return_;
+    }
+    static configure_view(view, limits) {
+        view.rect.set_attributes({
+            "x": limits.solverRight, "width": limits.right - limits.solverRight,
+            "fill-opacity": limits.showDiagnostic ? 0.5 : 1
+        });
+        view.line.set_attributes({
+            "x1": limits.solverRight, "x2": limits.solverRight
+        });
     }
 
     constructor(zoomBox, view) {
@@ -31,6 +52,9 @@ export default class Viewer {
         this._renderLeft = 0;
     }
 
+    get lower() {return this._groupLower;}
+    get upper() {return this._groupUpper;}
+
     // Following is too slow, due to the getBoundingClientRect apparently.
     // _set_text_width() {
     //     if (this._text === null) {
@@ -46,6 +70,7 @@ export default class Viewer {
     // }
 
     draw(limits) {
+        Viewer.configure_view(this._view, limits);
         this._draw_one(null, limits.left, limits, 0);
     }
 
@@ -70,8 +95,7 @@ export default class Viewer {
                 if (child.viewer === null) {
                     child.viewer = new Viewer(child, this._view);
                 }
-                child.viewer._draw_one(
-                    this._groupLower.node, edge, limits, level + 1);
+                child.viewer._draw_one(this, edge, limits, level + 1);
             });
         }
         else {
@@ -99,18 +123,6 @@ export default class Viewer {
         if (this._zoomBox.top > limits.bottom) {
             return false;
         }
-        /*
-
-        This check seems unnecessary here. Small boxes get erased in
-        arrange_children anyway.
-
-        if (this._zoomBox.renderHeightThreshold !== undefined) {
-            if (this._zoomBox.height < this._zoomBox.renderHeightThreshold) {
-                // return false;
-                console.log(`Viewer RHT "${this._zoomBox.message}".`);
-            }
-        }
-        */
 
         if (this._zoomBox.width <= 0) {
             return false;
@@ -127,8 +139,12 @@ export default class Viewer {
             // Reference:
             // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
 
-            this._groupLower = new Piece('g');
-            this._groupUpper = new Piece('g');
+            this._groupLower = new Piece('g', undefined, {"id": [
+                "group-lower", this._zoomBox.message, this._zoomBox.text
+            ].join("_") });
+            this._groupUpper = new Piece('g', undefined, {"id": [
+                "group-upper", this._zoomBox.message, this._zoomBox.text
+            ].join("_") });
         }
 
         const box = this._zoomBox;
@@ -151,34 +167,22 @@ export default class Viewer {
         //         this.message, renderMiddle, limitTop, margin, limits.top);
         // }
 
-
-
-        // this._groupUpper.node.style.transform = (
-        //     this._groupLower.node.style.transform);
-        this._renderLeft = renderLeft;
-
         const textLeft = (
             renderLeft + limits.textLeft < edge ?
             edge - renderLeft : limits.textLeft);
         this._groupUpper.node.style.transform = 
             `translate(${renderLeft + textLeft}px, ${renderMiddle}px)`;
 
+        this._renderLeft = renderLeft;
 
-        const parent = this._groupLower.node.parentElement;
-        const viewerNode = this._view.node
-        if (!Object.is(parent, viewerNode)) {
-            if (after === null) {
-                viewerNode.insertBefore(
-                    this._groupLower.node, viewerNode.firstChild);
-            }
-            else {
-                after.insertAdjacentElement('afterend', this._groupLower.node);
-            }
-            this._groupLower.node.insertAdjacentElement(
-                'afterend', this._groupUpper.node);
-        }
+        this._insert_group(
+            this._groupLower, this._view.lower,
+            after === null ? null : after.lower.node);
+        this._insert_group(
+            this._groupUpper, this._view.upper,
+            after === null ? null : after.upper.node);
 
-        this._render_rect(
+            this._render_rect(
             trimTop, trimBottom,
             limits.drawThresholdRect, limits.width,
             box.middle - renderMiddle
@@ -213,6 +217,19 @@ export default class Viewer {
             limitTop + margin
         );
         return [trimTop, trimBottom, renderMiddle];
+    }
+
+    _insert_group(group, base, after) {
+        const parent = group.node.parentElement;
+        const baseNode = base.node;
+        if (!Object.is(parent, baseNode)) {
+            if (after === null) {
+                baseNode.insertBefore(group.node, baseNode.firstChild);
+            }
+            else {
+                after.insertAdjacentElement('afterend', group.node);
+            }
+        }
     }
 
     _render_rect(trimTop, trimBottom, threshold, width, renderOffset) {
@@ -372,7 +389,6 @@ export default class Viewer {
         if (this._groupLower !== null) {
             this._groupLower.remove();
             this._groupUpper.remove();
-            // console.log('erase', this._zoomBox.message);
             this._clear();
         }
         this._zoomBox.each_childBox(child => child.erase());
