@@ -19,6 +19,24 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
 Backlog
 =======
+-   Move spawnMargin from ZoomBox to Limits.
+-   Restructure the Predictor code so that there is a separate Palette that has
+    the groups and order.
+-   Improve the Viewer textWidth to be based on a bounding box from the font
+    metric. Could be done by loading one of each character when the UI is
+    loading, and storing the bounding box for each.
+-   Decommission textLeft, which is always zero at the moment.
+-   Improve the zooming based on the PhD material, aka S parameter.
+    -   As part of the previous item, or standalone, make the zoom rate
+        non-linear.
+    -   Also make the zoom faster if the pointer is to the left of the origin, 
+        i.e. zooming out.
+-   Change the drawing of the X axis so it doesn't go all the way across the
+    area. Original Dasher has a short horizontal line.
+-   Maybe arrange_children on resize.
+-   Maybe shuffle letters left or right in the tail.
+-   Add tuning controls on a tab maybe. All parameters could be set there.
+    -   Store what is set in the standalone app to be used in the keyboard too.
 -   See about fixing the text alignment on Firefox.
 -   Change box colours to be set by the CSS maybe.
 -   Change terminology of "origin holder" to maybe "delta target".
