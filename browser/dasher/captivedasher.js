@@ -7,9 +7,10 @@
 // Import the Captive Web View simple page builder.
 import PageBuilder from "./pagebuilder.js";
 
-import UserInterface from "./userinterface.js"
-import PredictorCompletions from "./predictor_completions.js"
 import Predictor from "./predictor.js";
+import PredictorCompletions from "./predictor_completions.js"
+import PredictorTest from './predictor_test.js';
+import UserInterface from "./userinterface.js"
 
 class CaptiveDasher {
     constructor(bridge) {
@@ -58,6 +59,8 @@ class CaptiveDasher {
                 }, {
                     "label": "No prediction",
                     "item": new Predictor()
+                }, {
+                    "label": "Random", "item": new PredictorTest()
                 }];
             }
             ui.load(null, footerID);

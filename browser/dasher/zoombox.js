@@ -111,24 +111,6 @@ export default class ZoomBox {
             (child, index) => child !== null && callback(child, index));
     }
 
-    /*
-
-
-    Moved to the limits object.
-
-    // Height at which this box is considered big enough to render. If the box
-    // gets zoomed below this height, it is de-rendered.
-    get renderHeightThreshold() {
-        return this._renderHeightThreshold;
-    }
-    set renderHeightThreshold(renderHeightThreshold) {
-        this._renderHeightThreshold = renderHeightThreshold;
-        this.each_childBox(child => 
-            child.renderHeightThreshold = renderHeightThreshold
-        );
-    }
-    */
-
     // Principal properties that define the location and size of the box. The
     // update() method is always a no-op in the current version but could be
     // changed later.
@@ -209,7 +191,7 @@ export default class ZoomBox {
 
     inherit(parent) {
         [
-            "spawnMargin" //, "renderHeightThreshold"
+            "spawnMargin"
         ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 

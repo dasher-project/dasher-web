@@ -57,7 +57,7 @@ export default class UserInterface {
             {left:1 / -3, height: 1}
         ];
         this._limits.minimumFontSizePixels = 20;
-        this._limits.maximumFontSizePixels = 80;
+        this._limits.maximumFontSizePixels = 30;
         this._limits.drawThresholdRect = 10;
         this._limits.spawnThreshold = 4;
         this._limits.textLeft = 5;
@@ -185,9 +185,9 @@ export default class UserInterface {
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
-                "label": "Random prediction", "item": new PredictorTest()
-            }, {
                 "label": "Basic prediction", "item": new Predictor()
+            }, {
+                "label": "Random prediction", "item": new PredictorTest()
             }];
         }
     }
