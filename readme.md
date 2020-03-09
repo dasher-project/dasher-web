@@ -20,6 +20,8 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 Backlog
 =======
 -   Move spawnMargin from ZoomBox to Limits.
+-   Maybe arrange_children on resize. Also there are some cases in which the
+    white rectangle doesn't extend to the edge of the zooming area.
 -   Restructure the Predictor code so that there is a separate Palette that has
     the groups and order.
 -   Improve the Viewer textWidth to be based on a bounding box from the font
@@ -33,7 +35,6 @@ Backlog
         i.e. zooming out.
 -   Change the drawing of the X axis so it doesn't go all the way across the
     area. Original Dasher has a short horizontal line.
--   Maybe arrange_children on resize.
 -   Maybe shuffle letters left or right in the tail.
 -   Add tuning controls on a tab maybe. All parameters could be set there.
     -   Store what is set in the standalone app to be used in the keyboard too.
