@@ -43,6 +43,7 @@ export default class UserInterface {
         // load().
         this._controllerPointer = undefined;
         this._controller = null;
+        this._frozenClickListener = null;
 
         this._view = undefined;
 
@@ -51,10 +52,11 @@ export default class UserInterface {
 
         this._limits = new Limits();
         this._limits.ratios = [
-            {left:1 / 3, height: 0.01},
-            {left:1 / 5, height: 0.05},
-            {left:1 / -6, height: 0.5},
-            {left:1 / -3, height: 1}
+            {left:0.34, height: 0.01},
+            {left:0.33, height: 0.02},
+            {left:0.16, height: 0.25},
+            {left:0, height: 0.475},
+            {left:-0.16, height: 1}
         ];
         this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 30;
@@ -237,10 +239,21 @@ export default class UserInterface {
                     return;
                 }
                 this._controllerPointer.frozen = (
-                    checked ?
-                    zoomBox => console.log("Frozen", zoomBox.message) :
-                    null
-                );
+                    checked ? report => console.log("Frozen", report) : null);
+                if (checked) {
+                    const catcher = document.getElementById("catcher");
+                    this._frozenClickListener = () => {
+                        console.log('catchclick');
+                        this._controllerPointer.report_frozen(
+                            this.zoomBox, this._limits, false);
+                    };
+                    catcher.addEventListener(
+                        "click", this._frozenClickListener);
+                }
+                else {
+                    catcher.removeEventListener(
+                        "click", this._frozenClickListener);
+                }
             }, false);
 
             this._load_predictor_controls(this._divControls);
@@ -375,7 +388,7 @@ export default class UserInterface {
         this._divSettings.create('span', {}, "Speed:");
         this._load_input(
             this._divSettings, "number", "multiplier-left-right", "Left-Right",
-            value => this._pointer.multiplierLeftRight = value, "0.1");
+            value => this._pointer.multiplierLeftRight = value, "0.2");
         this._load_input(
             this._divSettings, "number", "multiplier-up-down", "Up-Down",
             value => this._pointer.multiplierUpDown = value, "0.2");

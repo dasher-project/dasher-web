@@ -91,16 +91,7 @@ export default class ControllerPointer {
             return;
         }
 
-        const path = [];
-
-        if (this.frozen !== null) {
-            const target = rootBox.holder(
-                this._pointer.rawX, this._pointer.rawY, path);
-            if (target === null || target === this._frozenTarget) {
-                return;
-            }
-            this._frozenTarget = target;
-            this._frozen(target);
+        if (this.report_frozen(rootBox, limits, true)) {
             return;
         }
 
@@ -109,30 +100,105 @@ export default class ControllerPointer {
         // same height as the pointer.  
         // Subtract one from the limit because boxes extend exactly to the
         // edge.
+        const path = [];
+        const maxRight = limits.solverRight - 3;
+        const holderX = (
+            this._pointer.rawX > maxRight ? maxRight : this._pointer.rawX);
         const target = rootBox.holder(
-            limits.solverRight, this._pointer.rawY, path);
+
+
+            // limits.solverRight, 
+            // this._pointer.rawX,
+
+            holderX, this._pointer.rawY, path);
+        let moveX;
+        let moveY;
         if (target === null) {
             // If the pointer is outside even the root box, apply the move
             // to the root box anyway.
             path[0] = -1;
+            moveX = 0 - this._pointer.x;
+            moveY = this._pointer.y;
+        }
+        else {
+            const calculation = this._calculate_move(target, limits);
+            moveX = calculation.moveX;
+            moveY = calculation.moveY;
         }
 
-        // if (target === null) {
-        //         console.log("Target null.");
-        // }
-        // else {
-        //     console.log(
-        //         `Target "${target.message}"`, path,
-        //         target.left, target.right, target.top, target.bottom
-        //     );    
-        // }
-
-        const applied = rootBox.apply_move(
-            0 - this._pointer.x, this._pointer.y, path, limits);
+        const applied = rootBox.apply_move(moveX, moveY, path, limits);
         if (!applied) {
             console.log('Not applied.');
         }
-    }        
+    }
+
+    _calculate_move(target, limits) {
+        const p0x = this._pointer.rawX;
+        const p0y = 0 - this._pointer.rawY;
+        const calculation = {
+            "box": target, "p0x": p0x, "p0y": p0y,
+            "lx":limits.left, "rx":limits.solverRight};
+        if (target !== null) {
+            const pointerX = this._pointer.x;
+            let tx1 = target.left - pointerX;
+            let adjustX = null;
+            if (tx1 < limits.left && pointerX < 0) {
+                adjustX = (limits.left - tx1) * p0x / limits.left;
+                tx1 += adjustX; //limits.left;
+            }
+            // const adjustX = tx1 > limits.left ? null : limits.left - tx1;
+            const h1 = limits.solve_height(tx1);
+            const on0 = (p0y - target.middle) / target.height;
+            const p1y = p0y + this._pointer.y;
+            // on0 = (p1y - ty1) / h1
+            // (on0 * h1) - p1y = -1 * ty1
+            // p1y - (on0 * h1) = ty1
+            const ty1 = p1y - (on0 * h1);
+            const on1 = (p1y - ty1) / h1;
+
+            // const offsetX = p0x - target.left;
+            // const left = offsetX / target.height;
+            Object.assign(calculation, {
+                "message": target.message,
+            //     "left": left, "rLeft": offsetX, "height": target.height,
+            //     "middle": p0y - target.middle,
+                // "a0": p0y - target.top, "b0": target.bottom - p0y
+                // "an0": (p0y - target.top) / target.height,
+                "adjustX": adjustX,
+                "on0": on0, "on1": on1,
+                "h0": target.height, "h1": h1,
+                "tx0": target.left, "tx1": tx1,
+                "ty0": target.middle, "ty1": ty1,
+                "moveX": tx1 - target.left, "moveY": ty1 - target.middle
+            });
+        }
+
+
+        // if (apply_move !== undefined) {
+        //     apply_move();
+        // }
+        return calculation;
+    }
+
+    report_frozen(rootBox, limits, onlyIfTargetChanged=false) {
+        if (this.frozen === null) {
+            return false;
+        }
+        // Pointer Y is positive upwards but Box Y is positive downwards. X has
+        // the same sense in both Pointer and Box. The holder method adjusts for
+        // that already.
+        const target = rootBox.holder(
+            this._pointer.rawX, this._pointer.rawY, []);
+        if (onlyIfTargetChanged && (
+            target === null || target === this._frozenTarget
+        )) {
+            return true;
+        }
+        this._frozenTarget = target;
+        // const report = {"box": target, "p0x": p0x, "p0y": p0y};
+        this._frozen(this._calculate_move(target, limits));
+        return true;
+    }
 
 }
 
