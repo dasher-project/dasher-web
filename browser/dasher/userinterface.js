@@ -21,6 +21,8 @@ import PredictorTest from './predictor_test.js';
 
 import Speech from './speech.js';
 
+import PageBuilder from "../pagebuilder.js";
+
 const messageLabelText = "Message:";
 
 export default class UserInterface {
@@ -46,6 +48,7 @@ export default class UserInterface {
         this._frozenClickListener = null;
 
         this._view = undefined;
+        this._panels = undefined;
 
         // Spawn and render parameters in mystery SVG units.
         this._spawnMargin = 30;
@@ -150,13 +153,13 @@ export default class UserInterface {
             loadingID === null ? null :
             new Piece(document.getElementById(loadingID))
         );
-        if (this._loading !== null) {
-            this._header.add_child(this._loading);
-        }
 
         this._load_message();
-        // Next call also creates some divisions in the header.
         this._load_view();
+        this._load_panels();
+        if (this._loading !== null) {
+            this._panels.main.piece.add_child(this._loading);
+        }
 
         this._load_predictors();
         
@@ -182,6 +185,34 @@ export default class UserInterface {
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
+    }
+
+    _load_panels() {
+        const parentPiece = this._keyboardMode ? undefined : this._header;
+        this._panels = {};
+        const selectors = new Piece('div', parentPiece);
+        selectors.node.classList.add('header__selectors');
+        ['main', 'speed', 'speech', 'developer'].forEach(panelLabel => {
+            const piece = new Piece('div', parentPiece);
+            piece.node.classList.add('header__panel');
+            this._panels[panelLabel] = {
+                "piece": piece,
+                "selector": this._load_button(
+                    panelLabel[0].toLocaleUpperCase() + panelLabel.slice(1),
+                    selectors, this._select_panel.bind(this, panelLabel)
+                )
+            };
+        });
+        this._select_panel('main');
+    }
+    _select_panel(label) {
+        for(const [panelLabel, panel] of Object.entries(this._panels)) {
+            // console.log('selecting', panelLabel, panelLabel === label);
+            panel.piece.node.classList.toggle(
+                'header__panel_selected', panelLabel === label);
+            panel.selector.classList.toggle(
+                'header__selector_selected', panelLabel === label);
+        }
     }
     
     _load_predictors() {
@@ -218,8 +249,15 @@ export default class UserInterface {
             this._load_predictor_controls(this._header);
             return;
         }
+        this._buttonPointer = this._load_button(
+            "Pointer", this._panels.main.piece, () => this.clicked_pointer());
+
+        this._buttonRandom = this._load_button(
+            "Go Random", this._panels.developer.piece,
+            () => this.clicked_random());
         this._load_input(
-            this._divControls, "checkbox", "show-diagnostic", "Show diagnostic",
+            this._panels.developer.piece,
+            "checkbox", "show-diagnostic", "Show diagnostic",
             checked => {
                 this._limits.showDiagnostic = checked;
                 this._diagnostic_div_display();
@@ -227,13 +265,9 @@ export default class UserInterface {
                     this._messageLabel.firstChild.nodeValue = messageLabelText;
                 }
             }, false);
-        this._buttonRandom = this._load_button(
-            "Go Random", () => this.clicked_random());
-        this._buttonPointer = this._load_button(
-            "Pointer", () => this.clicked_pointer());
         
         this._load_input(
-            this._divControls, "checkbox", "frozen", "Frozen",
+            this._panels.developer.piece, "checkbox", "frozen", "Frozen",
             checked => {
                 if (this._controllerPointer === undefined) {
                     return;
@@ -256,7 +290,7 @@ export default class UserInterface {
                 }
             }, false);
 
-            this._load_predictor_controls(this._divControls);
+            this._load_predictor_controls(this._panels.main.piece);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -319,9 +353,9 @@ export default class UserInterface {
         return control;
     }
 
-    _load_button(label, callback) {
-        const button = this._divControls.create(
-            'button', {'type': 'button', 'disabled': true}, label);
+    _load_button(label, parentPiece, callback) {
+        const button = PageBuilder.add_button(label, parentPiece.node);
+        button.setAttribute('disabled', true);
         button.addEventListener('click', callback);
         this._controls.push(button);
         return button;
@@ -331,7 +365,7 @@ export default class UserInterface {
         if (this._speech === null) {
             this._speech = speech;
             this._speakCheckbox = this._load_input(
-                this._divControls, "checkbox", "speak", "Speak on stop",
+                this._panels.speech.piece, "checkbox", "speak", "Speak on stop",
                 checked => {
                     if (checked && !this._speakOnStop) {
                         speech.speak("Speech is now active.");
@@ -339,7 +373,7 @@ export default class UserInterface {
                     this._speakOnStop = checked;
                 }, false);
             this._voiceSelect = new Piece(
-                this._divControls.create('select'));
+                this._panels.speech.piece.create('select'));
             this._voiceSelect.node.addEventListener('input', () => {
                 if (this._speakOnStop) {
                     speech.speak(
@@ -385,16 +419,17 @@ export default class UserInterface {
             return;
         }
 
-        this._divSettings.create('span', {}, "Speed:");
+        this._panels.speed.piece.create('span', {}, "Speed:");
         this._load_input(
-            this._divSettings, "number", "multiplier-left-right", "Left-Right",
+            this._panels.speed.piece, "number", "multiplier-left-right", "Left-Right",
             value => this._pointer.multiplierLeftRight = value, "0.2");
         this._load_input(
-            this._divSettings, "number", "multiplier-up-down", "Up-Down",
+            this._panels.speed.piece, "number", "multiplier-up-down", "Up-Down",
             value => this._pointer.multiplierUpDown = value, "0.2");
     }
 
     _load_diagnostic() {
+        this._divDiagnostic = new Piece('div', this._panels.developer.piece);
         // Diagnostic area in which to display various numbers. This is an array
         // so that the values can be updated.
         this._diagnostic_div_display();
@@ -412,10 +447,6 @@ export default class UserInterface {
     }
 
     _load_view() {
-        this._divControls = new Piece('div', this._header);
-        this._divSettings = new Piece('div', this._header);
-        this._divDiagnostic = new Piece('div', this._header);
-
         // This element is the root of the whole zooming area.
         this._svg = new Piece('svg', this._parent);
         // Touching and dragging in a mobile web view will scroll or pan the
@@ -463,9 +494,9 @@ export default class UserInterface {
         // loading has finished.
         if (this._loading !== null) {
             this._loading.remove();
-            const h1 = Piece.create(
-                'h1', undefined, undefined, "Proof of Concept");
-            this._messageDiv.node.insertAdjacentElement('afterend', h1);
+            const h1 = new Piece(
+                'h1', undefined, undefined, "Dasher Six beta");
+            this._panels.main.piece.add_child(h1, false);
         }
 
         // Previous lines could have changed the size of the svg so, after a
