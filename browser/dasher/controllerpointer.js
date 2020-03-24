@@ -103,20 +103,15 @@ export default class ControllerPointer {
         const path = [];
         const maxRight = limits.solverRight - 3;
         const holderX = (
-            this._pointer.rawX > maxRight ? maxRight : this._pointer.rawX);
-        const target = rootBox.holder(
+            limits.targetRight ? limits.solverRight : (
+                this._pointer.rawX > maxRight ? maxRight : this._pointer.rawX
+            )
+        );
+        const target = rootBox.holder(holderX, this._pointer.rawY, path);
 
-
-            // limits.solverRight, 
-            // this._pointer.rawX,
-
-            holderX, this._pointer.rawY, path);
         let moveX;
         let moveY;
-        if (target === null) {
-            // If the pointer is outside even the root box, apply the move
-            // to the root box anyway.
-            path[0] = -1;
+        if (limits.targetRight) {
             moveX = 0 - this._pointer.x;
             moveY = this._pointer.y;
         }
@@ -124,6 +119,12 @@ export default class ControllerPointer {
             const calculation = this._calculate_move(target, limits);
             moveX = calculation.moveX;
             moveY = calculation.moveY;
+        }
+
+        if (target === null) {
+            // If the pointer is outside even the root box, apply the move
+            // to the root box anyway.
+            path[0] = -1;
         }
 
         const applied = rootBox.apply_move(moveX, moveY, path, limits);
@@ -138,32 +139,32 @@ export default class ControllerPointer {
         const calculation = {
             "box": target, "p0x": p0x, "p0y": p0y,
             "lx":limits.left, "rx":limits.solverRight};
-        if (target !== null) {
+        if (target === null) {
+            Object.assign(calculation, {
+                "moveX": 0 - this._pointer.x,
+                "moveY": this._pointer.y
+            });
+        }
+        else {
             const pointerX = this._pointer.x;
             let tx1 = target.left - pointerX;
             let adjustX = null;
             if (tx1 < limits.left && pointerX < 0) {
                 adjustX = (limits.left - tx1) * p0x / limits.left;
-                tx1 += adjustX; //limits.left;
+                tx1 += adjustX;
             }
-            // const adjustX = tx1 > limits.left ? null : limits.left - tx1;
             const h1 = limits.solve_height(tx1);
             const on0 = (p0y - target.middle) / target.height;
             const p1y = p0y + this._pointer.y;
+            // Algebra here:
             // on0 = (p1y - ty1) / h1
             // (on0 * h1) - p1y = -1 * ty1
             // p1y - (on0 * h1) = ty1
             const ty1 = p1y - (on0 * h1);
             const on1 = (p1y - ty1) / h1;
 
-            // const offsetX = p0x - target.left;
-            // const left = offsetX / target.height;
             Object.assign(calculation, {
                 "message": target.message,
-            //     "left": left, "rLeft": offsetX, "height": target.height,
-            //     "middle": p0y - target.middle,
-                // "a0": p0y - target.top, "b0": target.bottom - p0y
-                // "an0": (p0y - target.top) / target.height,
                 "adjustX": adjustX,
                 "on0": on0, "on1": on1,
                 "h0": target.height, "h1": h1,
@@ -173,10 +174,6 @@ export default class ControllerPointer {
             });
         }
 
-
-        // if (apply_move !== undefined) {
-        //     apply_move();
-        // }
         return calculation;
     }
 

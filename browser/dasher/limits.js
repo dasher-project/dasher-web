@@ -20,6 +20,7 @@ export default class Limits {
         this._drawThresholdRect = undefined;
         this._spawnThreshold = undefined;
         this._textLeft = 5;
+        this._targetRight = true;
 
         this._gradients = undefined;
         this._solverRight = undefined;
@@ -144,6 +145,13 @@ export default class Limits {
     set textLeft(textLeft) {
         this._textLeft = textLeft;
     }
+
+    get targetRight() {return this._targetRight;}
+    set targetRight(targetRight) {
+        this._targetRight = targetRight;
+    }
+
+
 
     // Calculate height, given left position.
     solve_height(left) {

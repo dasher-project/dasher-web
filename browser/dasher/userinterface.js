@@ -50,17 +50,14 @@ export default class UserInterface {
         this._view = undefined;
         this._panels = undefined;
 
+        this._speedLeftRightInput = undefined;
+
         // Spawn and render parameters in mystery SVG units.
         this._spawnMargin = 30;
 
         this._limits = new Limits();
-        this._limits.ratios = [
-            {left:0.34, height: 0.01},
-            {left:0.33, height: 0.02},
-            {left:0.16, height: 0.25},
-            {left:0, height: 0.475},
-            {left:-0.16, height: 1}
-        ];
+        // this._limits.ratios = UserInterface._ratios[0];
+
         this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 30;
         this._limits.drawThresholdRect = 10;
@@ -218,9 +215,9 @@ export default class UserInterface {
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
-                "label": "Basic prediction", "item": new Predictor()
+                "label": "None", "item": new Predictor()
             }, {
-                "label": "Random prediction", "item": new PredictorTest()
+                "label": "Random", "item": new PredictorTest()
             }];
         }
     }
@@ -291,6 +288,7 @@ export default class UserInterface {
             }, false);
 
             this._load_predictor_controls(this._panels.main.piece);
+            this._load_behaviours(this._panels.main.piece);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -395,7 +393,12 @@ export default class UserInterface {
 
     _load_predictor_controls(parentPiece) {
         if (this._predictorSelect === null) {
-            this._predictorSelect = new Piece(parentPiece.create('select'));
+            const identifier = 'prediction-select';
+            parentPiece.create('label', {'for':identifier}, "Prediction:");
+            this._predictorSelect = new Piece(parentPiece.create('select', {
+                'id': identifier, 'name': identifier //,  'disabled': true
+            }));
+            // this._controls.push(this._predictorSelect);
             this._predictorSelect.node.addEventListener('input', event => {
                 if (this._controllerPointer !== undefined) {
                     this._controllerPointer.predictor = this._get_predictor(
@@ -410,6 +413,28 @@ export default class UserInterface {
         );
     }
 
+    _load_behaviours(parentPiece) {
+        const identifier = 'behaviour-select';
+        parentPiece.create('label', {'for':identifier}, "Behaviour:");
+        const behaviourSelect = parentPiece.create('select', {
+            'disabled': true, 'id':identifier, 'name':identifier});
+        this._controls.push(behaviourSelect);
+        behaviourSelect.addEventListener('input', event => 
+            this._select_behaviour(event.target.selectedIndex));
+
+        ["A", "B"].forEach(optionLabel => {
+            behaviourSelect.add(new Option(optionLabel));
+        });
+
+    }
+
+    _select_behaviour(index) {
+        this._limits.targetRight = (index === 0);
+        this._pointer.multiplierLeftRight = (index === 0 ? 0.1 : 0.2);
+        this._speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+        this._limits.ratios = UserInterface._ratios[index];
+    }
+
     _load_settings() {
         if (this._keyboardMode) {
             // Can't show settings in input controls in keyboard mode. The input
@@ -420,9 +445,10 @@ export default class UserInterface {
         }
 
         this._panels.speed.piece.create('span', {}, "Speed:");
-        this._load_input(
+        this._speedLeftRightInput = this._load_input(
             this._panels.speed.piece, "number", "multiplier-left-right", "Left-Right",
             value => this._pointer.multiplierLeftRight = value, "0.2");
+        this._select_behaviour(0);
         this._load_input(
             this._panels.speed.piece, "number", "multiplier-up-down", "Up-Down",
             value => this._pointer.multiplierUpDown = value, "0.2");
@@ -765,3 +791,16 @@ export default class UserInterface {
     }
 
 }
+
+UserInterface._ratios = [[
+    {left:1 / 3, height: 0.01},
+    {left:1 / 5, height: 0.05},
+    {left:1 / -6, height: 0.5},
+    {left:1 / -3, height: 1}
+], [
+    {left:0.34, height: 0.01},
+    {left:0.33, height: 0.02},
+    {left:0.16, height: 0.25},
+    {left:0, height: 0.475},
+    {left:-0.16, height: 1}
+]];
