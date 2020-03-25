@@ -73,6 +73,7 @@ export default class ControllerPointer {
 
             return {
                 "prediction": prediction,
+                "cssClass": colour === null ? prediction.group : undefined,
                 "colour": colour,
                 "message": message,
                 "text": displayText,
@@ -208,8 +209,8 @@ ControllerPointer.sequenceColours = [
 ];
 
 ControllerPointer.groupColours = {
-    "capital": "Yellow",
-    "small": "DeepSkyBlue",
+    "capital": null, // "Yellow",
+    "small": null, // "DeepSkyBlue",
     "numeral": "LightCoral",
     "punctuation": "LimeGreen",
     "space": "LightGray",

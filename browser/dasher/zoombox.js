@@ -9,7 +9,10 @@ export default class ZoomBox {
         this._specification = specification;
         this._colour = (
             specification.colour === undefined ? null : specification.colour);
-        this._text = (
+        this._cssClass = (
+            specification.cssClass === undefined ? null : specification.cssClass);
+
+            this._text = (
             specification.text === undefined ? null : specification.text);
         this._prediction = (
             specification.prediction === undefined ? null :
@@ -70,6 +73,7 @@ export default class ZoomBox {
 
     get ready() { return this._ready; }
     get colour() {return this._colour;}
+    get cssClass() {return this._cssClass;}
     get text() {return this._text;}
     get prediction() {return this._prediction;}
 

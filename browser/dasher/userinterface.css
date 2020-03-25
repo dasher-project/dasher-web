@@ -114,14 +114,16 @@ The user interface is laid out as follows, in a browser.
     float: right;
 
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     text-align: center;
 }
 .header__selector_selected {
     outline: 1px var(--accent-colour) solid !important;
     outline-offset: 1px;
 }
-.header__selectors .cwv-button + .cwv-button {
+.header__selectors .cwv-button + .cwv-button,
+input[type="color"] + label
+{
     margin-left: 0.25rem;
 }
 

@@ -235,7 +235,7 @@ export default class Viewer {
     _render_rect(trimTop, trimBottom, threshold, width, renderOffset) {
         const box = this._zoomBox;
         if (
-            box.colour === null ||
+            (box.colour === null && box.cssClass === null) ||
             (threshold !== undefined && box.height < threshold)
         ) {
             if (this._rect !== null) {
@@ -246,9 +246,14 @@ export default class Viewer {
         }
 
         if (this._rect === null) {
-            this._rect = new Piece('rect', undefined, {
-                "x": 0, "fill": box.colour
-            });
+            const attributes = { "x": 0 };
+            if (box.colour !== null) {
+                attributes.fill = box.colour;
+            }
+            if (box.cssClass !== null) {
+                attributes.class = box.cssClass;
+            }
+            this._rect = new Piece('rect', undefined, attributes);
             this._groupLower.add_child(this._rect, false);
 
             this._rect.node.addEventListener('click', event =>

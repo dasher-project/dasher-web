@@ -49,6 +49,8 @@ export default class UserInterface {
 
         this._view = undefined;
         this._panels = undefined;
+        this._cssNode = document.createElement('style');
+        document.head.append(this._cssNode);
 
         this._speedLeftRightInput = undefined;
 
@@ -158,6 +160,7 @@ export default class UserInterface {
             this._panels.main.piece.add_child(this._loading);
         }
 
+        this._load_colours(this._panels.colour.piece);
         this._load_predictors();
         
         this._load_controls();
@@ -189,7 +192,9 @@ export default class UserInterface {
         this._panels = {};
         const selectors = new Piece('div', parentPiece);
         selectors.node.classList.add('header__selectors');
-        ['main', 'speed', 'speech', 'developer'].forEach(panelLabel => {
+        [
+            'main', 'colour', 'speed', 'speech', 'developer'
+        ].forEach(panelLabel => {
             const piece = new Piece('div', parentPiece);
             piece.node.classList.add('header__panel');
             this._panels[panelLabel] = {
@@ -212,6 +217,34 @@ export default class UserInterface {
         }
     }
     
+    _load_colours(parentPiece) {
+        [
+            ['Capital', "#ffff00"],
+            ['Small', "#00BFFF"]
+        ].forEach(([label, value]) => {
+            // const inserted = node.sheet.insertRule(
+            //     "#message-holder label {background-color: pink;}");
+            // const inserted2 = node.sheet.insertRule(
+            //     "rect.capital {fill: cyan;}");
+            // console.log(inserted, inserted2, node.sheet.cssRules.length);
+            const name = label.toLowerCase();
+            const sheet = this._cssNode.sheet;
+            const inserted = sheet.insertRule(
+                `rect.${name} {fill: ${value};}`, sheet.cssRules.length);
+            // console.log(inserted, name);
+
+            this._load_input(
+                parentPiece, 'color', name, `${label}:`, changed => {
+                    // console.log(changed);
+                    sheet.deleteRule(inserted);
+                    sheet.insertRule(
+                        `rect.${name} {fill: ${changed};}`, inserted);
+                    // console.log(sheet.cssRules);
+                }, value
+            );
+        });
+    }
+
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
@@ -301,7 +334,7 @@ export default class UserInterface {
         }
     }
 
-    _load_input(parent, type, identifier, label, callback, initialValue) {
+    _load_input(parentPiece, type, identifier, label, callback, initialValue) {
         const attributes = {
             'type':type, 'disabled': true,
             'id':identifier, 'name':identifier
@@ -317,9 +350,15 @@ export default class UserInterface {
         const isFloat = (
             type === "number" && initialValue !== undefined &&
             initialValue.includes("."));
-        const parseValue = isFloat ? parseFloat : parseInt;
-        if (initialValue !== undefined) {
-            attributes.value = parseValue(initialValue);
+        const parsedValue = (
+            initialValue === undefined ? undefined : (
+                type === "number" ? (
+                    isFloat ? parseFloat(initialValue) : parseInt(initialValue)
+                ) : initialValue
+            )
+        );
+        if (parsedValue !== undefined) {
+            attributes.value = parsedValue;
         }
         if (type === "number") {
             attributes.step = isFloat ? 0.1 : 1;
@@ -327,12 +366,15 @@ export default class UserInterface {
 
         const labelFirst = (type !== "checkbox" && type !== "number");
         if (labelFirst) {
-            parent.create('label', {'for':identifier}, label);
+            parentPiece.create('label', {'for':identifier}, label);
         }
-        const control = parent.create('input', attributes);
+        const control = parentPiece.create('input', attributes);
         this._controls.push(control);
+        if (parsedValue !== undefined) {
+            control.value = parsedValue;
+        }
         if (!labelFirst) {
-            parent.create('label', {'for':identifier}, label);
+            parentPiece.create('label', {'for':identifier}, label);
         }
 
         if (initialValue !== undefined) {
