@@ -102,8 +102,34 @@ export default class Piece {
 
     static set_attributes(element, attributes) {
         if (attributes !== undefined && element !== undefined) {
+            // There seems to be a strange behaviour in Safari and WKWebView
+            // that, if you first set type='color' then set value='#hexColour',
+            // the picker control will always show black as the initial colour.
+            // However, if you first set the value, and then set the type, the
+            // initial colour will reflect the value correctly.  
+            // The following code works around the behaviour by filtering out
+            // the type setting, if the element is an input control of type
+            // color. Then the filtered out attribute setting is applied after.
+            const attributes2 = (
+                element.tagName.toLowerCase() === 'input' ? {} : null);
+
             for (const [key, value] of Object.entries(attributes)) {
-                element.setAttribute(key, value);
+                if (
+                    attributes2 !== null &&
+                    key.toLowerCase() === 'type' &&
+                    value === 'color'
+                ) {
+                    attributes2[key] = value;
+                }
+                else {
+                    element.setAttribute(key, value);
+                }
+            }
+            if (attributes2 !== null) {
+                console.log(attributes2);
+                for (const [key, value] of Object.entries(attributes2)) {
+                    element.setAttribute(key, value);
+                }
             }
         }
         return element;
