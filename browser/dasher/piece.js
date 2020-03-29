@@ -126,7 +126,6 @@ export default class Piece {
                 }
             }
             if (attributes2 !== null) {
-                console.log(attributes2);
                 for (const [key, value] of Object.entries(attributes2)) {
                     element.setAttribute(key, value);
                 }
