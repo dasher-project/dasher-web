@@ -2,6 +2,7 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 import ZoomBox from "./zoombox.js";
+import ControllerPointer from "./controllerpointer.js";
 
 export default class ControllerRandom {
     constructor(texts) {
@@ -15,7 +16,8 @@ export default class ControllerRandom {
     async child_specifications() {return this._texts.map((character, index) => {
         const xChange = 1 - ((index % 2) * 2);
         return {
-            colour: index % 2 === 0 ? "lightblue" : "lightgreen",
+            colour: null,
+            cssClass: `${ControllerPointer.sequenceStubCSS}-${index % 2}-0`,
             text: character, message: [character.codePointAt(0)],
             weight: 1,
             controllerSettings: {"xChange":xChange, "yChange":xChange},

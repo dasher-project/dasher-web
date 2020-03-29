@@ -250,10 +250,11 @@ export default class Viewer {
             if (box.colour !== null) {
                 attributes.fill = box.colour;
             }
-            if (box.cssClass !== null) {
-                attributes.class = box.cssClass;
-            }
             this._rect = new Piece('rect', undefined, attributes);
+            if (box.cssClass !== null) {
+                this._rect.node.classList.add(box.cssClass)
+            }
+            this._rect.node.classList.add('zoom__rect')
             this._groupLower.add_child(this._rect, false);
 
             this._rect.node.addEventListener('click', event =>

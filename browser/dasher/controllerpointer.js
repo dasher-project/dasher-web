@@ -10,7 +10,7 @@ export default class ControllerPointer {
         this._frozenTarget = null;
 
         this._rootSpecification = {
-            "colour":"silver", "message":[],
+            "colour": null, "cssClass": "root", "message":[],
             "spawner":this, "prediction": null
         };
     }
@@ -55,13 +55,18 @@ export default class ControllerPointer {
             );
                     
             let colour = ControllerPointer.unsetColour;
+            let cssClass = null;
             if (prediction.group === null) {
                 prediction.ordinal = (
                     zoomBox.prediction === null ? 0 :
                     zoomBox.prediction.ordinal + 1
                 );
-                colour = ControllerPointer.sequenceColours[
-                    (index % 2) + ((prediction.ordinal % 2) * 2)];
+                colour = null;
+                cssClass = [
+                    ControllerPointer.sequenceStubCSS,
+                    (prediction.ordinal % 2).toFixed(),
+                    (index % 2).toFixed()
+                ].join("-");
             }
             else {
                 prediction.ordinal = 0;
@@ -73,7 +78,11 @@ export default class ControllerPointer {
 
             return {
                 "prediction": prediction,
-                "cssClass": colour === null ? prediction.group : undefined,
+                "cssClass": (
+                    cssClass === null ?
+                    (colour === null ? prediction.group : undefined) :
+                    cssClass
+                ),
                 "colour": colour,
                 "message": message,
                 "text": displayText,
@@ -204,18 +213,16 @@ export default class ControllerPointer {
 
 ControllerPointer.unsetColour = "LightSlateGray";
 
-ControllerPointer.sequenceColours = [
-    "LightBlue", "SkyBlue", "LightGreen", "PaleGreen"
-];
+ControllerPointer.sequenceStubCSS = "sequence";
 
 ControllerPointer.groupColours = {
-    "capital": null, // "Yellow",
-    "small": null, // "DeepSkyBlue",
-    "numeral": "LightCoral",
-    "punctuation": "LimeGreen",
-    "space": "LightGray",
-    "highlight": "PapayaWhip"
-}
+    "capital": null,
+    "small": null,
+    "numeral": null,
+    "punctuation": null,
+    "contraction": null,
+    "space": null
+};
 
 // TOTH:
 // https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character

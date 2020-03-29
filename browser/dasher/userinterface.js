@@ -58,7 +58,6 @@ export default class UserInterface {
         this._spawnMargin = 30;
 
         this._limits = new Limits();
-        // this._limits.ratios = UserInterface._ratios[0];
 
         this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 30;
@@ -148,6 +147,7 @@ export default class UserInterface {
 
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
+        this.header.classList.add('header');
         this._loading = (
             loadingID === null ? null :
             new Piece(document.getElementById(loadingID))
@@ -196,12 +196,14 @@ export default class UserInterface {
             'main', 'colour', 'speed', 'speech', 'developer'
         ].forEach(panelLabel => {
             const piece = new Piece('div', parentPiece);
-            piece.node.classList.add('header__panel');
+            piece.node.classList.add(
+                'header__panel', `header__panel-${panelLabel}`);
             this._panels[panelLabel] = {
                 "piece": piece,
                 "selector": this._load_button(
                     panelLabel[0].toLocaleUpperCase() + panelLabel.slice(1),
-                    selectors, this._select_panel.bind(this, panelLabel)
+                    new Piece('div', selectors),
+                    this._select_panel.bind(this, panelLabel)
                 )
             };
         });
@@ -209,7 +211,6 @@ export default class UserInterface {
     }
     _select_panel(label) {
         for(const [panelLabel, panel] of Object.entries(this._panels)) {
-            // console.log('selecting', panelLabel, panelLabel === label);
             panel.piece.node.classList.toggle(
                 'header__panel_selected', panelLabel === label);
             panel.selector.classList.toggle(
@@ -220,29 +221,87 @@ export default class UserInterface {
     _load_colours(parentPiece) {
         [
             ['Capital', "#ffff00"],
-            ['Small', "#00BFFF"]
-        ].forEach(([label, value]) => {
-            // const inserted = node.sheet.insertRule(
-            //     "#message-holder label {background-color: pink;}");
-            // const inserted2 = node.sheet.insertRule(
-            //     "rect.capital {fill: cyan;}");
-            // console.log(inserted, inserted2, node.sheet.cssRules.length);
+            ['Small', "#00BFFF"],
+            ['Numeral', "#f08080"],
+            ['Punctuation', "#32cd32"],
+            ['Contraction', "#fbb7f0"],
+            ['Space', "#d3d3d3"],
+            ['Root', "#c0c0c0"]
+        ].forEach(([label, value], index) => {
             const name = label.toLowerCase();
-            const sheet = this._cssNode.sheet;
-            const inserted = sheet.insertRule(
-                `rect.${name} {fill: ${value};}`, sheet.cssRules.length);
-            // console.log(inserted, name);
-
             this._load_input(
-                parentPiece, 'color', name, `${label}:`, changed => {
-                    // console.log(changed);
-                    sheet.deleteRule(inserted);
-                    sheet.insertRule(
-                        `rect.${name} {fill: ${changed};}`, inserted);
-                    // console.log(sheet.cssRules);
-                }, value
+                new Piece('div', parentPiece), 'color', name, `${label}:`,
+                this._make_colour_changer(name, value), value
             );
         });
+
+        const divSequence = new Piece('div', parentPiece);
+        let label = "Sequence";
+        const stub = label.toLowerCase();
+        label += ":";
+        [
+            ["#add8e6", "#87ceeb"],
+            ["#90ee90", "#98fb98"]
+        ].forEach(
+            (values, outerIndex) => values.forEach((value, innerIndex) => {
+                const name = [
+                    stub, (outerIndex % 2).toFixed(), (innerIndex % 2).toFixed()
+                ].join("-");
+                this._load_input(
+                    divSequence, 'color', name, label,
+                    this._make_colour_changer(name, value), value
+                );
+                label = null;
+        }));
+
+        const divBorder = new Piece('div', parentPiece);
+        const borderChanger = this._make_border_changer('zoom__rect');
+        this._load_input(
+            divBorder, 'color', 'borderColour', "Outline:",
+            borderChanger.changedColour, "#000000"
+        );
+        this._load_input(
+            divBorder, 'checkbox', 'borderOn', "Show",
+            borderChanger.changedOn, false
+        );
+    }
+    _make_colour_changer(name, initialValue) {
+        const sheet = this._cssNode.sheet;
+        const inserted = sheet.insertRule(
+            `rect.${name} {fill: ${initialValue};}`, sheet.cssRules.length);
+
+        return changed => {
+            sheet.deleteRule(inserted);
+            sheet.insertRule(`rect.${name} {fill: ${changed};}`, inserted);
+        };
+    }
+    _make_border_changer(name) {
+        const sheet = this._cssNode.sheet;
+
+        let nowOn = true;
+        let nowColour = "#000000";
+
+        const rule = () => [
+            'rect.', name, " {",
+            "stroke-width: ", nowOn ? "1px" : "0px", "; ",
+            "stroke: ", nowColour, ";}"
+        ].join("");
+
+        const inserted = sheet.insertRule(rule(), sheet.cssRules.length);
+
+        return {
+            "changedOn": changed => {
+                nowOn = changed;
+                sheet.deleteRule(inserted);
+                sheet.insertRule(rule(), inserted);
+            },
+            "changedColour": changed => {
+                nowColour = changed;
+                sheet.deleteRule(inserted);
+                sheet.insertRule(rule(), inserted);
+            }
+        };
+
     }
 
     _load_predictors() {
@@ -276,7 +335,7 @@ export default class UserInterface {
     _load_controls() {
         if (this._keyboardMode) {
             this._limits.showDiagnostic = false;
-            this._load_predictor_controls(this._header);
+            this._load_predictor_controls(new Piece('div', this._header));
             return;
         }
         this._buttonPointer = this._load_button(
@@ -365,7 +424,7 @@ export default class UserInterface {
         }
 
         const labelFirst = (type !== "checkbox" && type !== "number");
-        if (labelFirst) {
+        if (label !== null && labelFirst) {
             parentPiece.create('label', {'for':identifier}, label);
         }
         const control = parentPiece.create('input', attributes);
@@ -373,7 +432,7 @@ export default class UserInterface {
         if (parsedValue !== undefined) {
             control.value = parsedValue;
         }
-        if (!labelFirst) {
+        if (label !== null && !labelFirst) {
             parentPiece.create('label', {'for':identifier}, label);
         }
 
@@ -394,7 +453,8 @@ export default class UserInterface {
     }
 
     _load_button(label, parentPiece, callback) {
-        const button = PageBuilder.add_button(label, parentPiece.node);
+        const button = PageBuilder.add_button(
+            label, parentPiece === undefined ? undefined : parentPiece.node);
         button.setAttribute('disabled', true);
         button.addEventListener('click', callback);
         this._controls.push(button);
@@ -473,7 +533,9 @@ export default class UserInterface {
     _select_behaviour(index) {
         this._limits.targetRight = (index === 0);
         this._pointer.multiplierLeftRight = (index === 0 ? 0.1 : 0.2);
-        this._speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+        if (this._speedLeftRightInput !== undefined) {
+            this._speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+        }
         this._limits.ratios = UserInterface._ratios[index];
     }
 
@@ -483,6 +545,7 @@ export default class UserInterface {
             // would itself require a keyboard. Set some slower default values.
             this._pointer.multiplierLeftRight = 0.2;
             this._pointer.multiplierUpDown = 0.2;
+            this._select_behaviour(1);
             return;
         }
 

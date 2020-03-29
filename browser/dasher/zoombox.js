@@ -10,9 +10,10 @@ export default class ZoomBox {
         this._colour = (
             specification.colour === undefined ? null : specification.colour);
         this._cssClass = (
-            specification.cssClass === undefined ? null : specification.cssClass);
+            specification.cssClass === undefined ? null :
+            specification.cssClass);
 
-            this._text = (
+        this._text = (
             specification.text === undefined ? null : specification.text);
         this._prediction = (
             specification.prediction === undefined ? null :
