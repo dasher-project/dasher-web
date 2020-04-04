@@ -339,8 +339,8 @@ export default class UserInterface {
             return;
         }
         this._buttonPointer = this._load_button(
-            "Pointer", this._panels.main.piece, () => this.clicked_pointer());
-
+            "Pointer", this._panels.developer.piece,
+            () => this.clicked_pointer());
         this._buttonRandom = this._load_button(
             "Go Random", this._panels.developer.piece,
             () => this.clicked_random());
@@ -634,9 +634,7 @@ export default class UserInterface {
         // time out for rendering, process a resize.
         setTimeout(() => {
             this._on_resize();
-            if (this._keyboardMode) {
-                this.clicked_pointer();
-            }
+            this.clicked_pointer();
         }, 0);
 
         // Activate intervals and controls.

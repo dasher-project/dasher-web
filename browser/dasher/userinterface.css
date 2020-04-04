@@ -136,6 +136,15 @@ svg text {
 svg g {
     transition: var(--transition) linear;
 }
+svg text#resume-message-text {
+    font-size: x-large;
+    transition: fill-opacity var(--transition) linear;
+}
+svg rect#resume-message-background {
+    fill: var(--field-colour);
+    /* rx: 15px; Seems not to work in Safari. */
+    transition: fill-opacity var(--transition) linear;
+}
 
 body {
     position: absolute;

@@ -1,6 +1,8 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
+import Piece from "./piece.js";
+
 export default class Pointer {
     constructor() {
         this._svgBoundingBox = undefined;
@@ -21,6 +23,12 @@ export default class Pointer {
 
         this._activateCallback = null;
         this._touchEndCallback = null;
+
+        this._paused = undefined;
+
+        this._catcher = null;
+        this._resumeMessage = null;
+        this._resumeBackground = null;
     }
 
     get multiplierLeftRight() {return this._multiplierLeftRight;}
@@ -35,11 +43,50 @@ export default class Pointer {
 
     get x() {return this._rawX * this.multiplierLeftRight;}
     get y() {return this._rawY * this.multiplierUpDown;}
-    get going() {return this._rawX !== 0 || this._rawY !== 0;}
+    get going() {
+        return (!this.paused) && (this._rawX !== 0 || this._rawY !== 0);
+    }
 
     get activateCallback() {return this._activateCallback;}
     set activateCallback(activateCallback) {
         this._activateCallback = activateCallback;
+    }
+    _activate_callback() {
+        if (this.activateCallback !== null) {
+            this.activateCallback();
+        }
+    }
+
+    get paused() {
+        return this._paused;
+    }
+    set paused(paused) {
+        if (this._paused === undefined) {
+            this._paused = !paused;
+        }
+        else if (paused !== this._paused) {
+            if (paused) {
+                this._touch_end();
+            }
+            else {
+                this._activate_callback();
+            }
+        }
+        const opacity = (
+            paused && !this._paused ? 1 :
+                this._paused && !paused ? 0 : undefined);
+        if (opacity !== undefined) {
+            [
+                [this._catcher, 0.3 * opacity],
+                [this._resumeMessage, opacity],
+                [this._resumeBackground, 0.8 * opacity]
+            ].forEach(([element, opacity]) => {
+                if (element !== null) {
+                    element.setAttribute('fill-opacity', opacity);
+                }
+            });
+        }
+        this._paused = paused;
     }
 
     // Purpose of the touch-end callback is to get into some other code from
@@ -48,6 +95,11 @@ export default class Pointer {
     get touchEndCallback() {return this._touchEndCallback;}
     set touchEndCallback(touchEndCallback) {
         this._touchEndCallback = touchEndCallback;
+    }
+    _touch_end() {
+        if (this.touchEndCallback !== null && !this._paused) {
+            this.touchEndCallback();
+        }
     }
 
     get rawX() {return this._rawX;}
@@ -82,10 +134,10 @@ export default class Pointer {
         // touch events at all. So, it has an opacity of zero.  
         // The touch handlers are attached to the svg element, even so, the
         // event will get handled down in the SVG elements.
-        this._svgPiece.create('rect', {
+        this._catcher = this._svgPiece.create('rect', {
             x:"-50%", y:"-50%", width:"100%", height:"100%", id:"catcher",
             'fill-opacity':0
-        })
+        });
 
         // Add pointer listeners, either touch or mouse. Desktop Safari doesn't
         // support pointer events like:
@@ -125,11 +177,55 @@ export default class Pointer {
                 'touchcancel', this._on_touch_leave.bind(this), {capture:true});
         }
         else {
+            this._set_up_pause_control();
             this._svgPiece.node.addEventListener(
                 'mousemove', this._on_mouse_move.bind(this), {capture:true});
             this._svgPiece.node.addEventListener(
                 'mouseleave', this._on_mouse_leave.bind(this), {capture:true});
         }
+    }
+
+    _set_up_pause_control() {
+        // Elements are set up with zero opacity. That way they get rendered,
+        // and their bounding boxes can be calculated. Then the `paused`
+        // property is set, which results in a setter invocation and the correct
+        // opacities being set. (That's still zero at time of writing, but could
+        // change if an option to start in paused mode was added.)
+
+        this._resumeMessage = this._svgPiece.create('text', {
+            x:"0", y:"0", id:'resume-message-text', 'text-anchor':"middle",
+            'fill-opacity': 0
+        }, "Click to resume");
+        // Next code is in a timeout so that the text has been rendered.
+        setTimeout(() => {
+            const messageBounds = this._resumeMessage.getBoundingClientRect()
+            const svgBounds = this._svgPiece.node.getBoundingClientRect();
+            const messageTop = (
+                (messageBounds.y - svgBounds.y) - (svgBounds.height * 0.5));
+            // console.log( svgBounds, messageBounds);
+            const padding = 15;
+
+            this._resumeBackground = Piece.create('rect', undefined, {
+                "x":(messageBounds.width * -0.5) - padding,
+                "y":messageTop - padding,
+                "width": messageBounds.width + padding + padding,
+                "height":messageBounds.height + padding + padding,
+                "rx": `${padding}px`,
+                "id":"resume-message-background", 'fill-opacity': 0
+            });
+            this._resumeMessage.insertAdjacentElement(
+                'beforebegin', this._resumeBackground);
+
+            // Setter invocation to set correct opacity.
+            this.paused = false;
+
+            const pause_toggler = () => this.paused = !this.paused;
+            [
+                this._resumeMessage, this._resumeBackground, this._catcher
+            ].forEach(element => element.addEventListener(
+                'click', pause_toggler
+            ));
+        }, 0);
     }
 
     get svgBoundingBox() {return this._svgBoundingBox;}
@@ -168,9 +264,7 @@ export default class Pointer {
             (clientX >= this.svgBoundingBox.x) &&
             (clientX <= this.svgBoundingBox.x + this.svgBoundingBox.width)
         ) {
-            if (this.activateCallback !== null) {
-                this.activateCallback();
-            }
+            this._activate_callback();
             return this._update_pointer_raw(
                 clientX - (
                     this.svgBoundingBox.x + (this.svgBoundingBox.width * 0.5)
@@ -208,9 +302,7 @@ export default class Pointer {
         // Mouse Leave events are posted for child nodes too.
         if (Object.is(mouseEvent.target, this._svgPiece.node)) {
             mouseEvent.preventDefault();
-            if (this.touchEndCallback !== null) {
-                this.touchEndCallback();
-            }
+            this._touch_end();
             return this._update_pointer_raw(0, 0);
         }
     }
@@ -232,9 +324,7 @@ export default class Pointer {
     }
     _on_touch_leave(touchEvent) {
         touchEvent.preventDefault();
-        if (this.touchEndCallback !== null) {
-            this.touchEndCallback();
-        }
+        this._touch_end();
         return this._update_pointer_raw(0, 0);
     }
 
