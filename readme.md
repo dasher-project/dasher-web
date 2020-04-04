@@ -19,6 +19,10 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
 Backlog
 =======
+-   Add a settings presentation option that works on small screens. In the
+    current code, the six buttons push out the actual controls on a phone
+    screen. Maybe just show one button by default that cycles through, and have
+    an option to expand all the settings panels.
 -   Move spawnMargin from ZoomBox to Limits.
 -   Maybe arrange_children on resize. Also there are some cases in which the
     white rectangle doesn't extend to the edge of the zooming area.
