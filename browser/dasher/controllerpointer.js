@@ -30,7 +30,7 @@ export default class ControllerPointer {
 
     get going() {return this._pointer.going;}
 
-    async child_specifications(zoomBox) {
+    async specify_child_boxes(zoomBox) {
         const predictions = await this.predictor(
             zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
         );

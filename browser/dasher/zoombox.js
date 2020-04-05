@@ -31,7 +31,6 @@ export default class ZoomBox {
         this._trimmedIndex = undefined;
         this._trimmedParent = null;
 
-        this._controllerSettings = specification.controllerSettings;
         this._viewer = null;
         
         this._childSpecifications = [];
@@ -43,18 +42,12 @@ export default class ZoomBox {
         this._childBoxes = Array(this._childSpecifications.length).fill(null);
         
         this._ready = new Promise((resolve, reject) => {
-            const factory = this._specification.factory;
-            if (factory === null) {
+            this._specification.factory.specify_child_boxes(this)
+            .then(specifications => {
+                this._set_child_specifications(specifications);
                 resolve(true);
-            }
-            else {
-                factory.child_specifications(this)
-                .then(specifications => {
-                    this._set_child_specifications(specifications);
-                    resolve(true);
-                })
-                .catch(error => reject(error));
-            }
+            })
+            .catch(error => reject(error));
         });
     }
 
@@ -88,7 +81,9 @@ export default class ZoomBox {
     get childBoxes() {return this._childBoxes;}
     get childCount() {return this._childCount;}
     get childSpecifications() {return this._childSpecifications;}
-    get controllerSettings() {return this._controllerSettings;}
+
+    get controllerData() {return this._specification.controllerData;}
+    get factoryData() {return this._specification.factoryData;}
 
     get viewer() {return this._viewer;}
     set viewer(viewer) {this._viewer = viewer;}

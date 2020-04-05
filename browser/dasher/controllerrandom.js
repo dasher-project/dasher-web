@@ -4,26 +4,31 @@
 import ZoomBox from "./zoombox.js";
 import ControllerPointer from "./controllerpointer.js";
 
+const emptyArray = [];
+
 export default class ControllerRandom {
     constructor(texts) {
         this._texts = texts;
         this._going = true;
-        this._rootSpecification = {factory:this};
+        this._rootSpecification = {"factory":this, "factoryData": true};
     }
 
     get rootSpecification() {return this._rootSpecification;}
 
-    async child_specifications() {return this._texts.map((character, index) => {
-        const xChange = 1 - ((index % 2) * 2);
-        return {
-            colour: null,
-            cssClass: `${ControllerPointer.sequenceStubCSS}-${index % 2}-0`,
-            text: character, message: [character.codePointAt(0)],
-            weight: 1,
-            controllerSettings: {"xChange":xChange, "yChange":xChange},
-            factory: null
-        };
-    });}
+    async specify_child_boxes(zoomBox) {
+        return zoomBox.factoryData ? this._texts.map((character, index) => {
+            const xChange = 1 - ((index % 2) * 2);
+            return {
+                "colour": null,
+                "cssClass":
+                    `${ControllerPointer.sequenceStubCSS}-${index % 2}-0`,
+                "text": character, message: [character.codePointAt(0)],
+                "weight": 1,
+                "controllerData": {"xChange":xChange, "yChange":xChange},
+                "factory":this, "factoryData": false
+            };
+        }) : emptyArray;
+    }
 
     get going() {return this._going;}
     set going(going) {this._going = going;}
@@ -39,8 +44,8 @@ export default class ControllerRandom {
         const widthMax = rootBox.width;
         let top = rootBox.top;
         rootBox.each_childBox(zoomBox => {
-            const xChange = zoomBox.controllerSettings.xChange;
-            const yChange = zoomBox.controllerSettings.yChange;
+            const xChange = zoomBox.controllerData.xChange;
+            const yChange = zoomBox.controllerData.yChange;
             const xDelta = (50 + Math.random() * 250) * xChange;
             const yDelta = heightMin * Math.random() * yChange;
 
@@ -51,7 +56,7 @@ export default class ControllerRandom {
                 (width > widthMax && xChange > 0)
             ) {
                 // Reverse direction; don't move.
-                zoomBox.controllerSettings.xChange *= -1;
+                zoomBox.controllerData.xChange *= -1;
                 width = undefined;
             }
             else {
@@ -66,7 +71,7 @@ export default class ControllerRandom {
                 // Reverse direction, don't change height. But, top will
                 // still have to change because adjacent child boxes will
                 // have moved probably.
-                zoomBox.controllerSettings.yChange *= -1;
+                zoomBox.controllerData.yChange *= -1;
             }
             else {
                 height += yDelta;
