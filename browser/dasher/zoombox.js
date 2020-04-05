@@ -43,12 +43,12 @@ export default class ZoomBox {
         this._childBoxes = Array(this._childSpecifications.length).fill(null);
         
         this._ready = new Promise((resolve, reject) => {
-            const spawner = this._specification.spawner;
-            if (spawner === null) {
+            const factory = this._specification.factory;
+            if (factory === null) {
                 resolve(true);
             }
             else {
-                spawner.child_specifications(this)
+                factory.child_specifications(this)
                 .then(specifications => {
                     this._set_child_specifications(specifications);
                     resolve(true);

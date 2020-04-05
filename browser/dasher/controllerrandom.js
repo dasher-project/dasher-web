@@ -8,7 +8,7 @@ export default class ControllerRandom {
     constructor(texts) {
         this._texts = texts;
         this._going = true;
-        this._rootSpecification = {spawner:this};
+        this._rootSpecification = {factory:this};
     }
 
     get rootSpecification() {return this._rootSpecification;}
@@ -21,7 +21,7 @@ export default class ControllerRandom {
             text: character, message: [character.codePointAt(0)],
             weight: 1,
             controllerSettings: {"xChange":xChange, "yChange":xChange},
-            spawner: null
+            factory: null
         };
     });}
 

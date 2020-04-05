@@ -11,7 +11,7 @@ export default class ControllerPointer {
 
         this._rootSpecification = {
             "colour": null, "cssClass": "root", "message":[],
-            "spawner":this, "prediction": null
+            "factory":this, "prediction": null
         };
     }
 
@@ -87,7 +87,7 @@ export default class ControllerPointer {
                 "message": message,
                 "text": displayText,
                 "weight": prediction.weight,
-                "spawner": this
+                "factory": this
             };
         });
     }
