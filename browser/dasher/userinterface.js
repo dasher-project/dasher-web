@@ -11,6 +11,7 @@ Whichever HTML file loads this script must also load the userinterface.css file.
 
 import Limits from './limits.js';
 import Piece from './piece.js';
+import Palette from './palette.js';
 import Pointer from './pointer.js';
 import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
@@ -39,13 +40,15 @@ export default class UserInterface {
         this._speakOnStop = false;
         this._speech = null;
 
+        this._palette = new Palette();
         this._controllerRandom = new ControllerRandom(
-            "abcdefghijklmnopqrstuvwxyz".split(""));
+            "abcdefghijklmnopqrstuvwxyz".split(""), this._palette);
         // Pointer controller will need a Pointer and it isn't set up until the
         // load().
         this._controllerPointer = undefined;
         this._controller = null;
         this._frozenClickListener = null;
+
 
         this._view = undefined;
         this._panels = undefined;
@@ -167,7 +170,7 @@ export default class UserInterface {
         this._load_settings();
 
         this._controllerPointer = new ControllerPointer(
-            this._pointer, this._get_predictor(0));
+            this._pointer, this._get_predictor(0), this._palette);
     
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -237,10 +240,7 @@ export default class UserInterface {
         let label = "Sequence";
         const stub = label.toLowerCase();
         label += ":";
-        [
-            ["#add8e6", "#87ceeb"],
-            ["#90ee90", "#98fb98"]
-        ].forEach(
+        [ ["#90ee90", "#98fb98"], ["#add8e6", "#87ceeb"] ].forEach(
             (values, outerIndex) => values.forEach((value, innerIndex) => {
                 const name = [
                     stub, (outerIndex % 2).toFixed(), (innerIndex % 2).toFixed()

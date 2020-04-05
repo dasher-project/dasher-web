@@ -55,7 +55,9 @@ export default class Predictor {
         // This is order n-squared which isn't good but proves the approach.
         const characterWeights = await this.get_character_weights(
             points, text, prediction);
-        characterWeights.forEach((weight, codePoint) => {
+
+
+            characterWeights.forEach((weight, codePoint) => {
             let found = false;
             for (const [index, returning] of returns.entries()) {
                 const returnGroup = returnGroups[index];
@@ -113,24 +115,27 @@ export default class Predictor {
     // Base class get... doesn't use the `text` parameter but subclass
     // implementations might.
     async get_character_weights(points, text, prediction) {
-        const lastIndex = points.length - 1;
+        return {
+            "weights": new Map(), "defaultWeight": 1, "contexts": new Map()
+        };
+        // const lastIndex = points.length - 1;
 
-        // Check if the message ends full stop, space.
-        const stopSpace = (
-            lastIndex >= 1 &&
-            points[lastIndex - 1] === codePointStop &&
-            points[lastIndex] === codePointSpace
-        );
+        // // Check if the message ends full stop, space.
+        // const stopSpace = (
+        //     lastIndex >= 1 &&
+        //     points[lastIndex - 1] === codePointStop &&
+        //     points[lastIndex] === codePointSpace
+        // );
 
-        if (prediction === null || stopSpace) {
-            // Start of input, or after full stop space, favour capital letters.
-            return capitalWeights;
-        }
+        // if (prediction === null || stopSpace) {
+        //     // Start of input, or after full stop space, favour capital letters.
+        //     return capitalWeights;
+        // }
 
-        const weightGroup = (
-            prediction.group === null ? prediction.member : prediction.boosted);
+        // const weightGroup = (
+        //     prediction.group === null ? prediction.member : prediction.boosted);
 
-        return Predictor.characterGroupMap[weightGroup].weights;
+        // return Predictor.characterGroupMap[weightGroup].weights;
     }
 
     static is_space(codePoint) {
@@ -140,56 +145,6 @@ export default class Predictor {
 
 const vowelTexts = ["a", "e", "i", "o", "u"];
 const vowelCodePoints = vowelTexts.map(text => text.codePointAt(0));
-
-Predictor.characterGroups = [
-    {
-        "name": "small", "boost": "small",
-        "firstPoint": "a".codePointAt(0), "lastPoint": "z".codePointAt(0)
-    }, {
-        "name": "capital", "boost": "small",
-        "firstPoint": "A".codePointAt(0), "lastPoint": "Z".codePointAt(0)
-    }, {
-        "name": "numeral", "boost": "numeral",
-        "firstPoint": "0".codePointAt(0), "lastPoint": "9".codePointAt(0)
-    }, {
-        "name": "contraction", "boost": "small", "texts": [
-            "'", "-"
-        ]
-    }, {
-        "name": "punctuation", "boost": "space", "texts": [
-            ",", ".", "&", "!", "?"
-        ]
-    }, {
-        "name": "space", "boost": "small", "texts": [
-            " ", "\n"
-        ]
-    }
-];
-
-// Create an object for easy mapping from group name to group object.
-Predictor.characterGroupMap = {};
-Predictor.characterGroups.forEach(group => {
-    Predictor.characterGroupMap[group.name] = group;
-});
-Predictor.characterGroupMap.space = Predictor.characterGroupMap.space;
-
-// Fill in basic attributes for groups: texts and codePoints.
-const characters = [];
-Predictor.characterGroups.forEach(group => {
-    if (!("texts" in group)) {
-        group.texts = [];
-        for (
-            let codePoint = group.firstPoint;
-            codePoint <= group.lastPoint;
-            codePoint++
-        ) {
-            group.texts.push(String.fromCodePoint(codePoint));
-        }
-    }
-    group.codePoints = group.texts.map(text => text.codePointAt(0));
-    characters.push(...group.codePoints);
-});
-Predictor.characters = characters;
 
 // Compute additional attributes for groups: weights under this group.
 const vowelWeight = 2;

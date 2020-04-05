@@ -2,13 +2,14 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 import ZoomBox from "./zoombox.js";
-import ControllerPointer from "./controllerpointer.js";
 
 const emptyArray = [];
 
 export default class ControllerRandom {
-    constructor(texts) {
+    constructor(texts, palette) {
         this._texts = texts;
+        this._palette = palette;
+
         this._going = true;
         this._rootSpecification = {"factory":this, "factoryData": true};
     }
@@ -21,7 +22,7 @@ export default class ControllerRandom {
             return {
                 "colour": null,
                 "cssClass":
-                    `${ControllerPointer.sequenceStubCSS}-${index % 2}-0`,
+                    `${this._palette.sequenceStubCSS}-${index % 2}-0`,
                 "text": character, message: [character.codePointAt(0)],
                 "weight": 1,
                 "controllerData": {"xChange":xChange, "yChange":xChange},

@@ -2,16 +2,20 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 export default class ControllerPointer {
-    constructor(pointer, predictor) {
+    constructor(pointer, predictor, palette) {
         this._pointer = pointer;
         this._predictor = predictor;
+        this._palette = palette;
 
         this._frozen = null;
         this._frozenTarget = null;
 
         this._rootSpecification = {
-            "colour": null, "cssClass": "root", "message":[],
-            "factory":this, "prediction": null
+            "colour": null, "cssClass": this._palette.sequenceCSS(0, 0),
+            "message":[], "factory":this, "factoryData": {
+                "predictorData": null, "childSpecifications": null,
+                "ordinal": 0
+            }
         };
     }
 
@@ -31,65 +35,137 @@ export default class ControllerPointer {
     get going() {return this._pointer.going;}
 
     async specify_child_boxes(zoomBox) {
-        const predictions = await this.predictor(
-            zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
+
+        // If the box isn't a group, get a new template from the palette.
+        // Create a box specification for: each plain character, and each group.
+        // If the box is a group, it already has a list of specifications.
+        if (zoomBox.factoryData.childSpecifications !== null) {
+            return zoomBox.factoryData.childSpecifications;
+        }
+
+        const ordinal = zoomBox.factoryData.ordinal + 1;
+        const prediction = await this.predictor.get_character_weights(
+            zoomBox.messageCodePoints,
+            zoomBox.message,
+            zoomBox.factoryData.predictorData
         );
-        return predictions.map((prediction, index) => {
-            const codePoint = prediction.codePoint;
+        const template = palette.template();
 
-            const message = zoomBox.messageCodePoints.slice();
-            if (codePoint !== null) {
-                message.push(codePoint);
-            }
-
-            const displayTextIndex = (
-                codePoint === null ? undefined :
-                ControllerPointer.displayTextLeft.indexOf(codePoint));
-            const displayText = (
-                displayTextIndex === undefined ? null :
-                String.fromCodePoint(
-                    displayTextIndex >= 0 ?
-                    ControllerPointer.displayTextMap[displayTextIndex][1] :
-                    codePoint
-                )
-            );
-                    
-            let colour = ControllerPointer.unsetColour;
-            let cssClass = null;
-            if (prediction.group === null) {
-                prediction.ordinal = (
-                    zoomBox.prediction === null ? 0 :
-                    zoomBox.prediction.ordinal + 1
+        // Apply predicted weights to the template, and set other ZoomBox
+        // specification parameters.
+        template.forEach(group => group.childSpecifications.forEach(
+            (specification, index) => {
+                specification.cssClass = palette.sequenceCSS(ordinal, index);
+                const codePoint = specification.codePoint;
+                specification.weight = (
+                    prediction.weights.has(codePoint) ?
+                    prediction.weights.get(codePoint) :
+                    prediction.defaultWeight
                 );
-                colour = null;
-                cssClass = [
-                    ControllerPointer.sequenceStubCSS,
-                    (prediction.ordinal % 2).toFixed(),
-                    (index % 2).toFixed()
-                ].join("-");
+                specification.message = zoomBox.messageCodePoints.slice();
+                if (codePoint !== null) {
+                    specification.message.push(codePoint);
+                }
+                specification.text = this._palette.display_text(codePoint);
+                specification.factory = this;
+                specification.factoryData = {
+                    "ordinal": ordinal, "childSpecifications": null,
+                    "predictorData": (
+                        prediction.contexts.has(codePoint) ?
+                        prediction.contexts.get(codePoint) :
+                        zoomBox.factoryData.predictorData
+                    )
+                };
+            }
+        ));
+
+        const returning = [];
+        template.forEach(group => {
+            if (group.cssClass === null) {
+                returning.push(...group.childSpecifications);
             }
             else {
-                prediction.ordinal = 0;
-                if (prediction.group in ControllerPointer.groupColours) {
-                    colour = ControllerPointer.groupColours[
-                        prediction.group];
-                }
+                group.weight = group.childSpecifications.reduce(
+                    (
+                        accumulator, specification
+                    ) => accumulator + specification.weight, 0
+                );
+                group.factory = this;
+                group.factoryData = {
+                    "predictorData": zoomBox.factoryData.predictorData,
+                    "childSpecifications": group.childSpecifications
+                };
+                delete group.childSpecifications;
+                returning.push(group);
             }
-
-            return {
-                "prediction": prediction,
-                "cssClass": (
-                    cssClass === null ?
-                    (colour === null ? prediction.group : undefined) :
-                    cssClass
-                ),
-                "colour": colour,
-                "message": message,
-                "text": displayText,
-                "weight": prediction.weight,
-                "factory": this
-            };
         });
+        return returning;
+
+
+
+
+        // Get a default array of specifications, or just characters, from the
+        // Palette. Apply the get_character_weights to it, unless we already
+        // have them because of a group.
+        // const weights = (
+        //     zoomBox.factoryData.characterWeights === null ?
+        //     await this.predictor.get_character_weights(
+        //         zoomBox.messageCodePoints,
+        //         zoomBox.message,
+        //         zoomBox.factoryData.predictorData
+        //     ) :
+        //     zoomBox.factoryData.characterWeights
+        // );
+
+        // Each character group can have weights.
+
+        // const predictions = await this.predictor(
+        //     zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
+        // );
+        // return predictions.map((prediction, index) => {
+        //     const codePoint = prediction.codePoint;
+
+        //     const message = zoomBox.messageCodePoints.slice();
+        //     if (codePoint !== null) {
+        //         message.push(codePoint);
+        //     }
+
+        //     let colour = ControllerPointer.unsetColour;
+        //     let cssClass = null;
+        //     if (prediction.group === null) {
+        //         prediction.ordinal = (
+        //             zoomBox.prediction === null ? 0 :
+        //             zoomBox.prediction.ordinal + 1
+        //         );
+        //         colour = null;
+
+        //         // Get it from the palette.
+        //         palette.sequenceCSS(prediction.ordinal, index);
+        //     }
+        //     else {
+        //         prediction.ordinal = 0;
+        //         if (prediction.group in ControllerPointer.groupColours) {
+        //             colour = ControllerPointer.groupColours[
+        //                 prediction.group];
+        //         }
+        //     }
+
+        //     return {
+
+        //         // Change `prediction` to factoryData.
+        //         "prediction": prediction,
+        //         "cssClass": (
+        //             cssClass === null ?
+        //             (colour === null ? prediction.group : undefined) :
+        //             cssClass
+        //         ),
+        //         "colour": colour,
+        //         "message": message,
+        //         "text": this._palette.display_text(codePoint),
+        //         "weight": prediction.weight,
+        //         "factory": this
+        //     };
+        // });
     }
 
     populate(rootBox, limits) {
@@ -213,8 +289,6 @@ export default class ControllerPointer {
 
 ControllerPointer.unsetColour = "LightSlateGray";
 
-ControllerPointer.sequenceStubCSS = "sequence";
-
 ControllerPointer.groupColours = {
     "capital": null,
     "small": null,
@@ -223,12 +297,3 @@ ControllerPointer.groupColours = {
     "contraction": null,
     "space": null
 };
-
-// TOTH:
-// https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character
-ControllerPointer.displayTextMap = [
-    [" ", 0x23b5], // Space mapped to under-bracket.
-    ["\n", 0xb6]   // Newline mapped to pilcrow.
-];
-ControllerPointer.displayTextLeft = ControllerPointer.displayTextMap.map(
-    pair => pair[0].codePointAt(0));
