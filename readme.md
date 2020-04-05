@@ -23,7 +23,6 @@ Backlog
     current code, the six buttons push out the actual controls on a phone
     screen. Maybe just show one button by default that cycles through, and have
     an option to expand all the settings panels.
--   Move spawnMargin from ZoomBox to Limits.
 -   Maybe arrange_children on resize. Also there are some cases in which the
     white rectangle doesn't extend to the edge of the zooming area.
 -   Restructure the Predictor code so that there is a separate Palette that has

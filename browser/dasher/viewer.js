@@ -148,7 +148,8 @@ export default class Viewer {
         }
 
         const box = this._zoomBox;
-        const margin = (box.spawnMargin === undefined ? 0 : box.spawnMargin);
+        const margin = (
+            limits.spawnMargin === undefined ? 0 : limits.spawnMargin);
         const limitLeft = limits.left + (level * margin);
         const renderLeft = box.left < limitLeft ? limitLeft : box.left;
 
@@ -349,9 +350,9 @@ export default class Viewer {
         }
 
         this._spawnMargin = Piece.toggle(
-            this._spawnMargin, show && (box.spawnMargin !== undefined),
+            this._spawnMargin, show && (limits.spawnMargin !== undefined),
             () => new Piece('line', this._groupLower, {
-                x1:"0", x2:`${box.spawnMargin}`,
+                x1:"0", x2:`${limits.spawnMargin}`,
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
             })

@@ -81,14 +81,12 @@ export default class ControllerRandom {
 
     populate(rootBox) {
         this._rectHeight = (rootBox.height / rootBox.childCount) * 0.75;
-        rootBox.spawnMargin = undefined;
 
         let top = rootBox.top;
         const width = this._rectHeight * 2;
         const left = (rootBox.left + rootBox.width) - width;
         rootBox.childSpecifications.forEach((specification, index) => {
             const zoomBox = new ZoomBox(specification);
-            zoomBox.inherit(rootBox);
             zoomBox.set_dimensions(
                 left, width, top + (this._rectHeight / 2), this._rectHeight
             );

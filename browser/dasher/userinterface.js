@@ -55,15 +55,13 @@ export default class UserInterface {
         this._speedLeftRightInput = undefined;
 
         // Spawn and render parameters in mystery SVG units.
-        this._spawnMargin = 30;
-
         this._limits = new Limits();
-
         this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 30;
         this._limits.drawThresholdRect = 10;
         this._limits.spawnThreshold = 4;
         this._limits.textLeft = 5;
+        this._limits.spawnMargin = 30;
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
@@ -795,7 +793,6 @@ export default class UserInterface {
         this.zoomBox = null;
 
         const zoomBox = new ZoomBox(this._controller.rootSpecification);
-        zoomBox.spawnMargin = this._spawnMargin;
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
         this._set_zoomBox_size(zoomBox);
@@ -873,7 +870,7 @@ export default class UserInterface {
             // Comment out one or other of the following.
 
             // // Set left; solve height.
-            // const width = this._spawnMargin * 2;
+            // const width = this.limits.spawnMargin * 2;
             // const left = this._limits.right - width;
             // const height = this._limits.solve_height(left);
 

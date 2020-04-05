@@ -31,8 +31,6 @@ export default class ZoomBox {
         this._trimmedIndex = undefined;
         this._trimmedParent = null;
 
-        this._spawnMargin = undefined;
-
         this._controllerSettings = specification.controllerSettings;
         this._viewer = null;
         
@@ -192,12 +190,6 @@ export default class ZoomBox {
     }
 
     update() {
-    }
-
-    inherit(parent) {
-        [
-            "spawnMargin"
-        ].forEach(attribute => this[attribute] = parent[attribute]);
     }
 
     dimension_undefined() {
@@ -400,7 +392,6 @@ export default class ZoomBox {
                 if (this.childBoxes[index] === null) {
                     this.childBoxes[index] = new ZoomBox(
                         this.childSpecifications[index]);
-                    this.childBoxes[index].inherit(this);
                 }
                 const zoomBox = this.childBoxes[index];
         
@@ -430,14 +421,6 @@ export default class ZoomBox {
             }
         }
         return up ? childBottom : childTop;
-    }
-
-    get spawnMargin() {
-        return this._spawnMargin;
-    }
-    set spawnMargin(spawnMargin) {
-        this._spawnMargin = spawnMargin;
-        this.each_childBox(child => child.spawnMargin = spawnMargin);
     }
 
     // If a child of this box should now be the new root box, then set it up and
