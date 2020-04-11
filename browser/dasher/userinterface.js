@@ -17,8 +17,8 @@ import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
-import Predictor from './predictor.js';
-import PredictorTest from './predictor_test.js';
+// import Predictor from './predictor.js';
+// import PredictorTest from './predictor_test.js';
 
 import Speech from './speech.js';
 
