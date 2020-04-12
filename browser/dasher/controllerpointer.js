@@ -2,21 +2,23 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 export default class ControllerPointer {
-    constructor(pointer, predictor, palette) {
+    constructor(pointer, predictor) {
         this._pointer = pointer;
         this._predictor = predictor;
-        this._palette = palette;
+        // this._palette = palette;
 
         this._frozen = null;
         this._frozenTarget = null;
 
-        this._rootSpecification = {
-            "colour": null, "cssClass": this._palette.sequenceCSS(0, 0),
-            "message":[], "factory":this, "factoryData": {
-                "predictorData": null, "childSpecifications": null,
-                "ordinal": 0
-            }
-        };
+        this._set_weight_bound = this._set_weight.bind(this);
+
+        // this._rootSpecification = {
+        //     "colour": null, "cssClass": this._palette.sequenceCSS(0, 0),
+        //     "message":[], "factory":this, "factoryData": {
+        //         "predictorData": null, "childSpecifications": null,
+        //         "ordinal": 0
+        //     }
+        // };
     }
 
     get predictor() {return this._predictor;}
@@ -30,7 +32,7 @@ export default class ControllerPointer {
         this._frozen = frozen;
     }
 
-    get rootSpecification() {return this._rootSpecification;}
+    // get rootSpecification() {return this._rootSpecification;}
 
     get going() {return this._pointer.going;}
 
@@ -168,9 +170,40 @@ export default class ControllerPointer {
         // });
     }
 
-    populate(rootBox, limits) {
+    async populate(rootBox, limits) {
+        if (rootBox.template.cssClass === null) {
+            console.log('populate', `"${rootBox.message}"`)
+            this.predictor(
+                rootBox.messageCodePoints, rootBox.message,
+                rootBox.predictorData, rootBox.template.palette,
+                this._set_weight.bind(this, rootBox)
+            );
+        }
         rootBox.arrange_children(limits);
     }
+
+    _set_weight(parentBox, codePoint, weight, predictorData) {
+        const path = parentBox.template.palette.indexMap.get(codePoint);
+        if (path === undefined) {
+            throw new Error([
+                `Set weight outside palette ${codePoint}`,
+                ` "${String.fromCodePoint(codePoint)}"`,
+                ` under "${parentBox.message}".`
+            ].join(""));
+        }
+        let target = parentBox;
+        const stack = [];
+        for(const index of path) {
+            target = target.childBoxes[index];
+            stack.push(target);
+        }
+        const delta = weight - target.weight;
+        for(const box of stack) {
+            stack.weight += delta;
+        }
+        console.log(
+            '_set_weight', stack.map(box => box.message), delta, path);
+}
 
     control(rootBox, limits) {
         if (!this.going) {

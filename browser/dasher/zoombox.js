@@ -3,6 +3,8 @@
 
 // Class to represent abstract zoom box.
 
+const emptyChildBoxArray = [];
+
 export default class ZoomBox {
     constructor(template, factory, parentCodePoints, ordinal, childIndex) {
         this._template = template;
@@ -35,9 +37,17 @@ export default class ZoomBox {
             specification.text === undefined ? null : specification.text);
         */
         
-        this._weight = 1;
+        this._weight = template.weight;
         this._spawned = false;
 
+        if (template.cssClass === null) {
+            this._childBoxes = emptyChildBoxArray;
+        }
+        else {
+            this._instantiate_child_boxes();
+        }
+        this._predictorData = undefined;
+        this._factoryData = undefined;
 
         this._left = undefined;
         this._width = undefined;
@@ -78,7 +88,15 @@ export default class ZoomBox {
         if (limits === undefined) {
             throw new Error("Limits undefined in spawn().");
         }
-        // this._childBoxes = Array(template.childTemplates.length).fill(null);
+        this._instantiate_child_boxes();
+        await this._factory.populate(this, limits);
+        this._totalWeight = this._childBoxes.reduce(
+            (accumulator, child) => accumulator + child.weight, 0);
+        this._spawned = true;
+        return this.spawned;
+    }
+
+    _instantiate_child_boxes() {
         this._childBoxes = this._template.childTemplates.map(
             (template, index) => new ZoomBox(
                 template, this._factory, this._messageCodePoints,
@@ -86,27 +104,25 @@ export default class ZoomBox {
                 index
             )
         );
-        await this._factory.populate(this, limits);
-        this._spawned = true;
-        return this.spawned;
     }
 
-    _set_child_specifications(specifications) {
-        this._childSpecifications = specifications;
-        this._childCount = this._childSpecifications.length;
-        this._totalWeight = this._childSpecifications.reduce(
-            (accumulator, specification) => accumulator + specification.weight,
-            0
-        );
+    // _set_child_specifications(specifications) {
+    //     this._childSpecifications = specifications;
+    //     // this._childCount = this._childSpecifications.length;
+    //     this._totalWeight = this._childSpecifications.reduce(
+    //         (accumulator, specification) => accumulator + specification.weight,
+    //         0
+    //     );
 
-        this._childBoxes = Array(this._childSpecifications.length).fill(null);
-        return true;
-    }
+    //     this._childBoxes = Array(this._childSpecifications.length).fill(null);
+    //     return true;
+    // }
 
     // get ready() { return this._ready; }
     // get colour() {return this._colour;}
     get cssClass() {return this._cssClass;}
     get text() {return this._template.displayText; } //this._text;}
+    get template() {return this._template;}
 
     get trimmedIndex() {return this._trimmedIndex;}
     set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
@@ -120,11 +136,14 @@ export default class ZoomBox {
 
     get childBoxes() {return this._childBoxes;}
     // get childCount() {return this._childCount;}
-    get childSpecifications() {return this._childSpecifications;}
+    // get childSpecifications() {return this._childSpecifications;}
 
     // get controllerData() {return this._specification.controllerData;}
     get factoryData() {return this._factoryData;}
     set factoryData(factoryData) {this._factoryData = factoryData;}
+
+    get predictorData() {return this._predictorData;}
+    set predictorData(predictorData) {this._predictorData = predictorData;}
 
     get viewer() {return this._viewer;}
     set viewer(viewer) {this._viewer = viewer;}
@@ -137,6 +156,8 @@ export default class ZoomBox {
         if (this.viewer !== null) {
             this.viewer.erase();
         }
+        this._spawned = false;
+        this._childBoxes = emptyChildBoxArray;
     }
 
     child_weight(index) {
@@ -245,11 +266,7 @@ export default class ZoomBox {
      * holder, and a -1 terminator.
      */
     holder(rawX, rawY, path) {
-        if (path === undefined) {
-            // If the caller didn't specify a path, create a path here. It gets
-            // discarded on return but makes the code easier to read.
-            path = [];
-        }
+        if (!this.spawned) { return null; }
 
         if (!this.holds(rawX, rawY)) {
             // This box doesn't hold the point, so neither will any of its child
@@ -257,19 +274,25 @@ export default class ZoomBox {
             return null;
         }
 
+        if (path === undefined) {
+            // If the caller didn't specify a path, create a path here. It gets
+            // discarded on return but makes the code easier to read.
+            path = [];
+        }
+
         // This box holds the point; check its child boxes. The child array is
         // sparse because it doesn't have instances for child boxes that are too
         // small to spawn.
-        for(let index = this.childCount - 1; index >= 0; index--) {
+        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
             const child = this.childBoxes[index];
-            if (child === null) { continue; }
+            if (!child.spawned) { continue; }
 
             // Recursive call.
             const holder = child.holder(rawX, rawY, path);
             if (holder === null) { continue; }
 
-            // If the code reaches here then a child holds the point, or
-            // returned `undefined`. Either way, finish here.
+            // If the code reaches here then a child holds the point. Finish
+            // here.
             path.unshift(index);
             return holder;
         }
@@ -281,7 +304,7 @@ export default class ZoomBox {
     }
 
     holds(rawX, rawY) {
-        if (this.dimension_undefined()) {
+        if (this.dimension_undefined() || !this.spawned) {
             return undefined;
         }
 
@@ -428,29 +451,38 @@ export default class ZoomBox {
                 childHeight >= limits.spawnThreshold) &&
                 childBottom > limits.top && childTop < limits.bottom;
 
+            const childBox = this.childBoxes[index];
             if (shouldSpawn) {
-                if (this.childBoxes[index] === null) {
-                    this.childBoxes[index] = new ZoomBox(
-                        this.childSpecifications[index]);
-                }
-                const zoomBox = this.childBoxes[index];
+                // if (this.childBoxes[index] === null) {
+                //     this.childBoxes[index] = new ZoomBox(
+                //         this.childSpecifications[index]);
+                // }
+                // const zoomBox = this.childBoxes[index];
         
                 const childLeft = limits.solve_left(childHeight);
                 const childWidth = limits.width - childLeft;
     
-                zoomBox.set_dimensions(
+                childBox.set_dimensions(
                     childLeft, childWidth,
                     childBottom - (childHeight / 2), childHeight);
-                zoomBox.arrange_children(limits);
+                
+                if (childBox.spawned) {
+                    childBox.arrange_children(limits);
+                }
+                else {
+                    // Spawn is async but we don't care here.
+                    childBox.spawn(limits);
+                }
             }
             else {
-                if (this.childBoxes[index] !== null) {
-                    // console.log(
-                    //     `Arrange spawn "${this.childBoxes[index].message}".`
-                    // );
-                    this.childBoxes[index].erase();
-                    this.childBoxes[index] = null;
-                }
+                childBox.erase();
+                // if (this.childBoxes[index] !== null) {
+                //     // console.log(
+                //     //     `Arrange spawn "${this.childBoxes[index].message}".`
+                //     // );
+                //     this.childBoxes[index].erase();
+                //     this.childBoxes[index] = null;
+                // }
             }
 
             if (up) {
@@ -475,7 +507,11 @@ export default class ZoomBox {
         // is about to be derendered. The new root is a child of this box and
         // would also get derendered, so detach it here.
         const trimmedRoot = this.childBoxes[rootIndex];
-        this.childBoxes[rootIndex] = null;
+        this._childBoxes = emptyChildBoxArray; // [rootIndex] = null;
+
+
+
+
         //
         // Later, the user might backspace and this box would need to be
         // inserted back, as a parent of the new root. Set a reference and some
@@ -496,8 +532,8 @@ export default class ZoomBox {
         // root. A child box will be null if it wasn't ever rendered, or if it
         // went off limits and was derendered.
         let candidate;
-        for(let index = this.childCount - 1; index >= 0; index--) {
-            if (this.childBoxes[index] === null) {
+        for(let index = this.childBoxes.length - 1; index >= 0; index--) {
+            if (!this.childBoxes[index].spawned) {
                 continue;
             }
 
@@ -505,7 +541,7 @@ export default class ZoomBox {
                 candidate = index;
             }
             else {
-                // Second non-null child box; don't trim.
+                // Second spawned child box; don't trim.
                 return -1;
             }
         }
@@ -541,6 +577,7 @@ export default class ZoomBox {
 
         const index = this.trimmedIndex;
 
+        parent.spawn(limits);
         // Put this box in as a child box of the parent.
         parent.childBoxes[index] = this;
 

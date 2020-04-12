@@ -17,6 +17,7 @@ import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
+import predictor_dummy from './predictor_dummy.js'
 // import Predictor from './predictor.js';
 // import PredictorTest from './predictor_test.js';
 
@@ -168,11 +169,10 @@ export default class UserInterface {
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
-        // this._palette = new Palette();
-        // this._controllerPointer = new ControllerPointer(
-        //     this._pointer, this._get_predictor(0), this._palette);
-
-        
+        this._palette = new Palette().build();
+        this._controllerPointer = new ControllerPointer(
+            this._pointer, predictor_dummy);
+            // this._get_predictor(0));
 
 
 
@@ -645,8 +645,8 @@ export default class UserInterface {
         // time out for rendering, process a resize.
         setTimeout(() => {
             this._on_resize();
-            // this.clicked_pointer();
-            this.clicked_random();
+            this.clicked_pointer();
+            // this.clicked_random();
 
 
 
@@ -771,7 +771,7 @@ export default class UserInterface {
             // the random moving boxes.
             this._controllerRandom.going = true;
             this._controller = this._controllerRandom;
-            this._palette = this._controller.palette;
+            this._rootTemplate = this._controller.palette.rootTemplate;
             this._new_ZoomBox(true);
         }
 
@@ -799,6 +799,7 @@ export default class UserInterface {
         this._controller = this._controllerPointer;
         // Next line will discard the current zoom box, which will effect a
         // reset, if the mode was already pointer.
+        this._rootTemplate = this._palette.rootTemplate;
         this._new_ZoomBox(false);
 
         // The other button will switch to random mode.
@@ -813,7 +814,7 @@ export default class UserInterface {
 
         // const zoomBox = new ZoomBox(this._controller.rootSpecification);
         const zoomBox = new ZoomBox(
-            this._palette.rootTemplate, this._controller, [], 0, 0);
+            this._rootTemplate, this._controller, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
         this._set_zoomBox_size(zoomBox);

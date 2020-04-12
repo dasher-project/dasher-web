@@ -77,7 +77,12 @@ class Template {
         this.cssClass = cssClass;
         this.childTemplates = childTemplates;
         this.palette = palette;
+
+        this._weight = codePoint === null ? childTemplates.length : 1;
     }
+
+    get weight() {return this._weight;}
+
 }
 
 export default class Palette {
@@ -185,20 +190,9 @@ export default class Palette {
     get displayTextDefinitions() {return baseDisplayTextDefinitions;}
 
     get rootTemplate() {return this._rootTemplate;}
+    get indexMap() {return this._indexMap;}
 
     display_text(codePoint) {
-        // const displayTextIndex = (
-        //     codePoint === null ? undefined :
-        //     Palette.displayTextLeft.indexOf(codePoint));
-        // return (
-        //     displayTextIndex === undefined ? null :
-        //     String.fromCodePoint(
-        //         displayTextIndex >= 0 ?
-        //         Palette.displayTextMap[displayTextIndex][1] :
-        //         codePoint
-        //     )
-        // );
-
         const mappedPoint = this._mapPointToDisplayPoint.get(codePoint);
         return String.fromCodePoint(
             mappedPoint === undefined ? codePoint : mappedPoint);
@@ -210,6 +204,7 @@ export default class Palette {
         ].join("-");
     }
 
+    /*
     get_blank(boxSpecification) {
         // ToDo: Change so that it returns a clone of something already
         // allocated in the constructor. But set the things that need to be set:
@@ -254,4 +249,5 @@ export default class Palette {
         // returning arrays could be shallow copies of a pre-gen.
 
     }
+    */
 }
