@@ -91,12 +91,12 @@ export default class Viewer {
             //         childEdge, this._renderLeft,
             //         limits.textLeft, this._textWidth);
             // }
-            this._zoomBox.each_childBox(child => {
+            this._zoomBox.childBoxes.forEach(child => { if (child.spawned) {
                 if (child.viewer === null) {
                     child.viewer = new Viewer(child, this._view);
                 }
                 child.viewer._draw_one(this, edge, limits, level + 1);
-            });
+            };});
         }
         else {
             this.erase();
@@ -398,6 +398,6 @@ export default class Viewer {
             this._groupUpper.remove();
             this._clear();
         }
-        this._zoomBox.each_childBox(child => child.erase());
+        this._zoomBox.childBoxes.forEach(child => child.erase());
     }
 }

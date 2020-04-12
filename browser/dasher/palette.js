@@ -71,17 +71,25 @@ const baseDisplayTextDefinitions = [
 //     pair => pair[0].codePointAt(0));
 
 class Template {
-    constructor(codePoint, childTemplates, displayText, cssClass) {
+    constructor(codePoint, displayText, cssClass, childTemplates, palette) {
         this.codePoint = codePoint;
-        this.childTemplates = childTemplates;
         this.displayText = displayText;
         this.cssClass = cssClass;
+        this.childTemplates = childTemplates;
+        this.palette = palette;
     }
 }
 
 export default class Palette {
 
     constructor() {
+        this.codePoints = [];
+        this._mapPointToDisplayPoint = new Map();
+        this._rootTemplate = new Template(null, null, null, [], this);
+        this._indexMap = new Map();
+    }
+
+    build() {
         // Create an object for easy mapping from group name to group object.
         // this.characterGroupMap = {};
         // Palette.characterGroups.forEach(group => {
@@ -89,7 +97,6 @@ export default class Palette {
         // });
 
         // Fill in basic attributes for groups: texts and codePoints.
-        this.codePoints = [];
         this._groups = this.groupDefinitions.map(definition => {
             const group = {
                 definition: definition,
@@ -117,29 +124,29 @@ export default class Palette {
             return group;
         });
 
-        this._mapPointToDisplayPoint = new Map();
         this.displayTextDefinitions.forEach(({leftText, rightCodePoint}) => {
             this._mapPointToDisplayPoint.set(
                 leftText.codePointAt(0), rightCodePoint);
         });
 
-        this._templates = [];
+        // Supports only a one or two level group hierarchy.
         this._groups.forEach(group => {
             const childTemplates = group.codePoints.map(codePoint => {
                 // Create specification for the code point.
                 // const specification = new BoxSpecification(codePoint, null);
                 return new Template(
-                    codePoint, null, this.display_text(codePoint), null);
+                    codePoint, this.display_text(codePoint), null,
+                    this._rootTemplate.childTemplates, this);
                 // specification.displayText = this.display_text(codePoint);
                 // return specification;
             });
 
             if (group.name === null) {
-                this._templates.push(...childTemplates);
+                this._rootTemplate.childTemplates.push(...childTemplates);
             }
             else {
-                this._templates.push(new Template(
-                    null, childTemplates, null, group.name));
+                this._rootTemplate.childTemplates.push(new Template(
+                    null, null, group.name, childTemplates, this));
                 // const specification = new BoxSpecification(
                 //     null, childTemplates);
                 // specification.cssClass = group.name;
@@ -149,10 +156,9 @@ export default class Palette {
                 // this._templates.push(specification);
             }
         });
-        // console.log(this._templates);
+        console.log(this._rootTemplate);
 
-        this._indexMap = new Map();
-        this._templates.forEach((template, index) => {
+        this._rootTemplate.childTemplates.forEach((template, index) => {
             // console.log(index, template);
             if (template.codePoint === null) {
                 template.childTemplates.forEach(
@@ -166,6 +172,7 @@ export default class Palette {
             }
         });
         console.log(this._indexMap);
+        return this;
     }
 
     // Getter to be overridden in subclasses.
@@ -176,6 +183,8 @@ export default class Palette {
 
     // Getter to be overridden in subclasses.
     get displayTextDefinitions() {return baseDisplayTextDefinitions;}
+
+    get rootTemplate() {return this._rootTemplate;}
 
     display_text(codePoint) {
         // const displayTextIndex = (

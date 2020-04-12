@@ -4,8 +4,27 @@
 // Class to represent abstract zoom box.
 
 export default class ZoomBox {
-    constructor(specification) {
+    constructor(template, factory, parentCodePoints, ordinal, childIndex) {
+        this._template = template;
+        this._factory = factory;
+        this._messageCodePoints = parentCodePoints.slice();
+        this._ordinal = ordinal;
+        this._childIndex = childIndex;
 
+        if (template.codePoint !== null) {
+            this._messageCodePoints.push(template.codePoint);
+        }
+        this._cssClass = (
+            template.cssClass === null ?
+            template.palette.sequence_CSS(ordinal, childIndex) :
+            template.cssClass);
+
+
+        this._message = (
+            this.messageCodePoints === undefined ? undefined :
+            String.fromCodePoint(...this.messageCodePoints));
+
+        /*
         this._specification = specification;
         this._colour = (
             specification.colour === undefined ? null : specification.colour);
@@ -14,10 +33,11 @@ export default class ZoomBox {
             specification.cssClass);
         this._text = (
             specification.text === undefined ? null : specification.text);
+        */
         
-        this._message = (
-            this.messageCodePoints === undefined ? undefined :
-            String.fromCodePoint(...this.messageCodePoints));
+        this._weight = 1;
+        this._spawned = false;
+
 
         this._left = undefined;
         this._width = undefined;
@@ -28,15 +48,19 @@ export default class ZoomBox {
         this._trimmedParent = null;
 
         this._viewer = null;
+
         
-        this._childSpecifications = [];
-        this._childCount = 0;
-        this._totalWeight = this._childSpecifications.reduce(
-            (accumulator, specification) => accumulator + specification.weight,
-            0
-        );
-        this._childBoxes = Array(this._childSpecifications.length).fill(null);
-        
+
+        // this._childSpecifications = [];
+        // this._childCount = 0;
+        // this._totalWeight = this._childSpecifications.reduce(
+        //     (accumulator, specification) => accumulator + specification.weight,
+        //     0
+        // );
+        // this._childBoxes = Array(this._childSpecifications.length).fill(null);
+
+
+        /*
         this._ready = new Promise((resolve, reject) => {
             this._specification.factory.specify_child_boxes(this)
             .then(specifications => {
@@ -45,6 +69,26 @@ export default class ZoomBox {
             })
             .catch(error => reject(error));
         });
+        */
+    }
+
+    get spawned() {return this._spawned;}
+
+    async spawn(limits) {
+        if (limits === undefined) {
+            throw new Error("Limits undefined in spawn().");
+        }
+        // this._childBoxes = Array(template.childTemplates.length).fill(null);
+        this._childBoxes = this._template.childTemplates.map(
+            (template, index) => new ZoomBox(
+                template, this._factory, this._messageCodePoints,
+                template.codePoint === null ? this._ordinal : this._ordinal + 1,
+                index
+            )
+        );
+        await this._factory.populate(this, limits);
+        this._spawned = true;
+        return this.spawned;
     }
 
     _set_child_specifications(specifications) {
@@ -59,10 +103,10 @@ export default class ZoomBox {
         return true;
     }
 
-    get ready() { return this._ready; }
-    get colour() {return this._colour;}
+    // get ready() { return this._ready; }
+    // get colour() {return this._colour;}
     get cssClass() {return this._cssClass;}
-    get text() {return this._text;}
+    get text() {return this._template.displayText; } //this._text;}
 
     get trimmedIndex() {return this._trimmedIndex;}
     set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
@@ -70,18 +114,23 @@ export default class ZoomBox {
     get trimmedParent() {return this._trimmedParent;}
     set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
 
-    get messageCodePoints() {return this._specification.message;}
+    get messageCodePoints() {return this._messageCodePoints;}
+     //this._specification.message;}
     get message() {return this._message;}
 
     get childBoxes() {return this._childBoxes;}
-    get childCount() {return this._childCount;}
+    // get childCount() {return this._childCount;}
     get childSpecifications() {return this._childSpecifications;}
 
-    get controllerData() {return this._specification.controllerData;}
-    get factoryData() {return this._specification.factoryData;}
+    // get controllerData() {return this._specification.controllerData;}
+    get factoryData() {return this._factoryData;}
+    set factoryData(factoryData) {this._factoryData = factoryData;}
 
     get viewer() {return this._viewer;}
     set viewer(viewer) {this._viewer = viewer;}
+
+    get weight() {return this._weight;}
+    set weight(weight) {this._weight = weight;}
 
     // Erase this box from the view, if it has ever been drawn.
     erase() {
@@ -91,7 +140,8 @@ export default class ZoomBox {
     }
 
     child_weight(index) {
-        return this.childSpecifications[index].weight;
+        return this._childBoxes[index].weight;
+        // this.childSpecifications[index].weight;
     }
 
     get totalWeight() {
@@ -99,10 +149,10 @@ export default class ZoomBox {
     }
 
     // Invoke the callback on each child box that isn't null.
-    each_childBox(callback) {
-        this.childBoxes !== undefined && this.childBoxes.forEach(
-            (child, index) => child !== null && callback(child, index));
-    }
+    // each_childBox(callback) {
+    //     this.childBoxes !== undefined && this.childBoxes.forEach(
+    //         (child, index) => child !== null && callback(child, index));
+    // }
 
     // Principal properties that define the location and size of the box. The
     // update() method is always a no-op in the current version but could be

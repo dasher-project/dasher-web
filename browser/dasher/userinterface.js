@@ -40,9 +40,8 @@ export default class UserInterface {
         this._speakOnStop = false;
         this._speech = null;
 
-        this._palette = new Palette();
         this._controllerRandom = new ControllerRandom(
-            "abcdefghijklmnopqrstuvwxyz".split(""), this._palette);
+            "abcdefghijklmnopqrstuvwxyz".split(""));
         // Pointer controller will need a Pointer and it isn't set up until the
         // load().
         this._controllerPointer = undefined;
@@ -169,9 +168,14 @@ export default class UserInterface {
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
-        this._controllerPointer = new ControllerPointer(
-            this._pointer, this._get_predictor(0), this._palette);
-    
+        // this._palette = new Palette();
+        // this._controllerPointer = new ControllerPointer(
+        //     this._pointer, this._get_predictor(0), this._palette);
+
+        
+
+
+
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
         if (footerID !== null) {
@@ -303,6 +307,11 @@ export default class UserInterface {
     }
 
     _load_predictors() {
+        this.predictors = [];
+        return;
+
+
+
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
                 "label": "None", "item": new Predictor()
@@ -312,6 +321,10 @@ export default class UserInterface {
         }
     }
     _get_predictor(index) {
+        return;
+
+
+
         const predictor = this.predictors[index].item;
         return predictor.get.bind(predictor);
     }
@@ -632,7 +645,12 @@ export default class UserInterface {
         // time out for rendering, process a resize.
         setTimeout(() => {
             this._on_resize();
-            this.clicked_pointer();
+            // this.clicked_pointer();
+            this.clicked_random();
+
+
+
+
         }, 0);
 
         // Activate intervals and controls.
@@ -753,6 +771,7 @@ export default class UserInterface {
             // the random moving boxes.
             this._controllerRandom.going = true;
             this._controller = this._controllerRandom;
+            this._palette = this._controller.palette;
             this._new_ZoomBox(true);
         }
 
@@ -792,17 +811,19 @@ export default class UserInterface {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
 
-        const zoomBox = new ZoomBox(this._controller.rootSpecification);
+        // const zoomBox = new ZoomBox(this._controller.rootSpecification);
+        const zoomBox = new ZoomBox(
+            this._palette.rootTemplate, this._controller, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
         this._set_zoomBox_size(zoomBox);
 
         this.zoomBox = zoomBox;
         
-        this.zoomBox.ready
+        this.zoomBox.spawn(this._limits) //ready
         .then(ready => {
             if (ready) {
-                this._controller.populate(zoomBox, this._limits);
+                // this._controller.populate(zoomBox, this._limits);
                 this._start_render(startRender);
             }
             else {
@@ -883,9 +904,9 @@ export default class UserInterface {
         }
         else if (Object.is(this._controller, this._controllerRandom)) {
             zoomBox.set_dimensions(
-                this.svgRect.width * -0.5,
-                this.svgRect.width,
-                0, this.svgRect.height
+                this.svgRect.width * -0.45,
+                this.svgRect.width * 0.9,
+                0, this.svgRect.height * 0.9
             );
         }
     }
