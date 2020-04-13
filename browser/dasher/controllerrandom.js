@@ -16,7 +16,7 @@ class PaletteSmall extends Palette {
         this.rootTemplate.childTemplates.forEach(
             template => template.childTemplates = []
         );
-        console.log("PaletteSmall", this.rootTemplate);
+        // console.log("PaletteSmall", this.rootTemplate);
         return this;
     }
 
@@ -46,27 +46,27 @@ export default class ControllerRandom {
         const widthMin = this._rectHeight * 2;
         const widthMax = rootBox.width;
         let top = rootBox.top;
-        rootBox.childBoxes.forEach(zoomBox => {
-            const xChange = zoomBox.factoryData.xChange;
-            const yChange = zoomBox.factoryData.yChange;
+        rootBox.childBoxes.forEach(childBox => {
+            const xChange = childBox.controllerData.xChange;
+            const yChange = childBox.controllerData.yChange;
             const xDelta = (50 + Math.random() * 250) * xChange;
             const yDelta = heightMin * Math.random() * yChange;
 
             let left;
-            let width = zoomBox.width + xDelta;
+            let width = childBox.width + xDelta;
             if (
                 (width < widthMin && xChange < 0) ||
                 (width > widthMax && xChange > 0)
             ) {
                 // Reverse direction; don't move.
-                zoomBox.factoryData.xChange *= -1;
+                childBox.controllerData.xChange *= -1;
                 width = undefined;
             }
             else {
                 left = (rootBox.left + rootBox.width) - width;
             }
 
-            let height = zoomBox.height;
+            let height = childBox.height;
             if (
                 (height + yDelta < heightMin && yChange < 0) ||
                 (height + yDelta > heightMax && yChange > 0)
@@ -74,41 +74,42 @@ export default class ControllerRandom {
                 // Reverse direction, don't change height. But, top will
                 // still have to change because adjacent child boxes will
                 // have moved probably.
-                zoomBox.factoryData.yChange *= -1;
+                childBox.controllerData.yChange *= -1;
             }
             else {
                 height += yDelta;
             }
 
-            zoomBox.set_dimensions(left, width, top + (height / 2), height);
+            childBox.set_dimensions(left, width, top + (height / 2), height);
 
             top += height;
         });
-
     }
 
     async populate(rootBox, limits) {
-        if (this._rectHeight === undefined && rootBox.childBoxes.length > 0) {
-            this._rectHeight = (
-                rootBox.height / rootBox.childBoxes.length) * 0.75;
-        }
-        else {
-            return;
-        }
+        rootBox.instantiate_child_boxes();
+
+        rootBox.set_dimensions(
+            limits.width * -0.45,
+            limits.width * 0.9,
+            0, limits.height * 0.9
+        );
+
+        this._rectHeight = (rootBox.height / rootBox.childBoxes.length) * 0.75;
 
         let top = rootBox.top;
         const width = this._rectHeight * 2;
         const left = (rootBox.left + rootBox.width) - width;
-        rootBox.childBoxes.forEach((zoomBox, index) => {
+        rootBox.childBoxes.forEach((childBox, index) => {
             const xChange = 1 - ((index % 2) * 2);
-            zoomBox.factoryData = {"xChange":xChange, "yChange":xChange};
-            zoomBox.set_dimensions(
+            childBox.controllerData = {"xChange":xChange, "yChange":xChange};
+            childBox.set_dimensions(
                 left, width, top + (this._rectHeight / 2), this._rectHeight
             );
+            // Next line will set childBoxes to an empty array
+            childBox.instantiate_child_boxes();
+
             top += this._rectHeight;
         });
-        for(const zoomBox of rootBox.childBoxes) {
-            await zoomBox.spawn(limits);
-        }
     }
 }

@@ -17,7 +17,7 @@ for (let codePoint = firstPoint; codePoint <= lastPoint; codePoint++) {
 
 let index = Math.floor(weightPoints.length / 2);
 
-export default function (
+export default async function (
     codePoints, text, predictorData, palette, set_weight
 ) {
     set_weight(weightPoints[index], 1);

@@ -171,15 +171,62 @@ export default class ControllerPointer {
     }
 
     async populate(rootBox, limits) {
-        if (rootBox.template.cssClass === null) {
-            console.log('populate', `"${rootBox.message}"`)
-            this.predictor(
-                rootBox.messageCodePoints, rootBox.message,
-                rootBox.predictorData, rootBox.template.palette,
-                this._set_weight.bind(this, rootBox)
-            );
+        // Comment out one or other of the following.
+
+        // // Set left; solve height.
+        // const width = this.limits.spawnMargin * 2;
+        // const left = this._limits.right - width;
+        // const height = this._limits.solve_height(left);
+
+        // Set height; solve left.
+        const height = limits.height / 2;
+        const left = limits.solve_left(height);
+        const width = limits.right - left;
+        rootBox.set_dimensions(left, width, 0, height);
+
+        await this.spawn(rootBox, limits, true);
+    }
+
+    _configure_box(zoomBox) {
+        if (zoomBox.factoryData === undefined) {
+            zoomBox.factoryData = {
+                "weight": zoomBox.template.weight, "totalWeight": undefined
+            };
         }
-        rootBox.arrange_children(limits);
+    }
+
+    async spawn(rootBox, limits, forcePrediction=false) {
+        this._configure_box(rootBox);
+        rootBox.instantiate_child_boxes();
+        rootBox.childBoxes.forEach(childBox => this._configure_box(childBox));
+
+        // rootBox.instantiate_child_boxes();
+        // rootBox.childBoxes.forEach(
+        //     childBox => childBox.factoryData = {
+        //         "weight": childBox.template.weight
+        //     }
+        // );
+
+
+
+
+
+        if (rootBox.factoryData.totalWeight === undefined) {
+            if (forcePrediction || rootBox.template.cssClass === null) {
+                // console.log('spawn', `"${rootBox.message}"`)
+                await this.predictor(
+                    rootBox.messageCodePoints, rootBox.message,
+                    rootBox.predictorData, rootBox.template.palette,
+                    this._set_weight.bind(this, rootBox)
+                );
+            }
+
+            rootBox.factoryData.totalWeight = rootBox.childBoxes.reduce(
+                (accumulator, child) =>
+                accumulator + child.factoryData.weight, 0);
+        }
+
+        this.arrange_children(rootBox, limits);
     }
 
     _set_weight(parentBox, codePoint, weight, predictorData) {
@@ -194,16 +241,130 @@ export default class ControllerPointer {
         let target = parentBox;
         const stack = [];
         for(const index of path) {
+            this._configure_box(target);
+            target.instantiate_child_boxes();
+            target.childBoxes.forEach(
+                childBox => this._configure_box(childBox));
+
             target = target.childBoxes[index];
             stack.push(target);
         }
-        const delta = weight - target.weight;
+        // if (target.factoryData === undefined) {
+        //     target.factoryData = { "weight": target.template.weight };
+        // }
+        const delta = weight - target.factoryData.weight;
         for(const box of stack) {
-            stack.weight += delta;
+            // if (box.factoryData === undefined) {
+            //     box.factoryData = { "weight": box.template.weight };
+            // }
+            box.factoryData.weight += delta;
         }
-        console.log(
-            '_set_weight', stack.map(box => box.message), delta, path);
-}
+        // console.log(
+        //     '_set_weight', stack.map(box => box.message), delta, path);
+    }
+
+    // Arrange some or all child boxes. There are three procedures, selected by
+    // the `up` parameter:
+    //
+    // -   up:undefined  
+    //     Assume this box already has its top set and arrange child boxes to
+    //     occupy it.
+    // -   up:true  
+    //     Arrange all the child boxes above an initialiser specified by its
+    //     index. Assume that the initialiser has its top set.
+    // -   up:false  
+    //     Arrange all the child boxes below an initialiser specified by its
+    //     index. Assume that the initialiser has its bottom set.
+    //
+    // Returns the bottom or top value of the last child arranged.
+    arrange_children(parentBox, limits, up, initialiser) {
+        if (parentBox.factoryData.totalWeight === undefined) {
+            return;
+        }
+        const unitHeight = parentBox.height / parentBox.factoryData.totalWeight;
+
+        let childTop;
+        let childBottom;
+        if (up === undefined) {
+            childTop = parentBox.top;
+            initialiser = -1;
+            up = false;
+        }
+        else if (up) {
+            childBottom = parentBox.childBoxes[initialiser].top;
+        }
+        else {
+            childTop = parentBox.childBoxes[initialiser].bottom;
+        }
+        const direction = (up ? -1 : 1)
+
+        const childLength = parentBox.childBoxes.length;
+        for(
+            let index = initialiser + direction;
+            index >= 0 && index < childLength;
+            index += direction
+        ) {
+            const childBox = parentBox.childBoxes[index];
+            const childHeight = childBox.factoryData.weight * unitHeight;
+            if (up) {
+                childTop = childBottom - childHeight;
+            }
+            else {
+                childBottom = childTop + childHeight;
+            }
+
+            const shouldSpawn = (
+                limits.spawnThreshold === undefined ||
+                childHeight >= limits.spawnThreshold) &&
+                childBottom > limits.top && childTop < limits.bottom;
+
+            if (shouldSpawn) {
+                // if (this.childBoxes[index] === null) {
+                //     this.childBoxes[index] = new ZoomBox(
+                //         this.childSpecifications[index]);
+                // }
+                // const zoomBox = this.childBoxes[index];
+        
+                const childLeft = limits.solve_left(childHeight);
+                const childWidth = limits.width - childLeft;
+   
+                // const dimensioned = !childBox.dimension_undefined();
+
+                childBox.set_dimensions(
+                    childLeft, childWidth,
+                    childBottom - (childHeight / 2), childHeight);
+                
+                this.spawn(childBox, limits);
+                // if (dimensioned) {
+                //     childBox.arrange_children(limits);
+                // }
+                // else {
+                //     // Spawn is async but we don't care here.
+                //     childBox.spawn(limits);
+                // }
+            }
+            else {
+                childBox.erase();
+                // if (this.childBoxes[index] !== null) {
+                //     // console.log(
+                //     //     `Arrange spawn "${this.childBoxes[index].message}".`
+                //     // );
+                //     this.childBoxes[index].erase();
+                //     this.childBoxes[index] = null;
+                // }
+            }
+
+            if (up) {
+                childBottom -= childHeight;
+            }
+            else {
+                childTop += childHeight;
+            }
+        }
+        return up ? childBottom : childTop;
+    }
+
+
 
     control(rootBox, limits) {
         if (!this.going) {
@@ -246,10 +407,31 @@ export default class ControllerPointer {
             path[0] = -1;
         }
 
-        const applied = rootBox.apply_move(moveX, moveY, path, limits);
+        const applied = this._apply_move(
+            rootBox, moveX, moveY, path, limits, 0);
         if (!applied) {
             console.log('Not applied.');
         }
+    }
+
+    report_frozen(rootBox, limits, onlyIfTargetChanged=false) {
+        if (this.frozen === null) {
+            return false;
+        }
+        // Pointer Y is positive upwards but Box Y is positive downwards. X has
+        // the same sense in both Pointer and Box. The holder method adjusts for
+        // that already.
+        const target = rootBox.holder(
+            this._pointer.rawX, this._pointer.rawY, []);
+        if (onlyIfTargetChanged && (
+            target === null || target === this._frozenTarget
+        )) {
+            return true;
+        }
+        this._frozenTarget = target;
+        // const report = {"box": target, "p0x": p0x, "p0y": p0y};
+        this._frozen(this._calculate_move(target, limits));
+        return true;
     }
 
     _calculate_move(target, limits) {
@@ -296,37 +478,91 @@ export default class ControllerPointer {
         return calculation;
     }
 
-    report_frozen(rootBox, limits, onlyIfTargetChanged=false) {
-        if (this.frozen === null) {
+    _apply_move(hereBox, moveX, moveY, path, limits, position) {
+        const index = path[position];
+        const isRootBox = position === 0;
+
+        if (index === -1) {
+            // End of the path; attempt to apply the move here.
+            return this._apply_move_here(
+                hereBox, moveX, moveY, limits, isRootBox);
+        }
+
+        // Attempt to apply the move to the specified child.
+        const target = hereBox.childBoxes[index];
+        const applied = this._apply_move(
+            target, moveX, moveY, path, limits, position + 1);
+        if (!applied) {
+            // If it wasn't applied to a child, attempt to apply here instead.
+            return this._apply_move_here(
+                hereBox, moveX, moveY, limits, isRootBox);
+        }
+
+        // Now adjust this box so that it is congruent to the new height of the
+        // target child. The following must become true:  
+        // this.child_weight(index) * unitHeight = target.height  
+        // Where:  
+        // unitHeight = this.height / this.totalWeight
+        // Therefore:
+        const height = (
+            (target.height / target.factoryData.weight) *
+            hereBox.factoryData.totalWeight);
+        
+        // Unless this is the root box and adjusting its size would cause its
+        // rect to be erased. In that case, undo the move by arranging the child
+        // boxes based on this box's current height and position.
+        if (isRootBox && height <= limits.drawThresholdRect) {
+            console.log('Undo height', height, limits.drawThresholdRect);
+            this.arrange_children(hereBox, limits);
             return false;
         }
-        // Pointer Y is positive upwards but Box Y is positive downwards. X has
-        // the same sense in both Pointer and Box. The holder method adjusts for
-        // that already.
-        const target = rootBox.holder(
-            this._pointer.rawX, this._pointer.rawY, []);
-        if (onlyIfTargetChanged && (
-            target === null || target === this._frozenTarget
-        )) {
-            return true;
+
+        hereBox.height = height;
+        //
+        // Arrange the child boxes, in two parts. First, push up everything
+        // above the target. Second, push down everything below the target.
+        const top = this.arrange_children(hereBox, limits, true, index);
+        // this.arrange_children(hereBox, limits, true, index)
+        // .then(top => {
+            this.arrange_children(hereBox, limits, false, index);
+            //
+            // Finalise the adjustment to this box.
+            hereBox.left = limits.solve_left(height);
+            hereBox.width = limits.width - hereBox.left;
+            hereBox.middle = top + (height / 2);
+        // });
+        return true;
+    }
+
+    _apply_move_here(hereBox, moveX, moveY, limits, isRootBox) {
+        const movedLeft = hereBox.left + moveX;
+        // At any point to the right of the last gradient, the solver will
+        // return a minimum height. This has some undesirable side effects.
+        // These can be avoided by rejecting the move if it would put this box
+        // into that zone.
+        if (movedLeft >= limits.solverRight) {
+            if (isRootBox) {
+                console.log('AMH left', movedLeft, limits.solverRight);
+            }
+            return false;
         }
-        this._frozenTarget = target;
-        // const report = {"box": target, "p0x": p0x, "p0y": p0y};
-        this._frozen(this._calculate_move(target, limits));
+
+        const solvedHeight = limits.solve_height(movedLeft);
+        // The root box shouldn't ever have its rect erased. If this move is
+        // being applied to the root box, and would result in erasure, reject
+        // the move.
+        if (isRootBox && solvedHeight <= limits.drawThresholdRect) {
+            console.log('AMH height', solvedHeight, limits.drawThresholdRect);
+            return false;
+        }
+
+        hereBox.left = movedLeft;
+        hereBox.width = limits.width - hereBox.left;
+        hereBox.height = solvedHeight;
+        hereBox.middle += moveY;
+        this.spawn(hereBox, limits);
+        this.arrange_children(hereBox, limits);
         return true;
     }
 
 }
-
-// See https://en.wikipedia.org/wiki/Web_colors
-
-ControllerPointer.unsetColour = "LightSlateGray";
-
-ControllerPointer.groupColours = {
-    "capital": null,
-    "small": null,
-    "numeral": null,
-    "punctuation": null,
-    "contraction": null,
-    "space": null
-};

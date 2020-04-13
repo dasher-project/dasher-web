@@ -224,6 +224,7 @@ export default class UserInterface {
     }
     
     _load_colours(parentPiece) {
+        // See https://en.wikipedia.org/wiki/Web_colors
         [
             ['Capital', "#ffff00"],
             ['Small', "#00BFFF"],
@@ -707,6 +708,10 @@ export default class UserInterface {
                     this.zoomBox.erase();
                 }
             }
+            else {
+                console.log(root, this.zoomBox.trimmedIndex);
+                root = null;
+            }
 
             if (root !== null) {
                 // Invoke setter.
@@ -813,23 +818,22 @@ export default class UserInterface {
         this.zoomBox = null;
 
         // const zoomBox = new ZoomBox(this._controller.rootSpecification);
-        const zoomBox = new ZoomBox(
-            this._rootTemplate, this._controller, [], 0, 0);
+        const zoomBox = new ZoomBox(this._rootTemplate, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
-        this._set_zoomBox_size(zoomBox);
+        // this._set_zoomBox_size(zoomBox);
 
         this.zoomBox = zoomBox;
         
-        this.zoomBox.spawn(this._limits) //ready
+        this._controller.populate(this.zoomBox, this._limits) //ready
         .then(ready => {
-            if (ready) {
+            // if (ready) {
                 // this._controller.populate(zoomBox, this._limits);
                 this._start_render(startRender);
-            }
-            else {
-                throw new Error("ZoomBox ready false.")
-            }
+            // }
+            // else {
+            //     throw new Error("ZoomBox ready false.")
+            // }
          })
         .catch(error => {
             // The thrown error mightn't be noticed, if the console isn't
@@ -869,7 +873,16 @@ export default class UserInterface {
 
     _on_resize() {
         this.svgRect = this._svg.node.getBoundingClientRect();
-        this._set_zoomBox_size(this.zoomBox);
+
+
+        // To-Do change to populate.
+        // this._set_zoomBox_size(this.zoomBox);
+        if (this._controller !== null) {
+            this._controller.populate(this.zoomBox, this._limits);
+        }
+
+
+
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
                 `${this.svgRect.width * -0.5} ${this.svgRect.height * -0.5}` +
@@ -887,30 +900,31 @@ export default class UserInterface {
         // Reference for innerHeight property.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
-    _set_zoomBox_size(zoomBox) {
-        if (Object.is(this._controller, this._controllerPointer)) {
-            // Comment out one or other of the following.
+    // _set_zoomBox_size(zoomBox) {
+    //     if (Object.is(this._controller, this._controllerPointer)) {
+    //         // Comment out one or other of the following.
 
-            // // Set left; solve height.
-            // const width = this.limits.spawnMargin * 2;
-            // const left = this._limits.right - width;
-            // const height = this._limits.solve_height(left);
+    //         // // Set left; solve height.
+    //         // const width = this.limits.spawnMargin * 2;
+    //         // const left = this._limits.right - width;
+    //         // const height = this._limits.solve_height(left);
 
-            // Set height; solve left.
-            const height = this.svgRect.height / 4;
-            const left = this._limits.solve_left(height);
-            const width = this._limits.right - left;
+    //         // Set height; solve left.
+    //         const height = this.svgRect.height / 4;
+    //         const left = this._limits.solve_left(height);
+    //         const width = this._limits.right - left;
 
-            zoomBox.set_dimensions(left, width, 0, height);
-        }
-        else if (Object.is(this._controller, this._controllerRandom)) {
-            zoomBox.set_dimensions(
-                this.svgRect.width * -0.45,
-                this.svgRect.width * 0.9,
-                0, this.svgRect.height * 0.9
-            );
-        }
-    }
+    //         zoomBox.set_dimensions(left, width, 0, height);
+    //     }
+    //     else if (Object.is(this._controller, this._controllerRandom)) {
+    //         // zoomBox.set_dimensions(
+    //         //     this.svgRect.width * -0.45,
+    //         //     this.svgRect.width * 0.9,
+    //         //     0, this.svgRect.height * 0.9
+    //         // );
+    //         this._controller.populate(zoomBox, this._limits);
+    //     }
+    // }
 
 }
 

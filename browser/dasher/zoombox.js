@@ -6,9 +6,8 @@
 const emptyChildBoxArray = [];
 
 export default class ZoomBox {
-    constructor(template, factory, parentCodePoints, ordinal, childIndex) {
+    constructor(template, parentCodePoints, ordinal, childIndex) {
         this._template = template;
-        this._factory = factory;
         this._messageCodePoints = parentCodePoints.slice();
         this._ordinal = ordinal;
         this._childIndex = childIndex;
@@ -37,17 +36,17 @@ export default class ZoomBox {
             specification.text === undefined ? null : specification.text);
         */
         
-        this._weight = template.weight;
-        this._spawned = false;
+        // this._weight = template.weight;
+        // this._spawned = false;
 
-        if (template.cssClass === null) {
-            this._childBoxes = emptyChildBoxArray;
-        }
-        else {
-            this._instantiate_child_boxes();
-        }
-        this._predictorData = undefined;
-        this._factoryData = undefined;
+        // if (template.cssClass === null) {
+            this._childBoxes = undefined; // emptyChildBoxArray;
+        // }
+        // else {
+        //     this._instantiate_child_boxes();
+        // }
+        // this._predictorData = undefined;
+        this._controllerData = undefined;
 
         this._left = undefined;
         this._width = undefined;
@@ -82,28 +81,37 @@ export default class ZoomBox {
         */
     }
 
-    get spawned() {return this._spawned;}
+    // get spawned() {return this._spawned;}
 
+    /*
     async spawn(limits) {
         if (limits === undefined) {
             throw new Error("Limits undefined in spawn().");
         }
         this._instantiate_child_boxes();
-        await this._factory.populate(this, limits);
+        // await this._factory.populate(this, limits);
         this._totalWeight = this._childBoxes.reduce(
             (accumulator, child) => accumulator + child.weight, 0);
         this._spawned = true;
         return this.spawned;
     }
+    */
 
-    _instantiate_child_boxes() {
-        this._childBoxes = this._template.childTemplates.map(
-            (template, index) => new ZoomBox(
-                template, this._factory, this._messageCodePoints,
-                template.codePoint === null ? this._ordinal : this._ordinal + 1,
-                index
-            )
-        );
+    instantiate_child_boxes() {
+        if (this._childBoxes === undefined) {
+            this._childBoxes = this._template.childTemplates.map(
+                (template, index) => new ZoomBox(
+                    template, this._messageCodePoints,
+                    template.codePoint === null ?
+                    this._ordinal :
+                    this._ordinal + 1,
+                    index
+                )
+            );
+            return true;
+        }
+
+        return false;
     }
 
     // _set_child_specifications(specifications) {
@@ -139,25 +147,27 @@ export default class ZoomBox {
     // get childSpecifications() {return this._childSpecifications;}
 
     // get controllerData() {return this._specification.controllerData;}
-    get factoryData() {return this._factoryData;}
-    set factoryData(factoryData) {this._factoryData = factoryData;}
+    get controllerData() {return this._controllerData;}
+    set controllerData(controllerData) {this._controllerData = controllerData;}
 
-    get predictorData() {return this._predictorData;}
-    set predictorData(predictorData) {this._predictorData = predictorData;}
+    // get predictorData() {return this._predictorData;}
+    // set predictorData(predictorData) {this._predictorData = predictorData;}
 
     get viewer() {return this._viewer;}
     set viewer(viewer) {this._viewer = viewer;}
 
-    get weight() {return this._weight;}
-    set weight(weight) {this._weight = weight;}
+    // get weight() {return this._weight;}
+    // set weight(weight) {this._weight = weight;}
 
     // Erase this box from the view, if it has ever been drawn.
     erase() {
         if (this.viewer !== null) {
             this.viewer.erase();
         }
-        this._spawned = false;
-        this._childBoxes = emptyChildBoxArray;
+        // this._spawned = false;
+        // this._childBoxes = emptyChildBoxArray;
+        this._childBoxes = undefined;
+        this._left = undefined;
     }
 
     child_weight(index) {
@@ -266,11 +276,12 @@ export default class ZoomBox {
      * holder, and a -1 terminator.
      */
     holder(rawX, rawY, path) {
-        if (!this.spawned) { return null; }
+        // if (!this.spawned) { return null; }
 
         if (!this.holds(rawX, rawY)) {
             // This box doesn't hold the point, so neither will any of its child
-            // boxes.
+            // boxes. The holds() method can return undefined, which this method
+            // treats as `false`.
             return null;
         }
 
@@ -280,12 +291,17 @@ export default class ZoomBox {
             path = [];
         }
 
-        // This box holds the point; check its child boxes. The child array is
+        // This box holds the point; check its child boxes.
+
+
+        // The child array is
         // sparse because it doesn't have instances for child boxes that are too
         // small to spawn.
+
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
             const child = this.childBoxes[index];
-            if (!child.spawned) { continue; }
+            // If any child dimension is undefined, holder() returns null.
+            // if (!child.spawned) { continue; }
 
             // Recursive call.
             const holder = child.holder(rawX, rawY, path);
@@ -304,7 +320,7 @@ export default class ZoomBox {
     }
 
     holds(rawX, rawY) {
-        if (this.dimension_undefined() || !this.spawned) {
+        if (this.dimension_undefined()) {
             return undefined;
         }
 
@@ -317,183 +333,6 @@ export default class ZoomBox {
         );
     }
 
-    apply_move(moveX, moveY, path, limits, position) {
-        if (position === undefined) {
-            position = 0;
-        }
-        const index = path[position];
-        const rootBox = position === 0;
-
-        if (index === -1) {
-            // End of the path; attempt to apply the move here.
-            return this._apply_move_here(moveX, moveY, limits, rootBox);
-        }
-
-        // Attempt to apply the move to the specified child.
-        const target = this.childBoxes[index];
-        const applied = target.apply_move(
-            moveX, moveY, path, limits, position + 1);
-        if (!applied) {
-            // If it wasn't applied to a child, attempt to apply here instead.
-            return this._apply_move_here(moveX, moveY, limits, rootBox);
-        }
-
-        // Now adjust this box so that it is congruent to the new height of the
-        // target child. The following must become true:  
-        // this.child_weight(index) * unitHeight = target.height  
-        // Where:  
-        // unitHeight = this.height / this.totalWeight
-        // Therefore:
-        const height = (
-            (target.height / this.child_weight(index)) * this.totalWeight);
-        
-        // Unless this is the root box and adjusting its size would cause its
-        // rect to be erased. In that case, undo the move by arranging the child
-        // boxes based on this box's current height and position.
-        if (rootBox && height <= limits.drawThresholdRect) {
-            console.log('Undo height', height, limits.drawThresholdRect);
-            this.arrange_children(limits);
-            return false;
-        }
-
-        this.height = height;
-        //
-        // Arrange the child boxes, in two parts. First, push up everything
-        // above the target. Second, push down everything below the target.
-        const top = this.arrange_children(limits, true, index);
-        this.arrange_children(limits, false, index);
-        //
-        // Finalise the adjustment to this box.
-        this.left = limits.solve_left(height);
-        this.width = limits.width - this.left;
-        this.middle = top + (height / 2);
-        return true;
-    }
-
-    _apply_move_here(moveX, moveY, limits, rootBox) {
-        const movedLeft = this.left + moveX;
-        // At any point to the right of the last gradient, the solver will
-        // return a minimum height. This has some undesirable side effects.
-        // These can be avoided by rejecting the move if it would put this box
-        // into that zone.
-        if (movedLeft >= limits.solverRight) {
-            if (rootBox) {
-                console.log('AMH left', movedLeft, limits.solverRight);
-            }
-            return false;
-        }
-
-        const solvedHeight = limits.solve_height(movedLeft);
-        // The root box shouldn't ever have its rect erased. If this move is
-        // being applied to the root box, and would result in erasure, reject
-        // the move.
-        if (rootBox && solvedHeight <= limits.drawThresholdRect) {
-            console.log('AMH height', solvedHeight, limits.drawThresholdRect);
-            return false;
-        }
-
-        this.left = movedLeft;
-        this.width = limits.width - this.left;
-        this.height = solvedHeight;
-        this.middle += moveY;
-        this.arrange_children(limits);
-        return true;
-    }
-
-    // Arrange some or all child boxes. There are three procedures, selected by
-    // the `up` parameter:
-    //
-    // -   up:undefined  
-    //     Assume this box already has its top set and arrange child boxes to
-    //     occupy it.
-    // -   up:true  
-    //     Arrange all the child boxes above an initialiser specified by its
-    //     index. Assume that the initialiser has its top set.
-    // -   up:false  
-    //     Arrange all the child boxes below an initialiser specified by its
-    //     index. Assume that the initialiser has its bottom set.
-    //
-    // Returns the bottom or top value of the last child arranged.
-    arrange_children(limits, up, initialiser) {
-        const unitHeight = this.height / this.totalWeight;
-
-        let childTop;
-        let childBottom;
-        if (up === undefined) {
-            childTop = this.top;
-            initialiser = -1;
-            up = false;
-        }
-        else if (up) {
-            childBottom = this._childBoxes[initialiser].top;
-        }
-        else {
-            childTop = this._childBoxes[initialiser].bottom;
-        }
-        const direction = (up ? -1 : 1)
-
-        const childLength = this.childBoxes.length;
-        for(
-            let index = initialiser + direction;
-            index >= 0 && index < childLength;
-            index += direction
-        ) {
-            const childHeight = this.child_weight(index) * unitHeight;
-            if (up) {
-                childTop = childBottom - childHeight;
-            }
-            else {
-                childBottom = childTop + childHeight;
-            }
-
-            const shouldSpawn = (
-                limits.spawnThreshold === undefined ||
-                childHeight >= limits.spawnThreshold) &&
-                childBottom > limits.top && childTop < limits.bottom;
-
-            const childBox = this.childBoxes[index];
-            if (shouldSpawn) {
-                // if (this.childBoxes[index] === null) {
-                //     this.childBoxes[index] = new ZoomBox(
-                //         this.childSpecifications[index]);
-                // }
-                // const zoomBox = this.childBoxes[index];
-        
-                const childLeft = limits.solve_left(childHeight);
-                const childWidth = limits.width - childLeft;
-    
-                childBox.set_dimensions(
-                    childLeft, childWidth,
-                    childBottom - (childHeight / 2), childHeight);
-                
-                if (childBox.spawned) {
-                    childBox.arrange_children(limits);
-                }
-                else {
-                    // Spawn is async but we don't care here.
-                    childBox.spawn(limits);
-                }
-            }
-            else {
-                childBox.erase();
-                // if (this.childBoxes[index] !== null) {
-                //     // console.log(
-                //     //     `Arrange spawn "${this.childBoxes[index].message}".`
-                //     // );
-                //     this.childBoxes[index].erase();
-                //     this.childBoxes[index] = null;
-                // }
-            }
-
-            if (up) {
-                childBottom -= childHeight;
-            }
-            else {
-                childTop += childHeight;
-            }
-        }
-        return up ? childBottom : childTop;
-    }
 
     // If a child of this box should now be the new root box, then set it up and
     // return the new root box. Otherwise return null.
@@ -507,7 +346,8 @@ export default class ZoomBox {
         // is about to be derendered. The new root is a child of this box and
         // would also get derendered, so detach it here.
         const trimmedRoot = this.childBoxes[rootIndex];
-        this._childBoxes = emptyChildBoxArray; // [rootIndex] = null;
+        this._childBoxes = undefined;
+        // emptyChildBoxArray; // [rootIndex] = null;
 
 
 
@@ -531,9 +371,15 @@ export default class ZoomBox {
         // If there is exactly one non-null child box, it could be the trimmed
         // root. A child box will be null if it wasn't ever rendered, or if it
         // went off limits and was derendered.
+
+
+
         let candidate;
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
-            if (!this.childBoxes[index].spawned) {
+            // if (!this.childBoxes[index].spawned) {
+            //     continue;
+            // }
+            if (this.childBoxes[index].childBoxes === undefined) {
                 continue;
             }
 
@@ -548,6 +394,9 @@ export default class ZoomBox {
         
         if (candidate === undefined) {
             // Zero non-null child boxes; can't trim.
+
+
+
             return -1;
         }
 
@@ -574,6 +423,8 @@ export default class ZoomBox {
         ) {
             return null;
         }
+
+        return parent; //, this.trimmedIndex;
 
         const index = this.trimmedIndex;
 

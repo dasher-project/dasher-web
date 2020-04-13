@@ -91,12 +91,16 @@ export default class Viewer {
             //         childEdge, this._renderLeft,
             //         limits.textLeft, this._textWidth);
             // }
-            this._zoomBox.childBoxes.forEach(child => { if (child.spawned) {
-                if (child.viewer === null) {
-                    child.viewer = new Viewer(child, this._view);
-                }
-                child.viewer._draw_one(this, edge, limits, level + 1);
-            };});
+            if (this._zoomBox.childBoxes !== undefined) {
+                this._zoomBox.childBoxes.forEach(child => {
+                    if (!child.dimension_undefined()) {
+                        if (child.viewer === null) {
+                            child.viewer = new Viewer(child, this._view);
+                        }
+                        child.viewer._draw_one(this, edge, limits, level + 1);
+                    }
+                });
+            }
         }
         else {
             this.erase();
@@ -267,6 +271,9 @@ export default class Viewer {
         this._rect.node.classList.toggle('trim-bottom', trimBottom !== 0);
 
         const drawY = (box.height / -2) + renderOffset + trimTop;
+        if (isNaN(drawY)) {
+            console.log('drawY nan.');
+        }
         const drawHeight = box.height - (trimTop + trimBottom);
 
         // if (drawHeight < 0) {
@@ -398,6 +405,8 @@ export default class Viewer {
             this._groupUpper.remove();
             this._clear();
         }
-        this._zoomBox.childBoxes.forEach(child => child.erase());
+        if (this._zoomBox.childBoxes !== undefined) {
+            this._zoomBox.childBoxes.forEach(child => child.erase());
+        }
     }
 }
