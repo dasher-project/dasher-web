@@ -143,6 +143,7 @@ export default class ZoomBox {
     get message() {return this._message;}
 
     get childBoxes() {return this._childBoxes;}
+    clear_child_boxes() {this._childBoxes = undefined;}
     // get childCount() {return this._childCount;}
     // get childSpecifications() {return this._childSpecifications;}
 
@@ -166,7 +167,7 @@ export default class ZoomBox {
         }
         // this._spawned = false;
         // this._childBoxes = emptyChildBoxArray;
-        this._childBoxes = undefined;
+        // this._childBoxes = undefined;
         this._left = undefined;
     }
 
@@ -346,12 +347,11 @@ export default class ZoomBox {
         // is about to be derendered. The new root is a child of this box and
         // would also get derendered, so detach it here.
         const trimmedRoot = this.childBoxes[rootIndex];
-        this._childBoxes = undefined;
-        // emptyChildBoxArray; // [rootIndex] = null;
 
-
-
-
+        // Put a dummy into the child box array.
+        this.childBoxes[rootIndex] = {erase:() => {
+            return;
+        }};
         //
         // Later, the user might backspace and this box would need to be
         // inserted back, as a parent of the new root. Set a reference and some
@@ -424,37 +424,8 @@ export default class ZoomBox {
             return null;
         }
 
+        parent.childBoxes[this.trimmedIndex] = this;
+
         return parent; //, this.trimmedIndex;
-
-        const index = this.trimmedIndex;
-
-        parent.spawn(limits);
-        // Put this box in as a child box of the parent.
-        parent.childBoxes[index] = this;
-
-        // Next segment of code arranges the parent in such a way that this box
-        // doesn't move.
-        //
-        // Calculate the parent height from the height of this box, via the
-        // parent unitHeight. Then solve the left position of the parent from
-        // its height. Set width as usual.
-        const unitHeight = this.height / parent.child_weight(index);
-        const height = unitHeight * parent.totalWeight;
-        const left = limits.solve_left(height);
-        const width = limits.width - left;
-        parent.set_dimensions(left, width, undefined, height);
-        //
-        // Now calculate the top of the parent by adding the tops of all the
-        // child boxes above this one. They will all be null but won't have zero
-        // weight. Fortunately, the same calculation is required by another
-        // method, so call it here.
-        const top = parent.arrange_children(limits, true, index);
-        parent.middle = top + (height / 2);
-        //
-        // Reset the parent insertion parameters.
-        this.trimmedParent = null;
-        this.trimmedIndex = undefined;
-
-        return parent;
     }
 }

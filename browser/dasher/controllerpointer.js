@@ -36,6 +36,7 @@ export default class ControllerPointer {
 
     get going() {return this._pointer.going;}
 
+    /*
     async specify_child_boxes(zoomBox) {
 
         // If the box isn't a group, get a new template from the palette.
@@ -169,6 +170,7 @@ export default class ControllerPointer {
         //     };
         // });
     }
+    */
 
     async populate(rootBox, limits) {
         // Comment out one or other of the following.
@@ -184,7 +186,9 @@ export default class ControllerPointer {
         const width = limits.right - left;
         rootBox.set_dimensions(left, width, 0, height);
 
-        await this.spawn(rootBox, limits, true);
+        await this._spawn(rootBox, true)
+        .then(this.arrange_children.bind(this, rootBox, limits));
+        // this.arrange_children(rootBox, limits);
     }
 
     _configure_box(zoomBox) {
@@ -195,7 +199,7 @@ export default class ControllerPointer {
         }
     }
 
-    async spawn(rootBox, limits, forcePrediction=false) {
+    async _spawn(rootBox /*, limits*/, forcePrediction=false) {
         this._configure_box(rootBox);
         rootBox.instantiate_child_boxes();
         rootBox.childBoxes.forEach(childBox => this._configure_box(childBox));
@@ -220,13 +224,16 @@ export default class ControllerPointer {
                     this._set_weight.bind(this, rootBox)
                 );
             }
-
-            rootBox.factoryData.totalWeight = rootBox.childBoxes.reduce(
-                (accumulator, child) =>
-                accumulator + child.factoryData.weight, 0);
+            this._set_total_weight(rootBox);
         }
 
-        this.arrange_children(rootBox, limits);
+        // this.arrange_children(rootBox, limits);
+    }
+
+    _set_total_weight(parentBox) {
+        parentBox.factoryData.totalWeight = parentBox.childBoxes.reduce(
+            (accumulator, child) =>
+            accumulator + child.factoryData.weight, 0);
     }
 
     _set_weight(parentBox, codePoint, weight, predictorData) {
@@ -334,17 +341,12 @@ export default class ControllerPointer {
                     childLeft, childWidth,
                     childBottom - (childHeight / 2), childHeight);
                 
-                this.spawn(childBox, limits);
-                // if (dimensioned) {
-                //     childBox.arrange_children(limits);
-                // }
-                // else {
-                //     // Spawn is async but we don't care here.
-                //     childBox.spawn(limits);
-                // }
+                this._spawn(childBox)
+                .then(this.arrange_children.bind(this, childBox, limits));
             }
             else {
                 childBox.erase();
+                childBox.clear_child_boxes();
                 // if (this.childBoxes[index] !== null) {
                 //     // console.log(
                 //     //     `Arrange spawn "${this.childBoxes[index].message}".`
@@ -560,9 +562,44 @@ export default class ControllerPointer {
         hereBox.width = limits.width - hereBox.left;
         hereBox.height = solvedHeight;
         hereBox.middle += moveY;
-        this.spawn(hereBox, limits);
-        this.arrange_children(hereBox, limits);
+        this._spawn(hereBox)
+        .then(this.arrange_children.bind(this, hereBox, limits));
         return true;
+    }
+
+    build(parentBox, childBox, limits) {
+        const index = childBox.trimmedIndex;
+
+        // parentBox.instantiate_child_boxes();
+        // return this._spawn(parentBox).then(() => {
+        //     parentBox.childBoxes[index] = childBox;
+        //     this._set_total_weight(parentBox);
+
+            // Next segment of code arranges the parent in such a way that the
+            // child doesn't move.
+            //
+            // Calculate the parent height from the height of the child, via the
+            // parent unitHeight. Then solve the left position of the parent
+            // from its height. Set width as usual.
+            const unitHeight = parentBox.height / childBox.factoryData.weight;
+            const height = unitHeight * parentBox.factoryData.totalWeight;
+            const left = limits.solve_left(height);
+            const width = limits.width - left;
+            parentBox.set_dimensions(left, width, undefined, height);
+            //
+            // Now calculate the top of the parent by adding the tops of all the
+            // child boxes above this one. They will all be null but won't have
+            // zero weight. Fortunately, the same calculation is required by
+            // another method, so call it here.
+            const top = this.arrange_children(parentBox, limits, true, index);
+            parentBox.middle = top + (height / 2);
+            //
+            // Reset the parent insertion parameters.
+            childBox.trimmedParent = null;
+            childBox.trimmedIndex = undefined;
+
+            this.arrange_children(parentBox, limits);
+        // });
     }
 
 }

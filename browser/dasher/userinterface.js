@@ -709,8 +709,9 @@ export default class UserInterface {
                 }
             }
             else {
-                console.log(root, this.zoomBox.trimmedIndex);
-                root = null;
+                this._controller.build(root, this.zoomBox, this._limits);
+                // console.log(root, this.zoomBox.trimmedIndex);
+                // root = null;
             }
 
             if (root !== null) {
