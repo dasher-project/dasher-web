@@ -162,6 +162,7 @@ export default class ZoomBox {
 
     // Erase this box from the view, if it has ever been drawn.
     erase() {
+        console.log(`erase() "${this.cssClass} "${this.message}"`);
         if (this.viewer !== null) {
             this.viewer.erase();
         }
@@ -379,7 +380,10 @@ export default class ZoomBox {
             // if (!this.childBoxes[index].spawned) {
             //     continue;
             // }
-            if (this.childBoxes[index].childBoxes === undefined) {
+            // if (this.childBoxes[index].childBoxes === undefined) {
+            //     continue;
+            // }
+            if (this.childBoxes[index].dimension_undefined()) {
                 continue;
             }
 

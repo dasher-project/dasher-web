@@ -10,8 +10,6 @@ export default class ControllerPointer {
         this._frozen = null;
         this._frozenTarget = null;
 
-        this._set_weight_bound = this._set_weight.bind(this);
-
         // this._rootSpecification = {
         //     "colour": null, "cssClass": this._palette.sequenceCSS(0, 0),
         //     "message":[], "factory":this, "factoryData": {
@@ -186,54 +184,83 @@ export default class ControllerPointer {
         const width = limits.right - left;
         rootBox.set_dimensions(left, width, 0, height);
 
-        await this._spawn(rootBox, true)
-        .then(this.arrange_children.bind(this, rootBox, limits));
+        this._configure_box(rootBox, true);
+        // rootBox.instantiate_child_boxes();
+        // rootBox.childBoxes.forEach(childBox => {
+        //     this._configure_box(childBox);
+        //     if (childBox.template.codePoint === null) {
+
+        //     }
+        // });
+
+        if (rootBox.factoryData.totalWeight === undefined) {
+            await this._predict_weights(rootBox);
+        }
+        this._arrange_children(rootBox, limits);
+        // this._spawn(rootBox, limits);
+        // .then(this.arrange_children.bind(this, rootBox, limits));
         // this.arrange_children(rootBox, limits);
     }
 
-    _configure_box(zoomBox) {
-        if (zoomBox.factoryData === undefined) {
-            zoomBox.factoryData = {
-                "weight": zoomBox.template.weight, "totalWeight": undefined
+    _configure_box(parentBox, configureChildBoxes) {
+        if (parentBox.factoryData === undefined) {
+            parentBox.factoryData = {
+                "weight": parentBox.template.weight,
+                "totalWeight": undefined,
+                "gettingWeights": false
             };
+        }
+
+        if (configureChildBoxes || parentBox.template.codePoint === null) {
+            if (parentBox.instantiate_child_boxes()) {
+                parentBox.childBoxes.forEach(
+                    childBox => this._configure_box(childBox, false));
+            }
         }
     }
 
-    async _spawn(rootBox /*, limits*/, forcePrediction=false) {
+    /*
+    _spawn(rootBox, limits) { //, forcePrediction=false) {
         this._configure_box(rootBox);
         rootBox.instantiate_child_boxes();
         rootBox.childBoxes.forEach(childBox => this._configure_box(childBox));
 
-        // rootBox.instantiate_child_boxes();
-        // rootBox.childBoxes.forEach(
-        //     childBox => childBox.factoryData = {
-        //         "weight": childBox.template.weight
+        // if (rootBox.factoryData.totalWeight === undefined) {
+        //     if (forcePrediction || rootBox.template.cssClass === null) {
+        //         // console.log('spawn', `"${rootBox.message}"`)
+        //         this.predictor(
+        //             rootBox.messageCodePoints, rootBox.message,
+        //             rootBox.predictorData, rootBox.template.palette,
+        //             this._set_weight.bind(this, rootBox)
+        //         );
         //     }
-        // );
+        //     this._set_total_weight(rootBox);
+        // }
 
+        this.arrange_children(rootBox, limits);
+    }
+    */
 
-
-
-
-        if (rootBox.factoryData.totalWeight === undefined) {
-            if (forcePrediction || rootBox.template.cssClass === null) {
-                // console.log('spawn', `"${rootBox.message}"`)
-                await this.predictor(
-                    rootBox.messageCodePoints, rootBox.message,
-                    rootBox.predictorData, rootBox.template.palette,
-                    this._set_weight.bind(this, rootBox)
-                );
-            }
-            this._set_total_weight(rootBox);
+    async _predict_weights(parentBox) {
+        if (parentBox.factoryData.gettingWeights) {
+            return;
+        }
+        parentBox.factoryData.gettingWeights = true;
+    
+        if (parentBox.template.cssClass === null) {
+            await this.predictor(
+                parentBox.messageCodePoints, parentBox.message,
+                parentBox.factoryData.predictorData,
+                parentBox.template.palette,
+                this._set_weight.bind(this, parentBox)
+            );
         }
 
-        // this.arrange_children(rootBox, limits);
-    }
-
-    _set_total_weight(parentBox) {
         parentBox.factoryData.totalWeight = parentBox.childBoxes.reduce(
             (accumulator, child) =>
             accumulator + child.factoryData.weight, 0);
+
+        parentBox.factoryData.gettingWeights = false;
     }
 
     _set_weight(parentBox, codePoint, weight, predictorData) {
@@ -246,26 +273,29 @@ export default class ControllerPointer {
             ].join(""));
         }
         let target = parentBox;
-        const stack = [];
+        // const stack = [];
         for(const index of path) {
-            this._configure_box(target);
-            target.instantiate_child_boxes();
-            target.childBoxes.forEach(
-                childBox => this._configure_box(childBox));
+            // this._configure_box(target);
+            // target.instantiate_child_boxes();
+            // target.childBoxes.forEach(
+            //     childBox => this._configure_box(childBox));
 
             target = target.childBoxes[index];
-            stack.push(target);
+            // stack.push(target);
         }
         // if (target.factoryData === undefined) {
         //     target.factoryData = { "weight": target.template.weight };
         // }
-        const delta = weight - target.factoryData.weight;
-        for(const box of stack) {
-            // if (box.factoryData === undefined) {
-            //     box.factoryData = { "weight": box.template.weight };
-            // }
-            box.factoryData.weight += delta;
-        }
+        // const delta = weight - target.factoryData.weight;
+        // console.log('_set_weight', target.message, target.factoryData, weight);
+        target.factoryData.weight = weight;
+        target.factoryData.predictorData = predictorData;
+        // for(const box of stack) {
+        //     // if (box.factoryData === undefined) {
+        //     //     box.factoryData = { "weight": box.template.weight };
+        //     // }
+        //     box.factoryData.weight += delta;
+        // }
         // console.log(
         //     '_set_weight', stack.map(box => box.message), delta, path);
     }
@@ -284,9 +314,13 @@ export default class ControllerPointer {
     //     index. Assume that the initialiser has its bottom set.
     //
     // Returns the bottom or top value of the last child arranged.
-    arrange_children(parentBox, limits, up, initialiser) {
+    _arrange_children(parentBox, limits, up, initialiser) {
         if (parentBox.factoryData.totalWeight === undefined) {
-            return;
+            this._configure_box(parentBox, true);
+            // Next function is async but this code doesn't wait for it to
+            // finish.
+            this._predict_weights(parentBox);
+            return undefined;
         }
         const unitHeight = parentBox.height / parentBox.factoryData.totalWeight;
 
@@ -341,12 +375,22 @@ export default class ControllerPointer {
                     childLeft, childWidth,
                     childBottom - (childHeight / 2), childHeight);
                 
-                this._spawn(childBox)
-                .then(this.arrange_children.bind(this, childBox, limits));
+                this._arrange_children(childBox, limits);
+                // this._spawn(childBox, limits);
+                // .then(this.arrange_children.bind(this, childBox, limits));
             }
             else {
                 childBox.erase();
-                childBox.clear_child_boxes();
+                // Clear the child boxes only if their weights could be
+                // generated again.
+                if (childBox.template.cssClass === null) {
+                    if (!childBox.factoryData.gettingWeights) {
+                        // throw new Error(
+                        //     'Erasing when prediction is in progress.')
+                        childBox.clear_child_boxes();
+                        childBox.factoryData.totalWeight = undefined;    
+                    }
+                }
                 // if (this.childBoxes[index] !== null) {
                 //     // console.log(
                 //     //     `Arrange spawn "${this.childBoxes[index].message}".`
@@ -365,8 +409,6 @@ export default class ControllerPointer {
         }
         return up ? childBottom : childTop;
     }
-
-
 
     control(rootBox, limits) {
         if (!this.going) {
@@ -515,7 +557,7 @@ export default class ControllerPointer {
         // boxes based on this box's current height and position.
         if (isRootBox && height <= limits.drawThresholdRect) {
             console.log('Undo height', height, limits.drawThresholdRect);
-            this.arrange_children(hereBox, limits);
+            this._arrange_children(hereBox, limits);
             return false;
         }
 
@@ -523,10 +565,16 @@ export default class ControllerPointer {
         //
         // Arrange the child boxes, in two parts. First, push up everything
         // above the target. Second, push down everything below the target.
-        const top = this.arrange_children(hereBox, limits, true, index);
+        const top = this._arrange_children(hereBox, limits, true, index);
+        if (top === undefined) {
+            throw new Error("Top undefined.");
+        }
+
+
+
         // this.arrange_children(hereBox, limits, true, index)
         // .then(top => {
-            this.arrange_children(hereBox, limits, false, index);
+            this._arrange_children(hereBox, limits, false, index);
             //
             // Finalise the adjustment to this box.
             hereBox.left = limits.solve_left(height);
@@ -562,8 +610,9 @@ export default class ControllerPointer {
         hereBox.width = limits.width - hereBox.left;
         hereBox.height = solvedHeight;
         hereBox.middle += moveY;
-        this._spawn(hereBox)
-        .then(this.arrange_children.bind(this, hereBox, limits));
+        this._arrange_children(hereBox, limits);
+        // this._spawn(hereBox, limits);
+        // .then(this.arrange_children.bind(this, hereBox, limits));
         return true;
     }
 
@@ -591,14 +640,17 @@ export default class ControllerPointer {
             // child boxes above this one. They will all be null but won't have
             // zero weight. Fortunately, the same calculation is required by
             // another method, so call it here.
-            const top = this.arrange_children(parentBox, limits, true, index);
+            const top = this._arrange_children(parentBox, limits, true, index);
+            if (top === undefined) {
+                throw new Error("Top undefined.");
+            }
             parentBox.middle = top + (height / 2);
             //
             // Reset the parent insertion parameters.
             childBox.trimmedParent = null;
             childBox.trimmedIndex = undefined;
 
-            this.arrange_children(parentBox, limits);
+            this._arrange_children(parentBox, limits);
         // });
     }
 
