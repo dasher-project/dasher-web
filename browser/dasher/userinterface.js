@@ -391,8 +391,9 @@ export default class UserInterface {
                 }
             }, false);
 
-            this._load_predictor_controls(this._panels.main.piece);
-            this._load_behaviours(this._panels.main.piece);
+        this._load_predictor_controls(this._panels.main.piece);
+        this._load_behaviours(this._panels.main.piece);
+        this._load_test_controls(this._panels.developer.piece);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -448,13 +449,18 @@ export default class UserInterface {
             parentPiece.create('label', {'for':identifier}, label);
         }
 
-        if (initialValue !== undefined) {
-            callback(initialValue);
+        if (parsedValue !== undefined) {
+            callback(parsedValue);
         }
 
         if (type === "checkbox") {
             control.addEventListener(
                 'change', (event) => callback(event.target.checked));
+        }
+        else if (type === "number") {
+            const parser = isFloat ? parseFloat : parseInt;
+            control.addEventListener(
+                'change', (event) => callback(parser(event.target.value)));
         }
         else {
             control.addEventListener(
@@ -539,7 +545,31 @@ export default class UserInterface {
         ["A", "B"].forEach(optionLabel => {
             behaviourSelect.add(new Option(optionLabel));
         });
+    }
 
+    _load_test_controls(parentPiece) {
+        let testX = 0;
+        let testY = 0;
+        const updateXY = (x, y) => {
+            if (x !== null) { testX = x; }
+            if (y !== null) { testY = y; }
+            if (this._pointer !== undefined) {
+                this._pointer.rawX = testX;
+                this._pointer.rawY = testY;    
+            }
+        };
+        this._load_input(
+            parentPiece, "number", "test-pointer-x", "X",
+            value => updateXY(value, null), "0");
+        this._load_input(
+            parentPiece, "number", "test-pointer-y", "Y",
+            value => updateXY(null, value), "0");
+        this._buttonAdvance = this._load_button(
+                "Advance", parentPiece, () => {
+                    updateXY(null, null);
+                    this._start_render(false);
+                });
+    
     }
 
     _select_behaviour(index) {

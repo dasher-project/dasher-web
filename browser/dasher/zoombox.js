@@ -97,7 +97,7 @@ export default class ZoomBox {
     }
     */
 
-    instantiate_child_boxes() {
+    instantiate_child_boxes(configure) {
         if (this._childBoxes === undefined) {
             this._childBoxes = this._template.childTemplates.map(
                 (template, index) => new ZoomBox(
@@ -108,6 +108,13 @@ export default class ZoomBox {
                     index
                 )
             );
+            this._childBoxes.forEach(childBox => {
+                configure(childBox);
+                if (childBox.template.cssClass !== null) {
+                    childBox.instantiate_child_boxes(configure);
+                }
+            });
+
             return true;
         }
 
@@ -162,8 +169,9 @@ export default class ZoomBox {
 
     // Erase this box from the view, if it has ever been drawn.
     erase() {
-        console.log(`erase() "${this.cssClass} "${this.message}"`);
+        // console.log(`erase() "${this.cssClass} "${this.message}"`);
         if (this.viewer !== null) {
+            // Next line cascades to erase all child boxes.
             this.viewer.erase();
         }
         // this._spawned = false;
@@ -416,20 +424,36 @@ export default class ZoomBox {
     // it up and return the new root box. Otherwise return null.
     parent_root(limits) {
         const parent = this.trimmedParent;
-        // If there isn't a trimmed parent, or there isn't any space around this
-        // box, root box shouldn't change.
-        if (
-            parent === null || !(
-                this.left > limits.left ||
-                this.bottom < limits.bottom ||
-                this.top > limits.top
-            )
-        ) {
+
+        // If there isn't a trimmed parent, root box shouldn't change.
+        if (parent === null) {
             return null;
         }
 
+        // If there isn't any space around this box, root box shouldn't change.
+        // It only matters if there is no space above if this isn't the first
+        // child box. Vice versa, it only matters if there is no space below if
+        // this isn't the last child box.
+        if (!(
+            this.left > limits.left ||
+            (
+                this.bottom < limits.bottom &&
+                this.trimmedIndex < parent.childBoxes.length - 1
+            ) ||
+            (
+                this.top > limits.top &&
+                this.trimmedIndex > 0
+            )
+        )) {
+            return null;
+        }
+
+        // console.log(
+        //     parent.childBoxes[this.trimmedIndex], this.left > limits.left,
+        //     this.bottom < limits.bottom, this.top > limits.top);
+
         parent.childBoxes[this.trimmedIndex] = this;
 
-        return parent; //, this.trimmedIndex;
+        return parent;
     }
 }

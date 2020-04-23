@@ -87,13 +87,13 @@ export default class ControllerRandom {
     }
 
     async populate(rootBox, limits) {
-        rootBox.instantiate_child_boxes();
-
         rootBox.set_dimensions(
             limits.width * -0.45,
             limits.width * 0.9,
             0, limits.height * 0.9
         );
+
+        rootBox.instantiate_child_boxes(() => {});
 
         this._rectHeight = (rootBox.height / rootBox.childBoxes.length) * 0.75;
 

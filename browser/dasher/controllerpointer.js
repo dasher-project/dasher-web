@@ -184,7 +184,10 @@ export default class ControllerPointer {
         const width = limits.right - left;
         rootBox.set_dimensions(left, width, 0, height);
 
-        this._configure_box(rootBox, true);
+        this._configure_box(rootBox);
+        this._configure_child_boxes(rootBox);
+        // rootBox.instantiate_child_boxes(this._configure_box.bind(this));
+        // this._configure_box(rootBox, true);
         // rootBox.instantiate_child_boxes();
         // rootBox.childBoxes.forEach(childBox => {
         //     this._configure_box(childBox);
@@ -194,15 +197,21 @@ export default class ControllerPointer {
         // });
 
         if (rootBox.factoryData.totalWeight === undefined) {
-            await this._predict_weights(rootBox);
+            await this._predict_weights(rootBox, limits);
         }
-        this._arrange_children(rootBox, limits);
+        else {
+            this._arrange_children(rootBox, limits);
+        }
+        
         // this._spawn(rootBox, limits);
         // .then(this.arrange_children.bind(this, rootBox, limits));
         // this.arrange_children(rootBox, limits);
     }
 
-    _configure_box(parentBox, configureChildBoxes) {
+    _configure_child_boxes(parentBox) {
+        parentBox.instantiate_child_boxes(this._configure_box.bind(this));
+    }
+    _configure_box(parentBox) { //, configureChildBoxes) {
         if (parentBox.factoryData === undefined) {
             parentBox.factoryData = {
                 "weight": parentBox.template.weight,
@@ -211,12 +220,14 @@ export default class ControllerPointer {
             };
         }
 
+        /*
         if (configureChildBoxes || parentBox.template.codePoint === null) {
             if (parentBox.instantiate_child_boxes()) {
                 parentBox.childBoxes.forEach(
                     childBox => this._configure_box(childBox, false));
             }
         }
+        */
     }
 
     /*
@@ -241,7 +252,7 @@ export default class ControllerPointer {
     }
     */
 
-    async _predict_weights(parentBox) {
+    async _predict_weights(parentBox, limits) {
         if (parentBox.factoryData.gettingWeights) {
             return;
         }
@@ -261,6 +272,8 @@ export default class ControllerPointer {
             accumulator + child.factoryData.weight, 0);
 
         parentBox.factoryData.gettingWeights = false;
+
+        this._arrange_children(parentBox, limits)
     }
 
     _set_weight(parentBox, codePoint, weight, predictorData) {
@@ -315,13 +328,12 @@ export default class ControllerPointer {
     //
     // Returns the bottom or top value of the last child arranged.
     _arrange_children(parentBox, limits, up, initialiser) {
-        if (parentBox.factoryData.totalWeight === undefined) {
-            this._configure_box(parentBox, true);
-            // Next function is async but this code doesn't wait for it to
-            // finish.
-            this._predict_weights(parentBox);
-            return undefined;
-        }
+        // if (parentBox.factoryData.totalWeight === undefined) {
+        //     // Next function is async but this code doesn't wait for it to
+        //     // finish.
+        //     this._predict_weights(parentBox);
+        //     return undefined;
+        // }
         const unitHeight = parentBox.height / parentBox.factoryData.totalWeight;
 
         let childTop;
@@ -375,7 +387,17 @@ export default class ControllerPointer {
                     childLeft, childWidth,
                     childBottom - (childHeight / 2), childHeight);
                 
-                this._arrange_children(childBox, limits);
+                this._configure_child_boxes(childBox);
+                if (childBox.factoryData.totalWeight === undefined) {
+                    // Next function is async but this code doesn't wait for it
+                    // to finish.
+                    this._predict_weights(childBox, limits);
+                }
+                else {
+                    this._arrange_children(childBox, limits);
+                }
+        
+                // this._arrange_children(childBox, limits);
                 // this._spawn(childBox, limits);
                 // .then(this.arrange_children.bind(this, childBox, limits));
             }
@@ -383,7 +405,11 @@ export default class ControllerPointer {
                 childBox.erase();
                 // Clear the child boxes only if their weights could be
                 // generated again.
-                if (childBox.template.cssClass === null) {
+                if (
+                    childBox.template.cssClass === null &&
+                    childBox.childBoxes !== undefined
+                ) {
+                    // console.log(`erasing childs "${childBox.cssClass} "${childBox.message}"`);
                     if (!childBox.factoryData.gettingWeights) {
                         // throw new Error(
                         //     'Erasing when prediction is in progress.')
@@ -618,6 +644,7 @@ export default class ControllerPointer {
 
     build(parentBox, childBox, limits) {
         const index = childBox.trimmedIndex;
+        const childHeight = childBox.height;
 
         // parentBox.instantiate_child_boxes();
         // return this._spawn(parentBox).then(() => {
@@ -630,7 +657,7 @@ export default class ControllerPointer {
             // Calculate the parent height from the height of the child, via the
             // parent unitHeight. Then solve the left position of the parent
             // from its height. Set width as usual.
-            const unitHeight = parentBox.height / childBox.factoryData.weight;
+            const unitHeight = childBox.height / childBox.factoryData.weight;
             const height = unitHeight * parentBox.factoryData.totalWeight;
             const left = limits.solve_left(height);
             const width = limits.width - left;
@@ -651,6 +678,9 @@ export default class ControllerPointer {
             childBox.trimmedIndex = undefined;
 
             this._arrange_children(parentBox, limits);
+            console.log(
+                'build check', childHeight === childBox.height,
+                childHeight, childBox.height);
         // });
     }
 

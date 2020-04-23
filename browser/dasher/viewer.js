@@ -203,7 +203,8 @@ export default class Viewer {
             0,
             limits.minimumFontSizePixels, limits.maximumFontSizePixels);
         this._render_diagnostics(
-            limits.showDiagnostic, box.middle - renderMiddle, 0);
+            limits.showDiagnostic, box.middle - renderMiddle,
+            limits.spawnMargin);
     }
 
     _trims(limitTop, limitBottom, margin) {
@@ -337,7 +338,7 @@ export default class Viewer {
         this._text.node.setAttribute('x', textLeft);
     }
 
-    _render_diagnostics(show, renderOffset, textLeft) {
+    _render_diagnostics(show, renderOffset, spawnMargin) {
         const box = this._zoomBox;
         const y1 = renderOffset + (box.height / -2);
         const y2 = renderOffset + (box.height / 2);
@@ -357,9 +358,9 @@ export default class Viewer {
         }
 
         this._spawnMargin = Piece.toggle(
-            this._spawnMargin, show && (limits.spawnMargin !== undefined),
+            this._spawnMargin, show && (spawnMargin !== undefined),
             () => new Piece('line', this._groupLower, {
-                x1:"0", x2:`${limits.spawnMargin}`,
+                x1:"0", x2:`${spawnMargin}`,
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
             })
@@ -371,13 +372,13 @@ export default class Viewer {
         this._textBox = Piece.toggle(
             this._textBox, show && this._textWidth > 0,
             () => new Piece('line', this._groupUpper, {
-                x1:textLeft, y1: "0", y2: "0",
+                x1:0, y1: "0", y2: "0",
                 stroke:"white", "stroke-width":"2px",
                 "stroke-dasharray":"4"
             })
         );
         if (this._textBox !== null) {
-            this._textBox.set_attributes({x2: textLeft + this._textWidth});
+            this._textBox.set_attributes({x2: this._textWidth});
         }
 
         /* The following animation code doesn't seem to work.
