@@ -267,13 +267,34 @@ export default class ControllerPointer {
             );
         }
 
-        parentBox.factoryData.totalWeight = parentBox.childBoxes.reduce(
-            (accumulator, child) =>
-            accumulator + child.factoryData.weight, 0);
+        parentBox.childBoxes.forEach(child => {
+            if (
+                child.template.weight === null &&
+                child.factoryData.totalWeight === undefined
+            ) {
+                child.factoryData.weight = this._calculate_total_weight(child);
+            }
+        });
+        this._calculate_total_weight(parentBox);
+
+        // parentBox.factoryData.totalWeight = parentBox.childBoxes.reduce(
+        //     (accumulator, child) =>
+        //     accumulator + child.factoryData.weight, 0);
 
         parentBox.factoryData.gettingWeights = false;
 
         this._arrange_children(parentBox, limits)
+    }
+    _calculate_total_weight(zoomBox) {
+        const totalWeight = zoomBox.childBoxes.reduce(
+            (accumulator, child) =>
+            accumulator + child.factoryData.weight, 0);
+        zoomBox.factoryData.totalWeight = totalWeight;
+        // console.log(
+        //     `total weight "${zoomBox.message}"`, zoomBox.template.cssClass,
+        //     totalWeight
+        // );
+        return totalWeight;
     }
 
     _set_weight(parentBox, codePoint, weight, predictorData) {

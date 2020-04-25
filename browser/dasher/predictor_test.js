@@ -39,3 +39,4 @@ export default class PredictorTest extends Predictor {
         return weights;
     }
 }
+

@@ -18,7 +18,7 @@ import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 import predictor_dummy from './predictor_dummy.js'
-// import Predictor from './predictor.js';
+import predictor_basic from './predictor.js';
 // import PredictorTest from './predictor_test.js';
 
 import Speech from './speech.js';
@@ -171,10 +171,7 @@ export default class UserInterface {
 
         this._palette = new Palette().build();
         this._controllerPointer = new ControllerPointer(
-            this._pointer, predictor_dummy);
-            // this._get_predictor(0));
-
-
+            this._pointer, this._get_predictor(0));
 
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -308,21 +305,18 @@ export default class UserInterface {
     }
 
     _load_predictors() {
-        this.predictors = [];
-        return;
-
-
-
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
-                "label": "None", "item": new Predictor()
+                "label": "Basic", "item": predictor_basic
             }, {
-                "label": "Random", "item": new PredictorTest()
+                "label": "None", "item": predictor_dummy
+            // }, {
+            //     "label": "Random", "item": new PredictorTest()
             }];
         }
     }
     _get_predictor(index) {
-        return;
+        return this.predictors[index].item;
 
 
 
@@ -516,9 +510,9 @@ export default class UserInterface {
             const identifier = 'prediction-select';
             parentPiece.create('label', {'for':identifier}, "Prediction:");
             this._predictorSelect = new Piece(parentPiece.create('select', {
-                'id': identifier, 'name': identifier //,  'disabled': true
+                'id': identifier, 'name': identifier,  'disabled': true
             }));
-            // this._controls.push(this._predictorSelect);
+            this._controls.push(this._predictorSelect.node);
             this._predictorSelect.node.addEventListener('input', event => {
                 if (this._controllerPointer !== undefined) {
                     this._controllerPointer.predictor = this._get_predictor(

@@ -53,7 +53,13 @@ const baseGroupDefinitions = [
     }, {
         "name": "contraction","texts": [ "'", "-" ]
     }, {
-        "name": "punctuation", "texts": [ ",", ".", "&", "!", "?" ]
+        "name": "punctuation", "texts": [
+            ",", ".", "&", "!", "?", "+", "$",
+            // Next line is: cents symbol, degrees symbol.
+            String.fromCodePoint(162), String.fromCodePoint(176),
+            String.fromCodePoint(163),
+
+        ]
     }, {
         "name": "space", "texts": [ " ", "\n" ]
     }
@@ -78,11 +84,11 @@ class Template {
         this.childTemplates = childTemplates;
         this.palette = palette;
 
-        this._weight = codePoint === null ? childTemplates.length : 1;
+        this._weight = codePoint === null ? null /*childTemplates.length*/ : 1;
     }
 
     get weight() {return this._weight;}
-
+    // get isGroup() {return this._isGroup;}
 }
 
 export default class Palette {

@@ -180,14 +180,14 @@ export default class ZoomBox {
         this._left = undefined;
     }
 
-    child_weight(index) {
-        return this._childBoxes[index].weight;
-        // this.childSpecifications[index].weight;
-    }
-
-    get totalWeight() {
-        return this._totalWeight;
-    }
+    // child_weight(index) {
+    //     return this._childBoxes[index].weight;
+    //     // this.childSpecifications[index].weight;
+    // }
+    //
+    // get totalWeight() {
+    //     return this._totalWeight;
+    // }
 
     // Invoke the callback on each child box that isn't null.
     // each_childBox(callback) {

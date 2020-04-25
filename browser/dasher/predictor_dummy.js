@@ -20,7 +20,10 @@ let index = Math.floor(weightPoints.length / 2);
 export default async function (
     codePoints, text, predictorData, palette, set_weight
 ) {
-    set_weight(weightPoints[index], 1);
+    if (predictorData !== undefined) {
+        console.log(`dummy "${text}" ${predictorData}`);
+    }
+    set_weight(weightPoints[index], 1, index);
     index = (index + 1) % weightPoints.length;
     return;
 }
