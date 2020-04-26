@@ -68,7 +68,7 @@ export default async function (
                 paletteText !== paletteText.toLowerCase()
             );
         });
-        console.log(capitalCodePoints);
+        // console.log(capitalCodePoints);
     }
 
     const lastIndex = codePoints.length - 1;
