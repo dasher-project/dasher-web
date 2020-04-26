@@ -667,11 +667,6 @@ export default class UserInterface {
         setTimeout(() => {
             this._on_resize();
             this.clicked_pointer();
-            // this.clicked_random();
-
-
-
-
         }, 0);
 
         // Activate intervals and controls.
@@ -716,10 +711,15 @@ export default class UserInterface {
             this.zoomBox.viewer.draw(this._limits);
 
             // Check if the root box should change, either to a child or to a
-            // previously trimmed parent. Note that the current root should
-            // be de-rendered if it is being replace by a child.
+            // previously trimmed parent. Note that the current root should be
+            // de-rendered if it is being replace by a child.
+            //
+            // First, check if a previously trimmed parent should be pulled
+            // back.
             let root = this.zoomBox.parent_root(this._limits);
             if (root === null) {
+                // If the code gets here then there isn't a parent to pull back.
+                // Check if a child of the root should become the root.
                 root = this.zoomBox.child_root(this._limits);
                 if (root !== null) {
                     // Could de-render by setting this.zoomBox to null and
@@ -729,9 +729,9 @@ export default class UserInterface {
                 }
             }
             else {
+                // Previously trimmed parent is being pulled back. Get its
+                // dimensions recalculated by the controller.
                 this._controller.build(root, this.zoomBox, this._limits);
-                // console.log(root, this.zoomBox.trimmedIndex);
-                // root = null;
             }
 
             if (root !== null) {
@@ -838,24 +838,16 @@ export default class UserInterface {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
 
-        // const zoomBox = new ZoomBox(this._controller.rootSpecification);
+        // Root template is set at the same time as the controller.
         const zoomBox = new ZoomBox(this._rootTemplate, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
-        // this._set_zoomBox_size(zoomBox);
-
+        // Setter invocation.
         this.zoomBox = zoomBox;
         
-        this._controller.populate(this.zoomBox, this._limits) //ready
-        .then(ready => {
-            // if (ready) {
-                // this._controller.populate(zoomBox, this._limits);
-                this._start_render(startRender);
-            // }
-            // else {
-            //     throw new Error("ZoomBox ready false.")
-            // }
-         })
+        // The populate() method is async, so that a predictor could be called.
+        this._controller.populate(this.zoomBox, this._limits)
+        .then(() => this._start_render(startRender))
         .catch(error => {
             // The thrown error mightn't be noticed, if the console isn't
             // visible. So, set it into the message too.
@@ -895,14 +887,9 @@ export default class UserInterface {
     _on_resize() {
         this.svgRect = this._svg.node.getBoundingClientRect();
 
-
-        // To-Do change to populate.
-        // this._set_zoomBox_size(this.zoomBox);
         if (this._controller !== null) {
             this._controller.populate(this.zoomBox, this._limits);
         }
-
-
 
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
@@ -921,31 +908,6 @@ export default class UserInterface {
         // Reference for innerHeight property.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
-    // _set_zoomBox_size(zoomBox) {
-    //     if (Object.is(this._controller, this._controllerPointer)) {
-    //         // Comment out one or other of the following.
-
-    //         // // Set left; solve height.
-    //         // const width = this.limits.spawnMargin * 2;
-    //         // const left = this._limits.right - width;
-    //         // const height = this._limits.solve_height(left);
-
-    //         // Set height; solve left.
-    //         const height = this.svgRect.height / 4;
-    //         const left = this._limits.solve_left(height);
-    //         const width = this._limits.right - left;
-
-    //         zoomBox.set_dimensions(left, width, 0, height);
-    //     }
-    //     else if (Object.is(this._controller, this._controllerRandom)) {
-    //         // zoomBox.set_dimensions(
-    //         //     this.svgRect.width * -0.45,
-    //         //     this.svgRect.width * 0.9,
-    //         //     0, this.svgRect.height * 0.9
-    //         // );
-    //         this._controller.populate(zoomBox, this._limits);
-    //     }
-    // }
 
 }
 
