@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		0400FFF523BB5788009AF4A0 /* Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		040898792455F87F00EBC1D9 /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
+		0408987A2455F87F00EBC1D9 /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0457D8FC2455F6A700B883E7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8F52455F6A700B883E7 /* MainViewController.swift */; };
 		0457D8FD2455F6A700B883E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0457D8F62455F6A700B883E7 /* Assets.xcassets */; };
 		0457D8FE2455F6A700B883E7 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8F72455F6A700B883E7 /* Commands.swift */; };
 		0457D8FF2455F6A700B883E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0457D8F82455F6A700B883E7 /* LaunchScreen.storyboard */; };
 		0457D9002455F6A700B883E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8FA2455F6A700B883E7 /* AppDelegate.swift */; };
-		0457D9012455F6A700B883E7 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0457D8FB2455F6A700B883E7 /* Info.plist */; };
 		0457D9052455F6B300B883E7 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D9032455F6B300B883E7 /* KeyboardViewController.swift */; };
-		0457D9062455F6B300B883E7 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0457D9042455F6B300B883E7 /* Info.plist */; };
 		0493224123BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		0493224223BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
@@ -44,6 +44,17 @@
 				0400FFF523BB5788009AF4A0 /* Keyboard.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0408987B2455F87F00EBC1D9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0408987A2455F87F00EBC1D9 /* CaptiveWebView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		049D59C023BB5DBE00C0171B /* Embed Frameworks */ = {
@@ -80,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				040898792455F87F00EBC1D9 /* CaptiveWebView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +175,7 @@
 				0400FFEA23BB5788009AF4A0 /* Sources */,
 				0400FFEB23BB5788009AF4A0 /* Frameworks */,
 				0400FFEC23BB5788009AF4A0 /* Resources */,
+				0408987B2455F87F00EBC1D9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -236,7 +249,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0457D9062455F6B300B883E7 /* Info.plist in Resources */,
 				0493224223BBA79C00A17898 /* browser in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,7 +257,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0457D9012455F6A700B883E7 /* Info.plist in Resources */,
 				0457D8FF2455F6A700B883E7 /* LaunchScreen.storyboard in Resources */,
 				0457D8FD2455F6A700B883E7 /* Assets.xcassets in Resources */,
 				0493224123BBA79C00A17898 /* browser in Resources */,
