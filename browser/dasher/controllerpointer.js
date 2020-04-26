@@ -665,7 +665,7 @@ export default class ControllerPointer {
 
     build(parentBox, childBox, limits) {
         const index = childBox.trimmedIndex;
-        const childHeight = childBox.height;
+        const childHeightBefore = Math.round(childBox.height * 100);
 
         // parentBox.instantiate_child_boxes();
         // return this._spawn(parentBox).then(() => {
@@ -699,10 +699,12 @@ export default class ControllerPointer {
             childBox.trimmedIndex = undefined;
 
             this._arrange_children(parentBox, limits);
-            console.log(
-                'build check', childHeight === childBox.height,
-                childHeight, childBox.height);
-        // });
+
+            const childHeightAfter = Math.round(childBox.height * 100);
+            if (childHeightAfter !== childHeightBefore) {
+                console.log(
+                    'build check failed', childHeightBefore, childHeightAfter);
+            }
     }
 
 }

@@ -1,19 +1,6 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
-/*
-A predictor instance must have a `get` method that returns an array of objects
-each with the following properties.
-
--   `codePoint`, the next text, like a letter, as a Unicode code point value.
--   `weight`, the visual weighting to be given to this box.
--   `group`, a group name like "capital" or null if this item doesn't represent
-    a group.
--   Other custom properties for the use of the predictor, next time around.
-    The Predictor class here adds one custom property: `boosted`.
-*/
-
-
 const codePointSpace = " ".codePointAt(0);
 const codePointStop = ".".codePointAt(0);
 

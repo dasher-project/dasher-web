@@ -17,9 +17,10 @@ import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
+
 import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
-// import PredictorTest from './predictor_test.js';
+import predictor_test from './predictor_test.js';
 
 import Speech from './speech.js';
 
@@ -310,18 +311,13 @@ export default class UserInterface {
                 "label": "Basic", "item": predictor_basic
             }, {
                 "label": "None", "item": predictor_dummy
-            // }, {
-            //     "label": "Random", "item": new PredictorTest()
+            }, {
+                "label": "Random", "item": predictor_test
             }];
         }
     }
     _get_predictor(index) {
         return this.predictors[index].item;
-
-
-
-        const predictor = this.predictors[index].item;
-        return predictor.get.bind(predictor);
     }
 
     _load_message() {
