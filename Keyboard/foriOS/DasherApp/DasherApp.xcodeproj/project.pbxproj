@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0400FFF523BB5788009AF4A0 /* Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		040898792455F87F00EBC1D9 /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
 		0408987A2455F87F00EBC1D9 /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0450AE522455FD6C0002CF00 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		0457D8FC2455F6A700B883E7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8F52455F6A700B883E7 /* MainViewController.swift */; };
 		0457D8FD2455F6A700B883E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0457D8F62455F6A700B883E7 /* Assets.xcassets */; };
 		0457D8FE2455F6A700B883E7 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8F72455F6A700B883E7 /* Commands.swift */; };
@@ -17,35 +17,24 @@
 		0457D9002455F6A700B883E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8FA2455F6A700B883E7 /* AppDelegate.swift */; };
 		0457D9052455F6B300B883E7 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D9032455F6B300B883E7 /* KeyboardViewController.swift */; };
 		0493224123BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
-		0493224223BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
 		049D59BF23BB5DBE00C0171B /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04A876EB2455FB51008E12AD /* Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04C4248923F9484300CCC4E4 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
 		26F46D3C23EBE32C00B00168 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0400FFF323BB5788009AF4A0 /* PBXContainerItemProxy */ = {
+		04A876EC2455FB51008E12AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 04D77CAE23BB56B500C25698 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0400FFED23BB5788009AF4A0;
-			remoteInfo = ACE;
+			remoteInfo = Keyboard;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0400FFF923BB5788009AF4A0 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				0400FFF523BB5788009AF4A0 /* Keyboard.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0408987B2455F87F00EBC1D9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -68,6 +57,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04A876EE2455FB51008E12AD /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				04A876EB2455FB51008E12AD /* Keyboard.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -82,7 +82,7 @@
 		0457D9042455F6B300B883E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0493224023BBA79C00A17898 /* browser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = browser; path = ../../../browser; sourceTree = "<group>"; };
 		049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CaptiveWebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		04D77CB623BB56B500C25698 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D77CB623BB56B500C25698 /* Dasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F46D3B23EBE32C00B00168 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,7 +159,7 @@
 		04D77CB723BB56B500C25698 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04D77CB623BB56B500C25698 /* App.app */,
+				04D77CB623BB56B500C25698 /* Dasher.app */,
 				0400FFEE23BB5788009AF4A0 /* Keyboard.appex */,
 			);
 			name = Products;
@@ -193,17 +193,17 @@
 				04D77CB223BB56B500C25698 /* Sources */,
 				04D77CB323BB56B500C25698 /* Frameworks */,
 				04D77CB423BB56B500C25698 /* Resources */,
-				0400FFF923BB5788009AF4A0 /* Embed App Extensions */,
 				049D59C023BB5DBE00C0171B /* Embed Frameworks */,
+				04A876EE2455FB51008E12AD /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0400FFF423BB5788009AF4A0 /* PBXTargetDependency */,
+				04A876ED2455FB51008E12AD /* PBXTargetDependency */,
 			);
 			name = App;
 			productName = Keyboard;
-			productReference = 04D77CB623BB56B500C25698 /* App.app */;
+			productReference = 04D77CB623BB56B500C25698 /* Dasher.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -249,7 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0493224223BBA79C00A17898 /* browser in Resources */,
+				0450AE522455FD6C0002CF00 /* browser in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,10 +289,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0400FFF423BB5788009AF4A0 /* PBXTargetDependency */ = {
+		04A876ED2455FB51008E12AD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0400FFED23BB5788009AF4A0 /* Keyboard */;
-			targetProxy = 0400FFF323BB5788009AF4A0 /* PBXContainerItemProxy */;
+			targetProxy = 04A876EC2455FB51008E12AD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -320,8 +320,8 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Keyboard.ACE;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -340,8 +340,8 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Keyboard.ACE;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -467,7 +467,6 @@
 		04D77CC923BB56B700C25698 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
@@ -477,8 +476,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Keyboard;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
+				PRODUCT_NAME = Dasher;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -487,7 +486,6 @@
 		04D77CCA23BB56B700C25698 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
@@ -497,8 +495,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Keyboard;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
+				PRODUCT_NAME = Dasher;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
