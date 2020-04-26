@@ -137,7 +137,7 @@ export default class Palette {
                 this._indexMap.set(template.codePoint, [index]);
             }
         });
-        console.log(this._indexMap);
+        // console.log(this._indexMap);
 
         return this;
     }
