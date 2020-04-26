@@ -11,13 +11,16 @@ Whichever HTML file loads this script must also load the userinterface.css file.
 
 import Limits from './limits.js';
 import Piece from './piece.js';
+import Palette from './palette.js';
 import Pointer from './pointer.js';
 import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
-import Predictor from './predictor.js';
-import PredictorTest from './predictor_test.js';
+
+import predictor_dummy from './predictor_dummy.js'
+import predictor_basic from './predictor.js';
+import predictor_test from './predictor_test.js';
 
 import Speech from './speech.js';
 
@@ -47,6 +50,7 @@ export default class UserInterface {
         this._controller = null;
         this._frozenClickListener = null;
 
+
         this._view = undefined;
         this._panels = undefined;
         this._cssNode = document.createElement('style');
@@ -55,15 +59,13 @@ export default class UserInterface {
         this._speedLeftRightInput = undefined;
 
         // Spawn and render parameters in mystery SVG units.
-        this._spawnMargin = 30;
-
         this._limits = new Limits();
-
         this._limits.minimumFontSizePixels = 20;
         this._limits.maximumFontSizePixels = 30;
         this._limits.drawThresholdRect = 10;
         this._limits.spawnThreshold = 4;
         this._limits.textLeft = 5;
+        this._limits.spawnMargin = 30;
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
@@ -168,9 +170,10 @@ export default class UserInterface {
         this._load_pointer(diagnosticSpans);
         this._load_settings();
 
+        this._palette = new Palette().build();
         this._controllerPointer = new ControllerPointer(
             this._pointer, this._get_predictor(0));
-    
+
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
         if (footerID !== null) {
@@ -219,6 +222,7 @@ export default class UserInterface {
     }
     
     _load_colours(parentPiece) {
+        // See https://en.wikipedia.org/wiki/Web_colors
         [
             ['Capital', "#ffff00"],
             ['Small', "#00BFFF"],
@@ -239,10 +243,7 @@ export default class UserInterface {
         let label = "Sequence";
         const stub = label.toLowerCase();
         label += ":";
-        [
-            ["#add8e6", "#87ceeb"],
-            ["#90ee90", "#98fb98"]
-        ].forEach(
+        [ ["#90ee90", "#98fb98"], ["#add8e6", "#87ceeb"] ].forEach(
             (values, outerIndex) => values.forEach((value, innerIndex) => {
                 const name = [
                     stub, (outerIndex % 2).toFixed(), (innerIndex % 2).toFixed()
@@ -307,15 +308,16 @@ export default class UserInterface {
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
-                "label": "None", "item": new Predictor()
+                "label": "Basic", "item": predictor_basic
             }, {
-                "label": "Random", "item": new PredictorTest()
+                "label": "None", "item": predictor_dummy
+            }, {
+                "label": "Random", "item": predictor_test
             }];
         }
     }
     _get_predictor(index) {
-        const predictor = this.predictors[index].item;
-        return predictor.get.bind(predictor);
+        return this.predictors[index].item;
     }
 
     _load_message() {
@@ -379,8 +381,9 @@ export default class UserInterface {
                 }
             }, false);
 
-            this._load_predictor_controls(this._panels.main.piece);
-            this._load_behaviours(this._panels.main.piece);
+        this._load_predictor_controls(this._panels.main.piece);
+        this._load_behaviours(this._panels.main.piece);
+        this._load_test_controls(this._panels.developer.piece);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -436,13 +439,18 @@ export default class UserInterface {
             parentPiece.create('label', {'for':identifier}, label);
         }
 
-        if (initialValue !== undefined) {
-            callback(initialValue);
+        if (parsedValue !== undefined) {
+            callback(parsedValue);
         }
 
         if (type === "checkbox") {
             control.addEventListener(
                 'change', (event) => callback(event.target.checked));
+        }
+        else if (type === "number") {
+            const parser = isFloat ? parseFloat : parseInt;
+            control.addEventListener(
+                'change', (event) => callback(parser(event.target.value)));
         }
         else {
             control.addEventListener(
@@ -498,9 +506,9 @@ export default class UserInterface {
             const identifier = 'prediction-select';
             parentPiece.create('label', {'for':identifier}, "Prediction:");
             this._predictorSelect = new Piece(parentPiece.create('select', {
-                'id': identifier, 'name': identifier //,  'disabled': true
+                'id': identifier, 'name': identifier,  'disabled': true
             }));
-            // this._controls.push(this._predictorSelect);
+            this._controls.push(this._predictorSelect.node);
             this._predictorSelect.node.addEventListener('input', event => {
                 if (this._controllerPointer !== undefined) {
                     this._controllerPointer.predictor = this._get_predictor(
@@ -527,7 +535,31 @@ export default class UserInterface {
         ["A", "B"].forEach(optionLabel => {
             behaviourSelect.add(new Option(optionLabel));
         });
+    }
 
+    _load_test_controls(parentPiece) {
+        let testX = 0;
+        let testY = 0;
+        const updateXY = (x, y) => {
+            if (x !== null) { testX = x; }
+            if (y !== null) { testY = y; }
+            if (this._pointer !== undefined) {
+                this._pointer.rawX = testX;
+                this._pointer.rawY = testY;    
+            }
+        };
+        this._load_input(
+            parentPiece, "number", "test-pointer-x", "X",
+            value => updateXY(value, null), "0");
+        this._load_input(
+            parentPiece, "number", "test-pointer-y", "Y",
+            value => updateXY(null, value), "0");
+        this._buttonAdvance = this._load_button(
+                "Advance", parentPiece, () => {
+                    updateXY(null, null);
+                    this._start_render(false);
+                });
+    
     }
 
     _select_behaviour(index) {
@@ -679,10 +711,15 @@ export default class UserInterface {
             this.zoomBox.viewer.draw(this._limits);
 
             // Check if the root box should change, either to a child or to a
-            // previously trimmed parent. Note that the current root should
-            // be de-rendered if it is being replace by a child.
+            // previously trimmed parent. Note that the current root should be
+            // de-rendered if it is being replace by a child.
+            //
+            // First, check if a previously trimmed parent should be pulled
+            // back.
             let root = this.zoomBox.parent_root(this._limits);
             if (root === null) {
+                // If the code gets here then there isn't a parent to pull back.
+                // Check if a child of the root should become the root.
                 root = this.zoomBox.child_root(this._limits);
                 if (root !== null) {
                     // Could de-render by setting this.zoomBox to null and
@@ -690,6 +727,11 @@ export default class UserInterface {
                     // result in a suspension of the render interval.
                     this.zoomBox.erase();
                 }
+            }
+            else {
+                // Previously trimmed parent is being pulled back. Get its
+                // dimensions recalculated by the controller.
+                this._controller.build(root, this.zoomBox, this._limits);
             }
 
             if (root !== null) {
@@ -755,6 +797,7 @@ export default class UserInterface {
             // the random moving boxes.
             this._controllerRandom.going = true;
             this._controller = this._controllerRandom;
+            this._rootTemplate = this._controller.palette.rootTemplate;
             this._new_ZoomBox(true);
         }
 
@@ -782,6 +825,7 @@ export default class UserInterface {
         this._controller = this._controllerPointer;
         // Next line will discard the current zoom box, which will effect a
         // reset, if the mode was already pointer.
+        this._rootTemplate = this._palette.rootTemplate;
         this._new_ZoomBox(false);
 
         // The other button will switch to random mode.
@@ -794,24 +838,16 @@ export default class UserInterface {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
 
-        const zoomBox = new ZoomBox(this._controller.rootSpecification);
-        zoomBox.spawnMargin = this._spawnMargin;
+        // Root template is set at the same time as the controller.
+        const zoomBox = new ZoomBox(this._rootTemplate, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
-        this._set_zoomBox_size(zoomBox);
-
+        // Setter invocation.
         this.zoomBox = zoomBox;
         
-        this.zoomBox.ready
-        .then(ready => {
-            if (ready) {
-                this._controller.populate(zoomBox, this._limits);
-                this._start_render(startRender);
-            }
-            else {
-                throw new Error("ZoomBox ready false.")
-            }
-         })
+        // The populate() method is async, so that a predictor could be called.
+        this._controller.populate(this.zoomBox, this._limits)
+        .then(() => this._start_render(startRender))
         .catch(error => {
             // The thrown error mightn't be noticed, if the console isn't
             // visible. So, set it into the message too.
@@ -850,7 +886,11 @@ export default class UserInterface {
 
     _on_resize() {
         this.svgRect = this._svg.node.getBoundingClientRect();
-        this._set_zoomBox_size(this.zoomBox);
+
+        if (this._controller !== null) {
+            this._controller.populate(this.zoomBox, this._limits);
+        }
+
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
                 `${this.svgRect.width * -0.5} ${this.svgRect.height * -0.5}` +
@@ -867,30 +907,6 @@ export default class UserInterface {
         ].join(" ");
         // Reference for innerHeight property.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
-    }
-    _set_zoomBox_size(zoomBox) {
-        if (Object.is(this._controller, this._controllerPointer)) {
-            // Comment out one or other of the following.
-
-            // // Set left; solve height.
-            // const width = this._spawnMargin * 2;
-            // const left = this._limits.right - width;
-            // const height = this._limits.solve_height(left);
-
-            // Set height; solve left.
-            const height = this.svgRect.height / 4;
-            const left = this._limits.solve_left(height);
-            const width = this._limits.right - left;
-
-            zoomBox.set_dimensions(left, width, 0, height);
-        }
-        else if (Object.is(this._controller, this._controllerRandom)) {
-            zoomBox.set_dimensions(
-                this.svgRect.width * -0.5,
-                this.svgRect.width,
-                0, this.svgRect.height
-            );
-        }
     }
 
 }

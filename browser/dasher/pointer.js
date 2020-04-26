@@ -103,7 +103,15 @@ export default class Pointer {
     }
 
     get rawX() {return this._rawX;}
+    set rawX(rawX) { // For testing only.
+        this._rawX = rawX;
+        this._update_pointer_raw(this._rawX, this._rawY)
+    }
     get rawY() {return this._rawY;}
+    set rawY(rawY) { // For testing only.
+        this._rawY = rawY;
+        this._update_pointer_raw(this._rawX, this._rawY)
+    }
 
     get svgPiece() { return this._svgPiece; }
     set svgPiece(svgPiece) {
