@@ -1,6 +1,15 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
+/*
+
+Predictor that doesn't set any weighting.  
+Actually, sets a weight of one into a character that advances on every call. One
+is the default weight, so setting it has no effect. The weight setting is a
+basic test of the caller.
+
+*/
+
 const firstPoint = "a".codePointAt(0);
 const lastPoint = "z".codePointAt(0);
 

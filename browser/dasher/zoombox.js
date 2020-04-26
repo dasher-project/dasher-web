@@ -3,8 +3,6 @@
 
 // Class to represent abstract zoom box.
 
-const emptyChildBoxArray = [];
-
 export default class ZoomBox {
     constructor(template, parentCodePoints, ordinal, childIndex) {
         this._template = template;
@@ -25,27 +23,7 @@ export default class ZoomBox {
             this.messageCodePoints === undefined ? undefined :
             String.fromCodePoint(...this.messageCodePoints));
 
-        /*
-        this._specification = specification;
-        this._colour = (
-            specification.colour === undefined ? null : specification.colour);
-        this._cssClass = (
-            specification.cssClass === undefined ? null :
-            specification.cssClass);
-        this._text = (
-            specification.text === undefined ? null : specification.text);
-        */
-        
-        // this._weight = template.weight;
-        // this._spawned = false;
-
-        // if (template.cssClass === null) {
-            this._childBoxes = undefined; // emptyChildBoxArray;
-        // }
-        // else {
-        //     this._instantiate_child_boxes();
-        // }
-        // this._predictorData = undefined;
+        this._childBoxes = undefined;
         this._controllerData = undefined;
 
         this._left = undefined;
@@ -57,45 +35,7 @@ export default class ZoomBox {
         this._trimmedParent = null;
 
         this._viewer = null;
-
-        
-
-        // this._childSpecifications = [];
-        // this._childCount = 0;
-        // this._totalWeight = this._childSpecifications.reduce(
-        //     (accumulator, specification) => accumulator + specification.weight,
-        //     0
-        // );
-        // this._childBoxes = Array(this._childSpecifications.length).fill(null);
-
-
-        /*
-        this._ready = new Promise((resolve, reject) => {
-            this._specification.factory.specify_child_boxes(this)
-            .then(specifications => {
-                this._set_child_specifications(specifications);
-                resolve(true);
-            })
-            .catch(error => reject(error));
-        });
-        */
     }
-
-    // get spawned() {return this._spawned;}
-
-    /*
-    async spawn(limits) {
-        if (limits === undefined) {
-            throw new Error("Limits undefined in spawn().");
-        }
-        this._instantiate_child_boxes();
-        // await this._factory.populate(this, limits);
-        this._totalWeight = this._childBoxes.reduce(
-            (accumulator, child) => accumulator + child.weight, 0);
-        this._spawned = true;
-        return this.spawned;
-    }
-    */
 
     instantiate_child_boxes(configure) {
         if (this._childBoxes === undefined) {
@@ -121,20 +61,6 @@ export default class ZoomBox {
         return false;
     }
 
-    // _set_child_specifications(specifications) {
-    //     this._childSpecifications = specifications;
-    //     // this._childCount = this._childSpecifications.length;
-    //     this._totalWeight = this._childSpecifications.reduce(
-    //         (accumulator, specification) => accumulator + specification.weight,
-    //         0
-    //     );
-
-    //     this._childBoxes = Array(this._childSpecifications.length).fill(null);
-    //     return true;
-    // }
-
-    // get ready() { return this._ready; }
-    // get colour() {return this._colour;}
     get cssClass() {return this._cssClass;}
     get text() {return this._template.displayText; } //this._text;}
     get template() {return this._template;}
@@ -146,54 +72,27 @@ export default class ZoomBox {
     set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
 
     get messageCodePoints() {return this._messageCodePoints;}
-     //this._specification.message;}
     get message() {return this._message;}
 
     get childBoxes() {return this._childBoxes;}
     clear_child_boxes() {this._childBoxes = undefined;}
-    // get childCount() {return this._childCount;}
-    // get childSpecifications() {return this._childSpecifications;}
 
-    // get controllerData() {return this._specification.controllerData;}
     get controllerData() {return this._controllerData;}
     set controllerData(controllerData) {this._controllerData = controllerData;}
-
-    // get predictorData() {return this._predictorData;}
-    // set predictorData(predictorData) {this._predictorData = predictorData;}
 
     get viewer() {return this._viewer;}
     set viewer(viewer) {this._viewer = viewer;}
 
-    // get weight() {return this._weight;}
-    // set weight(weight) {this._weight = weight;}
-
-    // Erase this box from the view, if it has ever been drawn.
+    // Erase this box from the view, if it has ever been drawn. Note that child
+    // boxes are left in place.
     erase() {
         // console.log(`erase() "${this.cssClass} "${this.message}"`);
         if (this.viewer !== null) {
             // Next line cascades to erase all child boxes.
             this.viewer.erase();
         }
-        // this._spawned = false;
-        // this._childBoxes = emptyChildBoxArray;
-        // this._childBoxes = undefined;
         this._left = undefined;
     }
-
-    // child_weight(index) {
-    //     return this._childBoxes[index].weight;
-    //     // this.childSpecifications[index].weight;
-    // }
-    //
-    // get totalWeight() {
-    //     return this._totalWeight;
-    // }
-
-    // Invoke the callback on each child box that isn't null.
-    // each_childBox(callback) {
-    //     this.childBoxes !== undefined && this.childBoxes.forEach(
-    //         (child, index) => child !== null && callback(child, index));
-    // }
 
     // Principal properties that define the location and size of the box. The
     // update() method is always a no-op in the current version but could be
@@ -301,30 +200,27 @@ export default class ZoomBox {
             path = [];
         }
 
-        // This box holds the point; check its child boxes.
-
-
-        // The child array is
-        // sparse because it doesn't have instances for child boxes that are too
-        // small to spawn.
-
+        // This box holds the point; check its child boxes.  
+        // The child array isn't sparse now, although it was in earlier
+        // versions.
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
             const child = this.childBoxes[index];
-            // If any child dimension is undefined, holder() returns null.
-            // if (!child.spawned) { continue; }
 
             // Recursive call.
             const holder = child.holder(rawX, rawY, path);
+            // If any child dimension is undefined, holder() will return null.
             if (holder === null) { continue; }
 
             // If the code reaches here then a child holds the point. Finish
-            // here.
+            // here.  
+            // The recursive call to holder() will have push'd the -1
+            // terminator.
             path.unshift(index);
             return holder;
         }
 
         // If the code reaches here, this box holds the point, and none of its
-        // child boxes do.
+        // child boxes do. Push the terminator and return.
         path.push(-1);
         return this;
     }
@@ -343,7 +239,6 @@ export default class ZoomBox {
         );
     }
 
-
     // If a child of this box should now be the new root box, then set it up and
     // return the new root box. Otherwise return null.
     child_root(limits) {
@@ -353,15 +248,14 @@ export default class ZoomBox {
         }
 
         // If the code reaches this point then there is a new root box. This box
-        // is about to be derendered. The new root is a child of this box and
-        // would also get derendered, so detach it here.
+        // is about to be erased. The new root is a child of this box and would
+        // also get erased, so save it here and replace it in the child box
+        // array with a dummy.
         const trimmedRoot = this.childBoxes[rootIndex];
-
-        // Put a dummy into the child box array.
         this.childBoxes[rootIndex] = {erase:() => {
             return;
         }};
-        //
+
         // Later, the user might backspace and this box would need to be
         // inserted back, as a parent of the new root. Set a reference and some
         // values into the new root to make that possible.
@@ -377,20 +271,11 @@ export default class ZoomBox {
             return -1;
         }
 
-        // If there is exactly one non-null child box, it could be the trimmed
-        // root. A child box will be null if it wasn't ever rendered, or if it
-        // went off limits and was derendered.
-
-
-
+        // If there is exactly one child box with defined dimensions, it could
+        // be the trimmed root. A child box will have undefined dimensions if it
+        // wasn't ever rendered, or if it went off limits and was erased.
         let candidate;
         for(let index = this.childBoxes.length - 1; index >= 0; index--) {
-            // if (!this.childBoxes[index].spawned) {
-            //     continue;
-            // }
-            // if (this.childBoxes[index].childBoxes === undefined) {
-            //     continue;
-            // }
             if (this.childBoxes[index].dimension_undefined()) {
                 continue;
             }
@@ -399,16 +284,15 @@ export default class ZoomBox {
                 candidate = index;
             }
             else {
-                // Second spawned child box; don't trim.
+                // If the code reaches this point then two candidates have been
+                // found. The condition for trimming is that there is exactly
+                // one candidate, so getting here means we can't trim.
                 return -1;
             }
         }
         
         if (candidate === undefined) {
-            // Zero non-null child boxes; can't trim.
-
-
-
+            // Zero child boxes with defined dimensions; can't trim.
             return -1;
         }
 

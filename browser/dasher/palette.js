@@ -1,45 +1,6 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
-import BoxSpecification from "./box_specification.js";
-
-class Blank {
-    constructor(childSpecifications, palette, parentBoxSpecification) {
-        this._childSpecifications = childSpecifications;
-        this._palette = palette;
-    }
-
-
-    set_weight(codePoint, weight) {
-        const path = self._palette.indexMap.get(codePoint);
-        // Some extra code could be needed to support code points that are in
-        // the prediction, but aren't in the palette. Specifically:
-        // -   Track the last index that is in a childSpecification but doesn't
-        //     have a group.
-        // -   Get the ordinal out of a childSpecification.
-        //
-        // For now, just put a default cssClass on them.
-        let target;
-        if (path === undefined) {
-            const template = new Template(
-                codePoint, null, palette.display_text(codePoint), "capital");
-            const specification = new BoxSpecification(template, );
-            specification.ordinal = this._childSpecifications[0].ordinal;
-            this._childSpecifications.push(specification);
-            target = specification;
-        }
-        else {
-            let target = this._childSpecifications[path[0]];
-            let index = 1;
-            for(const index of path) {
-                target = target.childSpecifications[index];
-            }
-            target.weight = weight;
-        }
-    }
-
-}
-
 const baseGroupDefinitions = [
     {
         "name": null,
@@ -55,7 +16,7 @@ const baseGroupDefinitions = [
     }, {
         "name": "punctuation", "texts": [
             ",", ".", "&", "!", "?", "+", "$",
-            // Next line is: cents symbol, degrees symbol.
+            // Next values are: cents symbol, degrees symbol, pound sign.
             String.fromCodePoint(162), String.fromCodePoint(176),
             String.fromCodePoint(163),
 
@@ -69,12 +30,14 @@ const baseSequenceStubCSS = "sequence";
 
 // TOTH:
 // https://ux.stackexchange.com/questions/91255/how-can-i-best-display-a-blank-space-character
+//
+// Some characters aren't displayed in the zooming user interface, for example
+// whitespace. This array is used to build a map of those characters and their
+// displayed alternates.
 const baseDisplayTextDefinitions = [
-    {leftText:" ", rightCodePoint:0x23b5}, // Space mapped to under-bracket.
-    {leftText:"\n", rightCodePoint:0xb6}   // Newline mapped to pilcrow.
+    {leftText:" ",  rightCodePoint:0x23b5}, // Space mapped to under-bracket.
+    {leftText:"\n", rightCodePoint:0xb6}    // Newline mapped to pilcrow.
 ];
-// Palette.displayTextLeft = Palette.displayTextMap.map(
-//     pair => pair[0].codePointAt(0));
 
 class Template {
     constructor(codePoint, displayText, cssClass, childTemplates, palette) {
@@ -84,11 +47,13 @@ class Template {
         this.childTemplates = childTemplates;
         this.palette = palette;
 
-        this._weight = codePoint === null ? null /*childTemplates.length*/ : 1;
+        // Default weight for any character is one. Groups don't have weights
+        // though. The controller generates their weights by summing their
+        // predicted child box weights.
+        this._weight = codePoint === null ? null : 1;
     }
 
     get weight() {return this._weight;}
-    // get isGroup() {return this._isGroup;}
 }
 
 export default class Palette {
@@ -101,12 +66,6 @@ export default class Palette {
     }
 
     build() {
-        // Create an object for easy mapping from group name to group object.
-        // this.characterGroupMap = {};
-        // Palette.characterGroups.forEach(group => {
-        //     Palette.characterGroupMap[group.name] = group;
-        // });
-
         // Fill in basic attributes for groups: texts and codePoints.
         this._groups = this.groupDefinitions.map(definition => {
             const group = {
@@ -135,40 +94,36 @@ export default class Palette {
             return group;
         });
 
+        // Fill in the display text map code points.
         this.displayTextDefinitions.forEach(({leftText, rightCodePoint}) => {
             this._mapPointToDisplayPoint.set(
                 leftText.codePointAt(0), rightCodePoint);
         });
 
-        // Supports only a one or two level group hierarchy.
+        // Create the Palette hierarchy. Supports only a one or two level group
+        // hierarchy in this version.
         this._groups.forEach(group => {
             const childTemplates = group.codePoints.map(codePoint => {
-                // Create specification for the code point.
-                // const specification = new BoxSpecification(codePoint, null);
                 return new Template(
                     codePoint, this.display_text(codePoint), null,
                     this._rootTemplate.childTemplates, this);
-                // specification.displayText = this.display_text(codePoint);
-                // return specification;
             });
 
             if (group.name === null) {
+                // Group isn't in the hierarchy, so flatten it.
                 this._rootTemplate.childTemplates.push(...childTemplates);
             }
             else {
+                // Add a template for the hierarchy.
                 this._rootTemplate.childTemplates.push(new Template(
                     null, null, group.name, childTemplates, this));
-                // const specification = new BoxSpecification(
-                //     null, childTemplates);
-                // specification.cssClass = group.name;
-
-                // // Assume each child has a weight of 1, in the template.
-                // specification.weight = childSpecifications.length;
-                // this._templates.push(specification);
             }
         });
-        console.log(this._rootTemplate);
+        // console.log(this._rootTemplate);
 
+        // Generate the index map. It maps from a code point to the sequence of
+        // index accesses that will reach the position of that code in the
+        // palette hierarchy.
         this._rootTemplate.childTemplates.forEach((template, index) => {
             // console.log(index, template);
             if (template.codePoint === null) {
@@ -183,77 +138,34 @@ export default class Palette {
             }
         });
         console.log(this._indexMap);
+
         return this;
     }
 
-    // Getter to be overridden in subclasses.
+    // Getter that could be overridden in subclasses.
     get sequenceStubCSS() {return baseSequenceStubCSS;}
 
     // Getter to be overridden in subclasses.
     get groupDefinitions() {return baseGroupDefinitions;}
 
-    // Getter to be overridden in subclasses.
+    // Getter that could be overridden in subclasses.
     get displayTextDefinitions() {return baseDisplayTextDefinitions;}
 
     get rootTemplate() {return this._rootTemplate;}
     get indexMap() {return this._indexMap;}
 
+    // Get a display character from the map; used for whitespace.
     display_text(codePoint) {
         const mappedPoint = this._mapPointToDisplayPoint.get(codePoint);
         return String.fromCodePoint(
             mappedPoint === undefined ? codePoint : mappedPoint);
     }
 
+    // Generate a CSS class name from an ordinal and index value.
     sequence_CSS(ordinal, index) {
         return [
             this.sequenceStubCSS, (ordinal % 2).toFixed(), (index % 2).toFixed()
         ].join("-");
     }
 
-    /*
-    get_blank(boxSpecification) {
-        // ToDo: Change so that it returns a clone of something already
-        // allocated in the constructor. But set the things that need to be set:
-        // -   ordinal, and therefore CSS class.
-        // -   message code points.
-        // -   ?factory
-
-        const childSpecifications = this._templates.map((template, index) => {
-            const specification = new BoxSpecification(
-                template, boxSpecification);
-            //     boxSpecification.messageCodePoints,
-            //     boxSpecification.ordinal);
-            if (template.codePoint !== null) {
-                specification.cssClass = this.sequence_CSS(
-                    boxSpecification.ordinal, index);
-                // specification.messageCodePoints.push(template.codePoint);
-                // specification.ordinal += 1;
-            }
-
-            return specification;
-        })
-
-        return new Blank(childSpecifications, this);
-    }
-
-    template() {
-        const returning = [];
-        for (const group of Palette.characterGroups) {
-            const template = {
-                "cssClass": group.name, "childSpecifications": []
-            };
-            returning.push(template);
-            group.codePoints.forEach(
-                codePoint => template.childSpecifications.push({
-                    "codePoint": codePoint
-                }));
-        }
-        return returning;
-
-        // could optimise by making a map of code points to groups, to speed up
-        // the weight population later. Also, the childspecifications and
-        // returning arrays could be shallow copies of a pre-gen.
-
-    }
-    */
 }

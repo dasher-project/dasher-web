@@ -5,18 +5,9 @@ export default class ControllerPointer {
     constructor(pointer, predictor) {
         this._pointer = pointer;
         this._predictor = predictor;
-        // this._palette = palette;
 
         this._frozen = null;
         this._frozenTarget = null;
-
-        // this._rootSpecification = {
-        //     "colour": null, "cssClass": this._palette.sequenceCSS(0, 0),
-        //     "message":[], "factory":this, "factoryData": {
-        //         "predictorData": null, "childSpecifications": null,
-        //         "ordinal": 0
-        //     }
-        // };
     }
 
     get predictor() {return this._predictor;}
@@ -30,145 +21,7 @@ export default class ControllerPointer {
         this._frozen = frozen;
     }
 
-    // get rootSpecification() {return this._rootSpecification;}
-
     get going() {return this._pointer.going;}
-
-    /*
-    async specify_child_boxes(zoomBox) {
-
-        // If the box isn't a group, get a new template from the palette.
-        // Create a box specification for: each plain character, and each group.
-        // If the box is a group, it already has a list of specifications.
-        if (zoomBox.factoryData.childSpecifications !== null) {
-            return zoomBox.factoryData.childSpecifications;
-        }
-
-        const ordinal = zoomBox.factoryData.ordinal + 1;
-        const prediction = await this.predictor.get_character_weights(
-            zoomBox.messageCodePoints,
-            zoomBox.message,
-            zoomBox.factoryData.predictorData
-        );
-        const template = palette.template();
-
-        // Apply predicted weights to the template, and set other ZoomBox
-        // specification parameters.
-        template.forEach(group => group.childSpecifications.forEach(
-            (specification, index) => {
-                specification.cssClass = palette.sequenceCSS(ordinal, index);
-                const codePoint = specification.codePoint;
-                specification.weight = (
-                    prediction.weights.has(codePoint) ?
-                    prediction.weights.get(codePoint) :
-                    prediction.defaultWeight
-                );
-                specification.message = zoomBox.messageCodePoints.slice();
-                if (codePoint !== null) {
-                    specification.message.push(codePoint);
-                }
-                specification.text = this._palette.display_text(codePoint);
-                specification.factory = this;
-                specification.factoryData = {
-                    "ordinal": ordinal, "childSpecifications": null,
-                    "predictorData": (
-                        prediction.contexts.has(codePoint) ?
-                        prediction.contexts.get(codePoint) :
-                        zoomBox.factoryData.predictorData
-                    )
-                };
-            }
-        ));
-
-        const returning = [];
-        template.forEach(group => {
-            if (group.cssClass === null) {
-                returning.push(...group.childSpecifications);
-            }
-            else {
-                group.weight = group.childSpecifications.reduce(
-                    (
-                        accumulator, specification
-                    ) => accumulator + specification.weight, 0
-                );
-                group.factory = this;
-                group.factoryData = {
-                    "predictorData": zoomBox.factoryData.predictorData,
-                    "childSpecifications": group.childSpecifications
-                };
-                delete group.childSpecifications;
-                returning.push(group);
-            }
-        });
-        return returning;
-
-
-
-
-        // Get a default array of specifications, or just characters, from the
-        // Palette. Apply the get_character_weights to it, unless we already
-        // have them because of a group.
-        // const weights = (
-        //     zoomBox.factoryData.characterWeights === null ?
-        //     await this.predictor.get_character_weights(
-        //         zoomBox.messageCodePoints,
-        //         zoomBox.message,
-        //         zoomBox.factoryData.predictorData
-        //     ) :
-        //     zoomBox.factoryData.characterWeights
-        // );
-
-        // Each character group can have weights.
-
-        // const predictions = await this.predictor(
-        //     zoomBox.messageCodePoints, zoomBox.message, zoomBox.prediction
-        // );
-        // return predictions.map((prediction, index) => {
-        //     const codePoint = prediction.codePoint;
-
-        //     const message = zoomBox.messageCodePoints.slice();
-        //     if (codePoint !== null) {
-        //         message.push(codePoint);
-        //     }
-
-        //     let colour = ControllerPointer.unsetColour;
-        //     let cssClass = null;
-        //     if (prediction.group === null) {
-        //         prediction.ordinal = (
-        //             zoomBox.prediction === null ? 0 :
-        //             zoomBox.prediction.ordinal + 1
-        //         );
-        //         colour = null;
-
-        //         // Get it from the palette.
-        //         palette.sequenceCSS(prediction.ordinal, index);
-        //     }
-        //     else {
-        //         prediction.ordinal = 0;
-        //         if (prediction.group in ControllerPointer.groupColours) {
-        //             colour = ControllerPointer.groupColours[
-        //                 prediction.group];
-        //         }
-        //     }
-
-        //     return {
-
-        //         // Change `prediction` to factoryData.
-        //         "prediction": prediction,
-        //         "cssClass": (
-        //             cssClass === null ?
-        //             (colour === null ? prediction.group : undefined) :
-        //             cssClass
-        //         ),
-        //         "colour": colour,
-        //         "message": message,
-        //         "text": this._palette.display_text(codePoint),
-        //         "weight": prediction.weight,
-        //         "factory": this
-        //     };
-        // });
-    }
-    */
 
     async populate(rootBox, limits) {
         // Comment out one or other of the following.
@@ -186,15 +39,6 @@ export default class ControllerPointer {
 
         this._configure_box(rootBox);
         this._configure_child_boxes(rootBox);
-        // rootBox.instantiate_child_boxes(this._configure_box.bind(this));
-        // this._configure_box(rootBox, true);
-        // rootBox.instantiate_child_boxes();
-        // rootBox.childBoxes.forEach(childBox => {
-        //     this._configure_box(childBox);
-        //     if (childBox.template.codePoint === null) {
-
-        //     }
-        // });
 
         if (rootBox.factoryData.totalWeight === undefined) {
             await this._predict_weights(rootBox, limits);
@@ -202,16 +46,12 @@ export default class ControllerPointer {
         else {
             this._arrange_children(rootBox, limits);
         }
-        
-        // this._spawn(rootBox, limits);
-        // .then(this.arrange_children.bind(this, rootBox, limits));
-        // this.arrange_children(rootBox, limits);
     }
 
     _configure_child_boxes(parentBox) {
         parentBox.instantiate_child_boxes(this._configure_box.bind(this));
     }
-    _configure_box(parentBox) { //, configureChildBoxes) {
+    _configure_box(parentBox) {
         if (parentBox.factoryData === undefined) {
             parentBox.factoryData = {
                 "weight": parentBox.template.weight,
@@ -219,38 +59,7 @@ export default class ControllerPointer {
                 "gettingWeights": false
             };
         }
-
-        /*
-        if (configureChildBoxes || parentBox.template.codePoint === null) {
-            if (parentBox.instantiate_child_boxes()) {
-                parentBox.childBoxes.forEach(
-                    childBox => this._configure_box(childBox, false));
-            }
-        }
-        */
     }
-
-    /*
-    _spawn(rootBox, limits) { //, forcePrediction=false) {
-        this._configure_box(rootBox);
-        rootBox.instantiate_child_boxes();
-        rootBox.childBoxes.forEach(childBox => this._configure_box(childBox));
-
-        // if (rootBox.factoryData.totalWeight === undefined) {
-        //     if (forcePrediction || rootBox.template.cssClass === null) {
-        //         // console.log('spawn', `"${rootBox.message}"`)
-        //         this.predictor(
-        //             rootBox.messageCodePoints, rootBox.message,
-        //             rootBox.predictorData, rootBox.template.palette,
-        //             this._set_weight.bind(this, rootBox)
-        //         );
-        //     }
-        //     this._set_total_weight(rootBox);
-        // }
-
-        this.arrange_children(rootBox, limits);
-    }
-    */
 
     async _predict_weights(parentBox, limits) {
         if (parentBox.factoryData.gettingWeights) {
@@ -267,6 +76,10 @@ export default class ControllerPointer {
             );
         }
 
+        // Weights of all child boxes have been set. Now calculate the total
+        // child box weight.  
+        // Child boxes that are groups don't have their own weights. Instead,
+        // they get the sum of their child box weights.
         parentBox.childBoxes.forEach(child => {
             if (
                 child.template.weight === null &&
@@ -276,10 +89,6 @@ export default class ControllerPointer {
             }
         });
         this._calculate_total_weight(parentBox);
-
-        // parentBox.factoryData.totalWeight = parentBox.childBoxes.reduce(
-        //     (accumulator, child) =>
-        //     accumulator + child.factoryData.weight, 0);
 
         parentBox.factoryData.gettingWeights = false;
 
@@ -307,31 +116,11 @@ export default class ControllerPointer {
             ].join(""));
         }
         let target = parentBox;
-        // const stack = [];
         for(const index of path) {
-            // this._configure_box(target);
-            // target.instantiate_child_boxes();
-            // target.childBoxes.forEach(
-            //     childBox => this._configure_box(childBox));
-
             target = target.childBoxes[index];
-            // stack.push(target);
         }
-        // if (target.factoryData === undefined) {
-        //     target.factoryData = { "weight": target.template.weight };
-        // }
-        // const delta = weight - target.factoryData.weight;
-        // console.log('_set_weight', target.message, target.factoryData, weight);
         target.factoryData.weight = weight;
         target.factoryData.predictorData = predictorData;
-        // for(const box of stack) {
-        //     // if (box.factoryData === undefined) {
-        //     //     box.factoryData = { "weight": box.template.weight };
-        //     // }
-        //     box.factoryData.weight += delta;
-        // }
-        // console.log(
-        //     '_set_weight', stack.map(box => box.message), delta, path);
     }
 
     // Arrange some or all child boxes. There are three procedures, selected by
@@ -348,13 +137,11 @@ export default class ControllerPointer {
     //     index. Assume that the initialiser has its bottom set.
     //
     // Returns the bottom or top value of the last child arranged.
+    //
+    // This method is where child boxes get their dimension set, including child
+    // boxes that have only just become big enough to render. This method is
+    // also where child boxes get erased and their grandchild boxes deleted.
     _arrange_children(parentBox, limits, up, initialiser) {
-        // if (parentBox.factoryData.totalWeight === undefined) {
-        //     // Next function is async but this code doesn't wait for it to
-        //     // finish.
-        //     this._predict_weights(parentBox);
-        //     return undefined;
-        // }
         const unitHeight = parentBox.height / parentBox.factoryData.totalWeight;
 
         let childTop;
@@ -393,17 +180,9 @@ export default class ControllerPointer {
                 childBottom > limits.top && childTop < limits.bottom;
 
             if (shouldSpawn) {
-                // if (this.childBoxes[index] === null) {
-                //     this.childBoxes[index] = new ZoomBox(
-                //         this.childSpecifications[index]);
-                // }
-                // const zoomBox = this.childBoxes[index];
-        
                 const childLeft = limits.solve_left(childHeight);
                 const childWidth = limits.width - childLeft;
    
-                // const dimensioned = !childBox.dimension_undefined();
-
                 childBox.set_dimensions(
                     childLeft, childWidth,
                     childBottom - (childHeight / 2), childHeight);
@@ -417,10 +196,6 @@ export default class ControllerPointer {
                 else {
                     this._arrange_children(childBox, limits);
                 }
-        
-                // this._arrange_children(childBox, limits);
-                // this._spawn(childBox, limits);
-                // .then(this.arrange_children.bind(this, childBox, limits));
             }
             else {
                 childBox.erase();
@@ -438,13 +213,6 @@ export default class ControllerPointer {
                         childBox.factoryData.totalWeight = undefined;    
                     }
                 }
-                // if (this.childBoxes[index] !== null) {
-                //     // console.log(
-                //     //     `Arrange spawn "${this.childBoxes[index].message}".`
-                //     // );
-                //     this.childBoxes[index].erase();
-                //     this.childBoxes[index] = null;
-                // }
             }
 
             if (up) {
@@ -609,25 +377,20 @@ export default class ControllerPointer {
         }
 
         hereBox.height = height;
-        //
+
         // Arrange the child boxes, in two parts. First, push up everything
         // above the target. Second, push down everything below the target.
         const top = this._arrange_children(hereBox, limits, true, index);
         if (top === undefined) {
             throw new Error("Top undefined.");
         }
+        this._arrange_children(hereBox, limits, false, index);
 
+        // Finalise the adjustment to this box.
+        hereBox.left = limits.solve_left(height);
+        hereBox.width = limits.width - hereBox.left;
+        hereBox.middle = top + (height / 2);
 
-
-        // this.arrange_children(hereBox, limits, true, index)
-        // .then(top => {
-            this._arrange_children(hereBox, limits, false, index);
-            //
-            // Finalise the adjustment to this box.
-            hereBox.left = limits.solve_left(height);
-            hereBox.width = limits.width - hereBox.left;
-            hereBox.middle = top + (height / 2);
-        // });
         return true;
     }
 
@@ -658,53 +421,48 @@ export default class ControllerPointer {
         hereBox.height = solvedHeight;
         hereBox.middle += moveY;
         this._arrange_children(hereBox, limits);
-        // this._spawn(hereBox, limits);
-        // .then(this.arrange_children.bind(this, hereBox, limits));
         return true;
     }
 
     build(parentBox, childBox, limits) {
         const index = childBox.trimmedIndex;
+
+        // Code here is meant to arrange the parent in such a way that the
+        // child height doesn't change. Check that by storing the height here.
         const childHeightBefore = Math.round(childBox.height * 100);
 
-        // parentBox.instantiate_child_boxes();
-        // return this._spawn(parentBox).then(() => {
-        //     parentBox.childBoxes[index] = childBox;
-        //     this._set_total_weight(parentBox);
+        // Calculate the parent height from the height of the child, via the
+        // parent unitHeight. Then solve the left position of the parent
+        // from its height. Set width as usual.
+        const unitHeight = childBox.height / childBox.factoryData.weight;
+        const height = unitHeight * parentBox.factoryData.totalWeight;
+        const left = limits.solve_left(height);
+        const width = limits.width - left;
+        parentBox.set_dimensions(left, width, undefined, height);
 
-            // Next segment of code arranges the parent in such a way that the
-            // child doesn't move.
-            //
-            // Calculate the parent height from the height of the child, via the
-            // parent unitHeight. Then solve the left position of the parent
-            // from its height. Set width as usual.
-            const unitHeight = childBox.height / childBox.factoryData.weight;
-            const height = unitHeight * parentBox.factoryData.totalWeight;
-            const left = limits.solve_left(height);
-            const width = limits.width - left;
-            parentBox.set_dimensions(left, width, undefined, height);
-            //
-            // Now calculate the top of the parent by adding the tops of all the
-            // child boxes above this one. They will all be null but won't have
-            // zero weight. Fortunately, the same calculation is required by
-            // another method, so call it here.
-            const top = this._arrange_children(parentBox, limits, true, index);
-            if (top === undefined) {
-                throw new Error("Top undefined.");
-            }
-            parentBox.middle = top + (height / 2);
-            //
-            // Reset the parent insertion parameters.
-            childBox.trimmedParent = null;
-            childBox.trimmedIndex = undefined;
+        // Now calculate the top of the parent by adding the tops of all the
+        // child boxes above this one. They will all have undefined dimensions
+        // but won't have zero weight. Fortunately, the same calculation is
+        // required by another method, so call it here.
+        const top = this._arrange_children(parentBox, limits, true, index);
+        if (top === undefined) {
+            throw new Error("Top undefined.");
+        }
+        parentBox.middle = top + (height / 2);
 
-            this._arrange_children(parentBox, limits);
+        // Clear the parent insertion parameters.
+        childBox.trimmedParent = null;
+        childBox.trimmedIndex = undefined;
 
-            const childHeightAfter = Math.round(childBox.height * 100);
-            if (childHeightAfter !== childHeightBefore) {
-                console.log(
-                    'build check failed', childHeightBefore, childHeightAfter);
-            }
+        this._arrange_children(parentBox, limits);
+
+        // Check the child height wasn't changed. This should maybe be an
+        // assertion except that asserting in production would be awkward.
+        const childHeightAfter = Math.round(childBox.height * 100);
+        if (childHeightAfter !== childHeightBefore) {
+            console.log(
+                'build check failed', childHeightBefore, childHeightAfter);
+        }
     }
 
 }
