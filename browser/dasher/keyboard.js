@@ -9,7 +9,7 @@ import PageBuilder from "./pagebuilder.js";
 
 import UserInterface from "./userinterface.js"
 import PredictorCompletions from "./predictor_completions.js"
-import Predictor from "./predictor.js";
+import predictor_basic from './predictor.js';
 
 class Keyboard {
     constructor(bridge) {
@@ -80,12 +80,14 @@ class Keyboard {
                 // In this version, the commands are ignored. Just the presence
                 // of the list in the response indicates that
                 // PredictorCompletions can be used.
+                const predictorCompletions = new PredictorCompletions(
+                    this._send.bind(this));
                 ui.predictors = [{
                     "label": "Auto-complete",
-                    "item": new PredictorCompletions(this._send.bind(this))
+                    "item": predictorCompletions.get_character_weights.bind(
+                        predictorCompletions)
                 }, {
-                    "label": "No prediction",
-                    "item": new Predictor()
+                    "label": "None", "item": predictor_basic
                 }];
             }
 

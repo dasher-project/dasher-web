@@ -7,9 +7,11 @@
 // Import the Captive Web View simple page builder.
 import PageBuilder from "./pagebuilder.js";
 
-import Predictor from "./predictor.js";
+import predictor_dummy from './predictor_dummy.js'
+import predictor_basic from './predictor.js';
+import predictor_test from './predictor_test.js';
 import PredictorCompletions from "./predictor_completions.js"
-import PredictorTest from './predictor_test.js';
+
 import UserInterface from "./userinterface.js"
 
 class CaptiveDasher {
@@ -53,14 +55,18 @@ class CaptiveDasher {
                 // In this version, the commands are ignored. Just the presence
                 // of the list in the response indicates that
                 // PredictorCompletions can be used.
+                const predictorCompletions = new PredictorCompletions(
+                    this._send.bind(this));
                 ui.predictors = [{
                     "label": "Auto-complete",
-                    "item": new PredictorCompletions(this._send.bind(this))
+                    "item": predictorCompletions.get_character_weights.bind(
+                        predictorCompletions)
                 }, {
-                    "label": "No prediction",
-                    "item": new Predictor()
+                    "label": "Basic", "item": predictor_basic
                 }, {
-                    "label": "Random", "item": new PredictorTest()
+                    "label": "None", "item": predictor_dummy
+                }, {
+                    "label": "Random", "item": predictor_test
                 }];
             }
             ui.load(null, footerID);
