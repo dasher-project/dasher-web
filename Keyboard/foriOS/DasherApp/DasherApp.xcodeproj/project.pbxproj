@@ -302,7 +302,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K45HHA96ND;
-				INFOPLIST_FILE = "$(SRCROOT)/Extension/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -322,7 +322,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K45HHA96ND;
-				INFOPLIST_FILE = "$(SRCROOT)/Extension/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -461,7 +461,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
-				INFOPLIST_FILE = "$(SRCROOT)/ContainingApplication/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -481,7 +481,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
-				INFOPLIST_FILE = "$(SRCROOT)/ContainingApplication/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
