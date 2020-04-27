@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040898792455F87F00EBC1D9 /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
-		0408987A2455F87F00EBC1D9 /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0450AE522455FD6C0002CF00 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
 		0457D8FC2455F6A700B883E7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8F52455F6A700B883E7 /* MainViewController.swift */; };
 		0457D8FD2455F6A700B883E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0457D8F62455F6A700B883E7 /* Assets.xcassets */; };
@@ -35,17 +33,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0408987B2455F87F00EBC1D9 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0408987A2455F87F00EBC1D9 /* CaptiveWebView.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		049D59C023BB5DBE00C0171B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -91,7 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				040898792455F87F00EBC1D9 /* CaptiveWebView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,7 +161,6 @@
 				0400FFEA23BB5788009AF4A0 /* Sources */,
 				0400FFEB23BB5788009AF4A0 /* Frameworks */,
 				0400FFEC23BB5788009AF4A0 /* Resources */,
-				0408987B2455F87F00EBC1D9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
