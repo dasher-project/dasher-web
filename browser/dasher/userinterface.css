@@ -1,0 +1,177 @@
+/*
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.
+MIT licensed, see https://opensource.org/licenses/MIT
+*/
+
+html {font-family: sans-serif;}
+p.small-print {font-size: 0.7rem;}
+p.small-print a {text-decoration: none;}
+
+select {font-size: large;}
+#user-interface.keyboard select {font-size: small;}
+select + label {margin-left: 0.5rem;}
+
+h1 {margin-top: 0.5rem; margin-bottom: 0.5rem;}
+button { margin: 0.25rem; }
+
+
+/*
+The user interface is laid out as follows, in a browser.
+
+-   There's an overall holder element, identified by id:user-interface.
+-   There are expected to be three child nodes within the holder.
+-   The child nodes are laid out in a column.
+-   The first and third elements are each as tall as their content requires.
+-   The second element occupies all the remaining vertical space.
+*/
+#user-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#user-interface > *:nth-child(1) {
+    /* background-color: aquamarine; */
+    flex: none;
+}
+#user-interface > *:nth-child(2) {
+    /* background-color: cornflowerblue; */
+    flex: auto;
+}
+#user-interface > *:nth-child(3) {
+    /* background-color: aqua; */
+    flex: none;
+}
+
+.header {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+}
+
+/*
+#user-interface.keyboard .header {
+    background-color: sandybrown;
+}
+*/
+#user-interface.keyboard .header > *:nth-child(2) {
+    /* background-color: palegoldenrod; */
+    flex: auto;
+}
+
+.header__selectors {
+    flex: none;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+}
+@media (orientation: portrait) {
+    /* .header { background-color: peachpuff; } */
+    .header__selectors { grid-template-columns: repeat(2, 1fr); }
+}
+
+.header__selectors > div > .cwv-button {
+    /* background-color: plum; */
+    width: 90%;
+}
+.header__selector_selected {
+    outline: 1px var(--accent-colour) solid !important;
+    outline-offset: 1px;
+}
+
+input[type="color"] + label
+{
+    margin-left: 0.25rem;
+}
+
+.header__panel {
+    /* background-color: rebeccapurple; */
+    display: none;
+}
+.header__panel_selected {
+    /* background-color: wheat; */
+    display: block;
+    flex: auto;
+}
+
+.header__panel_selected.header__panel-colour div {
+    padding: 0.25em;
+    display: inline-block;
+}
+
+#message-holder label {display: block; flex: none;}
+#user-interface.keyboard #message-holder label {display: none;}
+
+svg {
+    border: 1px black solid;
+}
+
+:root {
+    /* This value also appears in the index.js file, in the _transitionMillis
+     * property, and it's good if they're the same.
+     */
+    --transition: 0.4s;
+}
+
+svg rect {
+    transition:
+        y var(--transition) linear,
+        height var(--transition) linear,
+        fill var(--transition) linear,
+        stroke-width var(--transition) linear,
+        stroke var(--transition) linear;
+    /* stroke-dasharray: 3; */
+}
+
+svg text {
+    /* Making text.x transition doesn't work. For an explanation and solution
+     * see: https://stackoverflow.com/a/53452940
+     * transition: x 0.2s linear;
+     *
+     * text.font-size will make a transition no problem.
+     */
+    transition: font-size var(--transition) linear;
+}
+svg g {
+    transition: var(--transition) linear;
+}
+svg text#resume-message-text {
+    font-size: x-large;
+    transition: fill-opacity var(--transition) linear;
+}
+svg rect#resume-message-background {
+    fill: var(--field-colour);
+    /* rx: 15px; Seems not to work in Safari. */
+    transition: fill-opacity var(--transition) linear;
+}
+
+body {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+._hidden {
+    display: none;
+}
+
+/* TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/index.css#L22
+ */
+input[type="number"] {
+    width: 3em;
+    text-align: right;
+    margin-left: 1em;
+}
+
+/*
+If the user clicks on an input control that is inside a custom keyboard, and the
+input itself requires a keyboard to set values, that seems to be a catastrophe.
+
+Make sure that can't happen by not showing any such controls.
+*/
+#user-interface.keyboard input[type="number"] {
+    display: none;
+}

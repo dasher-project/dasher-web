@@ -7,15 +7,42 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
     To run the browser proof of concept, go here:
     [https://dasher-project.github.io/redash/browser/](https://dasher-project.github.io/redash/browser/)
 
--   Keyboard:
+-   Keyboard for iOS.
 
     There is an Xcode project for a functional custom keyboard for iOS in the
     [Keyboard](Keyboard) sub-directory.
 
+-   Keyboard for Android.
+
+    There is a Android Studio project for a functional custom keyboard for
+    Android in the [Keyboard](Keyboard) sub-directory.
+
 Backlog
 =======
+-   Fix the childIndex that goes into the zoom box CSS class to be 1 sometimes.
+    At the moment, it is always zero for the first child box. It should be 1 if
+    the preceding parent box didn't have an even number of child boxes.
+-   Add a settings presentation option that works on small screens. In the
+    current code, the six buttons push out the actual controls on a phone
+    screen. Maybe just show one button by default that cycles through, and have
+    an option to expand all the settings panels.
+-   Maybe arrange_children on resize. Also there are some cases in which the
+    white rectangle doesn't extend to the edge of the zooming area.
+-   Improve the Viewer textWidth to be based on a bounding box from the font
+    metric. Could be done by loading one of each character when the UI is
+    loading, and storing the bounding box for each.
+-   Decommission textLeft, which is always zero at the moment.
+-   Improve the zooming based on the PhD material, aka S parameter.
+    -   As part of the previous item, or standalone, make the zoom rate
+        non-linear.
+    -   Also make the zoom faster if the pointer is to the left of the origin, 
+        i.e. zooming out.
+-   Change the drawing of the X axis so it doesn't go all the way across the
+    area. Original Dasher has a short horizontal line.
+-   Maybe shuffle letters left or right in the tail.
+-   Add tuning controls on a tab maybe. All parameters could be set there.
+    -   Store what is set in the standalone app to be used in the keyboard too.
 -   See about fixing the text alignment on Firefox.
--   Change box colours to be set by the CSS maybe.
 -   Change terminology of "origin holder" to maybe "delta target".
 -   More use of built-in .append and .remove in piece.js module. See:
 
