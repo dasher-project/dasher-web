@@ -26,6 +26,8 @@ import Speech from './speech.js';
 
 import PageBuilder from "../pagebuilder.js";
 
+import ControlPanel from "./controlpanel.js";
+
 const messageLabelText = "Message:";
 
 export default class UserInterface {
@@ -52,7 +54,6 @@ export default class UserInterface {
 
 
         this._view = undefined;
-        this._panels = undefined;
         this._cssNode = document.createElement('style');
         document.head.append(this._cssNode);
 
@@ -75,6 +76,8 @@ export default class UserInterface {
         this._messageDisplay = null;
         this._divDiagnostic = null;
         this._controls = [];
+        this._controlPanel = new ControlPanel();
+        this._panels = this._controlPanel.load();
 
         this._svgRect = undefined;
         this._header = undefined;
@@ -159,10 +162,10 @@ export default class UserInterface {
         this._load_view();
         this._load_panels();
         if (this._loading !== null) {
-            this._panels.main.piece.add_child(this._loading);
+            this._panels.main.$.piece.add_child(this._loading);
         }
 
-        this._load_colours(this._panels.colour.piece);
+        this._load_colours(this._panels.colour.$.piece);
         this._load_predictors();
         
         this._load_controls();
@@ -192,33 +195,11 @@ export default class UserInterface {
 
     _load_panels() {
         const parentPiece = this._keyboardMode ? undefined : this._header;
-        this._panels = {};
-        const selectors = new Piece('div', parentPiece);
-        selectors.node.classList.add('header__selectors');
-        [
-            'main', 'colour', 'speed', 'speech', 'developer'
-        ].forEach(panelLabel => {
-            const piece = new Piece('div', parentPiece);
-            piece.node.classList.add(
-                'header__panel', `header__panel-${panelLabel}`);
-            this._panels[panelLabel] = {
-                "piece": piece,
-                "selector": this._load_button(
-                    panelLabel[0].toLocaleUpperCase() + panelLabel.slice(1),
-                    new Piece('div', selectors),
-                    this._select_panel.bind(this, panelLabel)
-                )
-            };
-        });
-        this._select_panel('main');
-    }
-    _select_panel(label) {
-        for(const [panelLabel, panel] of Object.entries(this._panels)) {
-            panel.piece.node.classList.toggle(
-                'header__panel_selected', panelLabel === label);
-            panel.selector.classList.toggle(
-                'header__selector_selected', panelLabel === label);
-        }
+
+        this._controlPanel.instantiate_panels(parentPiece);
+        console.log(this._controlPanel);
+
+        this._controlPanel.select_panel("main");
     }
     
     _load_colours(parentPiece) {
@@ -341,13 +322,13 @@ export default class UserInterface {
             return;
         }
         this._buttonPointer = this._load_button(
-            "Pointer", this._panels.developer.piece,
+            "Pointer", this._panels.developer.$.piece,
             () => this.clicked_pointer());
         this._buttonRandom = this._load_button(
-            "Go Random", this._panels.developer.piece,
+            "Go Random", this._panels.developer.$.piece,
             () => this.clicked_random());
         this._load_input(
-            this._panels.developer.piece,
+            this._panels.developer.$.piece,
             "checkbox", "show-diagnostic", "Show diagnostic",
             checked => {
                 this._limits.showDiagnostic = checked;
@@ -358,7 +339,7 @@ export default class UserInterface {
             }, false);
         
         this._load_input(
-            this._panels.developer.piece, "checkbox", "frozen", "Frozen",
+            this._panels.developer.$.piece, "checkbox", "frozen", "Frozen",
             checked => {
                 if (this._controllerPointer === undefined) {
                     return;
@@ -381,9 +362,9 @@ export default class UserInterface {
                 }
             }, false);
 
-        this._load_predictor_controls(this._panels.main.piece);
-        this._load_behaviours(this._panels.main.piece);
-        this._load_test_controls(this._panels.developer.piece);
+        this._load_predictor_controls(this._panels.main.$.piece);
+        this._load_behaviours(this._panels.main.$.piece);
+        this._load_test_controls(this._panels.developer.$.piece);
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -473,7 +454,7 @@ export default class UserInterface {
         if (this._speech === null) {
             this._speech = speech;
             this._speakCheckbox = this._load_input(
-                this._panels.speech.piece, "checkbox", "speak", "Speak on stop",
+                this._panels.speech.$.piece, "checkbox", "speak", "Speak on stop",
                 checked => {
                     if (checked && !this._speakOnStop) {
                         speech.speak("Speech is now active.");
@@ -481,7 +462,7 @@ export default class UserInterface {
                     this._speakOnStop = checked;
                 }, false);
             this._voiceSelect = new Piece(
-                this._panels.speech.piece.create('select'));
+                this._panels.speech.$.piece.create('select'));
             this._voiceSelect.node.addEventListener('input', () => {
                 if (this._speakOnStop) {
                     speech.speak(
@@ -581,18 +562,18 @@ export default class UserInterface {
             return;
         }
 
-        this._panels.speed.piece.create('span', {}, "Speed:");
+        this._panels.speed.$.piece.create('span', {}, "Speed:");
         this._speedLeftRightInput = this._load_input(
-            this._panels.speed.piece, "number", "multiplier-left-right", "Left-Right",
+            this._panels.speed.$.piece, "number", "multiplier-left-right", "Left-Right",
             value => this._pointer.multiplierLeftRight = value, "0.2");
         this._select_behaviour(0);
         this._load_input(
-            this._panels.speed.piece, "number", "multiplier-up-down", "Up-Down",
+            this._panels.speed.$.piece, "number", "multiplier-up-down", "Up-Down",
             value => this._pointer.multiplierUpDown = value, "0.2");
     }
 
     _load_diagnostic() {
-        this._divDiagnostic = new Piece('div', this._panels.developer.piece);
+        this._divDiagnostic = new Piece('div', this._panels.developer.$.piece);
         // Diagnostic area in which to display various numbers. This is an array
         // so that the values can be updated.
         this._diagnostic_div_display();
@@ -659,7 +640,7 @@ export default class UserInterface {
             this._loading.remove();
             const h1 = new Piece(
                 'h1', undefined, undefined, "Dasher Six beta");
-            this._panels.main.piece.add_child(h1, false);
+            this._panels.main.$.piece.add_child(h1, false);
         }
 
         // Previous lines could have changed the size of the svg so, after a
@@ -672,6 +653,9 @@ export default class UserInterface {
         // Activate intervals and controls.
         this._intervalRender = null;
         this._controls.forEach(control => control.removeAttribute('disabled'));
+        this._controlPanel.enable_controls();
+
+
     }
 
     _start_render(continuous) {
