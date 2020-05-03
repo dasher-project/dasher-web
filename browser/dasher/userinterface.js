@@ -54,8 +54,8 @@ export default class UserInterface {
 
 
         this._view = undefined;
-        this._cssNode = document.createElement('style');
-        document.head.append(this._cssNode);
+        // this._cssNode = document.createElement('style');
+        // document.head.append(this._cssNode);
 
         this._speedLeftRightInput = undefined;
 
@@ -165,7 +165,6 @@ export default class UserInterface {
             this._panels.main.$.piece.add_child(this._loading);
         }
 
-        this._load_colours(this._panels.colour.$.piece);
         this._load_predictors();
         
         this._load_controls();
@@ -196,96 +195,12 @@ export default class UserInterface {
     _load_panels() {
         const parentPiece = this._keyboardMode ? undefined : this._header;
 
-        this._controlPanel.instantiate_panels(parentPiece);
+        this._controlPanel.instantiate(parentPiece);
         console.log(this._controlPanel);
 
         this._controlPanel.select_panel("main");
     }
     
-    _load_colours(parentPiece) {
-        // See https://en.wikipedia.org/wiki/Web_colors
-        [
-            ['Capital', "#ffff00"],
-            ['Small', "#00BFFF"],
-            ['Numeral', "#f08080"],
-            ['Punctuation', "#32cd32"],
-            ['Contraction', "#fbb7f0"],
-            ['Space', "#d3d3d3"],
-            ['Root', "#c0c0c0"]
-        ].forEach(([label, value], index) => {
-            const name = label.toLowerCase();
-            this._load_input(
-                new Piece('div', parentPiece), 'color', name, `${label}:`,
-                this._make_colour_changer(name, value), value
-            );
-        });
-
-        const divSequence = new Piece('div', parentPiece);
-        let label = "Sequence";
-        const stub = label.toLowerCase();
-        label += ":";
-        [ ["#90ee90", "#98fb98"], ["#add8e6", "#87ceeb"] ].forEach(
-            (values, outerIndex) => values.forEach((value, innerIndex) => {
-                const name = [
-                    stub, (outerIndex % 2).toFixed(), (innerIndex % 2).toFixed()
-                ].join("-");
-                this._load_input(
-                    divSequence, 'color', name, label,
-                    this._make_colour_changer(name, value), value
-                );
-                label = null;
-        }));
-
-        const divBorder = new Piece('div', parentPiece);
-        const borderChanger = this._make_border_changer('zoom__rect');
-        this._load_input(
-            divBorder, 'color', 'borderColour', "Outline:",
-            borderChanger.changedColour, "#000000"
-        );
-        this._load_input(
-            divBorder, 'checkbox', 'borderOn', "Show",
-            borderChanger.changedOn, false
-        );
-    }
-    _make_colour_changer(name, initialValue) {
-        const sheet = this._cssNode.sheet;
-        const inserted = sheet.insertRule(
-            `rect.${name} {fill: ${initialValue};}`, sheet.cssRules.length);
-
-        return changed => {
-            sheet.deleteRule(inserted);
-            sheet.insertRule(`rect.${name} {fill: ${changed};}`, inserted);
-        };
-    }
-    _make_border_changer(name) {
-        const sheet = this._cssNode.sheet;
-
-        let nowOn = true;
-        let nowColour = "#000000";
-
-        const rule = () => [
-            'rect.', name, " {",
-            "stroke-width: ", nowOn ? "1px" : "0px", "; ",
-            "stroke: ", nowColour, ";}"
-        ].join("");
-
-        const inserted = sheet.insertRule(rule(), sheet.cssRules.length);
-
-        return {
-            "changedOn": changed => {
-                nowOn = changed;
-                sheet.deleteRule(inserted);
-                sheet.insertRule(rule(), inserted);
-            },
-            "changedColour": changed => {
-                nowColour = changed;
-                sheet.deleteRule(inserted);
-                sheet.insertRule(rule(), inserted);
-            }
-        };
-
-    }
-
     _load_predictors() {
         if (this.predictors === null || this.predictors.length <= 0) {
             this.predictors = [{
@@ -321,50 +236,40 @@ export default class UserInterface {
             this._load_predictor_controls(new Piece('div', this._header));
             return;
         }
-        this._buttonPointer = this._load_button(
-            "Pointer", this._panels.developer.$.piece,
-            () => this.clicked_pointer());
-        this._buttonRandom = this._load_button(
-            "Go Random", this._panels.developer.$.piece,
-            () => this.clicked_random());
-        this._load_input(
-            this._panels.developer.$.piece,
-            "checkbox", "show-diagnostic", "Show diagnostic",
-            checked => {
-                this._limits.showDiagnostic = checked;
-                this._diagnostic_div_display();
-                if (!checked) {
-                    this._messageLabel.firstChild.nodeValue = messageLabelText;
-                }
-            }, false);
-        
-        this._load_input(
-            this._panels.developer.$.piece, "checkbox", "frozen", "Frozen",
-            checked => {
-                if (this._controllerPointer === undefined) {
-                    return;
-                }
-                this._controllerPointer.frozen = (
-                    checked ? report => console.log("Frozen", report) : null);
-                if (checked) {
-                    const catcher = document.getElementById("catcher");
-                    this._frozenClickListener = () => {
-                        console.log('catchclick');
-                        this._controllerPointer.report_frozen(
-                            this.zoomBox, this._limits, false);
-                    };
-                    catcher.addEventListener(
-                        "click", this._frozenClickListener);
-                }
-                else {
-                    catcher.removeEventListener(
-                        "click", this._frozenClickListener);
-                }
-            }, false);
+        this._panels.developer.pointer.addListener(
+            this.clicked_pointer.bind(this));
+        this._panels.developer.random.addListener(
+            this.clicked_random.bind(this));
+        this._panels.developer.showDiagnostic.addListener(checked => {
+            this._limits.showDiagnostic = checked;
+            this._diagnostic_div_display();
+            if (!checked) {
+                this._messageLabel.firstChild.nodeValue = messageLabelText;
+            }
+        });
+        this._panels.developer.frozen.addListener(checked => {
+            if (this._controllerPointer === undefined) {
+                return;
+            }
+            this._controllerPointer.frozen = (
+                checked ? report => console.log("Frozen", report) : null);
+            if (checked) {
+                const catcher = document.getElementById("catcher");
+                this._frozenClickListener = () => {
+                    console.log('catchclick');
+                    this._controllerPointer.report_frozen(
+                        this.zoomBox, this._limits, false);
+                };
+                catcher.addEventListener("click", this._frozenClickListener);
+            }
+            else {
+                catcher.removeEventListener("click", this._frozenClickListener);
+            }
+        });
 
         this._load_predictor_controls(this._panels.main.$.piece);
         this._load_behaviours(this._panels.main.$.piece);
-        this._load_test_controls(this._panels.developer.$.piece);
+        this._load_test_controls();
 
         new Speech().initialise(this._load_speech.bind(this));
     }
@@ -518,7 +423,7 @@ export default class UserInterface {
         });
     }
 
-    _load_test_controls(parentPiece) {
+    _load_test_controls() {
         let testX = 0;
         let testY = 0;
         const updateXY = (x, y) => {
@@ -529,25 +434,22 @@ export default class UserInterface {
                 this._pointer.rawY = testY;    
             }
         };
-        this._load_input(
-            parentPiece, "number", "test-pointer-x", "X",
-            value => updateXY(value, null), "0");
-        this._load_input(
-            parentPiece, "number", "test-pointer-y", "Y",
-            value => updateXY(null, value), "0");
-        this._buttonAdvance = this._load_button(
-                "Advance", parentPiece, () => {
-                    updateXY(null, null);
-                    this._start_render(false);
-                });
-    
+
+        this._panels.developer.x.addListener(value => updateXY(value, null));
+        this._panels.developer.y.addListener(value => updateXY(null, value));
+        this._panels.developer.advance.addListener(() => {
+            updateXY(null, null);
+            this._start_render(false);
+        });
     }
 
     _select_behaviour(index) {
         this._limits.targetRight = (index === 0);
         this._pointer.multiplierLeftRight = (index === 0 ? 0.1 : 0.2);
-        if (this._speedLeftRightInput !== undefined) {
-            this._speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+        // if (this._speedLeftRightInput !== undefined) {
+        const speedLeftRightInput = this._panels.speed.horizontal.node;
+        if (speedLeftRightInput !== undefined) {
+            speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
         }
         this._limits.ratios = UserInterface._ratios[index];
     }
@@ -562,14 +464,11 @@ export default class UserInterface {
             return;
         }
 
-        this._panels.speed.$.piece.create('span', {}, "Speed:");
-        this._speedLeftRightInput = this._load_input(
-            this._panels.speed.$.piece, "number", "multiplier-left-right", "Left-Right",
-            value => this._pointer.multiplierLeftRight = value, "0.2");
+        this._panels.speed.horizontal.addListener(
+            value => this._pointer.multiplierLeftRight = value);
         this._select_behaviour(0);
-        this._load_input(
-            this._panels.speed.$.piece, "number", "multiplier-up-down", "Up-Down",
-            value => this._pointer.multiplierUpDown = value, "0.2");
+        this._panels.speed.vertical.addListener(
+            value => this._pointer.multiplierUpDown = value);
     }
 
     _load_diagnostic() {
@@ -786,10 +685,10 @@ export default class UserInterface {
         }
 
         // The other button will switch to pointer mode.
-        this._buttonPointer.textContent = "Pointer";
+        this._panels.developer.pointer.node.textContent = "Pointer";
 
         // This button will either stop or go.
-        this._buttonRandom.textContent = (
+        this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
     }
 
@@ -802,7 +701,7 @@ export default class UserInterface {
             // Current mode is random. Change this button's label to indicate
             // what it does if clicked again.
             if (!this._keyboardMode) {
-                this._buttonPointer.textContent = "Reset";
+                this._panels.developer.pointer.node.textContent = "Reset";
             }
         }
 
@@ -814,7 +713,7 @@ export default class UserInterface {
 
         // The other button will switch to random mode.
         if (!this._keyboardMode) {
-            this._buttonRandom.textContent = "Go Random";
+            this._panels.developer.random.node.textContent = "Go Random";
         }
     }
 
