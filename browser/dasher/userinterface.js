@@ -58,7 +58,6 @@ export default class UserInterface {
         this._controller = null;
         this._frozenClickListener = null;
 
-
         this._view = undefined;
         // this._cssNode = document.createElement('style');
         // document.head.append(this._cssNode);
@@ -270,8 +269,8 @@ export default class UserInterface {
             index);
 
         this._load_test_controls();
-
-        new Speech().initialise(this._load_speech.bind(this));
+        
+        this._load_speech();
     }
 
     _diagnostic_div_display() {
@@ -346,15 +345,43 @@ export default class UserInterface {
         return control;
     }
 
-    _load_speech(speech) {
-        if (this._speech === null) {
-            this._speech = speech;
-            this._panels.speech.stop.listener = checked => {
-                if (checked && !this._speakOnStop) {
-                    speech.speak("Speech is now active.");
-                }
-                this._speakOnStop = checked;
+    _load_speech() {
+        this._panels.speech.stop.listener = checked => {
+            if (checked && this._speech !== null && !this._speakOnStop) {
+                this._speech.speak("Speech is now active.");
             }
+            this._speakOnStop = checked;
+        };
+        this._panels.speech.voice.listener = index => {
+            if (this._speakOnStop && this._speech !== null) {
+                this._speech.speak("Speech is now active.", index);
+            }
+        };
+
+        new Speech().initialise(speech => {
+            this._speech = speech;
+
+            // To Do: Probably disable everything if !speech.available. Maybe
+            // add convenience methods to Control to: hide the control. Hiding
+            // could work by removing it from its parent ...
+
+            this._panels.speech.stop.active = speech.available;
+            if (speech.available) {
+                this._panels.speech.voice.optionStrings = speech.voices.map(
+                    voice => `${voice.name} (${voice.lang})`);
+            }
+            else {
+                this._panels.speech.voice.optionStrings = [
+                    'No voices available'];
+            }
+            // this._panels.speech.voice.listener = voiceListener;
+        });
+
+        // this._panels.speech.voice.listener = (i, v) => console.log(
+        //     'voice', i, v);
+
+        // });
+        // if (this._speech === null) {
             // this._speakCheckbox = this._load_input(
             //     this._panels.speech.$.piece, "checkbox", "speak", "Speak on stop",
             //     checked => {
@@ -372,27 +399,18 @@ export default class UserInterface {
             //             this._voiceSelect.node.selectedIndex);
             //     }
             // });
-            this._panels.speech.voice.listener = index => {
-                if (this._speakOnStop) {
-                    speech.speak("Speech is now active.", index);
-                }
-            };
-        }
+        // }
 
         
-        // To Do: Probably disable everything if !speech.available. Maybe add
-        // convenience methods to Control to: disable the control, hide the
-        // control. Hiding could work by removing it from its parent ...
 
-
-        if (speech.available) {
-            this._speakCheckbox.removeAttribute('disabled');
-            this._voiceSelect.remove_childs();
-            speech.voices.forEach(voice => {
-                this._voiceSelect.create(
-                    'option', undefined, `${voice.name} (${voice.lang})`);
-            });
-        }
+        // if (speech.available) {
+        //     this._speakCheckbox.removeAttribute('disabled');
+        //     this._voiceSelect.remove_childs();
+        //     speech.voices.forEach(voice => {
+        //         this._voiceSelect.create(
+        //             'option', undefined, `${voice.name} (${voice.lang})`);
+        //     });
+        // }
     }
 
     _load_test_controls() {
@@ -483,7 +501,7 @@ export default class UserInterface {
                 this.message !== null
             ) {
                 this._speech.speak(
-                    this.message, this._voiceSelect.node.selectedIndex);
+                    this.message, this._panels.speech.voice.node.selectedIndex);
             }
         });
         diagnosticSpans[2].firstChild.nodeValue = (

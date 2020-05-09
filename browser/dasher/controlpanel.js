@@ -63,7 +63,7 @@ const structure = {
         "stop": {$:{
             "order": 0, "control": "checkbox", "label": "Speak on stop"}},
         "voice": {$:{
-            "order": 1, "control":"select"}}
+            "order": 1, "control":"select", "label": null}}
 
     },
 
@@ -98,6 +98,7 @@ class Control {
         this._valueListener = null;
         this._addedListener = null;
         this._optionStrings = undefined;
+        this._active = undefined;
 
         this._label = Control.make_label(
             $, path, this._labelFirst && $.control !== "button");
@@ -125,6 +126,19 @@ class Control {
         return this._piece === undefined ? this._node : this._piece.node;
     }
 
+    get active() {return this._active;}
+    set active(active) {
+        this._active = active;
+        if (this.node !== undefined) {
+            if (active) {
+                this.node.removeAttribute('disabled');
+            }
+            else {
+                this.node.setAttribute('disabled', true);
+            }
+        }
+    }
+
     static make_label($, path, colon) {
         return $.label === undefined ? [
             path[path.length - 1][0].toLocaleUpperCase(),
@@ -141,15 +155,15 @@ class Control {
         this._node = PageBuilder.add_button(
             this._label,
             parentPiece === undefined ? undefined : parentPiece.node);
-        this.node.setAttribute('disabled', true);
+        this.active = !!this.active;
     }
 
     _construct_select(parentPiece) {
-        const attributes = {
-            'id':this._identifier, 'name':this._identifier, 'disabled': true};
+        const attributes = {'id':this._identifier, 'name':this._identifier};
         this._with_label(parentPiece, () => {
             this._piece = new Piece('select', parentPiece, attributes);
         });
+        this.active = !!this.active;
 
         if (this.optionStrings !== undefined) {
             this.optionStrings.forEach(optionString => this.node.add(
@@ -170,7 +184,7 @@ class Control {
 
     _construct_input(parentPiece) {
         const attributes = {
-            'type':this.$.control, 'disabled': true,
+            'type':this.$.control,
             'id':this._identifier, 'name':this._identifier
         };
         if (this.$.control === "checkbox" && this.$.value) {
@@ -201,6 +215,7 @@ class Control {
         this._with_label(parentPiece, () => {
             this._node = parentPiece.create('input', attributes);
         });
+        this.active = !!this.active;
         if (this._parsedValue !== undefined) {
             this.node.value = this._parsedValue;
         }
@@ -213,6 +228,11 @@ class Control {
             this.node.removeEventListener(
                 this._listenerType, this._addedListener);
             this._addedListener = null;
+        }
+        this._valueListener = listener;
+
+        if (listener === null || listener === undefined) {
+            return;
         }
 
         if (this.$.control === "button") {
@@ -241,7 +261,6 @@ class Control {
         }
 
         this.node.addEventListener(this._listenerType, this._addedListener);
-        this._valueListener = listener;
     }
 
     get optionStrings() {return this._optionStrings;}
@@ -259,6 +278,10 @@ class Control {
             this._optionStrings.forEach(optionString => this.node.add(
                 new Option(optionString)));
         }
+        // It seems that an input event listener added to a <select> gets
+        // added to all its <option> children and that's what makes it work.
+        // If the children get removed, the listener has to be set again.
+        this.listener = this.listener;
     }
 }
 
@@ -410,13 +433,11 @@ export default class ControlPanel {
 
     enable_controls() {
         this.descend(structure => {
-            const element = (
-                structure.$.panel ? structure.$.selector.node :
-                structure.$.control !== undefined ? structure.node :
-                null
-            );
-            if (element !== null) {
-                element.removeAttribute('disabled');
+            if (structure.$.panel) {
+                structure.$.selector.active = true;
+            }
+            if (structure.$.control !== undefined) {
+                structure.active = true;
             }
         });
     }
