@@ -84,7 +84,6 @@ export default class UserInterface {
         this._controls = [];
         this._controlPanel = new ControlPanel();
         this._panels = this._controlPanel.load();
-        // this._controlPanel.instantiate();
 
         // Predictors setter invocation, only OK after controlPanel is loaded.
         this.predictors = defaultPredictorList;
@@ -158,9 +157,6 @@ export default class UserInterface {
 
         this._panels.main.prediction.optionStrings = this.predictors.map(
             predictor => predictor.label);
-        // if (this._predictorSelect !== null) {
-        //     this._load_predictor_controls();
-        // }
     }
 
     load(loadingID, footerID) {
@@ -177,12 +173,6 @@ export default class UserInterface {
         if (this._loading !== null) {
             this._panels.main.$.piece.add_child(this._loading);
         }
-
-        // this._load_predictors();
-        // if (this.predictors === null || this.predictors.length <= 0) {
-        //     // Setter invocation.
-        //     this.predictors = defaultPredictorList;
-        // }
 
         
         this._load_controls();
@@ -211,9 +201,6 @@ export default class UserInterface {
     }
 
     _load_panels() {
-        // const parentPiece = this._keyboardMode ? undefined : this._header;
-
-        // this._controlPanel.instantiate(parentPiece);
         if (!this._keyboardMode) {
             this._controlPanel.set_parent(this._header);
         }
@@ -222,21 +209,6 @@ export default class UserInterface {
         this._controlPanel.select_panel("main");
     }
     
-    // _load_predictors() {
-    //     if (this.predictors === null || this.predictors.length <= 0) {
-    //         this.predictors = [{
-    //             "label": "Basic", "item": predictor_basic
-    //         }, {
-    //             "label": "None", "item": predictor_dummy
-    //         }, {
-    //             "label": "Random", "item": predictor_test
-    //         }];
-    //     }
-    // }
-    // _get_predictor(index) {
-    //     return this.predictors[index].item;
-    // }
-
     _load_message() {
         // Textarea in which the message is displayed, and surrounding div.
         this._messageDiv = new Piece(
@@ -289,17 +261,14 @@ export default class UserInterface {
             }
         };
 
-        // this._load_predictor_controls(this._panels.main.$.piece);
         this._panels.main.prediction.listener = index => {
-            // if (this._controllerPointer !== undefined) {
-            //     this._controllerPointer.predictor = this._get_predictor(
-            //         // event.target.selectedIndex);
-            //         index);
-            // }
             this._controllerPointer.predictor = this.predictors[index].item;
         };
 
-        this._load_behaviours(this._panels.main.$.piece);
+        this._panels.main.behaviour.optionStrings = ["A","B"];
+        this._panels.main.behaviour.listener = index => this._select_behaviour(
+            index);
+
         this._load_test_controls();
 
         new Speech().initialise(this._load_speech.bind(this));
@@ -377,37 +346,45 @@ export default class UserInterface {
         return control;
     }
 
-    _load_button(label, parentPiece, callback) {
-        const button = PageBuilder.add_button(
-            label, parentPiece === undefined ? undefined : parentPiece.node);
-        button.setAttribute('disabled', true);
-        button.addEventListener('click', callback);
-        this._controls.push(button);
-        return button;
-    }
-
     _load_speech(speech) {
         if (this._speech === null) {
             this._speech = speech;
-            this._speakCheckbox = this._load_input(
-                this._panels.speech.$.piece, "checkbox", "speak", "Speak on stop",
-                checked => {
-                    if (checked && !this._speakOnStop) {
-                        speech.speak("Speech is now active.");
-                    }
-                    this._speakOnStop = checked;
-                }, false);
-            this._voiceSelect = new Piece(
-                this._panels.speech.$.piece.create('select'));
-            this._voiceSelect.node.addEventListener('input', () => {
-                if (this._speakOnStop) {
-                    speech.speak(
-                        "Speech is now active.",
-                        this._voiceSelect.node.selectedIndex);
+            this._panels.speech.stop.listener = checked => {
+                if (checked && !this._speakOnStop) {
+                    speech.speak("Speech is now active.");
                 }
-            });
+                this._speakOnStop = checked;
+            }
+            // this._speakCheckbox = this._load_input(
+            //     this._panels.speech.$.piece, "checkbox", "speak", "Speak on stop",
+            //     checked => {
+            //         if (checked && !this._speakOnStop) {
+            //             speech.speak("Speech is now active.");
+            //         }
+            //         this._speakOnStop = checked;
+            //     }, false);
+            // this._voiceSelect = new Piece(
+            //     this._panels.speech.$.piece.create('select'));
+            // this._voiceSelect.node.addEventListener('input', () => {
+            //     if (this._speakOnStop) {
+            //         speech.speak(
+            //             "Speech is now active.",
+            //             this._voiceSelect.node.selectedIndex);
+            //     }
+            // });
+            this._panels.speech.voice.listener = index => {
+                if (this._speakOnStop) {
+                    speech.speak("Speech is now active.", index);
+                }
+            };
         }
+
         
+        // To Do: Probably disable everything if !speech.available. Maybe add
+        // convenience methods to Control to: disable the control, hide the
+        // control. Hiding could work by removing it from its parent ...
+
+
         if (speech.available) {
             this._speakCheckbox.removeAttribute('disabled');
             this._voiceSelect.remove_childs();
@@ -416,46 +393,6 @@ export default class UserInterface {
                     'option', undefined, `${voice.name} (${voice.lang})`);
             });
         }
-    }
-
-    // _load_predictor_controls(parentPiece) {
-        // if (this._predictorSelect === null) {
-        //     const identifier = 'prediction-select';
-        //     parentPiece.create('label', {'for':identifier}, "Prediction:");
-        //     this._predictorSelect = new Piece(parentPiece.create('select', {
-        //         'id': identifier, 'name': identifier,  'disabled': true
-        //     }));
-        //     this._controls.push(this._predictorSelect.node);
-            // this._predictorSelect.node.addEventListener('input', event => {
-        // this._panels.main.prediction.listener = (index, value) => {
-        //         if (this._controllerPointer !== undefined) {
-        //             this._controllerPointer.predictor = this._get_predictor(
-        //                 // event.target.selectedIndex);
-        //                 index);
-        //         }
-        //     };
-        // }
-
-        // this._panels.main.prediction.set_options(
-        //     this.predictors.map(predictor => predictor.label));
-        // this._predictorSelect.remove_childs();
-        // this.predictors.forEach(predictor =>
-        //     this._predictorSelect.node.add(new Option(predictor.label))
-        // );
-    // }
-
-    _load_behaviours(parentPiece) {
-        const identifier = 'behaviour-select';
-        parentPiece.create('label', {'for':identifier}, "Behaviour:");
-        const behaviourSelect = parentPiece.create('select', {
-            'disabled': true, 'id':identifier, 'name':identifier});
-        this._controls.push(behaviourSelect);
-        behaviourSelect.addEventListener('input', event => 
-            this._select_behaviour(event.target.selectedIndex));
-
-        ["A", "B"].forEach(optionLabel => {
-            behaviourSelect.add(new Option(optionLabel));
-        });
     }
 
     _load_test_controls() {

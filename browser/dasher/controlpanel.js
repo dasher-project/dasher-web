@@ -10,7 +10,8 @@ const structure = {
 
     "main": {
         $: {"order": 0},
-        "prediction": {$:{"order": 0, "control":"select"}}
+        "prediction": {$:{"order": 0, "control":"select"}},
+         "behaviour": {$:{"order": 1, "control":"select"}}
     },
 
     "colour":{
@@ -57,7 +58,13 @@ const structure = {
     },
 
     "speech":{
-        $: {"order": 3}
+        $: {"order": 3},
+
+        "stop": {$:{
+            "order": 0, "control": "checkbox", "label": "Speak on stop"}},
+        "voice": {$:{
+            "order": 1, "control":"select"}}
+
     },
 
     "developer": {
@@ -316,8 +323,8 @@ export default class ControlPanel {
         return this._structure;
     }
 
-    _instantiate(/*parentPiece*/) {
-        this._selectors = new Piece('div'); //, parentPiece);
+    _instantiate() {
+        this._selectors = new Piece('div');
         this._selectors.node.classList.add('header__selectors');
 
         this.descend((structure, path, statePiece) => {
@@ -353,7 +360,7 @@ export default class ControlPanel {
             }
 
             return statePiece;
-        }); //, parentPiece);
+        });
 
         this.descend((structure, path) => {
             if (structure.$.after !== undefined) {
