@@ -6,13 +6,17 @@ import Piece from './piece.js';
 import PageBuilder from "../pagebuilder.js";
 
 const structure = {
+    $:{$:{"panel":true}},
+
     "main": {
-        $: {"order": 0}
+        $: {"order": 0},
+        "prediction": {$:{"order": 0, "control":"select"}}
     },
+
     "colour":{
-        "$": {"order": 1},
+        $: {"order": 1},
         "fill": {
-            "$": {"order": 0, "$": {"control": "color", "after":"colour"}},
+            $: {"order": 0, $: {"control": "color", "after":"colour"}},
             // See https://en.wikipedia.org/wiki/Web_colors
                 "capital":{$:{"order": 0, "value": "#ffff00"}},
                   "small":{$:{"order": 1, "value": "#00BFFF"}},
@@ -23,9 +27,9 @@ const structure = {
                    "root":{$:{"order": 6, "value": "#c0c0c0"}}
         },
         "sequence": {
-            "$": {
+            $: {
                 "order": 1, "html": "div",
-                "$": {"control": "color", "label":null, "after":"colour"}
+                $: {"control": "color", "label":null, "after":"colour"}
             },
             "sequence-0-0":{$:{"label": "Sequence:",
                                "order": 0, "value": "#90ee90"}},
@@ -41,6 +45,7 @@ const structure = {
                 "order": 1, "control": "checkbox"}}
         }
     },
+
     "speed":{
         $: {"order": 2},
         
@@ -50,9 +55,11 @@ const structure = {
           "vertical":{$:{"order": 2, "control":"number",
                          "value": "0.2", "label":"Up-Down"}}
     },
+
     "speech":{
         $: {"order": 3}
     },
+
     "developer": {
         $: {"order": 4},
 
@@ -70,11 +77,6 @@ const structure = {
             "order": 5, "control": "number", "value":"0"}},
         "advance":{$:{
             "order": 6, "control": "button"}}
-    },
-    "$": {
-        "$": {
-            "panel":true
-        }
     }
 };
 
@@ -84,15 +86,36 @@ class Control {
     constructor(parentPiece, path, $) {
         this.$ = $;
 
+        this._piece = undefined;
+        this._node = undefined;
+        this._valueListener = null;
+        this._addedListener = null;
+        this._optionStrings = undefined;
+
         this._label = Control.make_label(
             $, path, this._labelFirst && $.control !== "button");
+        this._identifier = path.join(pathJoin);
+
+        this._listenerType = (
+            this.$.control === "button" ? "click" :
+            this.$.control === "select" ? "input" :
+            "change"
+        );
 
         if ($.control === "button") {
-            this._construct_button(parentPiece, path);
+            this._construct_button(parentPiece);
+        }
+        else if ($.control === "select") {
+            this._construct_select(parentPiece);
         }
         else {
-            this._construct_input(parentPiece, path);
+            this._construct_input(parentPiece);
         }
+    }
+
+    get piece() {return this._piece;}
+    get node() {
+        return this._piece === undefined ? this._node : this._piece.node;
     }
 
     static make_label($, path, colon) {
@@ -107,18 +130,41 @@ class Control {
         return this.$.control !== "checkbox" && this.$.control !== "number";
     }
 
-    _construct_button(parentPiece, path) {
+    _construct_button(parentPiece) {
         this._node = PageBuilder.add_button(
             this._label,
             parentPiece === undefined ? undefined : parentPiece.node);
-        this._node.setAttribute('disabled', true);
+        this.node.setAttribute('disabled', true);
     }
 
-    _construct_input(parentPiece, path) {
-        const identifier = path.join(pathJoin);
+    _construct_select(parentPiece) {
+        const attributes = {
+            'id':this._identifier, 'name':this._identifier, 'disabled': true};
+        this._with_label(parentPiece, () => {
+            this._piece = new Piece('select', parentPiece, attributes);
+        });
+
+        if (this.optionStrings !== undefined) {
+            this.optionStrings.forEach(optionString => this.node.add(
+                new Option(optionString)
+            ));
+        }
+    }
+
+    _with_label(parentPiece, build) {
+        if (this._label !== null && this._labelFirst) {
+            parentPiece.create('label', {'for':this._identifier}, this._label);
+        }
+        build();
+        if (this._label !== null && !this._labelFirst) {
+            parentPiece.create('label', {'for':this._identifier}, this._label);
+        }
+    }
+
+    _construct_input(parentPiece) {
         const attributes = {
             'type':this.$.control, 'disabled': true,
-            'id':identifier, 'name':identifier
+            'id':this._identifier, 'name':this._identifier
         };
         if (this.$.control === "checkbox" && this.$.value) {
             attributes.checked = true;
@@ -145,53 +191,76 @@ class Control {
             attributes.step = this._isFloat ? 0.1 : 1;
         }
 
-        if (this._label !== null && this._labelFirst) {
-            parentPiece.create('label', {'for':identifier}, this._label);
-        }
-        this._node = parentPiece.create('input', attributes);
+        this._with_label(parentPiece, () => {
+            this._node = parentPiece.create('input', attributes);
+        });
         if (this._parsedValue !== undefined) {
-            this._node.value = this._parsedValue;
+            this.node.value = this._parsedValue;
         }
-        if (this._label !== null && !this._labelFirst) {
-            parentPiece.create('label', {'for':identifier}, this._label);
-        }
-
     }
 
-    // get piece() {return this._piece;}
-    get node() {return this._node;}
+    get listener() {return this._valueListener;}
 
-    addListener(listener) {
+    set listener(listener) {
+        if (this._addedListener !== null) {
+            this.node.removeEventListener(
+                this._listenerType, this._addedListener);
+            this._addedListener = null;
+        }
+
         if (this.$.control === "button") {
-            this._node.addEventListener("click", listener);
-            return;
+            this._addedListener = listener;
         }
-
-        if (this._parsedValue !== undefined) {
-            listener(this._parsedValue);
-        }
-
-        if (this.$.control === "checkbox") {
-            this._node.addEventListener(
-                'change', (event) => listener(event.target.checked));
-        }
-        else if (this.$.control === "number") {
-            const parser = this._isFloat ? parseFloat : parseInt;
-            this._node.addEventListener(
-                'change', (event) => listener(parser(event.target.value)));
+        else if (this.$.control === "select") {
+            this._addedListener = event => listener(
+                event.target.selectedIndex, event.target.value);
         }
         else {
-            this._node.addEventListener(
-                'change', (event) => listener(event.target.value));
+            if (this._parsedValue !== undefined) {
+                listener(this._parsedValue);
+            }
+
+            if (this.$.control === "checkbox") {
+                this._addedListener = event => listener(event.target.checked);
+            }
+            else if (this.$.control === "number") {
+                const parser = this._isFloat ? parseFloat : parseInt;
+                this._addedListener = event => listener(parser(
+                    event.target.value));
+            }
+            else {
+                this._addedListener = event => listener(event.target.value);
+            }
         }
 
+        this.node.addEventListener(this._listenerType, this._addedListener);
+        this._valueListener = listener;
+    }
+
+    get optionStrings() {return this._optionStrings;}
+    set optionStrings(optionStrings) {
+        // Only works with control:select instances.
+
+        this._optionStrings = optionStrings.slice();
+
+        // ToDo: Near here, get the current value and preserve it in case the
+        // new options include it.
+        if (this.piece !== null) {
+            this.piece.remove_all();
+        }
+        if (this.node !== null) {
+            this._optionStrings.forEach(optionString => this.node.add(
+                new Option(optionString)));
+        }
     }
 }
 
 export default class ControlPanel {
     constructor() {
         this._structure = structure;
+
         this._cssNode = undefined;
+        this._selectors = undefined;
     }
 
     descend(callback, state) {
@@ -243,12 +312,13 @@ export default class ControlPanel {
 
             return structure.$.$;
         });
+        this._instantiate();
         return this._structure;
     }
 
-    instantiate(parentPiece) {
-        const selectors = new Piece('div', parentPiece);
-        selectors.node.classList.add('header__selectors');
+    _instantiate(/*parentPiece*/) {
+        this._selectors = new Piece('div'); //, parentPiece);
+        this._selectors.node.classList.add('header__selectors');
 
         this.descend((structure, path, statePiece) => {
             if (structure.$.panel && path.length > 0) {
@@ -259,9 +329,10 @@ export default class ControlPanel {
                 structure.$.piece = piece;
             
                 structure.$.selector = new Control(
-                    new Piece('div', selectors), path, {"control": "button"});
-                structure.$.selector.addListener(
-                    this.select_panel.bind(this, label));
+                    new Piece('div', this._selectors), path,
+                    {"control": "button"});
+                structure.$.selector.listener = this.select_panel.bind(
+                    this, label);
 
                 statePiece = piece;
             }
@@ -282,13 +353,29 @@ export default class ControlPanel {
             }
 
             return statePiece;
-        }, parentPiece);
+        }); //, parentPiece);
 
         this.descend((structure, path) => {
             if (structure.$.after !== undefined) {
                 (afterInstantiate[structure.$.after].bind(this)
                 )(path, structure);
             }
+        });
+    }
+
+    set_parent(parentPiece) {
+        if (this._selectors !== undefined) {
+            parentPiece.add_child(this._selectors);
+        }
+        this.descend((structure, path) => {
+            if (path.length === 0) {
+                return true;
+            }
+            if (structure.$.panel && path.length > 0) {
+                parentPiece.add_child(structure.$.piece);
+                return false;
+            }
+            throw new Error('Non-panel in structure.');
         });
     }
 
@@ -358,16 +445,16 @@ const afterInstantiate = {
         const sheet = this.add_CSS_node().sheet;
         const inserted = sheet.insertRule(rule(), sheet.cssRules.length);
 
-        checkboxControl.addListener(checked => {
+        checkboxControl.listener = checked => {
             nowOn = checked;
             sheet.deleteRule(inserted);
             sheet.insertRule(rule(), inserted);
-        });
-        colorControl.addListener(chosen => {
+        };
+        colorControl.listener = chosen => {
             nowColour = chosen;
             sheet.deleteRule(inserted);
             sheet.insertRule(rule(), inserted);
-        });
+        };
     },
 
     colour: function(path, control) {
@@ -377,10 +464,10 @@ const afterInstantiate = {
             `rect.${name} {fill: ${control.$.value};}`,
             sheet.cssRules.length);
 
-        control.addListener(value => {
+        control.listener = value => {
             sheet.deleteRule(inserted);
             sheet.insertRule(`rect.${name} {fill: ${value};}`, inserted);
-        });
+        };
     }
 
 };

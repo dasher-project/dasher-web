@@ -30,6 +30,14 @@ import ControlPanel from "./controlpanel.js";
 
 const messageLabelText = "Message:";
 
+const defaultPredictorList = [{
+    "label": "Basic", "item": predictor_basic
+}, {
+    "label": "None", "item": predictor_dummy
+}, {
+    "label": "Random", "item": predictor_test
+}];
+
 export default class UserInterface {
     constructor(parent) {
         this._parent = parent;
@@ -38,8 +46,6 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
-        this._predictors = null;
-        this._predictorSelect = null;
 
         this._speakOnStop = false;
         this._speech = null;
@@ -78,6 +84,10 @@ export default class UserInterface {
         this._controls = [];
         this._controlPanel = new ControlPanel();
         this._panels = this._controlPanel.load();
+        // this._controlPanel.instantiate();
+
+        // Predictors setter invocation, only OK after controlPanel is loaded.
+        this.predictors = defaultPredictorList;
 
         this._svgRect = undefined;
         this._header = undefined;
@@ -144,10 +154,13 @@ export default class UserInterface {
         return this._predictors;
     }
     set predictors(predictors) {
-        this._predictors = predictors;
-        if (this._predictorSelect !== null) {
-            this._load_predictor_controls();
-        }
+        this._predictors = predictors.slice();
+
+        this._panels.main.prediction.optionStrings = this.predictors.map(
+            predictor => predictor.label);
+        // if (this._predictorSelect !== null) {
+        //     this._load_predictor_controls();
+        // }
     }
 
     load(loadingID, footerID) {
@@ -165,7 +178,12 @@ export default class UserInterface {
             this._panels.main.$.piece.add_child(this._loading);
         }
 
-        this._load_predictors();
+        // this._load_predictors();
+        // if (this.predictors === null || this.predictors.length <= 0) {
+        //     // Setter invocation.
+        //     this.predictors = defaultPredictorList;
+        // }
+
         
         this._load_controls();
         const diagnosticSpans = this._load_diagnostic();
@@ -174,7 +192,7 @@ export default class UserInterface {
 
         this._palette = new Palette().build();
         this._controllerPointer = new ControllerPointer(
-            this._pointer, this._get_predictor(0));
+            this._pointer, this.predictors[0].item);
 
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -193,28 +211,31 @@ export default class UserInterface {
     }
 
     _load_panels() {
-        const parentPiece = this._keyboardMode ? undefined : this._header;
+        // const parentPiece = this._keyboardMode ? undefined : this._header;
 
-        this._controlPanel.instantiate(parentPiece);
+        // this._controlPanel.instantiate(parentPiece);
+        if (!this._keyboardMode) {
+            this._controlPanel.set_parent(this._header);
+        }
         console.log(this._controlPanel);
 
         this._controlPanel.select_panel("main");
     }
     
-    _load_predictors() {
-        if (this.predictors === null || this.predictors.length <= 0) {
-            this.predictors = [{
-                "label": "Basic", "item": predictor_basic
-            }, {
-                "label": "None", "item": predictor_dummy
-            }, {
-                "label": "Random", "item": predictor_test
-            }];
-        }
-    }
-    _get_predictor(index) {
-        return this.predictors[index].item;
-    }
+    // _load_predictors() {
+    //     if (this.predictors === null || this.predictors.length <= 0) {
+    //         this.predictors = [{
+    //             "label": "Basic", "item": predictor_basic
+    //         }, {
+    //             "label": "None", "item": predictor_dummy
+    //         }, {
+    //             "label": "Random", "item": predictor_test
+    //         }];
+    //     }
+    // }
+    // _get_predictor(index) {
+    //     return this.predictors[index].item;
+    // }
 
     _load_message() {
         // Textarea in which the message is displayed, and surrounding div.
@@ -234,20 +255,21 @@ export default class UserInterface {
         if (this._keyboardMode) {
             this._limits.showDiagnostic = false;
             this._load_predictor_controls(new Piece('div', this._header));
+            // To do: In keyboard mode, change the parent of the select node in
+            // the control.
             return;
         }
-        this._panels.developer.pointer.addListener(
-            this.clicked_pointer.bind(this));
-        this._panels.developer.random.addListener(
-            this.clicked_random.bind(this));
-        this._panels.developer.showDiagnostic.addListener(checked => {
+        this._panels.developer.pointer.listener = this.clicked_pointer.bind(
+            this);
+        this._panels.developer.random.listener = this.clicked_random.bind(this);
+        this._panels.developer.showDiagnostic.listener = checked => {
             this._limits.showDiagnostic = checked;
             this._diagnostic_div_display();
             if (!checked) {
                 this._messageLabel.firstChild.nodeValue = messageLabelText;
             }
-        });
-        this._panels.developer.frozen.addListener(checked => {
+        };
+        this._panels.developer.frozen.listener = checked => {
             if (this._controllerPointer === undefined) {
                 return;
             }
@@ -265,9 +287,18 @@ export default class UserInterface {
             else {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
-        });
+        };
 
-        this._load_predictor_controls(this._panels.main.$.piece);
+        // this._load_predictor_controls(this._panels.main.$.piece);
+        this._panels.main.prediction.listener = index => {
+            // if (this._controllerPointer !== undefined) {
+            //     this._controllerPointer.predictor = this._get_predictor(
+            //         // event.target.selectedIndex);
+            //         index);
+            // }
+            this._controllerPointer.predictor = this.predictors[index].item;
+        };
+
         this._load_behaviours(this._panels.main.$.piece);
         this._load_test_controls();
 
@@ -387,27 +418,31 @@ export default class UserInterface {
         }
     }
 
-    _load_predictor_controls(parentPiece) {
-        if (this._predictorSelect === null) {
-            const identifier = 'prediction-select';
-            parentPiece.create('label', {'for':identifier}, "Prediction:");
-            this._predictorSelect = new Piece(parentPiece.create('select', {
-                'id': identifier, 'name': identifier,  'disabled': true
-            }));
-            this._controls.push(this._predictorSelect.node);
-            this._predictorSelect.node.addEventListener('input', event => {
-                if (this._controllerPointer !== undefined) {
-                    this._controllerPointer.predictor = this._get_predictor(
-                        event.target.selectedIndex);
-                }
-            });
-        }
+    // _load_predictor_controls(parentPiece) {
+        // if (this._predictorSelect === null) {
+        //     const identifier = 'prediction-select';
+        //     parentPiece.create('label', {'for':identifier}, "Prediction:");
+        //     this._predictorSelect = new Piece(parentPiece.create('select', {
+        //         'id': identifier, 'name': identifier,  'disabled': true
+        //     }));
+        //     this._controls.push(this._predictorSelect.node);
+            // this._predictorSelect.node.addEventListener('input', event => {
+        // this._panels.main.prediction.listener = (index, value) => {
+        //         if (this._controllerPointer !== undefined) {
+        //             this._controllerPointer.predictor = this._get_predictor(
+        //                 // event.target.selectedIndex);
+        //                 index);
+        //         }
+        //     };
+        // }
 
-        this._predictorSelect.remove_childs();
-        this.predictors.forEach(predictor =>
-            this._predictorSelect.node.add(new Option(predictor.label))
-        );
-    }
+        // this._panels.main.prediction.set_options(
+        //     this.predictors.map(predictor => predictor.label));
+        // this._predictorSelect.remove_childs();
+        // this.predictors.forEach(predictor =>
+        //     this._predictorSelect.node.add(new Option(predictor.label))
+        // );
+    // }
 
     _load_behaviours(parentPiece) {
         const identifier = 'behaviour-select';
@@ -435,12 +470,12 @@ export default class UserInterface {
             }
         };
 
-        this._panels.developer.x.addListener(value => updateXY(value, null));
-        this._panels.developer.y.addListener(value => updateXY(null, value));
-        this._panels.developer.advance.addListener(() => {
+        this._panels.developer.x.listener = value => updateXY(value, null);
+        this._panels.developer.y.listener = value => updateXY(null, value);
+        this._panels.developer.advance.listener = () => {
             updateXY(null, null);
             this._start_render(false);
-        });
+        };
     }
 
     _select_behaviour(index) {
@@ -464,11 +499,13 @@ export default class UserInterface {
             return;
         }
 
-        this._panels.speed.horizontal.addListener(
-            value => this._pointer.multiplierLeftRight = value);
+        this._panels.speed.horizontal.listener = value => {
+            this._pointer.multiplierLeftRight = value
+        };
         this._select_behaviour(0);
-        this._panels.speed.vertical.addListener(
-            value => this._pointer.multiplierUpDown = value);
+        this._panels.speed.vertical.listener = value => {
+            this._pointer.multiplierUpDown = value;
+        };
     }
 
     _load_diagnostic() {
@@ -553,8 +590,6 @@ export default class UserInterface {
         this._intervalRender = null;
         this._controls.forEach(control => control.removeAttribute('disabled'));
         this._controlPanel.enable_controls();
-
-
     }
 
     _start_render(continuous) {
