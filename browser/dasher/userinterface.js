@@ -24,6 +24,7 @@ import predictor_test from './predictor_test.js';
 
 import Speech from './speech.js';
 
+import panels from "./controlpanelspecification.js"
 import ControlPanel from "./controlpanel.js";
 
 const messageLabelText = "Message:";
@@ -79,7 +80,7 @@ export default class UserInterface {
         this._message = undefined;
         this._messageDisplay = null;
         this._diagnosticSpans = null;
-        this._controlPanel = new ControlPanel();
+        this._controlPanel = new ControlPanel(panels);
         this._panels = this._controlPanel.load();
 
         this._palette = new Palette().build();
