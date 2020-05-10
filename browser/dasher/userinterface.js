@@ -217,6 +217,8 @@ export default class UserInterface {
             new Piece(document.getElementById(loadingID))
         );
         if (!this._keyboardMode) {
+            // In keyboard mode, the control panel and all its HTML still exists
+            // it just never gets added to the body so it doesn't get rendered.
             this._controlPanel.set_parent(this._header);
         }
         if (this._loading !== null) {
@@ -227,11 +229,12 @@ export default class UserInterface {
     
     _load_controls() {
         if (this._keyboardMode) {
-            this._limits.showDiagnostic = false;
-            this._load_predictor_controls(new Piece('div', this._header));
-            // To do: In keyboard mode, change the parent of the select node in
-            // the control.
-            return;
+            // In keyboard mode, the prediction select control is the only
+            // control to be shown. The control panel parent isn't set, in
+            // keyboard mode. So, pull the prediction select control out and put
+            // it under the header, which is shown in keyboard mode.
+            const piece = new Piece('div', this._header);
+            piece.add_child(this._panels.main.prediction.piece);
         }
 
         this._panels.main.prediction.listener = index => {
@@ -242,7 +245,11 @@ export default class UserInterface {
         this._panels.main.behaviour.listener = index => this._select_behaviour(
             index);
 
-        this._load_speech_controls();
+        if (!this._keyboardMode) {
+            // There's a defect in speech.js that crashes in the Android
+            // keyboard.
+            this._load_speech_controls();
+        }
         this._load_developer_controls();
     }
 
@@ -594,9 +601,7 @@ export default class UserInterface {
         if (!Object.is(this._controller, this._controllerPointer)) {
             // Current mode is random. Change this button's label to indicate
             // what it does if clicked again.
-            if (!this._keyboardMode) {
-                this._panels.developer.pointer.node.textContent = "Reset";
-            }
+            this._panels.developer.pointer.node.textContent = "Reset";
         }
 
         this._controller = this._controllerPointer;
@@ -606,9 +611,7 @@ export default class UserInterface {
         this._new_ZoomBox(false);
 
         // The other button will switch to random mode.
-        if (!this._keyboardMode) {
-            this._panels.developer.random.node.textContent = "Go Random";
-        }
+        this._panels.developer.random.node.textContent = "Go Random";
     }
 
     _new_ZoomBox(startRender) {
