@@ -238,6 +238,8 @@ export default class UserInterface {
             piece.add_child(this._panels.main.prediction.piece);
         }
 
+        this._load_settings_management_controls();
+
         this._panels.main.prediction.listener = index => {
             this._controllerPointer.predictor = this.predictors[index].item;
         };
@@ -252,6 +254,64 @@ export default class UserInterface {
             this._load_speech_controls();
         }
         this._load_developer_controls();
+    }
+
+    _load_settings_management_controls() {
+        const resultNode = this._panels.manage.result.$.piece.node;
+        const outcomeNode = this._panels.manage.result.outcome.$.piece.node;
+        const detailNode = this._panels.manage.result.detail.$.piece.node;
+        resultNode.classList.add("header__result");
+        let fadeTimeout = undefined;
+        const showResult = (outcome, detail) => {
+            if (fadeTimeout !== undefined) {
+                clearTimeout(fadeTimeout);
+            }
+            outcomeNode.textContent = outcome;
+            detailNode.textContent = detail === undefined ? "" : detail;
+            resultNode.classList.remove("header__result-stale");
+            if (detail === undefined) {
+                fadeTimeout = setTimeout(
+                    () => resultNode.classList.add("header__result-stale"),
+                    1000);
+            }
+        };
+
+        this._panels.manage.copy.listener = () => {
+            if (navigator.clipboard === undefined) {
+                showResult("Copy failed", "No clipboard access");
+            }
+            else {
+                navigator.clipboard.writeText(
+                    this._controlPanel.json_stringify()
+                ).then(ok => showResult("Copied OK", ok)
+                ).catch(error => showResult("Copy failed", error));
+            }
+        }
+
+        this._panels.manage.paste.listener = () => {
+            if (navigator.clipboard === undefined) {
+                showResult("Paste failed", "No clipboard access");
+            }
+            else {
+                navigator.clipboard.readText()
+                .then(text => {
+                    let settings;
+                    try {
+                        settings = JSON.parse(text);
+                    }
+                    catch {
+                        showResult("Paste isn't JSON", text);
+                        settings = undefined;
+                    }
+                    if (settings !== undefined) {
+                        this._controlPanel.set_values(settings);
+                        showResult(
+                            "Paste OK", JSON.stringify(settings, undefined, 4));
+                    }
+                })
+                .catch(error => showResult("Paste failed", error));
+            }
+        }
     }
 
     _select_behaviour(index) {

@@ -201,6 +201,54 @@ class Control {
         // If the children get removed, the listener has to be set again.
         this.listener = this.listener;
     }
+
+    get json() {
+        if (this.$.control === "button") {
+            return undefined;
+        }
+
+        if (this.$.control === "select") {
+            return {"index": this.node.selectedIndex, "value": this.node.value};
+        }
+
+        if (this.$.control === "checkbox") {
+            return this.node.checked;
+        }
+
+        if (this.$.control === "number") {
+            const parser = this._isFloat ? parseFloat : parseInt;
+            return parser(this.node.value);
+        }
+
+        return this.node.value;
+    }
+
+    set_value(value) {
+        const listener = (
+            this._valueListener === null || this._valueListener === undefined ?
+            () => {} :
+            this._valueListener
+        );
+
+        if (this.$.control === "select") {
+            const index = value.index;
+            value = value.value;
+
+
+
+            // More code here. Method like set_option(index, optionString) that
+            // selects the option with the matching string if there is one, or
+            // the index otherwise.
+        }
+
+        if (this.$.control === "checkbox") {
+            value = !!value;
+            this.node.checked = value;
+            listener(value);
+        }
+
+
+    }
 }
 
 export default class ControlPanel {
@@ -360,6 +408,53 @@ export default class ControlPanel {
         });
     }
 
+    json_stringify(spaces=4) {
+        function replacer(key, value) {
+            if (value.$ === undefined) {
+                // Plain value returned from the json property of a Control
+                // instance.
+                return value;
+            }
+
+            if (key === "" || value.$.control === undefined) {
+                // key === "" only happens once, at the top of the structure.
+                let returning = undefined;
+                for(const key of value.$.childOrder) {
+                    if (returning === undefined) {
+                        returning = {};
+                    }
+                    returning[key] = value[key];
+                }
+                return returning;
+                // Return undefined for empty structural elements.
+            }
+
+            // The code can only reach this point if value.$.control isn't
+            // undefined. Therefore, value is a Control instance.
+            return value.json;
+        }
+        return JSON.stringify(this._structure, replacer, spaces);
+    }
+
+    set_values(rootSettings) { this.descend((structure, path, settings) => {
+        if (path.length === 0) {
+            // Top of the structure; descend structure with same settings.
+            return settings;
+        }
+
+        const name = path[path.length - 1];
+
+        if (structure.$.control === undefined) {
+            // Not a control; descend structure and settings.
+            return settings[name];
+        }
+
+        if (structure.$.control !== "button") {
+            console.log('Set', path, settings[name]);
+            structure.set_value(settings[name]);
+        }
+        return false;
+    }, rootSettings); }
 }
 
 const afterInstantiate = {

@@ -175,3 +175,17 @@ Make sure that can't happen by not showing any such controls.
 #user-interface.keyboard input[type="number"] {
     display: none;
 }
+
+.header__result {
+    opacity: 1;
+}
+
+.header__result-stale {
+    opacity: 0;
+    transition: opacity var(--transition) linear;
+}
+
+.header__result pre {
+    font-family: monospace;
+    white-space: pre;
+}
