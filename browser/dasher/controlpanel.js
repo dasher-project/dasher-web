@@ -83,7 +83,9 @@ const structure = {
         "y": {$:{
             "order": 5, "control": "number", "value":"0"}},
         "advance":{$:{
-            "order": 6, "control": "button"}}
+            "order": 6, "control": "button"}},
+        "diagnostic":{$:{
+            "order": 7, "html": "div"}}
     }
 };
 
