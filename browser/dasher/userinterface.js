@@ -262,7 +262,7 @@ export default class UserInterface {
         const detailNode = this._panels.manage.result.detail.$.piece.node;
         resultNode.classList.add("header__result");
         let fadeTimeout = undefined;
-        const showResult = (outcome, detail) => {
+        const show_result = (outcome, detail) => {
             if (fadeTimeout !== undefined) {
                 clearTimeout(fadeTimeout);
             }
@@ -278,19 +278,19 @@ export default class UserInterface {
 
         this._panels.manage.copy.listener = () => {
             if (navigator.clipboard === undefined) {
-                showResult("Copy failed", "No clipboard access");
+                show_result("Copy failed", "No clipboard access");
             }
             else {
                 navigator.clipboard.writeText(
                     this._controlPanel.json_stringify()
-                ).then(ok => showResult("Copied OK", ok)
-                ).catch(error => showResult("Copy failed", error));
+                ).then(ok => show_result("Copied OK", ok)
+                ).catch(error => show_result("Copy failed", error));
             }
         }
 
         this._panels.manage.paste.listener = () => {
             if (navigator.clipboard === undefined) {
-                showResult("Paste failed", "No clipboard access");
+                show_result("Paste failed", "No clipboard access");
             }
             else {
                 navigator.clipboard.readText()
@@ -300,16 +300,16 @@ export default class UserInterface {
                         settings = JSON.parse(text);
                     }
                     catch {
-                        showResult("Paste isn't JSON", text);
+                        show_result("Paste isn't JSON", text);
                         settings = undefined;
                     }
                     if (settings !== undefined) {
                         this._controlPanel.set_values(settings);
-                        showResult(
-                            "Paste OK", JSON.stringify(settings, undefined, 4));
+                        show_result("Paste OK");
+                        // , JSON.stringify(settings, undefined, 4));
                     }
                 })
-                .catch(error => showResult("Paste failed", error));
+                .catch(error => show_result("Paste failed", error));
             }
         }
     }

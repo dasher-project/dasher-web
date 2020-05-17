@@ -252,8 +252,12 @@ class Control {
         const foundIndex = (
             selectedString === undefined ? -1 :
             this._optionStrings.indexOf(selectedString));
-        this.node.selectedIndex = (
-            foundIndex === -1 ? selectedIndex : foundIndex);
+        if (foundIndex !== -1) {
+            selectedIndex = foundIndex;
+        }
+        if (selectedIndex !== undefined) {
+            this.node.selectedIndex = selectedIndex;
+        }
 
         // Other code that might be useful later:
         // this.node.value = this.node.options[selectedIndex].value;
@@ -462,7 +466,7 @@ export default class ControlPanel {
         }
 
         if (structure.$.control !== "button") {
-            console.log('Set', path, settings[name]);
+            // console.log('Set', path, settings[name]);
             structure.set_value(settings[name]);
         }
         return false;
