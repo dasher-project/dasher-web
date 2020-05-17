@@ -226,28 +226,40 @@ class Control {
     set_value(value) {
         const listener = (
             this._valueListener === null || this._valueListener === undefined ?
-            () => {} :
-            this._valueListener
-        );
+            () => {} : this._valueListener);
 
         if (this.$.control === "select") {
-            const index = value.index;
-            value = value.value;
-
-
-
-            // More code here. Method like set_option(index, optionString) that
-            // selects the option with the matching string if there is one, or
-            // the index otherwise.
+            this.select_option(value.value, value.index);
+            listener(this.node.selectedIndex, this.node.value);
         }
-
-        if (this.$.control === "checkbox") {
-            value = !!value;
-            this.node.checked = value;
+        else {
+            if (this.$.control === "checkbox") {
+                value = !!value;
+                this.node.checked = value;
+            }
+            else {
+                if (this.$.control === "number") {
+                    const parser = this._isFloat ? parseFloat : parseInt;
+                    value = parser(value);
+                }
+                this.node.value = value;
+            }
             listener(value);
         }
+    }
 
+    select_option(selectedString, selectedIndex) {
+        const foundIndex = (
+            selectedString === undefined ? -1 :
+            this._optionStrings.indexOf(selectedString));
+        this.node.selectedIndex = (
+            foundIndex === -1 ? selectedIndex : foundIndex);
 
+        // Other code that might be useful later:
+        // this.node.value = this.node.options[selectedIndex].value;
+        // this.node.options.forEach((option, index)=> {
+        //     option.setAttribute('selected', index === foundIndex);
+        // });
     }
 }
 
