@@ -22,6 +22,8 @@ import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 
+import DasherAPI from './dasherAPI.js'
+
 import Speech from './speech.js';
 
 import PageBuilder from "../pagebuilder.js";
@@ -83,6 +85,9 @@ export default class UserInterface {
 
         //Second screen
         this._opener = null;
+
+        //Dasher API (webasm) tester
+        this._dasherAPI = new DasherAPI();
     }
 
     get header() {
@@ -343,6 +348,9 @@ export default class UserInterface {
             this._load_predictor_controls(new Piece('div', this._header));
             return;
         }
+        this._dasherButton = this._load_button(
+          "DasherAPI", this._panels.developer.piece,
+          () => this.clicked_DasherAPI());
         this._buttonPointer = this._load_button(
             "Pointer", this._panels.developer.piece,
             () => this.clicked_pointer());
@@ -826,6 +834,9 @@ export default class UserInterface {
     }
     clicked_popup() {
        this._opener = window.open("","wildebeast","width=300,height=300,scrollbars=1,resizable=1");
+    }
+    clicked_DasherAPI() {
+      this._dasherAPI.testAPI();
     }
 
     clicked_pointer() {

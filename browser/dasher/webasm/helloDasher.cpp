@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <emscripten/emscripten.h>
 
 using namespace std;
 
@@ -17,10 +18,23 @@ int main(int argc, char ** argv) {
   printf("Hello, world2!\n");
   runTests();
 }
+
 /******* Dasher API *****/
 string getData(){
   return "Goodbye Dasher";
 }
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void EMSCRIPTEN_KEEPALIVE myFunction(int argc, char ** argv) {
+    printf("MyFunction Called\n");
+}
+
+#ifdef __cplusplus
+}
+#endif
 /****** TESTS *******/
 void runTests(){
   testWriteFile();
