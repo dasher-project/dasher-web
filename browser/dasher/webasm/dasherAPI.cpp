@@ -15,7 +15,7 @@ void testReadFile();
 //Function to return arbitrary string
 //Integrate other lib/file
 int main(int argc, char ** argv) {
-  printf("Hello, world2!\n");
+  printf("Hello, world!\n");
   runTests();
 }
 

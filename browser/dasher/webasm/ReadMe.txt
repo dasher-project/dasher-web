@@ -9,12 +9,15 @@ Install Emscripten
 
 https://webassembly.org/getting-started/developers-guide/
 
-Build Sample HTML
+Source the Environment
 
-em++ helloDasher.cpp -O3 -s WASM=1 -s NO_EXIT_RUNTIME=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall']" -o helloDasher.js
+$ source ./emsdk_env.sh --build=Release
+
+Build the WebASM (note use of makefile)
+
+$ make
 
 Helpful Resources:
-
 
 https://emscripten.org/docs/getting_started/Tutorial.html
 

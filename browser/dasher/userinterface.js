@@ -22,7 +22,7 @@ import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 
-import DasherAPI from './dasherAPI.js'
+import DasherWebASM from './dasherWebASM.js'
 
 import Speech from './speech.js';
 
@@ -87,7 +87,7 @@ export default class UserInterface {
         this._opener = null;
 
         //Dasher API (webasm) tester
-        this._dasherAPI = new DasherAPI();
+        this._dasherAPI = new DasherWebASM();
     }
 
     get header() {
