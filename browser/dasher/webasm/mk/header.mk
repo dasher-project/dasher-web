@@ -1,7 +1,8 @@
 ##########################################
-#        EMMA TECHNOLOGIES, L.L.C.       #
-#           Copyright (c) 2013.          #
-#           All rights reserved.         #
+#        					Dasher				         #
+#           Copyright (c) 2020.          #
+#             MIT licensed							 #
+#   https://opensource.org/licenses/MIT  #
 ##########################################
 # Purpose: Define generic make rules/terms
 #   that are required to be defined at the
