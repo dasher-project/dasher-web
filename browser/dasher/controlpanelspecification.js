@@ -45,7 +45,7 @@ export default {
 
     "speed":{
         $: {"order": 2},
-        
+
              "speed":{$:{"order": 0, "html": "span"}},
         "horizontal":{$:{"order": 1, "control":"number",
                          "value": "0.2", "label":"Left-Right"}},
@@ -95,6 +95,8 @@ export default {
         "advance":{$:{
             "order": 6, "control": "button"}},
         "diagnostic":{$:{
-            "order": 7, "html": "div"}}
+            "order": 7, "html": "div"}},
+        "webasm":{$:{
+            "order": 8, "control": "button"}},
     }
 };

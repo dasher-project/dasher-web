@@ -18,11 +18,11 @@ import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 
+import DasherWebASM from './dasherWebASM.js'
+
 import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
-
-import DasherWebASM from './dasherWebASM.js'
 
 import Speech from './speech.js';
 
@@ -95,11 +95,8 @@ export default class UserInterface {
 
         this._stopCallback = null;
 
-        //Second screen
-        this._opener = null;
-
         //Dasher API (webasm) tester
-        this._dasherAPI = new DasherWebASM();
+        this._dasherWebASM = new DasherWebASM();
     }
 
     get header() {
@@ -173,7 +170,7 @@ export default class UserInterface {
         this._load_message();
         this._load_view();
         this._load_control_panel(loadingID);
-        
+
         this._load_controls();
         this._load_pointer();
         this._load_speed_controls();
@@ -235,7 +232,7 @@ export default class UserInterface {
         }
         this._controlPanel.select_panel("main");
     }
-    
+
     _load_controls() {
         if (this._keyboardMode) {
             // In keyboard mode, the prediction select control is the only
@@ -245,9 +242,6 @@ export default class UserInterface {
             const piece = new Piece('div', this._header);
             piece.add_child(this._panels.main.prediction.piece);
         }
-        this._dasherButton = this._load_button(
-          "DasherAPI", this._panels.developer.piece,
-          () => this.clicked_DasherAPI());
 
         this._load_settings_management_controls();
 
@@ -401,6 +395,8 @@ export default class UserInterface {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
         };
+
+        panel.webasm.listener = this.clicked_DasherWebASM.bind(this);
 
         this._load_advance_controls();
         this._load_diagnostic();
@@ -559,9 +555,8 @@ export default class UserInterface {
                     (originHolder === null || originHolder === undefined) ?
                     "N/A" : originHolder.message);
             }
-
-            //Process the current input
-            this._process_input(originHolder);
+            this.message = (
+                originHolder === null ? undefined : originHolder.message);
 
             // Process one draw cycle.
             this.zoomBox.viewer.draw(this._limits);
@@ -634,20 +629,8 @@ export default class UserInterface {
         if (this._intervalRender === null && this.zoomBox !== null) {
             this._start_render(true);
         }
-
     }
-    _process_input(originHolder){
-      if(originHolder !== null && this._opener !== null){
-        var html = "<html><head></head><body>"+originHolder.message+"</body></html>";
-        this._opener.document.open();
-        this._opener.document.write(html);
-        this._opener.document.close();
-      }
 
-      //Update the ui element
-      this.message = (
-          originHolder === null ? undefined : originHolder.message);
-    }
     // Go-Random button was clicked.
     clicked_random() {
         if (this._intervalRender === undefined) {
@@ -676,12 +659,6 @@ export default class UserInterface {
         this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
     }
-    clicked_popup() {
-       this._opener = window.open("","wildebeast","width=300,height=300,scrollbars=1,resizable=1");
-    }
-    clicked_DasherAPI() {
-      this._dasherAPI.testAPI();
-    }
 
     // Pointer button was clicked.
     clicked_pointer() {
@@ -703,6 +680,11 @@ export default class UserInterface {
 
         // The other button will switch to random mode.
         this._panels.developer.random.node.textContent = "Go Random";
+    }
+
+    //Web ASM button was clicked.
+    clicked_DasherWebASM() {
+      this._dasherWebASM.testAPI();
     }
 
     _new_ZoomBox(startRender) {
