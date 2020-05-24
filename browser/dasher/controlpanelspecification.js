@@ -66,14 +66,17 @@ export default {
     "manage":{
         $: {"order": 4},
 
-        "copy": {$:{
-            "order": 0, "control": "button", "label": "Copy setttings"}},
-        "paste": {$:{
-            "order": 1, "control": "button", "label": "Paste setttings"}},
-        "result": {
-            $:{"order": 2, "html":"div"},
-            "outcome": {$:{"order": 0, "html":"span", "label":""}},
-             "detail": {$:{"order": 1, "html":"pre"}}
+        "manager": {
+            $:{"after":"manager"},
+            "copy": {$:{
+                "order": 0, "control": "button", "label": "Copy setttings"}},
+            "paste": {$:{
+                "order": 1, "control": "button", "label": "Paste setttings"}},
+            "result": {
+                $:{"order": 2, "html":"div"},
+                "outcome": {$:{"order": 0, "html":"span", "label":""}},
+                "detail": {$:{"order": 1, "html":"pre"}}
+            }
         }
     },
 

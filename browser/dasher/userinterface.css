@@ -3,6 +3,8 @@
 MIT licensed, see https://opensource.org/licenses/MIT
 */
 
+@import url(controlpanel.css);
+
 html {font-family: sans-serif;}
 p.small-print {font-size: 0.7rem;}
 p.small-print a {text-decoration: none;}
@@ -57,47 +59,6 @@ The user interface is laid out as follows, in a browser.
 #user-interface.keyboard .header > *:nth-child(2) {
     /* background-color: palegoldenrod; */
     flex: auto;
-}
-
-.header__selectors {
-    flex: none;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    text-align: center;
-}
-@media (orientation: portrait) {
-    /* .header { background-color: peachpuff; } */
-    .header__selectors { grid-template-columns: repeat(2, 1fr); }
-}
-
-.header__selectors > div > .cwv-button {
-    /* background-color: plum; */
-    width: 90%;
-}
-.header__selector_selected {
-    outline: 1px var(--accent-colour) solid !important;
-    outline-offset: 1px;
-}
-
-input[type="color"] + label
-{
-    margin-left: 0.25rem;
-}
-
-.header__panel {
-    /* background-color: rebeccapurple; */
-    display: none;
-}
-.header__panel_selected {
-    /* background-color: wheat; */
-    display: block;
-    flex: auto;
-}
-
-.header__panel_selected.header__panel-colour div {
-    padding: 0.25em;
-    display: inline-block;
 }
 
 #message-holder label {display: block; flex: none;}
@@ -174,18 +135,4 @@ Make sure that can't happen by not showing any such controls.
 */
 #user-interface.keyboard input[type="number"] {
     display: none;
-}
-
-.header__result {
-    opacity: 1;
-}
-
-.header__result-stale {
-    opacity: 0;
-    transition: opacity var(--transition) linear;
-}
-
-.header__result pre {
-    font-family: monospace;
-    white-space: pre;
 }

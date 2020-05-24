@@ -330,14 +330,14 @@ export default class ControlPanel {
 
     _instantiate() {
         this._selectors = new Piece('div');
-        this._selectors.node.classList.add('header__selectors');
+        this._selectors.node.classList.add('control-panel__selectors');
 
         this.descend((structure, path, statePiece) => {
             if (structure.$.panel && path.length > 0) {
                 const label = path[path.length - 1];
                 const piece = new Piece('div', statePiece);
                 piece.node.classList.add(
-                    'header__panel', `header__panel-${label}`);
+                    'control-panel__panel', `control-panel__panel-${label}`);
                 structure.$.piece = piece;
             
                 structure.$.selector = new Control(
@@ -406,9 +406,10 @@ export default class ControlPanel {
             if (structure.$.panel && path.length > 0) {
                 const label = path[path.length - 1];
                 structure.$.piece.node.classList.toggle(
-                    'header__panel_selected', selectedLabel === label);
+                    'control-panel__panel_selected', selectedLabel === label);
                 structure.$.selector.node.classList.toggle(
-                    'header__selector_selected', selectedLabel === label);
+                    'control-panel__selector_selected',
+                    selectedLabel === label);
             }
         });
     }
@@ -525,6 +526,64 @@ const afterInstantiate = {
             sheet.deleteRule(inserted);
             sheet.insertRule(`rect.${name} {fill: ${value};}`, inserted);
         };
+    },
+
+    manager: function(path, structure) {
+        const resultNode = structure.result.$.piece.node;
+        const outcomeNode = structure.result.outcome.$.piece.node;
+        const detailNode = structure.result.detail.$.piece.node;
+
+        resultNode.classList.add("control-panel__result");
+        let fadeTimeout = undefined;
+        const show_result = (outcome, detail) => {
+            if (fadeTimeout !== undefined) {
+                clearTimeout(fadeTimeout);
+            }
+            outcomeNode.textContent = outcome;
+            detailNode.textContent = detail === undefined ? "" : detail;
+            resultNode.classList.remove("control-panel__result-stale");
+            if (detail === undefined) {
+                fadeTimeout = setTimeout(
+                    () => resultNode.classList.add("control-panel__result-stale"),
+                    1000);
+            }
+        };
+
+        structure.copy.listener = () => {
+            if (navigator.clipboard === undefined) {
+                show_result("Copy failed", "No clipboard access");
+            }
+            else {
+                navigator.clipboard.writeText(this.json_stringify())
+                .then(ok => show_result("Copied OK", ok))
+                .catch(error => show_result("Copy failed", error));
+            }
+        }
+
+        structure.paste.listener = () => {
+            if (navigator.clipboard === undefined) {
+                show_result("Paste failed", "No clipboard access");
+            }
+            else {
+                navigator.clipboard.readText()
+                .then(text => {
+                    let settings;
+                    try {
+                        settings = JSON.parse(text);
+                    }
+                    catch {
+                        show_result("Paste isn't JSON", text);
+                        settings = undefined;
+                    }
+                    if (settings !== undefined) {
+                        this.set_values(settings);
+                        show_result("Paste OK");
+                        // , JSON.stringify(settings, undefined, 4));
+                    }
+                })
+                .catch(error => show_result("Paste failed", error));
+            }
+        }
     }
 
 };

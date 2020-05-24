@@ -1,0 +1,71 @@
+/*
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.
+MIT licensed, see https://opensource.org/licenses/MIT
+*/
+
+/*
+Cascading Style Sheet for the control panel. This file is imported by the
+userinterface.css file.
+
+Try to follow the Block Element Modifier convention, see:  
+https://en.bem.info/methodology/naming-convention/
+*/
+
+/* Panels and their selector buttons.
+ */
+.control-panel__selectors {
+    flex: none;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+}
+@media (orientation: portrait) {
+    /* .header { background-color: peachpuff; } */
+    .control-panel__selectors { grid-template-columns: repeat(2, 1fr); }
+}
+
+.control-panel__selectors > div > .cwv-button {
+    /* background-color: plum; */
+    width: 90%;
+}
+.control-panel__selector_selected {
+    outline: 1px var(--accent-colour) solid !important;
+    outline-offset: 1px;
+}
+
+input[type="color"] + label
+{
+    margin-left: 0.25rem;
+}
+
+.control-panel__panel {
+    /* background-color: rebeccapurple; */
+    display: none;
+}
+.control-panel__panel_selected {
+    /* background-color: wheat; */
+    display: block;
+    flex: auto;
+}
+
+.control-panel__panel_selected.control-panel__panel-colour div {
+    padding: 0.25em;
+    display: inline-block;
+}
+
+/* Fading result display, used by the afterInstantiate.manager piece.
+ */
+.control-panel__result {
+    opacity: 1;
+}
+
+.control-panel__result-stale {
+    opacity: 0;
+    transition: opacity var(--transition) linear;
+}
+
+.control-panel__result pre {
+    font-family: monospace;
+    white-space: pre;
+}
