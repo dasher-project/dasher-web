@@ -26,6 +26,12 @@ Backlog
     current code, the six buttons push out the actual controls on a phone
     screen. Maybe just show one button by default that cycles through, and have
     an option to expand all the settings panels.
+-   Change controlpanel.afterInstantiate to be based on JS Symbol constants
+    and a Map maybe, instead of a dictionary object. See:
+
+    -   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
+    -   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+-   
 -   Maybe arrange_children on resize. Also there are some cases in which the
     white rectangle doesn't extend to the edge of the zooming area.
 -   Improve the Viewer textWidth to be based on a bounding box from the font

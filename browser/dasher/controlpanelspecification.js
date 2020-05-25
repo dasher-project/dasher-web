@@ -69,20 +69,25 @@ export default {
         "settings": {
             $:{"after":"manager"},
             "copy": {$:{
-                "order": 0, "control": "button", "label": "Copy setttings"}},
+                "order": 0, "control": "button", "label": "Copy settings"}},
             "paste": {$:{
-                "order": 1, "control": "button", "label": "Paste setttings"}},
+                "order": 1, "control": "button", "label": "Paste settings"}},
+            "reset": {$:{
+                "order": 2, "control": "button", "label": "Defaults"}},
             "result": {
-                $:{"order": 2, "html":"div"},
+                $:{"order": 3, "html":"div"},
                 "outcome": {$:{"order": 0, "html":"span", "label":""}},
                 "detail": {$:{"order": 1, "html":"pre"}}
             },
+            "Save settings in browser": {$:{
+                "order": 4, "html": "span"}},
+            "saveAutomatically": {$:{
+                "order": 5, "control": "checkbox", "value": true,
+                "label": "Automatically"}},
             "save": {$:{
-                "order": 3, "control": "button", "label": "Save in browser"}},
+                "order": 6, "control": "button", "label": "Save now"}},
             "load": {$:{
-                "order": 4, "control": "button", "label": "Load from browser"}},
-            "reset": {$:{
-                "order": 5, "control": "button", "label": "Defaults"}}
+                "order": 7, "control": "button", "label": "Load now"}},
         }
     },
 

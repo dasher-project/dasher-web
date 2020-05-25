@@ -21,6 +21,8 @@ class Control {
         this._selectedIndex = undefined;
         this._selectedString = undefined;
 
+        this._panelListener = null;
+
         this._label = Control.make_label(
             $, path, this._labelFirst && $.control !== "button");
         this._identifier = path.join(pathJoin);
@@ -34,11 +36,26 @@ class Control {
         if ($.control === "button") {
             this._construct_button(parentPiece);
         }
-        else if ($.control === "select") {
-            this._construct_select(parentPiece);
-        }
         else {
-            this._construct_input(parentPiece);
+            if ($.control === "select") {
+                this._construct_select(parentPiece);
+            }
+            else {
+                this._construct_input(parentPiece);
+            }
+            this._add_panel_listener();
+        }
+    }
+
+    get panelListener() {return this._panelListener;}
+    set panelListener(panelListener) {this._panelListener = panelListener;}
+    _add_panel_listener() {
+        this.node.addEventListener(
+            this._listenerType, this._panel_listener.bind(this));
+    }
+    _panel_listener(event) {
+        if (this.panelListener !== null) {
+            this.panelListener(event);
         }
     }
 
@@ -131,7 +148,7 @@ class Control {
                 ) : this.$.value
             )
         );
-        if (this._parsedValue !== undefined) {
+        if (this._parsedValue !== undefined && this.$.control !== "checkbox") {
             attributes.value = this._parsedValue;
         }
         if (this.$.control === "number") {
@@ -143,7 +160,12 @@ class Control {
         });
         this.active = !!this.active;
         if (this._parsedValue !== undefined) {
-            this.node.value = this._parsedValue;
+            if (this.$.control === "checkbox") {
+                this.node.checked = this._parsedValue;
+            }
+            else {
+                this.node.value = this._parsedValue;
+            }
         }
     }
 
@@ -215,6 +237,7 @@ class Control {
         // to all its <option> children and that's what makes it work. If the
         // children get removed, the listener has to be set again.
         this.listener = this.listener;
+        this._add_panel_listener();
     }
 
     get json() {
@@ -306,10 +329,16 @@ export default class ControlPanel {
         this._cssNode = undefined;
         this._selectors = undefined;
         this._defaultValues = undefined;
+        this._managerListener = null;
     }
 
     // Maybe this getter should return Object.assign({}, _defaultValues).
     get defaultValues() {return this._defaultValues;}
+
+    get managerListener() {return this._managerListener;}
+    set managerListener(managerListener) {
+        this._managerListener = managerListener;
+    }
 
     descend(callback, state) {
         return this._descend(this._structure, [], callback, state);
@@ -388,6 +417,11 @@ export default class ControlPanel {
             if (structure.$.control !== undefined) {
                 const control = new Control(statePiece, path, structure.$);
                 this.replace(path, control);
+                control.panelListener = () => {
+                    if (this.managerListener !== null) {
+                        this.managerListener();
+                    }
+                };
                 return false;
             }
 
@@ -541,6 +575,7 @@ class ControlPanelManager {
         this._fadeTimeout = null;
         this._databaseVersion = 1;
         this._objectStoreKey = 0;
+        this._everLoaded = false;
     }
 
     _show_result(outcome, detail) {
@@ -566,13 +601,16 @@ class ControlPanelManager {
 
         this._structure.copy.listener = this.copy_to_clipboard.bind(this);
         this._structure.paste.listener = this.paste_from_clipboard.bind(this);
-        this._structure.save.listener = this.save_to_browser.bind(this);
+        this._structure.save.listener = this.save_to_browser.bind(this, true);
         this._structure.load.listener = this.load_from_browser.bind(this);
 
         this._structure.reset.listener = () => {
             this._controlPanel.set_values(this._controlPanel.defaultValues);
-            this.save_to_browser();
+            this.save_to_browser(true);
         };
+
+        this._structure.saveAutomatically.listener = this._automatic_save.bind(
+            this);
 
         this.load_from_browser();
         return this;
@@ -613,12 +651,20 @@ class ControlPanelManager {
         .catch(error => this._show_result("Paste failed", error));
     }
 
-    save_to_browser() {
+    save_to_browser(showResult) {
         this._open_object_store("readwrite").catch(() => {}).then(store => {
             const putRequest = store.put(
                 this._controlPanel.get_values(), this._objectStoreKey);
             putRequest.onsuccess = event => {
-                this._show_result("Saved OK.", event.target.result);
+                if (showResult) {
+                    this._show_result(
+                        "Saved OK.",
+                        // Only set a detail if the key isn't as expected.
+                        event.target.result === this._objectStoreKey ?
+                        undefined :
+                        event.target.result
+                    );
+                }
             };
         });
     }
@@ -626,9 +672,10 @@ class ControlPanelManager {
     load_from_browser() {
         this._open_object_store("readonly").catch(() => {}).then(store =>
             store.get(this._objectStoreKey).onsuccess = event => {
-                this._show_result("Loaded OK");
+                this._show_result("Loaded OK.");
                 // , JSON.stringify( event.target.result, undefined, 4));
                 this._controlPanel.set_values(event.target.result);
+                this._everLoaded = true;
             }
         )
     }
@@ -685,6 +732,24 @@ class ControlPanelManager {
         };
     });}
 
+    _automatic_save(checked) {
+        // The values at the point of saveAutomatically must be saved,
+        // whatever its setting. If automatic save has just been switched
+        // off, don't inform the user because it could cause confusion.
+        if (this._everLoaded) {
+            this.save_to_browser(checked);
+        }
+
+        // If the save-automatically box is ticked, set the control panel
+        // manager listener to a lambda that silently saves all settings in the
+        // database. Otherwise, the manager listener to null.
+        this._controlPanel.managerListener = (
+            checked ? this.save_to_browser.bind(this, false) : null);
+
+        // If saving automatically, deactivate the save and load buttons.
+        this._structure.save.active = !checked;
+        this._structure.load.active = !checked;
+    }
 }
 
 const afterInstantiate = {
