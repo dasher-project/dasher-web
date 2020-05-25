@@ -532,8 +532,8 @@ const afterInstantiate = {
         const resultNode = structure.result.$.piece.node;
         const outcomeNode = structure.result.outcome.$.piece.node;
         const detailNode = structure.result.detail.$.piece.node;
-
         resultNode.classList.add("control-panel__result");
+
         let fadeTimeout = undefined;
         const show_result = (outcome, detail) => {
             if (fadeTimeout !== undefined) {
@@ -544,7 +544,8 @@ const afterInstantiate = {
             resultNode.classList.remove("control-panel__result-stale");
             if (detail === undefined) {
                 fadeTimeout = setTimeout(
-                    () => resultNode.classList.add("control-panel__result-stale"),
+                    () => resultNode.classList.add(
+                        "control-panel__result-stale"),
                     1000);
             }
         };
@@ -583,6 +584,64 @@ const afterInstantiate = {
                 })
                 .catch(error => show_result("Paste failed", error));
             }
+        }
+
+        // The database and object store get the same name, based on the last
+        // segment of the path.
+        const name = path[path.length - 1];
+
+        structure.save.listener = () => {
+            if (!window.indexedDB) {
+                show_result("No database access", window.indexedDB);
+                return;
+            }
+            const request = window.indexedDB.open(name, 1);
+            request.onerror = event => {
+                show_result(
+                    "Failed to open database",
+                    [event.target.errorCode, request.error]);
+            };
+            request.onupgradeneeded = event => {
+                event.target.result.createObjectStore(name);
+            };
+            request.onsuccess = event => {
+                const database = event.target.result;
+                const transaction = database.transaction([name], "readwrite");
+                transaction.onerror = event => {
+                    show_result("Transaction failed", event.target.error);
+                }
+                const store = transaction.objectStore(name);
+                const putRequest =  store.put({"a":"b"}, 0);
+                putRequest.onsuccess = event => {
+                    show_result("Put OK.");
+                };
+            };
+        }
+
+        structure.delete.listener = () => {
+            if (!window.indexedDB) {
+                show_result("No database access", window.indexedDB);
+                return;
+            }
+            const request = window.indexedDB.open(name, 1);
+            request.onerror = event => {
+                show_result(`Failed to open database`, event.target.error);
+            };
+            request.onupgradeneeded = event => {
+                event.target.result.createObjectStore(name);
+            };
+            request.onsuccess = event => {
+                const database = event.target.result;
+                const transaction = database.transaction([name], "readwrite");
+                transaction.onerror = event => {
+                    show_result("Transaction failed", event.target.error);
+                }
+                const store = transaction.objectStore(name);
+                const putRequest =  store.delete(0);
+                putRequest.onsuccess = event => {
+                    show_result("Delete OK.");
+                };
+            };
         }
     }
 

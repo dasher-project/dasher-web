@@ -66,7 +66,7 @@ export default {
     "manage":{
         $: {"order": 4},
 
-        "manager": {
+        "settings": {
             $:{"after":"manager"},
             "copy": {$:{
                 "order": 0, "control": "button", "label": "Copy setttings"}},
@@ -76,7 +76,12 @@ export default {
                 $:{"order": 2, "html":"div"},
                 "outcome": {$:{"order": 0, "html":"span", "label":""}},
                 "detail": {$:{"order": 1, "html":"pre"}}
-            }
+            },
+            "save": {$:{
+                "order": 3, "control": "button", "label": "Save in browser"}},
+            "delete": {$:{
+                "order": 3, "control": "button",
+                "label": "Delete from browser"}}
         }
     },
 
