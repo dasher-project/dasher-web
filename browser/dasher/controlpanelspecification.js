@@ -79,9 +79,10 @@ export default {
             },
             "save": {$:{
                 "order": 3, "control": "button", "label": "Save in browser"}},
-            "delete": {$:{
-                "order": 3, "control": "button",
-                "label": "Delete from browser"}}
+            "load": {$:{
+                "order": 4, "control": "button", "label": "Load from browser"}},
+            "reset": {$:{
+                "order": 5, "control": "button", "label": "Defaults"}}
         }
     },
 

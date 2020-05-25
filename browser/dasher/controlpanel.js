@@ -18,6 +18,9 @@ class Control {
         this._optionStrings = undefined;
         this._active = undefined;
 
+        this._selectedIndex = undefined;
+        this._selectedString = undefined;
+
         this._label = Control.make_label(
             $, path, this._labelFirst && $.control !== "button");
         this._identifier = path.join(pathJoin);
@@ -83,11 +86,16 @@ class Control {
         });
         this.active = !!this.active;
 
+        // If option strings were set early, create <option> elements now.
         if (this.optionStrings !== undefined) {
             this.optionStrings.forEach(optionString => this.node.add(
                 new Option(optionString)
             ));
         }
+
+        this.select_option(
+            this.$.value === undefined ? undefined : this.$.value.value,
+            this.$.value === undefined ? 0 : this.$.value.index);
     }
 
     _with_label(parentPiece, build) {
@@ -187,8 +195,13 @@ class Control {
 
         this._optionStrings = optionStrings.slice();
 
-        // ToDo: Near here, get the current value and preserve it in case the
-        // new options include it.
+        if (this.node !== null && this.node.selectedIndex !== -1) {
+            // Get the current value and preserve it in case the new options
+            // include it but in a different place.
+            this._selectedIndex = this.node.selectedIndex;
+            this._selectedString = this.node.value;
+        }
+
         if (this.piece !== null) {
             this.piece.remove_all();
         }
@@ -196,9 +209,11 @@ class Control {
             this._optionStrings.forEach(optionString => this.node.add(
                 new Option(optionString)));
         }
-        // It seems that an input event listener added to a <select> gets
-        // added to all its <option> children and that's what makes it work.
-        // If the children get removed, the listener has to be set again.
+        this.select_option(this._selectedString, this._selectedIndex);
+
+        // It seems that an input event listener added to a <select> gets added
+        // to all its <option> children and that's what makes it work. If the
+        // children get removed, the listener has to be set again.
         this.listener = this.listener;
     }
 
@@ -208,7 +223,13 @@ class Control {
         }
 
         if (this.$.control === "select") {
-            return {"index": this.node.selectedIndex, "value": this.node.value};
+            return {
+                "index":
+                    this.node.selectedIndex === -1 ?
+                    this._selectedIndex :
+                    this.node.selectedIndex,
+                "value": this.node.value
+            };
         }
 
         if (this.$.control === "checkbox") {
@@ -252,12 +273,23 @@ class Control {
         const foundIndex = (
             selectedString === undefined ? -1 :
             this._optionStrings.indexOf(selectedString));
-        if (foundIndex !== -1) {
+        
+        if (foundIndex === -1) {
+            this._selectedIndex = selectedIndex;
+            this._selectedString = undefined;
+        }
+        else {
             selectedIndex = foundIndex;
+            this._selectedString = selectedString;
+            this._selectedIndex = selectedIndex;
         }
         if (selectedIndex !== undefined) {
             this.node.selectedIndex = selectedIndex;
         }
+
+        // Retain the selectedString and selectedIndex in case the optionStrings
+        // get set later. That supports early selection, like before the
+        // optionStrings get set.
 
         // Other code that might be useful later:
         // this.node.value = this.node.options[selectedIndex].value;
@@ -273,7 +305,11 @@ export default class ControlPanel {
 
         this._cssNode = undefined;
         this._selectors = undefined;
+        this._defaultValues = undefined;
     }
+
+    // Maybe this getter should return Object.assign({}, _defaultValues).
+    get defaultValues() {return this._defaultValues;}
 
     descend(callback, state) {
         return this._descend(this._structure, [], callback, state);
@@ -367,6 +403,8 @@ export default class ControlPanel {
             return statePiece;
         });
 
+        this._defaultValues = this.get_values();
+
         this.descend((structure, path) => {
             if (structure.$.after !== undefined) {
                 (afterInstantiate[structure.$.after].bind(this)
@@ -453,6 +491,26 @@ export default class ControlPanel {
         return JSON.stringify(this._structure, replacer, spaces);
     }
 
+    get_values() { return this.descend((structure, path, values) => {
+        if (path.length === 0) {
+            // Top of the structure; create the top of the value structure.
+            return {};
+        }
+
+        const name = path[path.length - 1];
+
+        if (structure.$.control === undefined) {
+            // Not a control; create new value structure node.
+            values[name] = {};
+            return values[name];
+        }
+
+        if (structure.$.control !== "button") {
+            values[name] = structure.json;
+        }
+        return false;
+    })}
+
     set_values(rootSettings) { this.descend((structure, path, settings) => {
         if (path.length === 0) {
             // Top of the structure; descend structure with same settings.
@@ -472,6 +530,161 @@ export default class ControlPanel {
         }
         return false;
     }, rootSettings); }
+}
+
+class ControlPanelManager {
+    constructor(controlPanel, structure, databaseName) {
+        this._controlPanel = controlPanel;
+        this._structure = structure;
+        this._databaseName = databaseName;
+
+        this._fadeTimeout = null;
+        this._databaseVersion = 1;
+        this._objectStoreKey = 0;
+    }
+
+    _show_result(outcome, detail) {
+        this._structure.result.outcome.$.piece.node.textContent = outcome;
+        this._structure.result.detail.$.piece.node.textContent = (
+            detail === undefined ? "" : detail);
+
+        const resultNode = this._structure.result.$.piece.node;
+        resultNode.classList.remove("control-panel__result-stale");
+        if (this._fadeTimeout !== null) {
+            clearTimeout(this._fadeTimeout);
+        }
+        if (detail === undefined) {
+            this._fadeTimeout = setTimeout(
+                () => resultNode.classList.add("control-panel__result-stale"),
+                1000);
+        }
+    }
+
+    load() {
+        this._structure.result.$.piece.node.classList.add(
+            "control-panel__result");
+
+        this._structure.copy.listener = this.copy_to_clipboard.bind(this);
+        this._structure.paste.listener = this.paste_from_clipboard.bind(this);
+        this._structure.save.listener = this.save_to_browser.bind(this);
+        this._structure.load.listener = this.load_from_browser.bind(this);
+
+        this._structure.reset.listener = () => {
+            this._controlPanel.set_values(this._controlPanel.defaultValues);
+            this.save_to_browser();
+        };
+
+        this.load_from_browser();
+        return this;
+    }
+
+    copy_to_clipboard() {
+        if (navigator.clipboard === undefined) {
+            this._show_result("Copy failed", "No clipboard access");
+            return;
+        }
+
+        navigator.clipboard.writeText(this._controlPanel.json_stringify())
+        .then(ok => this._show_result("Copied OK", ok))
+        .catch(error => this._show_result("Copy failed", error));
+    }
+
+    paste_from_clipboard() {
+        if (navigator.clipboard === undefined) {
+            this._show_result("Paste failed", "No clipboard access");
+            return;
+        }
+
+        navigator.clipboard.readText()
+        .then(text => {
+            let settings;
+            try {
+                settings = JSON.parse(text);
+            }
+            catch {
+                this._show_result("Paste isn't JSON", text);
+                settings = undefined;
+            }
+            if (settings !== undefined) {
+                this._controlPanel.set_values(settings);
+                this._show_result("Paste OK");
+            }
+        })
+        .catch(error => this._show_result("Paste failed", error));
+    }
+
+    save_to_browser() {
+        this._open_object_store("readwrite").catch(() => {}).then(store => {
+            const putRequest = store.put(
+                this._controlPanel.get_values(), this._objectStoreKey);
+            putRequest.onsuccess = event => {
+                this._show_result("Saved OK.", event.target.result);
+            };
+        });
+    }
+
+    load_from_browser() {
+        this._open_object_store("readonly").catch(() => {}).then(store =>
+            store.get(this._objectStoreKey).onsuccess = event => {
+                this._show_result("Loaded OK");
+                // , JSON.stringify( event.target.result, undefined, 4));
+                this._controlPanel.set_values(event.target.result);
+            }
+        )
+    }
+
+    _open_object_store(mode) { return new Promise((resolve, reject) => {
+        // Code is inside the Promise constructor but `this` is still the
+        // ControlPanelManager instance because we're also inside a lambda.
+        if (!window.indexedDB) {
+            this._show_result("No database access", window.indexedDB);
+            reject(window.indexedDB);
+            return;
+        }
+        const request = window.indexedDB.open(
+            this._databaseName, this._databaseVersion);
+        request.onerror = event => {
+            this._show_result(`Failed to open database`, event.target.error);
+            reject(event.target.error);
+            return;
+        };
+
+        let justUpgraded = false;
+        request.onupgradeneeded = event => {
+            // Object store has the same name as the database.
+            const database = event.target.result;
+            database.createObjectStore(this._databaseName);
+            justUpgraded = true;
+        };
+
+        request.onsuccess = event => {
+            const database = event.target.result;
+
+            const get_store = () => {
+                const transaction = database.transaction(
+                    [this._databaseName], mode);
+                transaction.onerror = event => {
+                    this._show_result("Transaction failed", event.target.error);
+                }
+                resolve(transaction.objectStore(this._databaseName));
+            }
+
+            if (justUpgraded) {
+                const transaction = database.transaction(
+                    [this._databaseName], "readwrite");
+                transaction.onerror = event => {
+                    this._show_result("Create failed", event.target.error);
+                };
+                transaction.objectStore(this._databaseName).add(
+                    this._controlPanel.get_values(), this._objectStoreKey);
+                transaction.oncomplete = get_store;
+            }
+            else {
+                get_store();
+            }
+        };
+    });}
+
 }
 
 const afterInstantiate = {
@@ -529,120 +742,9 @@ const afterInstantiate = {
     },
 
     manager: function(path, structure) {
-        const resultNode = structure.result.$.piece.node;
-        const outcomeNode = structure.result.outcome.$.piece.node;
-        const detailNode = structure.result.detail.$.piece.node;
-        resultNode.classList.add("control-panel__result");
-
-        let fadeTimeout = undefined;
-        const show_result = (outcome, detail) => {
-            if (fadeTimeout !== undefined) {
-                clearTimeout(fadeTimeout);
-            }
-            outcomeNode.textContent = outcome;
-            detailNode.textContent = detail === undefined ? "" : detail;
-            resultNode.classList.remove("control-panel__result-stale");
-            if (detail === undefined) {
-                fadeTimeout = setTimeout(
-                    () => resultNode.classList.add(
-                        "control-panel__result-stale"),
-                    1000);
-            }
-        };
-
-        structure.copy.listener = () => {
-            if (navigator.clipboard === undefined) {
-                show_result("Copy failed", "No clipboard access");
-            }
-            else {
-                navigator.clipboard.writeText(this.json_stringify())
-                .then(ok => show_result("Copied OK", ok))
-                .catch(error => show_result("Copy failed", error));
-            }
-        }
-
-        structure.paste.listener = () => {
-            if (navigator.clipboard === undefined) {
-                show_result("Paste failed", "No clipboard access");
-            }
-            else {
-                navigator.clipboard.readText()
-                .then(text => {
-                    let settings;
-                    try {
-                        settings = JSON.parse(text);
-                    }
-                    catch {
-                        show_result("Paste isn't JSON", text);
-                        settings = undefined;
-                    }
-                    if (settings !== undefined) {
-                        this.set_values(settings);
-                        show_result("Paste OK");
-                        // , JSON.stringify(settings, undefined, 4));
-                    }
-                })
-                .catch(error => show_result("Paste failed", error));
-            }
-        }
-
-        // The database and object store get the same name, based on the last
-        // segment of the path.
-        const name = path[path.length - 1];
-
-        structure.save.listener = () => {
-            if (!window.indexedDB) {
-                show_result("No database access", window.indexedDB);
-                return;
-            }
-            const request = window.indexedDB.open(name, 1);
-            request.onerror = event => {
-                show_result(
-                    "Failed to open database",
-                    [event.target.errorCode, request.error]);
-            };
-            request.onupgradeneeded = event => {
-                event.target.result.createObjectStore(name);
-            };
-            request.onsuccess = event => {
-                const database = event.target.result;
-                const transaction = database.transaction([name], "readwrite");
-                transaction.onerror = event => {
-                    show_result("Transaction failed", event.target.error);
-                }
-                const store = transaction.objectStore(name);
-                const putRequest =  store.put({"a":"b"}, 0);
-                putRequest.onsuccess = event => {
-                    show_result("Put OK.");
-                };
-            };
-        }
-
-        structure.delete.listener = () => {
-            if (!window.indexedDB) {
-                show_result("No database access", window.indexedDB);
-                return;
-            }
-            const request = window.indexedDB.open(name, 1);
-            request.onerror = event => {
-                show_result(`Failed to open database`, event.target.error);
-            };
-            request.onupgradeneeded = event => {
-                event.target.result.createObjectStore(name);
-            };
-            request.onsuccess = event => {
-                const database = event.target.result;
-                const transaction = database.transaction([name], "readwrite");
-                transaction.onerror = event => {
-                    show_result("Transaction failed", event.target.error);
-                }
-                const store = transaction.objectStore(name);
-                const putRequest =  store.delete(0);
-                putRequest.onsuccess = event => {
-                    show_result("Delete OK.");
-                };
-            };
-        }
+        const manager = new ControlPanelManager(
+            this, structure, path[path.length - 1]);
+        manager.load();
     }
 
 };
