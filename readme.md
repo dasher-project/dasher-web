@@ -19,6 +19,17 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
 Backlog
 =======
+-   Maybe replace the current userinterface.js stopCallback and pointer.js
+    touchEndCallback mechanisms, and anything similar, with a custom DOMEvent.
+    See:
+
+    -   https://developer.mozilla.org/en-US/docs/Web/API/Event
+    -   https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+
+    The root SVG item that holds the zooming user interface would be a suitable
+    EventTarget from which to dispatch these events. Using an event instead of a
+    callback seems more flexible and in keeping with the standard.
+
 -   Fix the childIndex that goes into the zoom box CSS class to be 1 sometimes.
     At the moment, it is always zero for the first child box. It should be 1 if
     the preceding parent box didn't have an even number of child boxes.
