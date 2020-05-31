@@ -2,7 +2,7 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 export default {
-    $:{$:{"panel":true}},
+    $:{$:{"after":"panel", "html":"fieldset"}},
 
     "main": {
         $: {"order": 0},
@@ -10,8 +10,12 @@ export default {
          "behaviour": {$:{"order": 1, "control":"select"}}
     },
 
-    "colour":{
-        $: {"order": 1},
+    "navigator": {
+        $: {"order": 1, "after":"navigator"}
+    },
+
+    "colour": {
+        $: {"order": 2},
         "fill": {
             $: {"order": 0, $: {"control": "color", "after":"colour"}},
             // See https://en.wikipedia.org/wiki/Web_colors
@@ -44,7 +48,7 @@ export default {
     },
 
     "speed":{
-        $: {"order": 2},
+        $: {"order": 3},
         
              "speed":{$:{"order": 0, "html": "span"}},
         "horizontal":{$:{"order": 1, "control":"number",
@@ -54,7 +58,7 @@ export default {
     },
 
     "speech":{
-        $: {"order": 3},
+        $: {"order": 4},
 
         "stop": {$:{
             "order": 0, "control": "checkbox", "label": "Speak on stop"}},
@@ -64,7 +68,7 @@ export default {
     },
 
     "manage":{
-        $: {"order": 4},
+        $: {"order": 5},
 
         "settings": {
             $:{"after":"manager"},
@@ -79,8 +83,9 @@ export default {
                 "outcome": {$:{"order": 0, "html":"span", "label":""}},
                 "detail": {$:{"order": 1, "html":"pre"}}
             },
-            "Save settings in browser": {$:{
-                "order": 4, "html": "span"}},
+            "saveSettings": {$:{
+                "order": 4, "html": "span",
+                "label":"Save settings in browser"}},
             "saveAutomatically": {$:{
                 "order": 5, "control": "checkbox", "value": true,
                 "label": "Automatically"}},
@@ -92,7 +97,7 @@ export default {
     },
 
     "developer": {
-        $: {"order": 5},
+        $: {"order": 6},
 
         "pointer":{$:{
             "order": 0, "control": "button"}},

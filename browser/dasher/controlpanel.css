@@ -11,8 +11,10 @@ Try to follow the Block Element Modifier convention, see:
 https://en.bem.info/methodology/naming-convention/
 */
 
-/* Panels and their selector buttons.
+/* Panels.
  */
+
+/*
 .control-panel__selectors {
     flex: none;
 
@@ -21,35 +23,65 @@ https://en.bem.info/methodology/naming-convention/
     text-align: center;
 }
 @media (orientation: portrait) {
-    /* .header { background-color: peachpuff; } */
     .control-panel__selectors { grid-template-columns: repeat(2, 1fr); }
 }
 
 .control-panel__selectors > div > .cwv-button {
-    /* background-color: plum; */
     width: 90%;
 }
 .control-panel__selector_selected {
     outline: 1px var(--accent-colour) solid !important;
     outline-offset: 1px;
 }
-
+*/
 input[type="color"] + label
 {
     margin-left: 0.25rem;
 }
 
-.control-panel__panel {
+div.control-panel__panel {
     /* background-color: rebeccapurple; */
     display: none;
 }
-.control-panel__panel_selected {
+div.control-panel__panel_selected {
     /* background-color: wheat; */
     display: block;
     flex: auto;
 }
 
-.control-panel__panel_selected.control-panel__panel-colour div {
+form {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    /* height: 100%; */
+}
+
+
+fieldset.control-panel__panel {
+    display: inline-block;
+    flex: none;
+    /* border: 0.25rem red dashed; */
+    /* height: 100%; */
+}
+
+legend.cwv-button {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+fieldset.control-panel__structure-navigator > div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* text-align: center; */
+    align-items: center;
+}
+
+fieldset.control-panel__structure-navigator > div .cwv-button + .cwv-button,
+fieldset.control-panel__structure-navigator > div .cwv-button
+{
+    margin: 0.25em;
+}
+
+.control-panel__structure-colour div {
     padding: 0.25em;
     display: inline-block;
 }
@@ -68,4 +100,9 @@ input[type="color"] + label
 .control-panel__result pre {
     font-family: monospace;
     white-space: pre;
+}
+
+.control-panel__structure-manage-settings-result {
+    background-color: blue;
+    float: right;
 }

@@ -61,6 +61,8 @@ The user interface is laid out as follows, in a browser.
     flex: auto;
 }
 
+/* #message-holder {float: right;} */
+
 #message-holder label {display: block; flex: none;}
 #user-interface.keyboard #message-holder label {display: none;}
 

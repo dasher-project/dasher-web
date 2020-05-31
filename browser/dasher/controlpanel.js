@@ -327,7 +327,7 @@ export default class ControlPanel {
         this._structure = structure;
 
         this._cssNode = undefined;
-        this._selectors = undefined;
+        // this._selectors = undefined;
         this._defaultValues = undefined;
         this._managerListener = null;
     }
@@ -394,25 +394,10 @@ export default class ControlPanel {
     }
 
     _instantiate() {
-        this._selectors = new Piece('div');
-        this._selectors.node.classList.add('control-panel__selectors');
+        // this._selectors = new Piece('div');
+        // this._selectors.node.classList.add('control-panel__selectors');
 
         this.descend((structure, path, statePiece) => {
-            if (structure.$.panel && path.length > 0) {
-                const label = path[path.length - 1];
-                const piece = new Piece('div', statePiece);
-                piece.node.classList.add(
-                    'control-panel__panel', `control-panel__panel-${label}`);
-                structure.$.piece = piece;
-            
-                structure.$.selector = new Control(
-                    new Piece('div', this._selectors), path,
-                    {"control": "button"});
-                structure.$.selector.listener = this.select_panel.bind(
-                    this, label);
-
-                statePiece = piece;
-            }
 
             if (structure.$.control !== undefined) {
                 const control = new Control(statePiece, path, structure.$);
@@ -431,6 +416,8 @@ export default class ControlPanel {
                     structure.$.html === "span" ?
                     Control.make_label(structure.$, path, true) :
                     undefined);
+                structure.$.piece.node.classList.add(
+                    `control-panel__structure-${path.join("-")}`)
                 statePiece = structure.$.piece;
             }
 
@@ -448,18 +435,36 @@ export default class ControlPanel {
     }
 
     set_parent(parentPiece) {
-        if (this._selectors !== undefined) {
-            parentPiece.add_child(this._selectors);
-        }
+        // if (this._selectors !== undefined) {
+        //     parentPiece.add_child(this._selectors);
+        // }
+        parentPiece.node.addEventListener('scroll', (event) => {
+            console.log(event.target.scrollLeft);
+        });
+        const widthPromises = [];
         this.descend((structure, path) => {
             if (path.length === 0) {
                 return true;
             }
-            if (structure.$.panel && path.length > 0) {
+            if (structure.$.panel !== undefined && path.length > 0) {
                 parentPiece.add_child(structure.$.piece);
+                widthPromises.push(structure.$.panel.get_width());
                 return false;
             }
-            throw new Error('Non-panel in structure.');
+            throw new Error(`Non-panel in structure. Path:${path}`);
+        });
+
+        Promise.all(widthPromises).then(widths => {
+            this.descend((structure, path) => {
+                if (path.length === 0) {
+                    return true;
+                }
+                if (structure.$.panel !== undefined && path.length > 0) {
+                    structure.$.panel.calculate_scroll_position(widths);
+                    return false;
+                }
+                throw new Error(`Non-panel in structure. Path:${path}`);
+            });
         });
     }
 
@@ -472,24 +477,44 @@ export default class ControlPanel {
     }
 
     select_panel(selectedLabel) {
+        let selected = false;
         this.descend((structure, path) => {
-            // Find everything that is a panel and toggle the css classes  on
-            // the panel and its selector accordingly.
-            if (structure.$.panel && path.length > 0) {
-                const label = path[path.length - 1];
-                structure.$.piece.node.classList.toggle(
-                    'control-panel__panel_selected', selectedLabel === label);
-                structure.$.selector.node.classList.toggle(
-                    'control-panel__selector_selected',
-                    selectedLabel === label);
+            if (selected) {
+                return false;
             }
+
+            if (structure.$.panel !== undefined && path.length > 0) {
+                const label = (
+                    selectedLabel === undefined ? undefined :
+                    path[path.length - 1]);
+
+                if (selectedLabel === label) {
+                    selected = true;
+                    console.log(
+                        structure.$.panel.scrollPosition,
+                        structure.$.piece.node.parentNode);
+                    structure.$.piece.node.parentNode.scrollLeft =
+                        structure.$.panel.scrollPosition;
+                }
+                return false;
+
+                // Find everything that is a panel and toggle the css classes  on
+                // the panel and its selector accordingly.
+                // structure.$.piece.node.classList.toggle(
+                //     'control-panel__panel_selected', selectedLabel === label);
+                // structure.$.selector.node.classList.toggle(
+                //     'control-panel__selector_selected',
+                //     selectedLabel === label);
+            }
+
+            return true;
         });
     }
 
     enable_controls() {
         this.descend(structure => {
-            if (structure.$.panel) {
-                structure.$.selector.active = true;
+            if (structure.$.controls !== undefined) {
+                structure.$.controls.forEach(control => control.active = true);
             }
             if (structure.$.control !== undefined) {
                 structure.active = true;
@@ -752,6 +777,70 @@ class ControlPanelManager {
     }
 }
 
+class Panel {
+    constructor(controlPanel, structure, path) {
+        this._controlPanel = controlPanel;
+        this.$ = structure.$;
+        this._name = path[path.length - 1];
+
+        this._scrollPosition = undefined;
+
+        this.$.piece.node.classList.add('control-panel__panel');
+        const legend = this.$.piece.create(
+            'legend', undefined, "< " + Control.make_label(this.$, path));
+        legend.classList.add('cwv-button');
+        legend.addEventListener('click', this.legend_on_click.bind(this));
+    }
+
+    get scrollPosition() {return this._scrollPosition;}
+
+    legend_on_click(event) {
+        this._controlPanel.select_panel('navigator');
+    }
+
+    get_width() {return new Promise((resolve, reject) => {
+        const styles = window.getComputedStyle(this.$.piece.node);
+        setTimeout(() => {
+            const propertyWidths = [
+                'border-left-width', 'border-right-width'
+            ].map(
+                // Property values will be in pixels, and with "px" suffix. The
+                // parseFloat() call ignores the suffix.
+                propertyName => parseFloat(styles.getPropertyValue(
+                    propertyName))
+            );
+            // console.log(
+            //     this._name,
+            //     propertyWidths,
+            //     styles.getPropertyValue('margin-left'),
+            //     this.$.piece.node.offsetWidth,
+            //     this.$.piece.node.scrollWidth
+            // );
+            // offsetWidth += structure.$.piece.node.offsetWidth;
+
+            resolve(this.$.piece.node.offsetWidth);
+        }, 0);
+    });}
+
+    calculate_scroll_position(widths) {
+        let position = 0;
+        let index;
+        for(index=0; index < this.$.order; index += 1) {
+            position += widths[index];
+        }
+        this._scrollPosition = position;
+        console.log(this._name, this._scrollPosition);
+    }
+}
+
+class PanelNavigator extends Panel {
+
+    // Override.
+    legend_on_click(event) {
+        this._controlPanel.select_panel(undefined);
+    }
+}
+
 const afterInstantiate = {
 
     border: function(path, structure) {
@@ -810,6 +899,31 @@ const afterInstantiate = {
         const manager = new ControlPanelManager(
             this, structure, path[path.length - 1]);
         manager.load();
+    },
+
+    panel: function(path, structure) {
+        structure.$.panel = new Panel(this, structure, path);
+    },
+
+    navigator: function(navigatorPath, navigatorStructure) {
+        navigatorStructure.$.panel = new PanelNavigator(
+            this, navigatorStructure, navigatorPath);
+
+        navigatorStructure.$.controls = [];
+        const div = new Piece('div', navigatorStructure.$.piece);
+        this.descend((structure, path) => {
+            if (structure.$.after === "panel") {
+                const selector = new Control(div, path, {"control": "button"});
+                selector.listener = this.select_panel.bind(
+                    this, path[path.length - 1]);
+                navigatorStructure.$.controls.push(selector);
+
+                return false;
+            }
+            return true;
+        });
+
+
     }
 
 };

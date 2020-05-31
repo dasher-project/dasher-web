@@ -26,6 +26,11 @@ export default class Piece {
     static create(tag, parent, attributes, text, nameSpace) {
         if (nameSpace === undefined) {
             nameSpace = Piece.NS_for_tag(tag);
+            if (nameSpace === undefined) {
+                throw new Error(
+                    `Unknown name space for <${tag}>.` +
+                    ' Add it to Piece.nameSpaces in the piece.js file.');
+            }
         }
         else {
             const mappedNS = Piece.nameSpaces[nameSpace];
@@ -166,8 +171,8 @@ Piece.nameSpaces = {
     'html': {
         'url': 'http://www.w3.org/1999/xhtml',
         'tags': [
-            'div', 'span', 'button', 'h1', 'input', 'label', 'option', 'select',
-            'textarea'
+            'div', 'fieldset', 'form', 'span', 'button', 'h1', 'input', 'label',
+            'legend', 'option', 'pre', 'select', 'textarea'
         ]
     },
     'svg': {
