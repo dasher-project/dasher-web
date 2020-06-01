@@ -42,8 +42,7 @@
  * Please also consult the references in README.md file in this directory.
  */
 
-import * as assert from 'assert';
-import Vocabulary from "./vocabulary.js";
+import { rootSymbol, Vocabulary } from "./vocabulary.js";
 
 /**
  * Kneser-Ney "-like" smoothing parameters.
@@ -56,6 +55,15 @@ const knBeta = 0.77;
 
 /* Epsilon for sanity checks. */
 const epsilon = 1E-10;
+
+/**
+ * Platform-independent version of assert.
+ */
+const _assert = function(condition, message) {
+  if (!condition) {
+    throw Error("Assertion failed: " + (message || ""));
+  }
+};
 
 /**
  * Node in a search tree, which is implemented as a suffix trie that represents
@@ -92,7 +100,7 @@ class Node {
     // in this node was observed.
     this.count_ = 1;
     // Symbol that this node stores.
-    this.symbol_ = vocab.rootSymbol;
+    this.symbol_ = rootSymbol;
   }
 
   /**
@@ -171,8 +179,8 @@ export default class PPMLanguageModel {
    */
   constructor(vocab, maxOrder) {
     this.vocab_ = vocab;
-    assert(this.vocab_.size() > 1,
-           "Expecting at least two symbols in the vocabulary");
+    _assert(this.vocab_.size() > 1,
+            "Expecting at least two symbols in the vocabulary");
 
     this.maxOrder_ = maxOrder;
     this.root_ = new Node();
@@ -200,11 +208,11 @@ export default class PPMLanguageModel {
       // representing shorter contexts.
       symbolNode.count_++;
       let backoffNode = symbolNode.backoff_;
-      assert(backoffNode != null, "Expected valid backoff node!");
+      _assert(backoffNode != null, "Expected valid backoff node!");
       while (backoffNode != null) {
-        assert(backoffNode == this.root_ || backoffNode.symbol_ == symbol,
-               "Expected backoff node to be root or to contain " + symbol +
-               ". Found " + backoffNode.symbol_ + " instead");
+        _assert(backoffNode == this.root_ || backoffNode.symbol_ == symbol,
+                "Expected backoff node to be root or to contain " + symbol +
+                ". Found " + backoffNode.symbol_ + " instead");
         backoffNode.count_++;
         backoffNode = backoffNode.backoff_;
       }
@@ -220,7 +228,7 @@ export default class PPMLanguageModel {
         // Shortest possible context.
         symbolNode.backoff_ = this.root_;
       } else {
-        assert(node.backoff_ != null, "Expected valid backoff node");
+        _assert(node.backoff_ != null, "Expected valid backoff node");
         symbolNode.backoff_ = this.addSymbolToNode_(node.backoff_, symbol);
       }
     }
@@ -253,10 +261,10 @@ export default class PPMLanguageModel {
    * @final
    */
   addSymbolToContext(context, symbol) {
-    if (symbol <= vocab.rootSymbol) {  // Only add valid symbols.
+    if (symbol <= rootSymbol) {  // Only add valid symbols.
       return;
     }
-    assert(symbol < this.vocab_.size(), "Invalid symbol: " + symbol);
+    _assert(symbol < this.vocab_.size(), "Invalid symbol: " + symbol);
     while (context.head_ != null) {
       if (context.order_ < this.maxOrder_) {
         // Extend the current context.
@@ -284,12 +292,12 @@ export default class PPMLanguageModel {
    * @final
    */
   addSymbolAndUpdate(context, symbol) {
-    if (symbol <= vocab.rootSymbol) {  // Only add valid symbols.
+    if (symbol <= rootSymbol) {  // Only add valid symbols.
       return;
     }
-    assert(symbol < this.vocab_.size(), "Invalid symbol: " + symbol);
+    _assert(symbol < this.vocab_.size(), "Invalid symbol: " + symbol);
     const symbolNode = this.addSymbolToNode_(context.head_, symbol);
-    assert(symbolNode == context.head_.findChildWithSymbol(symbol));
+    _assert(symbolNode == context.head_.findChildWithSymbol(symbol));
     context.head_ = symbolNode;
     context.order_++;
     while (context.order_ > this.maxOrder_) {
@@ -424,8 +432,8 @@ export default class PPMLanguageModel {
       node = node.backoff_;
       gamma = totalMass;
     }
-    assert(totalMass >= 0.0,
-           "Invalid remaining probability mass: " + totalMass);
+    _assert(totalMass >= 0.0,
+            "Invalid remaining probability mass: " + totalMass);
 
     // Count the total number of symbols that should have their estimates
     // blended with the uniform distribution representing the zero context.
@@ -461,8 +469,9 @@ export default class PPMLanguageModel {
       newProbMass += probs[i];
       --leftSymbols;
     }
-    assert(totalMass == 0.0, "Expected remaining probability mass to be zero!");
-    assert(Math.abs(1.0 - newProbMass) < epsilon);
+    _assert(totalMass == 0.0,
+	    "Expected remaining probability mass to be zero!");
+    _assert(Math.abs(1.0 - newProbMass) < epsilon);
     return probs;
   }
 
