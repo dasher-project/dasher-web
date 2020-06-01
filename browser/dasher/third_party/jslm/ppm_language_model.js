@@ -42,9 +42,8 @@
  * Please also consult the references in README.md file in this directory.
  */
 
-const assert = require("assert");
-
-const vocab = require("./vocabulary");
+import * as assert from 'assert';
+import Vocabulary from "./vocabulary.js";
 
 /**
  * Kneser-Ney "-like" smoothing parameters.
@@ -165,7 +164,7 @@ class Context {
  * Prediction by Partial Matching (PPM) Language Model.
  * @final
  */
-class PPMLanguageModel {
+export default class PPMLanguageModel {
   /**
    * @param {?Vocabulary} vocab Symbol vocabulary object.
    * @param {number} maxOrder Maximum length of the context.
@@ -492,8 +491,3 @@ class PPMLanguageModel {
     this.printToConsole_(this.root_, "");
   }
 }
-
-/**
- * Exported APIs.
- */
-exports.PPMLanguageModel = PPMLanguageModel;
