@@ -42,7 +42,7 @@ Backlog
 
     -   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
     -   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
--   
+
 -   Maybe arrange_children on resize. Also there are some cases in which the
     white rectangle doesn't extend to the edge of the zooming area.
 -   Improve the Viewer textWidth to be based on a bounding box from the font
