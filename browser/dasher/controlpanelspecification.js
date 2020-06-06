@@ -5,7 +5,7 @@ export default {
     $:{$:{"after":"panel", "html":"fieldset"}},
 
     "main": {
-        $: {"order": 0},
+        $: {"order": 0, "label":""},
         "prediction": {$:{"order": 0, "control":"select"}},
          "behaviour": {$:{"order": 1, "control":"select"}}
     },

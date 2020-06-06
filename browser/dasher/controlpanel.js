@@ -327,7 +327,6 @@ export default class ControlPanel {
         this._structure = structure;
 
         this._cssNode = undefined;
-        // this._selectors = undefined;
         this._defaultValues = undefined;
         this._managerListener = null;
     }
@@ -435,37 +434,62 @@ export default class ControlPanel {
     }
 
     set_parent(parentPiece) {
-        // if (this._selectors !== undefined) {
-        //     parentPiece.add_child(this._selectors);
-        // }
-        parentPiece.node.addEventListener('scroll', (event) => {
-            console.log(event.target.scrollLeft);
+        // Handy diagnostic that prints the scrollLeft value when you scroll the
+        // control panel.
+        parentPiece.node.addEventListener('scroll', event => {
+            console.log(`Scrolled to: ${event.target.scrollLeft}`);
         });
-        const widthPromises = [];
+        // const widthPromises = [];
         this.descend((structure, path) => {
             if (path.length === 0) {
                 return true;
             }
+
+
+            // Change to anything that has html? Still return false because the
+            // html will already hold all child nodes.
             if (structure.$.panel !== undefined && path.length > 0) {
                 parentPiece.add_child(structure.$.piece);
-                widthPromises.push(structure.$.panel.get_width());
+                // widthPromises.push(structure.$.panel.get_width());
                 return false;
             }
+
+
+            // Get rid of this throw.
             throw new Error(`Non-panel in structure. Path:${path}`);
         });
 
-        Promise.all(widthPromises).then(widths => {
+        setTimeout(() => {
             this.descend((structure, path) => {
-                if (path.length === 0) {
-                    return true;
-                }
-                if (structure.$.panel !== undefined && path.length > 0) {
-                    structure.$.panel.calculate_scroll_position(widths);
+                if (structure.$.panel !== undefined) {
+                    console.log(
+                        'Bounding',
+                        path,
+                        structure.$.piece.node.getBoundingClientRect().x,
+                        parentPiece.node.getBoundingClientRect().x
+                    );
+                    structure.$.panel.scrollPosition = (
+                        structure.$.piece.node.getBoundingClientRect().x
+                        - parentPiece.node.getBoundingClientRect().x
+                    );
                     return false;
                 }
-                throw new Error(`Non-panel in structure. Path:${path}`);
+                return true;
             });
-        });
+        }, 0);
+
+        // Promise.all(widthPromises).then(widths => {
+        //     this.descend((structure, path) => {
+        //         if (path.length === 0) {
+        //             return true;
+        //         }
+        //         if (structure.$.panel !== undefined && path.length > 0) {
+        //             structure.$.panel.calculate_scroll_position(widths);
+        //             return false;
+        //         }
+        //         throw new Error(`Non-panel in structure. Path:${path}`);
+        //     });
+        // });
     }
 
     add_CSS_node() {
@@ -493,18 +517,22 @@ export default class ControlPanel {
                     console.log(
                         structure.$.panel.scrollPosition,
                         structure.$.piece.node.parentNode);
-                    structure.$.piece.node.parentNode.scrollLeft =
-                        structure.$.panel.scrollPosition;
+                    // structure.$.piece.node.parentNode.scrollLeft =
+                    //     structure.$.panel.scrollPosition;
+                    const panelNode = structure.$.piece.node;
+                    setTimeout(() => {
+                        const panelX = panelNode.getBoundingClientRect().x;
+                        const parentX = panelNode
+                        .parentNode.getBoundingClientRect().x;
+
+                        // console.log(
+                        //     selectedLabel, label, panelX, parentX,
+                        //     panelNode.parentNode.getBoundingClientRect());
+                        panelNode.parentNode.scrollLeft += panelX - parentX;
+                    }, 0);
+            
                 }
                 return false;
-
-                // Find everything that is a panel and toggle the css classes  on
-                // the panel and its selector accordingly.
-                // structure.$.piece.node.classList.toggle(
-                //     'control-panel__panel_selected', selectedLabel === label);
-                // structure.$.selector.node.classList.toggle(
-                //     'control-panel__selector_selected',
-                //     selectedLabel === label);
             }
 
             return true;
@@ -767,7 +795,7 @@ class ControlPanelManager {
 
         // If the save-automatically box is ticked, set the control panel
         // manager listener to a lambda that silently saves all settings in the
-        // database. Otherwise, the manager listener to null.
+        // database. Otherwise, set the manager listener to null.
         this._controlPanel.managerListener = (
             checked ? this.save_to_browser.bind(this, false) : null);
 
@@ -787,35 +815,61 @@ class Panel {
 
         this.$.piece.node.classList.add('control-panel__panel');
         const legend = this.$.piece.create(
-            'legend', undefined, "< " + Control.make_label(this.$, path));
-        legend.classList.add('cwv-button');
-        legend.addEventListener('click', this.legend_on_click.bind(this));
+            'legend', undefined, Control.make_label(this.$, path));
+
+        if (this._set_navigator_label() !== undefined) {
+            legend.classList.add('cwv-button');
+            legend.addEventListener(
+                'click', this._controlPanel.select_panel.bind(
+                    this._controlPanel, this.legend_select_label)
+            );
+        }
+    }
+
+    _set_navigator_label() {
+        this._navigatorLabel = undefined;
+        this._controlPanel.descend((structure, path) => {
+            if (this._navigatorLabel !== undefined) {
+                return false;
+            }
+            if (structure.$.after === "navigator") {
+                this._navigatorLabel = path[path.length - 1];
+                return false;
+            }
+            return true;
+        });
+
+        return this._navigatorLabel;
     }
 
     get scrollPosition() {return this._scrollPosition;}
+    set scrollPosition(scrollPosition) {this._scrollPosition = scrollPosition;}
 
-    legend_on_click(event) {
-        this._controlPanel.select_panel('navigator');
+    // Override this getter to select a different panel when the legend is
+    // clicked.
+    get legend_select_label() {
+        return this._navigatorLabel;
     }
 
     get_width() {return new Promise((resolve, reject) => {
         const styles = window.getComputedStyle(this.$.piece.node);
         setTimeout(() => {
             const propertyWidths = [
-                'border-left-width', 'border-right-width'
+                'border-left-width', 'border-right-width', 'margin-left'
             ].map(
                 // Property values will be in pixels, and with "px" suffix. The
                 // parseFloat() call ignores the suffix.
                 propertyName => parseFloat(styles.getPropertyValue(
                     propertyName))
             );
-            // console.log(
-            //     this._name,
-            //     propertyWidths,
+            console.log(
+                this._name,
+                propertyWidths,
+                this.$.piece.node.getBoundingClientRect()
             //     styles.getPropertyValue('margin-left'),
             //     this.$.piece.node.offsetWidth,
             //     this.$.piece.node.scrollWidth
-            // );
+            );
             // offsetWidth += structure.$.piece.node.offsetWidth;
 
             resolve(this.$.piece.node.offsetWidth);
@@ -835,9 +889,43 @@ class Panel {
 
 class PanelNavigator extends Panel {
 
+    constructor(controlPanel, navigatorStructure, navigatorPath) {
+        super(controlPanel, navigatorStructure, navigatorPath);
+
+        navigatorStructure.$.controls = [];
+        // Create a div to put all the selector controls in. A grid layout can't
+        // be applied to the navigator panel because it will also include a
+        // legend.
+        const div = new Piece('div', navigatorStructure.$.piece);
+
+        // Don't create a selector control for the first panel. It can be
+        // selected by tapping the legend of the navigator panel.
+        let panelOrdinal = 0;
+        controlPanel.descend((structure, path) => {
+            if (structure.$.after === "panel") {
+                panelOrdinal += 1;
+                if (panelOrdinal > 1) {
+                    const selector = new Control(
+                        div, path, {"control": "button"});
+                    selector.listener = controlPanel.select_panel.bind(
+                        controlPanel, path[path.length - 1]);
+                    navigatorStructure.$.controls.push(selector);
+                }
+
+                return false;
+            }
+            return true;
+        });
+
+    }
+
     // Override.
-    legend_on_click(event) {
-        this._controlPanel.select_panel(undefined);
+    get legend_select_label() {
+        // Clicking the navigator legend selects the first panel. The return
+        // value of this getter will be passed to the ControlPanel select_panel
+        // method. Passing undefined causes that method to select the first
+        // panel.
+        return undefined;
     }
 }
 
@@ -905,25 +993,8 @@ const afterInstantiate = {
         structure.$.panel = new Panel(this, structure, path);
     },
 
-    navigator: function(navigatorPath, navigatorStructure) {
-        navigatorStructure.$.panel = new PanelNavigator(
-            this, navigatorStructure, navigatorPath);
-
-        navigatorStructure.$.controls = [];
-        const div = new Piece('div', navigatorStructure.$.piece);
-        this.descend((structure, path) => {
-            if (structure.$.after === "panel") {
-                const selector = new Control(div, path, {"control": "button"});
-                selector.listener = this.select_panel.bind(
-                    this, path[path.length - 1]);
-                navigatorStructure.$.controls.push(selector);
-
-                return false;
-            }
-            return true;
-        });
-
-
+    navigator: function(path, structure) {
+        structure.$.panel = new PanelNavigator(this, structure, path);
     }
 
 };
