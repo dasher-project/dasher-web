@@ -5,7 +5,7 @@ export default {
     $:{$:{"after":"panel", "html":"fieldset"}},
 
     "main": {
-        $: {"order": 0, "label":""},
+        $: {"order": 0, "label":null},
         "prediction": {$:{"order": 0, "control":"select"}},
          "behaviour": {$:{"order": 1, "control":"select"}}
     },
@@ -18,14 +18,12 @@ export default {
         $: {"order": 2},
         "fill": {
             $: {"order": 0, $: {"control": "color", "after":"colour"}},
-            // See https://en.wikipedia.org/wiki/Web_colors
+            // See https://en.wikipedia.org/wiki/Web_colors if you need a hint.
                 "capital":{$:{"order": 0, "value": "#ffff00"}},
-                  "small":{$:{"order": 1, "value": "#00BFFF"}},
                 "numeral":{$:{"order": 2, "value": "#f08080"}},
             "punctuation":{$:{"order": 3, "value": "#32cd32"}},
             "contraction":{$:{"order": 4, "value": "#fbb7f0"}},
-                  "space":{$:{"order": 5, "value": "#d3d3d3"}},
-                   "root":{$:{"order": 6, "value": "#c0c0c0"}}
+                  "space":{$:{"order": 5, "value": "#d3d3d3"}}
         },
         "sequence": {
             $: {

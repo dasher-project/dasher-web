@@ -49,7 +49,8 @@ export default class Piece {
             document.createElementNS(nameSpace, tag));
         Piece.set_attributes(element, attributes);
         const textNode = (
-            text === undefined ? undefined : document.createTextNode(text));
+            text === undefined || text === null ? undefined :
+            document.createTextNode(text));
         if (element === undefined) {
             element = textNode;
         }
