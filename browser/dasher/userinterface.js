@@ -220,7 +220,6 @@ export default class UserInterface {
         if (!this._keyboardMode) {
             // In keyboard mode, the control panel and all its HTML still exists
             // it just never gets added to the body so it doesn't get rendered.
-            // this._controlPanel.set_parent(this._header);
             const form = new Piece('form', this._header);
             this._controlPanel.set_parent(form);
         }

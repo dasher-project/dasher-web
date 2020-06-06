@@ -393,9 +393,6 @@ export default class ControlPanel {
     }
 
     _instantiate() {
-        // this._selectors = new Piece('div');
-        // this._selectors.node.classList.add('control-panel__selectors');
-
         this.descend((structure, path, statePiece) => {
 
             if (structure.$.control !== undefined) {
@@ -439,57 +436,19 @@ export default class ControlPanel {
         parentPiece.node.addEventListener('scroll', event => {
             console.log(`Scrolled to: ${event.target.scrollLeft}`);
         });
-        // const widthPromises = [];
+
+        parentPiece.node.classList.add('control-panel__parent');
+
+        // Add to the parentPiece anything that has html. No need to descend
+        // further because the structure under anything with html will already
+        // have been built.
         this.descend((structure, path) => {
-            if (path.length === 0) {
-                return true;
-            }
-
-
-            // Change to anything that has html? Still return false because the
-            // html will already hold all child nodes.
-            if (structure.$.panel !== undefined && path.length > 0) {
+            if (structure.$.html !== undefined) {
                 parentPiece.add_child(structure.$.piece);
-                // widthPromises.push(structure.$.panel.get_width());
                 return false;
             }
-
-
-            // Get rid of this throw.
-            throw new Error(`Non-panel in structure. Path:${path}`);
+            return true;
         });
-
-        setTimeout(() => {
-            this.descend((structure, path) => {
-                if (structure.$.panel !== undefined) {
-                    console.log(
-                        'Bounding',
-                        path,
-                        structure.$.piece.node.getBoundingClientRect().x,
-                        parentPiece.node.getBoundingClientRect().x
-                    );
-                    structure.$.panel.scrollPosition = (
-                        structure.$.piece.node.getBoundingClientRect().x
-                        - parentPiece.node.getBoundingClientRect().x
-                    );
-                    return false;
-                }
-                return true;
-            });
-        }, 0);
-
-        // Promise.all(widthPromises).then(widths => {
-        //     this.descend((structure, path) => {
-        //         if (path.length === 0) {
-        //             return true;
-        //         }
-        //         if (structure.$.panel !== undefined && path.length > 0) {
-        //             structure.$.panel.calculate_scroll_position(widths);
-        //             return false;
-        //         }
-        //         throw new Error(`Non-panel in structure. Path:${path}`);
-        //     });
-        // });
     }
 
     add_CSS_node() {
@@ -514,23 +473,16 @@ export default class ControlPanel {
 
                 if (selectedLabel === label) {
                     selected = true;
-                    console.log(
-                        structure.$.panel.scrollPosition,
-                        structure.$.piece.node.parentNode);
-                    // structure.$.piece.node.parentNode.scrollLeft =
-                    //     structure.$.panel.scrollPosition;
                     const panelNode = structure.$.piece.node;
+                    // getBoundingClientRect seems to work better in a timeout,
+                    // presumably because the browser has by then rendered
+                    // everything.
                     setTimeout(() => {
                         const panelX = panelNode.getBoundingClientRect().x;
-                        const parentX = panelNode
-                        .parentNode.getBoundingClientRect().x;
-
-                        // console.log(
-                        //     selectedLabel, label, panelX, parentX,
-                        //     panelNode.parentNode.getBoundingClientRect());
+                        const parentX = (
+                            panelNode.parentNode.getBoundingClientRect().x);
                         panelNode.parentNode.scrollLeft += panelX - parentX;
                     }, 0);
-            
                 }
                 return false;
             }
@@ -619,6 +571,8 @@ export default class ControlPanel {
     }, rootSettings); }
 }
 
+// Class for the manager panel. The manager has functions like copying and
+// pasting, and saving and loading.
 class ControlPanelManager {
     constructor(controlPanel, structure, databaseName) {
         this._controlPanel = controlPanel;
@@ -811,9 +765,8 @@ class Panel {
         this.$ = structure.$;
         this._name = path[path.length - 1];
 
-        this._scrollPosition = undefined;
-
         this.$.piece.node.classList.add('control-panel__panel');
+
         const legend = this.$.piece.create(
             'legend', undefined, Control.make_label(this.$, path));
 
@@ -842,48 +795,10 @@ class Panel {
         return this._navigatorLabel;
     }
 
-    get scrollPosition() {return this._scrollPosition;}
-    set scrollPosition(scrollPosition) {this._scrollPosition = scrollPosition;}
-
     // Override this getter to select a different panel when the legend is
     // clicked.
     get legend_select_label() {
         return this._navigatorLabel;
-    }
-
-    get_width() {return new Promise((resolve, reject) => {
-        const styles = window.getComputedStyle(this.$.piece.node);
-        setTimeout(() => {
-            const propertyWidths = [
-                'border-left-width', 'border-right-width', 'margin-left'
-            ].map(
-                // Property values will be in pixels, and with "px" suffix. The
-                // parseFloat() call ignores the suffix.
-                propertyName => parseFloat(styles.getPropertyValue(
-                    propertyName))
-            );
-            console.log(
-                this._name,
-                propertyWidths,
-                this.$.piece.node.getBoundingClientRect()
-            //     styles.getPropertyValue('margin-left'),
-            //     this.$.piece.node.offsetWidth,
-            //     this.$.piece.node.scrollWidth
-            );
-            // offsetWidth += structure.$.piece.node.offsetWidth;
-
-            resolve(this.$.piece.node.offsetWidth);
-        }, 0);
-    });}
-
-    calculate_scroll_position(widths) {
-        let position = 0;
-        let index;
-        for(index=0; index < this.$.order; index += 1) {
-            position += widths[index];
-        }
-        this._scrollPosition = position;
-        console.log(this._name, this._scrollPosition);
     }
 }
 
