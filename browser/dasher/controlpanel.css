@@ -57,6 +57,7 @@ legend.cwv-button {
  */
 .control-panel__result {
     opacity: 1;
+    display: inline;
 }
 
 .control-panel__result-stale {
@@ -67,20 +68,5 @@ legend.cwv-button {
 .control-panel__result pre {
     font-family: monospace;
     white-space: pre;
-}
-
-.control-panel__structure-manage-settings-result {
-    float: right;
-}
-
-/* Miscellaneous styling that has been found useful.
- */
-.control-panel__panel input[type="color"] + label
-{
-    margin-left: 0.25rem;
-}
-
-.control-panel__structure-colour div {
-    padding: 0.25em;
-    display: inline-block;
+    background-color: var(--field-colour);
 }

@@ -126,7 +126,9 @@ body {
 input[type="number"] {
     width: 3em;
     text-align: right;
-    margin-left: 1em;
+}
+input[type="number"] + label {
+    padding-left: 0.25em;
 }
 
 /*
@@ -137,4 +139,34 @@ Make sure that can't happen by not showing any such controls.
 */
 #user-interface.keyboard input[type="number"] {
     display: none;
+}
+
+/* Control Panel styling that in principle only applies to this user interface.
+ */
+
+.control-panel__structure-colour-fill {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr 1fr 1fr;
+    margin-bottom: 0.5em;
+}
+
+.control-panel__structure-colour-fill label {
+    text-align: right;
+    align-self: center;
+}
+
+.control-panel__structure-colour-sequence { display: inline; }
+.control-panel__structure-colour-zoom__rect {
+    display: inline;
+    padding-left: 0.5em;
+}
+
+.control-panel__structure-speech select {
+    display: block;
+}
+
+.control-panel__structure-manage-settings-divider,
+.control-panel__structure-developer-divider
+{
+    height: 0px;
 }

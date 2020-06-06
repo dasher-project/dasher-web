@@ -339,8 +339,11 @@ export default class ControlPanel {
         this._managerListener = managerListener;
     }
 
-    descend(callback, state) {
-        return this._descend(this._structure, [], callback, state);
+    descend(callback, state, structure) {
+        return this._descend(
+            structure === undefined ? this._structure : structure,
+            [], callback, state
+        );
     }
 
     _descend(structure, path, callback, state) {
@@ -381,9 +384,9 @@ export default class ControlPanel {
     
             if (structure.$.childOrder === undefined) {
                 structure.$.childOrder = Object.entries(structure)
-                .sort((kvA, kvB) => kvA[1].order - kvB[1].order)
-                .map(kv => kv[0])
-                .filter(key => key !== "$");
+                .filter(kv => kv[0] !== "$")
+                .sort((kvA, kvB) => kvA[1].$.order - kvB[1].$.order)
+                .map(kv => kv[0]);
             }
 
             return structure.$.$;
@@ -395,6 +398,20 @@ export default class ControlPanel {
     _instantiate() {
         this.descend((structure, path, statePiece) => {
 
+            if (structure.$.html !== undefined) {
+                structure.$.piece = new Piece(
+                    structure.$.html, statePiece, {}, 
+                    structure.$.html === "span" ?
+                    Control.make_label(structure.$, path, true) :
+                    undefined);
+                structure.$.piece.node.classList.add(
+                    `control-panel__structure-${path.join("-")}`)
+
+                // Next line sets the parent for the structure under here, but
+                // also for the control, if there is one.
+                statePiece = structure.$.piece;
+            }
+
             if (structure.$.control !== undefined) {
                 const control = new Control(statePiece, path, structure.$);
                 this.replace(path, control);
@@ -404,17 +421,6 @@ export default class ControlPanel {
                     }
                 };
                 return false;
-            }
-
-            if (structure.$.html !== undefined) {
-                structure.$.piece = new Piece(
-                    structure.$.html, statePiece, {}, 
-                    structure.$.html === "span" ?
-                    Control.make_label(structure.$, path, true) :
-                    undefined);
-                structure.$.piece.node.classList.add(
-                    `control-panel__structure-${path.join("-")}`)
-                statePiece = structure.$.piece;
             }
 
             return statePiece;
@@ -586,11 +592,11 @@ class ControlPanelManager {
     }
 
     _show_result(outcome, detail) {
-        this._structure.result.outcome.$.piece.node.textContent = outcome;
-        this._structure.result.detail.$.piece.node.textContent = (
+        this._child("result").outcome.$.piece.node.textContent = outcome;
+        this._child("result").detail.$.piece.node.textContent = (
             detail === undefined ? "" : detail);
 
-        const resultNode = this._structure.result.$.piece.node;
+        const resultNode = this._child("result").$.piece.node;
         resultNode.classList.remove("control-panel__result-stale");
         if (this._fadeTimeout !== null) {
             clearTimeout(this._fadeTimeout);
@@ -602,21 +608,32 @@ class ControlPanelManager {
         }
     }
 
+    _child(name) {
+        let child;
+        this._controlPanel.descend((structure, path) => {
+            if (path.length > 0 && path[path.length - 1] === name) {
+                child = structure;
+            }
+            return child === undefined;
+        }, undefined, this._structure);
+        return child;
+    }
+
     load() {
-        this._structure.result.$.piece.node.classList.add(
+        this._child("result").$.piece.node.classList.add(
             "control-panel__result");
 
-        this._structure.copy.listener = this.copy_to_clipboard.bind(this);
-        this._structure.paste.listener = this.paste_from_clipboard.bind(this);
-        this._structure.save.listener = this.save_to_browser.bind(this, true);
-        this._structure.load.listener = this.load_from_browser.bind(this);
+        this._child("copy").listener = this.copy_to_clipboard.bind(this);
+        this._child("paste").listener = this.paste_from_clipboard.bind(this);
+        this._child("save").listener = this.save_to_browser.bind(this, true);
+        this._child("load").listener = this.load_from_browser.bind(this);
 
-        this._structure.reset.listener = () => {
+        this._child("reset").listener = () => {
             this._controlPanel.set_values(this._controlPanel.defaultValues);
             this.save_to_browser(true);
         };
 
-        this._structure.saveAutomatically.listener = this._automatic_save.bind(
+        this._child("saveAutomatically").listener = this._automatic_save.bind(
             this);
 
         this.load_from_browser();
@@ -754,8 +771,8 @@ class ControlPanelManager {
             checked ? this.save_to_browser.bind(this, false) : null);
 
         // If saving automatically, deactivate the save and load buttons.
-        this._structure.save.active = !checked;
-        this._structure.load.active = !checked;
+        this._child("save").active = !checked;
+        this._child("load").active = !checked;
     }
 }
 
