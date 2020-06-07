@@ -33,10 +33,7 @@ Backlog
 -   Fix the childIndex that goes into the zoom box CSS class to be 1 sometimes.
     At the moment, it is always zero for the first child box. It should be 1 if
     the preceding parent box didn't have an even number of child boxes.
--   Add a settings presentation option that works on small screens. In the
-    current code, the six buttons push out the actual controls on a phone
-    screen. Maybe just show one button by default that cycles through, and have
-    an option to expand all the settings panels.
+-   Option to expand all the settings panels.
 -   Change controlpanel.afterInstantiate to be based on JS Symbol constants
     and a Map maybe, instead of a dictionary object. See:
 

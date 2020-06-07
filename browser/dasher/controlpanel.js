@@ -439,16 +439,16 @@ export default class ControlPanel {
     set_parent(parentPiece) {
         // Handy diagnostic that prints the scrollLeft value when you scroll the
         // control panel.
-        parentPiece.node.addEventListener('scroll', event => {
-            console.log(`Scrolled to: ${event.target.scrollLeft}`);
-        });
+        // parentPiece.node.addEventListener('scroll', event => {
+        //     console.log(`Scrolled to: ${event.target.scrollLeft}`);
+        // });
 
         parentPiece.node.classList.add('control-panel__parent');
 
         // Add to the parentPiece anything that has html. No need to descend
         // further because the structure under anything with html will already
         // have been built.
-        this.descend((structure, path) => {
+        this.descend(structure => {
             if (structure.$.html !== undefined) {
                 parentPiece.add_child(structure.$.piece);
                 return false;

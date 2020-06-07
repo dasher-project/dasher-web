@@ -47,10 +47,13 @@ legend.cwv-button {
     align-items: center;
 }
 
-.control-panel__structure-navigator > div .cwv-button + .cwv-button,
 .control-panel__structure-navigator > div .cwv-button
 {
     margin: 0.25em;
+}
+
+.control-panel__structure-navigator > div .cwv-button::after {
+    content: " >";
 }
 
 /* Fading result display, used by the afterInstantiate.manager piece.
