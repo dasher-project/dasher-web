@@ -30,6 +30,16 @@ Backlog
     EventTarget from which to dispatch these events. Using an event instead of a
     callback seems more flexible and in keeping with the standard.
 
+-   Change the message position to float over the bottom left corner of the
+    zooming area. Or make that a user preference between:
+
+    -   Current browser position at top right.
+    -   Floating over bottom left of the zooming area.
+    -   Current keyboard position, across the top of the zooming area.
+
+    In keyboard mode, the message should maybe be in a small floating control
+    panel that also holds the predictor drop-down, and the next keyboard button.
+
 -   Fix the childIndex that goes into the zoom box CSS class to be 1 sometimes.
     At the moment, it is always zero for the first child box. It should be 1 if
     the preceding parent box didn't have an even number of child boxes.
@@ -54,8 +64,7 @@ Backlog
 -   Change the drawing of the X axis so it doesn't go all the way across the
     area. Original Dasher has a short horizontal line.
 -   Maybe shuffle letters left or right in the tail.
--   Add tuning controls on a tab maybe. All parameters could be set there.
-    -   Store what is set in the standalone app to be used in the keyboard too.
+-   Store what is set in the standalone app to be used in the keyboard too.
 -   See about fixing the text alignment on Firefox.
 -   Change terminology of "origin holder" to maybe "delta target".
 -   More use of built-in .append and .remove in piece.js module. See:
