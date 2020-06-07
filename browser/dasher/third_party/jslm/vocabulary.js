@@ -88,5 +88,4 @@ class Vocabulary {
 /**
  * Exported APIs.
  */
-exports.rootSymbol = rootSymbol;
-exports.Vocabulary = Vocabulary;
+export { rootSymbol, Vocabulary };
