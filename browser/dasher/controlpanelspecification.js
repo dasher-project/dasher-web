@@ -2,26 +2,30 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 export default {
-    $:{$:{"panel":true}},
+    $:{$:{"after":"panel", "html":"fieldset"}},
 
     "main": {
-        $: {"order": 0},
+        $: {"order": 0, "label":null},
         "prediction": {$:{"order": 0, "control":"select"}},
          "behaviour": {$:{"order": 1, "control":"select"}}
     },
 
-    "colour":{
-        $: {"order": 1},
+    "navigator": {
+        $: {"order": 1, "after":"navigator"}
+    },
+
+    "colour": {
+        $: {"order": 2},
         "fill": {
-            $: {"order": 0, $: {"control": "color", "after":"colour"}},
-            // See https://en.wikipedia.org/wiki/Web_colors
+            $: {"order": 0, "html": "div",
+                $: {"control": "color", "after":"colour"}
+            },
+            // See https://en.wikipedia.org/wiki/Web_colors if you need a hint.
                 "capital":{$:{"order": 0, "value": "#ffff00"}},
-                  "small":{$:{"order": 1, "value": "#00BFFF"}},
-                "numeral":{$:{"order": 2, "value": "#f08080"}},
+                "numeral":{$:{"order": 1, "value": "#f08080"}},
+                  "space":{$:{"order": 2, "value": "#d3d3d3"}},
             "punctuation":{$:{"order": 3, "value": "#32cd32"}},
-            "contraction":{$:{"order": 4, "value": "#fbb7f0"}},
-                  "space":{$:{"order": 5, "value": "#d3d3d3"}},
-                   "root":{$:{"order": 6, "value": "#c0c0c0"}}
+            "contraction":{$:{"order": 4, "value": "#fbb7f0"}}
         },
         "sequence": {
             $: {
@@ -44,9 +48,8 @@ export default {
     },
 
     "speed":{
-        $: {"order": 2},
+        $: {"order": 3, $:{"html":"div"}},
         
-             "speed":{$:{"order": 0, "html": "span"}},
         "horizontal":{$:{"order": 1, "control":"number",
                          "value": "0.2", "label":"Left-Right"}},
           "vertical":{$:{"order": 2, "control":"number",
@@ -54,17 +57,16 @@ export default {
     },
 
     "speech":{
-        $: {"order": 3},
+        $: {"order": 4},
 
         "stop": {$:{
             "order": 0, "control": "checkbox", "label": "Speak on stop"}},
         "voice": {$:{
             "order": 1, "control":"select", "label": null}}
-
     },
 
     "manage":{
-        $: {"order": 4},
+        $: {"order": 5},
 
         "settings": {
             $:{"after":"manager"},
@@ -79,20 +81,23 @@ export default {
                 "outcome": {$:{"order": 0, "html":"span", "label":""}},
                 "detail": {$:{"order": 1, "html":"pre"}}
             },
-            "Save settings in browser": {$:{
-                "order": 4, "html": "span"}},
+            "divider":{$:{
+                "order": 4, "html": "div"}},
+            "saveSettings": {$:{
+                "order": 5, "html": "span",
+                "label":"Save settings in browser"}},
             "saveAutomatically": {$:{
-                "order": 5, "control": "checkbox", "value": true,
+                "order": 6, "control": "checkbox", "value": true,
                 "label": "Automatically"}},
             "save": {$:{
-                "order": 6, "control": "button", "label": "Save now"}},
+                "order": 7, "control": "button", "label": "Save now"}},
             "load": {$:{
-                "order": 7, "control": "button", "label": "Load now"}},
+                "order": 8, "control": "button", "label": "Load now"}},
         }
     },
 
     "developer": {
-        $: {"order": 5},
+        $: {"order": 6},
 
         "pointer":{$:{
             "order": 0, "control": "button"}},
@@ -102,13 +107,15 @@ export default {
             "order": 2, "control": "checkbox", "label": "Show diagnostic"}},
         "frozen": {$:{
             "order": 3, "control": "checkbox"}},
-        "x": {$:{
-            "order": 4, "control": "number", "value":"0"}},
-        "y": {$:{
-            "order": 5, "control": "number", "value":"0"}},
-        "advance":{$:{
-            "order": 6, "control": "button"}},
         "diagnostic":{$:{
-            "order": 7, "html": "div"}}
+            "order": 4, "html": "div"}},
+        "divider":{$:{
+            "order": 5, "html": "div"}},
+        "x": {$:{
+            "order": 6, "control": "number", "value":"0"}},
+        "y": {$:{
+            "order": 7, "control": "number", "value":"0"}},
+        "advance":{$:{
+            "order": 8, "control": "button"}}
     }
 };

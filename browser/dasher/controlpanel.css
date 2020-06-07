@@ -11,53 +11,56 @@ Try to follow the Block Element Modifier convention, see:
 https://en.bem.info/methodology/naming-convention/
 */
 
-/* Panels and their selector buttons.
- */
-.control-panel__selectors {
-    flex: none;
+/* Style for the parent of all panels. */
+.control-panel__parent {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
 
+/* Style for all panels. */
+.control-panel__panel {
+    display: inline-block;
+    flex: none;
+    /* border: 0.25rem red dashed; */
+}
+
+/* Legends will be clickable and styled as buttons, but smaller. */
+legend.cwv-button {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+/* Forward and back navigation hints on clickable legends.
+ */
+.control-panel__panel:nth-of-type(1) > legend.cwv-button::after {
+    content: " >";
+}
+.control-panel__panel:nth-of-type(n+2) > legend.cwv-button::before {
+    content: "< ";
+}
+
+/* Navigator panel.
+ */
+.control-panel__structure-navigator > div {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    text-align: center;
-}
-@media (orientation: portrait) {
-    /* .header { background-color: peachpuff; } */
-    .control-panel__selectors { grid-template-columns: repeat(2, 1fr); }
+    align-items: center;
 }
 
-.control-panel__selectors > div > .cwv-button {
-    /* background-color: plum; */
-    width: 90%;
-}
-.control-panel__selector_selected {
-    outline: 1px var(--accent-colour) solid !important;
-    outline-offset: 1px;
-}
-
-input[type="color"] + label
+.control-panel__structure-navigator > div .cwv-button
 {
-    margin-left: 0.25rem;
+    margin: 0.25em;
 }
 
-.control-panel__panel {
-    /* background-color: rebeccapurple; */
-    display: none;
-}
-.control-panel__panel_selected {
-    /* background-color: wheat; */
-    display: block;
-    flex: auto;
-}
-
-.control-panel__panel_selected.control-panel__panel-colour div {
-    padding: 0.25em;
-    display: inline-block;
+.control-panel__structure-navigator > div .cwv-button::after {
+    content: " >";
 }
 
 /* Fading result display, used by the afterInstantiate.manager piece.
  */
 .control-panel__result {
     opacity: 1;
+    display: inline;
 }
 
 .control-panel__result-stale {
@@ -68,4 +71,5 @@ input[type="color"] + label
 .control-panel__result pre {
     font-family: monospace;
     white-space: pre;
+    background-color: var(--field-colour);
 }

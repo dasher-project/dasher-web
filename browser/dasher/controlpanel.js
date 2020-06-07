@@ -327,7 +327,6 @@ export default class ControlPanel {
         this._structure = structure;
 
         this._cssNode = undefined;
-        this._selectors = undefined;
         this._defaultValues = undefined;
         this._managerListener = null;
     }
@@ -340,8 +339,11 @@ export default class ControlPanel {
         this._managerListener = managerListener;
     }
 
-    descend(callback, state) {
-        return this._descend(this._structure, [], callback, state);
+    descend(callback, state, structure) {
+        return this._descend(
+            structure === undefined ? this._structure : structure,
+            [], callback, state
+        );
     }
 
     _descend(structure, path, callback, state) {
@@ -382,9 +384,9 @@ export default class ControlPanel {
     
             if (structure.$.childOrder === undefined) {
                 structure.$.childOrder = Object.entries(structure)
-                .sort((kvA, kvB) => kvA[1].order - kvB[1].order)
-                .map(kv => kv[0])
-                .filter(key => key !== "$");
+                .filter(kv => kv[0] !== "$")
+                .sort((kvA, kvB) => kvA[1].$.order - kvB[1].$.order)
+                .map(kv => kv[0]);
             }
 
             return structure.$.$;
@@ -394,24 +396,20 @@ export default class ControlPanel {
     }
 
     _instantiate() {
-        this._selectors = new Piece('div');
-        this._selectors.node.classList.add('control-panel__selectors');
-
         this.descend((structure, path, statePiece) => {
-            if (structure.$.panel && path.length > 0) {
-                const label = path[path.length - 1];
-                const piece = new Piece('div', statePiece);
-                piece.node.classList.add(
-                    'control-panel__panel', `control-panel__panel-${label}`);
-                structure.$.piece = piece;
-            
-                structure.$.selector = new Control(
-                    new Piece('div', this._selectors), path,
-                    {"control": "button"});
-                structure.$.selector.listener = this.select_panel.bind(
-                    this, label);
 
-                statePiece = piece;
+            if (structure.$.html !== undefined) {
+                structure.$.piece = new Piece(
+                    structure.$.html, statePiece, {}, 
+                    structure.$.html === "span" ?
+                    Control.make_label(structure.$, path, true) :
+                    undefined);
+                structure.$.piece.node.classList.add(
+                    `control-panel__structure-${path.join("-")}`)
+
+                // Next line sets the parent for the structure under here, but
+                // also for the control, if there is one.
+                statePiece = structure.$.piece;
             }
 
             if (structure.$.control !== undefined) {
@@ -423,15 +421,6 @@ export default class ControlPanel {
                     }
                 };
                 return false;
-            }
-
-            if (structure.$.html !== undefined) {
-                structure.$.piece = new Piece(
-                    structure.$.html, statePiece, {}, 
-                    structure.$.html === "span" ?
-                    Control.make_label(structure.$, path, true) :
-                    undefined);
-                statePiece = structure.$.piece;
             }
 
             return statePiece;
@@ -448,18 +437,23 @@ export default class ControlPanel {
     }
 
     set_parent(parentPiece) {
-        if (this._selectors !== undefined) {
-            parentPiece.add_child(this._selectors);
-        }
-        this.descend((structure, path) => {
-            if (path.length === 0) {
-                return true;
-            }
-            if (structure.$.panel && path.length > 0) {
+        // Handy diagnostic that prints the scrollLeft value when you scroll the
+        // control panel.
+        // parentPiece.node.addEventListener('scroll', event => {
+        //     console.log(`Scrolled to: ${event.target.scrollLeft}`);
+        // });
+
+        parentPiece.node.classList.add('control-panel__parent');
+
+        // Add to the parentPiece anything that has html. No need to descend
+        // further because the structure under anything with html will already
+        // have been built.
+        this.descend(structure => {
+            if (structure.$.html !== undefined) {
                 parentPiece.add_child(structure.$.piece);
                 return false;
             }
-            throw new Error('Non-panel in structure.');
+            return true;
         });
     }
 
@@ -472,24 +466,47 @@ export default class ControlPanel {
     }
 
     select_panel(selectedLabel) {
+        let selected = false;
         this.descend((structure, path) => {
-            // Find everything that is a panel and toggle the css classes  on
-            // the panel and its selector accordingly.
-            if (structure.$.panel && path.length > 0) {
-                const label = path[path.length - 1];
-                structure.$.piece.node.classList.toggle(
-                    'control-panel__panel_selected', selectedLabel === label);
-                structure.$.selector.node.classList.toggle(
-                    'control-panel__selector_selected',
-                    selectedLabel === label);
+            if (selected) {
+                return false;
             }
+
+            if (structure.$.panel !== undefined && path.length > 0) {
+                const label = (
+                    selectedLabel === undefined ? undefined :
+                    path[path.length - 1]);
+
+                if (selectedLabel === label) {
+                    selected = true;
+                    const panelNode = structure.$.piece.node;
+                    // getBoundingClientRect seems to work better in a timeout,
+                    // presumably because the browser has by then rendered
+                    // everything.
+                    setTimeout(() => {
+                        const panelX = panelNode.getBoundingClientRect().x;
+                        const parentX = (
+                            panelNode.parentNode.getBoundingClientRect().x);
+                        panelNode.parentNode.scrollTo({
+                            left: (
+                                panelNode.parentNode.scrollLeft +
+                                (panelX - parentX)
+                            ),
+                            behavior: 'smooth'
+                        });
+                    }, 0);
+                }
+                return false;
+            }
+
+            return true;
         });
     }
 
     enable_controls() {
         this.descend(structure => {
-            if (structure.$.panel) {
-                structure.$.selector.active = true;
+            if (structure.$.controls !== undefined) {
+                structure.$.controls.forEach(control => control.active = true);
             }
             if (structure.$.control !== undefined) {
                 structure.active = true;
@@ -566,6 +583,8 @@ export default class ControlPanel {
     }, rootSettings); }
 }
 
+// Class for the manager panel. The manager has functions like copying and
+// pasting, and saving and loading.
 class ControlPanelManager {
     constructor(controlPanel, structure, databaseName) {
         this._controlPanel = controlPanel;
@@ -579,11 +598,11 @@ class ControlPanelManager {
     }
 
     _show_result(outcome, detail) {
-        this._structure.result.outcome.$.piece.node.textContent = outcome;
-        this._structure.result.detail.$.piece.node.textContent = (
+        this._child("result").outcome.$.piece.node.textContent = outcome;
+        this._child("result").detail.$.piece.node.textContent = (
             detail === undefined ? "" : detail);
 
-        const resultNode = this._structure.result.$.piece.node;
+        const resultNode = this._child("result").$.piece.node;
         resultNode.classList.remove("control-panel__result-stale");
         if (this._fadeTimeout !== null) {
             clearTimeout(this._fadeTimeout);
@@ -595,21 +614,32 @@ class ControlPanelManager {
         }
     }
 
+    _child(name) {
+        let child;
+        this._controlPanel.descend((structure, path) => {
+            if (path.length > 0 && path[path.length - 1] === name) {
+                child = structure;
+            }
+            return child === undefined;
+        }, undefined, this._structure);
+        return child;
+    }
+
     load() {
-        this._structure.result.$.piece.node.classList.add(
+        this._child("result").$.piece.node.classList.add(
             "control-panel__result");
 
-        this._structure.copy.listener = this.copy_to_clipboard.bind(this);
-        this._structure.paste.listener = this.paste_from_clipboard.bind(this);
-        this._structure.save.listener = this.save_to_browser.bind(this, true);
-        this._structure.load.listener = this.load_from_browser.bind(this);
+        this._child("copy").listener = this.copy_to_clipboard.bind(this);
+        this._child("paste").listener = this.paste_from_clipboard.bind(this);
+        this._child("save").listener = this.save_to_browser.bind(this, true);
+        this._child("load").listener = this.load_from_browser.bind(this);
 
-        this._structure.reset.listener = () => {
+        this._child("reset").listener = () => {
             this._controlPanel.set_values(this._controlPanel.defaultValues);
             this.save_to_browser(true);
         };
 
-        this._structure.saveAutomatically.listener = this._automatic_save.bind(
+        this._child("saveAutomatically").listener = this._automatic_save.bind(
             this);
 
         this.load_from_browser();
@@ -742,13 +772,98 @@ class ControlPanelManager {
 
         // If the save-automatically box is ticked, set the control panel
         // manager listener to a lambda that silently saves all settings in the
-        // database. Otherwise, the manager listener to null.
+        // database. Otherwise, set the manager listener to null.
         this._controlPanel.managerListener = (
             checked ? this.save_to_browser.bind(this, false) : null);
 
         // If saving automatically, deactivate the save and load buttons.
-        this._structure.save.active = !checked;
-        this._structure.load.active = !checked;
+        this._child("save").active = !checked;
+        this._child("load").active = !checked;
+    }
+}
+
+class Panel {
+    constructor(controlPanel, structure, path) {
+        this._controlPanel = controlPanel;
+        this.$ = structure.$;
+        this._name = path[path.length - 1];
+
+        this.$.piece.node.classList.add('control-panel__panel');
+
+        const legend = this.$.piece.create(
+            'legend', undefined, Control.make_label(this.$, path));
+
+        if (this._set_navigator_label() !== undefined) {
+            legend.classList.add('cwv-button');
+            legend.addEventListener(
+                'click', this._controlPanel.select_panel.bind(
+                    this._controlPanel, this.legend_select_label)
+            );
+        }
+    }
+
+    _set_navigator_label() {
+        this._navigatorLabel = undefined;
+        this._controlPanel.descend((structure, path) => {
+            if (this._navigatorLabel !== undefined) {
+                return false;
+            }
+            if (structure.$.after === "navigator") {
+                this._navigatorLabel = path[path.length - 1];
+                return false;
+            }
+            return true;
+        });
+
+        return this._navigatorLabel;
+    }
+
+    // Override this getter to select a different panel when the legend is
+    // clicked.
+    get legend_select_label() {
+        return this._navigatorLabel;
+    }
+}
+
+class PanelNavigator extends Panel {
+
+    constructor(controlPanel, navigatorStructure, navigatorPath) {
+        super(controlPanel, navigatorStructure, navigatorPath);
+
+        navigatorStructure.$.controls = [];
+        // Create a div to put all the selector controls in. A grid layout can't
+        // be applied to the navigator panel because it will also include a
+        // legend.
+        const div = new Piece('div', navigatorStructure.$.piece);
+
+        // Don't create a selector control for the first panel. It can be
+        // selected by tapping the legend of the navigator panel.
+        let panelOrdinal = 0;
+        controlPanel.descend((structure, path) => {
+            if (structure.$.after === "panel") {
+                panelOrdinal += 1;
+                if (panelOrdinal > 1) {
+                    const selector = new Control(
+                        div, path, {"control": "button"});
+                    selector.listener = controlPanel.select_panel.bind(
+                        controlPanel, path[path.length - 1]);
+                    navigatorStructure.$.controls.push(selector);
+                }
+
+                return false;
+            }
+            return true;
+        });
+
+    }
+
+    // Override.
+    get legend_select_label() {
+        // Clicking the navigator legend selects the first panel. The return
+        // value of this getter will be passed to the ControlPanel select_panel
+        // method. Passing undefined causes that method to select the first
+        // panel.
+        return undefined;
     }
 }
 
@@ -810,6 +925,14 @@ const afterInstantiate = {
         const manager = new ControlPanelManager(
             this, structure, path[path.length - 1]);
         manager.load();
+    },
+
+    panel: function(path, structure) {
+        structure.$.panel = new Panel(this, structure, path);
+    },
+
+    navigator: function(path, structure) {
+        structure.$.panel = new PanelNavigator(this, structure, path);
     }
 
 };
