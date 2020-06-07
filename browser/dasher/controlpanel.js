@@ -487,7 +487,13 @@ export default class ControlPanel {
                         const panelX = panelNode.getBoundingClientRect().x;
                         const parentX = (
                             panelNode.parentNode.getBoundingClientRect().x);
-                        panelNode.parentNode.scrollLeft += panelX - parentX;
+                        panelNode.parentNode.scrollTo({
+                            left: (
+                                panelNode.parentNode.scrollLeft +
+                                (panelX - parentX)
+                            ),
+                            behavior: 'smooth'
+                        });
                     }, 0);
                 }
                 return false;
