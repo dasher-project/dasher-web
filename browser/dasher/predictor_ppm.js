@@ -26,7 +26,7 @@ Please coordinate with him. I think I'm OK. Nothing from Mom. I'm still here.
 See you soon. See you later. Will you come get me? I am on my way. hi rob.
 I'm going to sleep. Still waiting on decision. Are you sure? I am all over it.
 Will follow up today. Nothing but good news everyday. please call. agreed.
-i want to thank everyone involved. Hey, how are you doing? Sorry about that!
+I want to thank everyone involved. Hey, how are you doing? Sorry about that!
 Can you help me here? Can we meet? Are you feeling better? i am trying again.
 I will be back Friday. and how would i be going for work. sounds good to me
 and how would i be going for work? i have a favor to ask. best of luck and
@@ -77,9 +77,8 @@ function bootstrapModel(vocab) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
-let currentContext = null;
-let predictorContext = null;
-let currentProbs = null;
+let predictorContexts = {};
+const emptyContext = "<EMPTY>"
 
 export default async function (
     codePoints, text, predictorData, palette, set_weight
@@ -87,26 +86,39 @@ export default async function (
     // Check if we're called the first time.
     if (!vocab) {
 	// Initialize vocabulary, the model, setup initial (empty) context and
-	// compute initial probabilities.
+	// compute initial probabilities. Cache this information.
 	vocab = initVocabulary(palette);
 	model = bootstrapModel(vocab);
-	currentContext = model.createContext();
-	predictorContext = { "need_update": true, "context": currentContext };
-	currentProbs = model.getProbs(currentContext)
+	const currentContext = model.createContext();
+	const currentProbs = model.getProbs(currentContext)
+	predictorContexts[emptyContext] = [currentContext, currentProbs]
     }
 
-    // Look at the history to check whether we need to update the context.
-    let lastCodepoint = -1;
+    // Fetch the last symbol in history and construct a silly context key. It is
+    // very silly because we rely on the entire history of the input for
+    // construction. Should fix this later.
+    let contextKey = emptyContext;
+    let lastCodepoint = -1
     if (codePoints.length > 0) {
-	// A symbol has been selected. Check whether the context needs to be
-	// updated.
-	lastCodepoint = codePoints[codePoints.length - 1]
-	if (lastCodepoint > 0 && predictorContext["need_update"]) {
-	    const symbol = lastCodepoint.toString();
-	    model.addSymbolAndUpdate(predictorContext["context"],
-				     vocab.symbols_.indexOf(symbol));
-	    predictorContext["need_update"] = false;
-	}
+	contextKey = codePoints.join("");
+	lastCodepoint = codePoints[codePoints.length - 1];
+    }
+
+    // Check whether the context needs to be updated.
+    let currentContext = null;
+    let currentProbs = null;
+    if (!(contextKey in predictorContexts)) {
+	currentContext = predictorData;
+	const symbol = lastCodepoint.toString();
+	model.addSymbolAndUpdate(currentContext,
+				 vocab.symbols_.indexOf(symbol));
+	currentProbs = model.getProbs(currentContext);
+	predictorContexts[contextKey] = [currentContext, currentProbs];
+    } else {
+	// We already have this context. Fetch the probabilities to avoid
+	// recomputing them.
+	currentContext = predictorContexts[contextKey][0];
+	currentProbs = predictorContexts[contextKey][1];
     }
     if (predictorData !== undefined) {
         console.log(`dummy "${text}" ${predictorData}`);
@@ -118,7 +130,7 @@ export default async function (
     for (let i = 1; i < numVocabSymbols; ++i) {
 	const codepoint = Number(vocab.symbols_[i])
 	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
-		   predictorContext);
+		   currentContext);
     }
     return;
 }
