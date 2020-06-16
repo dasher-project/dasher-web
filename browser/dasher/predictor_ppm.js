@@ -59,11 +59,11 @@ function initVocabulary(palette) {
 //
 
 let model = null
-const maxOrder = 4;  // History length.
+const modelMaxOrder = 5;  // History length.
 
 function bootstrapModel(vocab) {
     console.log("Initializing LM ...")
-    model = new PPMLanguageModel(vocab, maxOrder);
+    model = new PPMLanguageModel(vocab, modelMaxOrder);
     let context = model.createContext()
     for (let i = 0; i < trainingText.length; ++i) {
 	const symbol = trainingText.codePointAt(i).toString();
@@ -78,54 +78,68 @@ function bootstrapModel(vocab) {
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
 let predictorContexts = {};
-const emptyContext = "<EMPTY>"
+let currentContext = null;
+const emptyContextKey = "<EMPTY>";
 
 export default async function (
     codePoints, text, predictorData, palette, set_weight
 ) {
+    console.log(`text: "${text}"`);
+
     // Check if we're called the first time.
     if (!vocab) {
 	// Initialize vocabulary, the model, setup initial (empty) context and
 	// compute initial probabilities. Cache this information.
 	vocab = initVocabulary(palette);
 	model = bootstrapModel(vocab);
-	const currentContext = model.createContext();
-	const currentProbs = model.getProbs(currentContext)
-	predictorContexts[emptyContext] = [currentContext, currentProbs]
+	currentContext = model.createContext();
+	const currentProbs = model.getProbs(currentContext);
+	predictorContexts[emptyContextKey] = currentProbs;
     }
 
     // Fetch the last symbol in history and construct a silly context key. It is
     // very silly because we rely on the entire history of the input for
     // construction. Should fix this later.
-    let contextKey = emptyContext;
-    let lastCodepoint = -1
+    let contextKey = emptyContextKey;
     if (codePoints.length > 0) {
-	contextKey = codePoints.join("");
-	lastCodepoint = codePoints[codePoints.length - 1];
+	const historyCodepoints = codePoints.slice(-modelMaxOrder);
+	contextKey = historyCodepoints.join("");
     }
 
     // Check whether the context needs to be updated.
-    let currentContext = null;
     let currentProbs = null;
     if (!(contextKey in predictorContexts)) {
-	currentContext = predictorData;
-	const symbol = lastCodepoint.toString();
-	model.addSymbolAndUpdate(currentContext,
-				 vocab.symbols_.indexOf(symbol));
+	// Rebuild current context.
+	//
+	// My current understanding of the predictor API is that we are given
+	// history, where all the characters up until the last have been
+	// committed. We check whether we already have a context for the last
+	// character and if not - update the model.
+	const historyCodepoints = codePoints.slice(-modelMaxOrder);
+	currentContext = model.createContext();
+	for (let i = 0; i < historyCodepoints.length; ++i) {
+	    const symbol = historyCodepoints.toString();
+	    if (i < historyCodepoints.length - 1) {
+		model.addSymbolToContext(currentContext,
+					 vocab.symbols_.indexOf(symbol));
+	    } else {
+		model.addSymbolAndUpdate(currentContext,
+					 vocab.symbols_.indexOf(symbol));
+	    }
+	}
 	currentProbs = model.getProbs(currentContext);
-	predictorContexts[contextKey] = [currentContext, currentProbs];
+	predictorContexts[contextKey] = currentProbs;
     } else {
 	// We already have this context. Fetch the probabilities to avoid
 	// recomputing them.
-	currentContext = predictorContexts[contextKey][0];
-	currentProbs = predictorContexts[contextKey][1];
-    }
-    if (predictorData !== undefined) {
-        console.log(`dummy "${text}" ${predictorData}`);
+	currentProbs = predictorContexts[contextKey];
     }
 
     // Update the probabilities for the universe of symbols (as defined by vocab
-    // that follow current context).
+    // that follow current context), e.g. provide:
+    //
+    //   P(c_i|c_{i-n},...,c_{i-1}), c \in C, where $n$ is the model order and
+    //   C is the alphabet.
     const numVocabSymbols = currentProbs.length - 1;
     for (let i = 1; i < numVocabSymbols; ++i) {
 	const codepoint = Number(vocab.symbols_[i])
