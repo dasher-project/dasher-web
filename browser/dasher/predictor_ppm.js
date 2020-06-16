@@ -12,32 +12,10 @@ by `jslm` library.
 import PPMLanguageModel from './third_party/jslm/ppm_language_model.js'
 import {Vocabulary} from './third_party/jslm/vocabulary.js'
 
-/*
-  Initialize the vocabulary from the fixed alphabet.
-*/
-let vocab = new Vocabulary()
-
-const firstPoint = "a".codePointAt(0);
-const lastPoint = "z".codePointAt(0);
-
-const weightPoints = [];
-let letterSymbols = new Set();
-let lower = true;
-for (let codePoint = firstPoint; codePoint <= lastPoint; codePoint++) {
-    let str = String.fromCodePoint(codePoint);
-    str = lower ? str.toLowerCase() : str.toUpperCase();
-    let codepoint = str.codePointAt(0);
-    let letterSymbol = codepoint.toString();
-    vocab.addSymbol(letterSymbol);
-    letterSymbols.add(letterSymbol);
-    weightPoints.push(codepoint);
-    lower = !lower;
-}
-
-/*
-  Now get some very simple priors on the symbols using a very short training
-  text assembled from Enron Mobile dataset.
-*/
+//
+// Simple priors on the symbols are computed using a very short training text
+// assembled from Enron Mobile dataset.
+//
 const trainingText = `
 Have a good evening. Are you going to join us for lunch?
 OK to make changes, change out original. This looks fine. See you next week.
@@ -49,39 +27,98 @@ See you soon. See you later. Will you come get me? I am on my way. hi rob.
 I'm going to sleep. Still waiting on decision. Are you sure? I am all over it.
 Will follow up today. Nothing but good news everyday. please call. agreed.
 i want to thank everyone involved. Hey, how are you doing? Sorry about that!
-Can you help me here? Can we meet? Are you feeling better?
-I will be back Friday.
+Can you help me here? Can we meet? Are you feeling better? i am trying again.
+I will be back Friday. and how would i be going for work. sounds good to me
+and how would i be going for work? i have a favor to ask. best of luck and
+stay in touch. yes I am here actually. love got it I better go. I'll confirm
+nine three six five nine seven three nine zero five two one for your information
+I'm fine. will call later to explain. today has been hard for me
 `;
 
-for (let i = 0; i < trainingText.length; ++i) {
-    const symbol = trainingText.codePointAt(i).toString();
-    if (letterSymbols.has(symbol)) {
+// Computes vocabulary from the supplied palette and the short training text
+// above.
+let vocab = null
+
+function initVocabulary(palette) {
+    console.log("Initializing vocabulary ...")
+    vocab = new Vocabulary()
+    for (let i = 0; i < trainingText.length; ++i) {
+	const symbol = trainingText.codePointAt(i).toString();
 	vocab.addSymbol(symbol);
     }
-}
-
-/*
-  Boostrap PPM model using training text.
-*/
-const maxOrder = 4;  // Model order (length of the history).
-let model = new PPMLanguageModel(vocab, maxOrder);
-let context = model.createContext()
-for (let i = 0; i < trainingText.length; ++i) {
-    const symbol = trainingText.codePointAt(i).toString();
-    if (letterSymbols.has(symbol)) {
-	model.addSymbolAndUpdate(context, vocab.symbols_.indexOf(symbol))
+    let codePoints = palette.codePoints;
+    for (let i = 0; i < codePoints.length; ++i) {
+	const symbol = codePoints[i].toString();
+	vocab.addSymbol(symbol);
     }
+    return vocab
 }
 
-let index = Math.floor(weightPoints.length / 2);
+//
+// Boostraps PPM model using training text.
+//
+
+let model = null
+const maxOrder = 4;  // History length.
+
+function bootstrapModel(vocab) {
+    console.log("Initializing LM ...")
+    model = new PPMLanguageModel(vocab, maxOrder);
+    let context = model.createContext()
+    for (let i = 0; i < trainingText.length; ++i) {
+	const symbol = trainingText.codePointAt(i).toString();
+	model.addSymbolAndUpdate(context, vocab.symbols_.indexOf(symbol));
+    }
+    return model;
+}
+
+//
+// Actual prediction interface:
+//
+// Current context specifies the context in which the prediction is to happen,
+// i.e. the history.
+let currentContext = null;
+let predictorContext = null;
+let currentProbs = null;
 
 export default async function (
     codePoints, text, predictorData, palette, set_weight
 ) {
+    // Check if we're called the first time.
+    if (!vocab) {
+	// Initialize vocabulary, the model, setup initial (empty) context and
+	// compute initial probabilities.
+	vocab = initVocabulary(palette);
+	model = bootstrapModel(vocab);
+	currentContext = model.createContext();
+	predictorContext = { "need_update": true, "context": currentContext };
+	currentProbs = model.getProbs(currentContext)
+    }
+
+    // Look at the history to check whether we need to update the context.
+    let lastCodepoint = -1;
+    if (codePoints.length > 0) {
+	// A symbol has been selected. Check whether the context needs to be
+	// updated.
+	lastCodepoint = codePoints[codePoints.length - 1]
+	if (lastCodepoint > 0 && predictorContext["need_update"]) {
+	    const symbol = lastCodepoint.toString();
+	    model.addSymbolAndUpdate(predictorContext["context"],
+				     vocab.symbols_.indexOf(symbol));
+	    predictorContext["need_update"] = false;
+	}
+    }
     if (predictorData !== undefined) {
         console.log(`dummy "${text}" ${predictorData}`);
     }
-    set_weight(weightPoints[index], 1, index);
-    index = (index + 1) % weightPoints.length;
+
+    // Update the probabilities for the universe of symbols (as defined by vocab
+    // that follow current context).
+    const numVocabSymbols = currentProbs.length - 1;
+    for (let i = 1; i < numVocabSymbols; ++i) {
+	const codepoint = Number(vocab.symbols_[i])
+	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
+		   predictorContext);
+    }
     return;
 }
