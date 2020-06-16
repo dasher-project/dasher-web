@@ -1,0 +1,40 @@
+mobile1325	You have a nice holiday too.
+mobile1329	We need to talk about this month.
+mobile1335	What about Jay?
+mobile1350	We are waiting on the cold front.
+mobile1356	Ken agreed yesterday.
+mobile1357	Neil has been asking around.
+mobile1433	Are you available?
+mobile1440	That would likely be an expensive option.
+mobile1442	Good for you.
+mobile1498	We will keep you posted.
+mobile1502	Do we have anyone in Portland?
+mobile1503	No surprise there.
+mobile1515	Hope you guys are doing fine.
+mobile1516	Are you going to call?
+mobile1517	Did that happen?
+mobile1530	I would be glad to participate.
+mobile1581	I worked on the grade level promotion.
+mobile1585	I have a request.
+mobile1596	You're the greatest.
+mobile1598	What is this?
+mobile1603	Travis is in charge.
+mobile1605	Can you handle?
+mobile1626	Their key decision maker did not show which is not a good sign.
+mobile1640	Can you help get this cleared up?
+mobile1643	I have a high level in my office.
+mobile1649	Thanks I will.
+mobile1651	If we don't get it, could be trouble.
+mobile1656	Are you being a baby?
+mobile1659	Did you get this?
+mobile1677	I'm on a plane.
+mobile1678	Florida is great.
+mobile1679	I sent it to her.
+mobile1684	I will call.
+mobile1685	Please let me know if you learn anything at the floor meeting.
+mobile1693	Please revise accordingly.
+mobile1695	I don't have the distraction of taking care of Mimi.
+mobile1700	Could you see where this stands?
+mobile1711	I'm going to class.
+mobile1716	See you on the third.
+mobile1720	Did we get ours back?

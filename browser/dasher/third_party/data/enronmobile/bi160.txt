@@ -1,0 +1,160 @@
+mobile13	Have a good evening.
+mobile20	Are you going to join us for lunch?
+mobile32	OK to make changes, change out original.
+mobile39	Do you want to eat lunch somewhere before?
+mobile68	If so he probably will have to pay back.
+mobile73	I have already approved and forwarded.
+mobile82	How are we handling others in that group?
+mobile89	Is she done yet?
+mobile109	Michael has his holiday performance.
+mobile112	Here's the talking points for ANNGTC.
+mobile126	Very foggy this AM.
+mobile134	Mostly a social call.
+mobile148	I would like to attend if so.
+mobile157	I am in 50M if you need me.
+mobile182	Chad thought we were on a treasure hunt.
+mobile201	Thanks I needed that today!
+mobile206	No problem Maria, please contact Rick.
+mobile210	A bit behind on my emails.
+mobile217	What is your issue sir?
+mobile230	Paige is gone.
+mobile278	I'm in the waiting room of the ENT now.
+mobile280	Check with Haedicke
+mobile283	Is Cassandra there today?
+mobile288	Shouldn't be too hard though.
+mobile290	In a couple of weeks.
+mobile300	I will call in 20 to 30 minutes.
+mobile323	This is the neatest toy I have had.
+mobile333	No, but thanks.
+mobile361	Can we go to 150/150 with Foster?
+mobile393	Surely we can cover this from within Virgo's team?
+mobile409	Do you need it today?
+mobile412	Will call later to explain.
+mobile422	There will be some better news later today
+mobile423	What is going on?
+mobile460	I'll probably page you.
+mobile478	Would you please send runner to get this?
+mobile497	I'm looking forward to the long weekend!
+mobile498	Do we need to do anything here?
+mobile503	Because there is traffic.
+mobile506	Jane, what about this Thursday for lunch?
+mobile515	Presumably so do you.
+mobile519	What is happening to the stock price?
+mobile542	Are things better for you at home tonight?
+mobile546	Mixed signals from APS today.
+mobile559	Milly is a seller.
+mobile571	Boy, I couldn't write too much on this thing!
+mobile581	Shelley (making good use of my jury duty time)
+mobile590	Next time ask Jim to call me.
+mobile599	This looks fine.
+mobile600	I am out of town on business.
+mobile615	I would expect an answer ASAP.
+mobile632	Did you see Laura's message.?
+mobile636	Is it over?
+mobile641	I'll get you one.
+mobile671	I'll just have her call Tracy.
+mobile697	What did you and Ava decide to do?
+mobile723	Lynn checked with Fran and she told her coordinator.
+mobile729	I am on a plane, sorry.
+mobile745	I think that we should enforce the agreement.
+mobile753	Did he get a signing bonus?
+mobile761	Still hustling to find dollars for the quarter end.
+mobile776	When do you have to be there?
+mobile783	We are about to leave Heaven!
+mobile786	Please leave it to Brian.
+mobile797	Just playing with you!
+mobile807	They may want to discuss with you.
+mobile858	Wasn't nearly as bad as I thought.
+mobile867	I think that Pam Butler called him.
+mobile877	I'll come have a beer with you guys later.
+mobile878	The SoCal meeting was very beneficial.
+mobile893	We must be consistent.
+mobile905	This is a most unfortunate news release.
+mobile912	We can have wine and catch up.
+mobile918	You just can't work without me can you?
+mobile963	What is wrong?
+mobile976	Weather is bad here.
+mobile1016	We can work around these plans if you prefer.
+mobile1021	Maybe you can leave early.
+mobile1063	Thank you for your prompt reply.
+mobile1071	I know several who work there.
+mobile1093	Is that enough for this week?
+mobile1106	Thanks for all you are doing
+mobile1122	Jan, sorry for the inconvenience.
+mobile1165	We have lots of forks, etc. (went to Sam's).
+mobile1174	Michael was great this AM.
+mobile1184	I need your home cell or whatever.
+mobile1201	FYI on the demand letter I signed earlier.
+mobile1252	Barry, hope that you had a great Christmas.
+mobile1258	The rest is a byproduct of slapshot.
+mobile1270	1 - number of questions on this.
+mobile1271	How soon do you need it?
+mobile1302	I'll find someone to do it.
+mobile1305	Geez, I sound pathetic.
+mobile1330	How is it going?
+mobile1358	We are having fun.
+mobile1360	I have rates and capacity utilization information ready.
+mobile1384	Sorry to keep you in suspense!
+mobile1393	We sold the UK business to AEP.
+mobile1397	Are we ready for this on Monday?
+mobile1415	Isn't that about the way it could happen?
+mobile1441	We haven't made that decision here though.
+mobile1462	I just had my head in the clouds.
+mobile1470	Wonder what next week will bring.
+mobile1483	So you're ignoring me.
+mobile1500	I am really not wanting to come back.
+mobile1504	I spoke with Lara Robinson this morning.
+mobile1523	Has it been mentioned yet?
+mobile1557	Please stay on top of the security issue.
+mobile1590	I will not be available.
+mobile1603	Travis is in charge.
+mobile1617	FYI I saw Ken Caminiti at Animal Kingdom yesterday!
+mobile1624	I would suggest you and Mark address this together.
+mobile1627	I am in a due diligence meeting until 6:00.
+mobile1638	Are you in a good mood?
+mobile1640	Can you help get this cleared up?
+mobile1643	I have a high level in my office.
+mobile1669	Kind of like silent fireworks.
+mobile1676	She has the game tomorrow.
+mobile1680	What is the status of the Pemex discussions?
+mobile1690	Remember blackberry doesn't work so well at home.
+mobile1696	I think afraid of mass exodus.
+mobile1706	Sorry for the unfriendly greeting in the lobby.
+mobile1707	I need to talk to Tom Carlton, their decision-maker.
+mobile1726	Let's leave it until we get going.
+mobile1746	The other figure is the top 15 contracts.
+mobile1767	Do you need to be there?
+mobile1769	Hope you had a good weekend.
+mobile1795	Can you bring these to 49C1?
+mobile1796	I have no personal transactions with any Enron entity.
+mobile1802	She is taking over Global Finance Legal.
+mobile1808	Just sitting around.
+mobile1824	I'm in 49C1.
+mobile1858	It's raining here.
+mobile1862	If so what was it?
+mobile1881	If you need John speak up now.
+mobile1894	We are somewhat emasculated bystanders.
+mobile1899	This seems fine to me.
+mobile1901	I will tell them.
+mobile1930	I thought you needed him to carry two people.
+mobile1945	I'll ask, he just came by.
+mobile1978	Call me anytime for information.
+mobile1990	I have received your messages and will respond accordingly.
+mobile2006	I think you need to push Wasaff.
+mobile2008	Was wondering if you and Natalie connected?
+mobile2061	You are welcome in Palacios this weekend, of course.
+mobile2066	FAX 212 253 9229
+mobile2082	These are big storms and traffic isn't moving.
+mobile2083	We had a VP PRC meeting Thursday.
+mobile2086	I vote for the latter.
+mobile2089	We don't want to look bad to Dyn.
+mobile2095	Lynn, got to the office OK.
+mobile2118	We just pulled schedules from the web.
+mobile2148	They are specifically concerned about the current intercompany notes.
+mobile2149	Nice weather for it.
+mobile2188	Thanks for your help in quickly setting this up.
+mobile2194	Just in case we haven't invited any of them.
+mobile2199	Go ahead and notify.
+mobile2212	How did they get onto our floor?
+mobile2229	Is it far?
+mobile2234	On Mahonia margining, I spoke with Mike Garberding.

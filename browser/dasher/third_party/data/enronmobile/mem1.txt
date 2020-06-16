@@ -1,0 +1,40 @@
+mobile20	Are you going to join us for lunch?
+mobile89	Is she done yet?
+mobile95	Thanks for the quick turnaround.
+mobile101	How are you?
+mobile130	Yes, I am playing.
+mobile139	Please call tomorrow if possible.
+mobile140	We are all fragile.
+mobile148	I would like to attend if so.
+mobile155	I can return earlier.
+mobile156	I am trying again.
+mobile174	I will bring John Brindle.
+mobile193	He would love anything about rocks.
+mobile198	What do you hear?
+mobile212	Hope your trip to Florida was good.
+mobile226	What's his problem?
+mobile228	She called and wants to come over this AM.
+mobile229	There is now a meeting at 8PM as well.
+mobile232	See you soon!
+mobile281	It reads like she is in.
+mobile291	Has Dynegy made a specific request?
+mobile292	I am walking in now.
+mobile294	They have capacity now.
+mobile310	A gift isn't necessary.
+mobile313	Tell her to get my expense report done.
+mobile314	I am out of town on business tonight.
+mobile319	I'm waiting until she comes home.
+mobile320	Not even close.
+mobile329	Chris Foster is in!
+mobile334	They are more efficiently pooled.
+mobile404	Could you try ringing her?
+mobile409	Do you need it today?
+mobile429	Keep me posted!
+mobile434	John this message concerns me.
+mobile464	Call me to give me a heads up.
+mobile467	And leave my school alone.
+mobile479	What is in the plan?
+mobile539	Where do you want to meet to walk over there?
+mobile561	I am almost speechless.
+mobile563	Ava, please put me on the list.
+mobile564	Suggest you get facts before judging anyone.

@@ -1,0 +1,40 @@
+mobile130	Yes, I am playing.
+mobile139	Please call tomorrow if possible.
+mobile212	Hope your trip to Florida was good.
+mobile228	She called and wants to come over this AM.
+mobile292	I am walking in now.
+mobile313	Tell her to get my expense report done.
+mobile404	Could you try ringing her?
+mobile576	Should systems manage the migration?
+mobile588	I think that is the right answer.
+mobile602	Get with Mary for format.
+mobile607	I'm glad she likes her tree.
+mobile713	Thursday works better for me.
+mobile822	This is very sensitive.
+mobile831	Can we have them until we move?
+mobile919	Don't they have some conflicts here?
+mobile1003	Hopefully this can wait until Monday.
+mobile1057	I agree since I am at the bank right now.
+mobile1072	I changed that in one prior draft.
+mobile1090	Don't make me pull tapes on whether you understood our fee.
+mobile1151	I wanted to go drinking with you.
+mobile1158	No material impact.
+mobile1160	We don't seem to have any positive income there.
+mobile1192	If not can I call you?
+mobile1271	How soon do you need it?
+mobile1320	Ava, do we need to worry about this?
+mobile1626	Their key decision maker did not show which is not a good sign.
+mobile1649	Thanks I will.
+mobile1656	Are you being a baby?
+mobile1693	Please revise accordingly.
+mobile1711	I'm going to class.
+mobile1775	Is that OK?
+mobile1828	I can review afterwards and get back to you tonight.
+mobile1861	Can you resend me the Doyle email from last week?
+mobile1863	I'm in Stan's office.
+mobile1879	Hey TK, how are you doing?
+mobile1929	What a pain.
+mobile1932	Pressure to finish my review!
+mobile2109	We're on the way.
+mobile2130	No there will be plenty of others.
+mobile2146	No can do.

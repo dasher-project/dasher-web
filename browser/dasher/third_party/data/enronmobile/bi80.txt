@@ -1,0 +1,80 @@
+mobile13	Have a good evening.
+mobile16	Tonight is my anniversary.
+mobile17	Thanks, I think we have taken care of this.
+mobile18	Will follow up today.
+mobile42	FYI, would she meet my requirements?
+mobile47	Yes I am coming twice.
+mobile79	Let Gary Smith know today if you want him.
+mobile118	The filing concerns various scheduling and balancing rules.
+mobile119	You'll be OK.
+mobile127	He is pretty tapped into it all.
+mobile128	I am out of town until Friday.
+mobile134	Mostly a social call.
+mobile145	Pretty impressive win!
+mobile155	I can return earlier.
+mobile157	I am in 50M if you need me.
+mobile233	I'm on my way back there to do so.
+mobile279	Probably need to check with HR group providing services.
+mobile438	I'm leaving around noon tomorrow to catch a flight.
+mobile485	Do you and George have a thing going?
+mobile504	I am fine with this.
+mobile546	Mixed signals from APS today.
+mobile557	Good to know that the FERC cares!
+mobile581	Shelley (making good use of my jury duty time)
+mobile619	Did you talk to Ava this morning?
+mobile641	I'll get you one.
+mobile678	Is that EOTT or the company that owns it?
+mobile706	Wednesday is definitely a hot chocolate day.
+mobile721	Chase back office and their restart plan updates individually.
+mobile723	Lynn checked with Fran and she told her coordinator.
+mobile728	I am all over it.
+mobile785	I am on my way.
+mobile797	Just playing with you!
+mobile821	Thanks for checking with me.
+mobile839	Treasa knows the details.
+mobile884	Let it rip.
+mobile891	We just need a sitter.
+mobile901	When things get speculative the language always gets scary.
+mobile926	Can you get me the Calger letter done?
+mobile943	Thanks for your leadership on this issue.
+mobile951	No obligation to pay.
+mobile1116	Nothing for Paige.
+mobile1122	Jan, sorry for the inconvenience.
+mobile1127	Finally, I would delete the paragraph about lawyers.
+mobile1151	I wanted to go drinking with you.
+mobile1154	Jordan is taking Christina Mordant's last job, corporate development.
+mobile1165	We have lots of forks, etc. (went to Sam's).
+mobile1172	Please make sure Bob Kelley is on the list.
+mobile1201	FYI on the demand letter I signed earlier.
+mobile1202	Ava please put on my calendar.
+mobile1226	Still waiting on decision.
+mobile1265	Much better than carrying a laptop.
+mobile1277	Nothing but good news everyday.
+mobile1315	I would like it paid through I Buy It.
+mobile1329	We need to talk about this month.
+mobile1342	I was trying to remember what Bobby said.
+mobile1392	I will not make the CIO meeting at 1.
+mobile1457	Lavo called it, never mind though.
+mobile1605	Can you handle?
+mobile1624	I would suggest you and Mark address this together.
+mobile1629	If hair doesn't work then how about coffee?
+mobile1706	Sorry for the unfriendly greeting in the lobby.
+mobile1711	I'm going to class.
+mobile1750	Are you sure?
+mobile1816	Also it appears no payment is required tomorrow.
+mobile1866	It's death or Dynegy, with no clear leader.
+mobile1894	We are somewhat emasculated bystanders.
+mobile1899	This seems fine to me.
+mobile1958	Who should I contact regarding severance?
+mobile1969	I can get them.
+mobile1981	Will it be delivered?
+mobile1996	I'm not close enough right now to the discussion.
+mobile2005	What information, if any, do we owe him?
+mobile2040	Lisa now has everything.
+mobile2082	These are big storms and traffic isn't moving.
+mobile2103	Jim please confirm to Vince you are happy.
+mobile2105	If he'll sign no issues with Barclays.
+mobile2191	Thanks - that's what I was hoping it was.
+mobile2194	Just in case we haven't invited any of them.
+mobile2198	Are you sure I don't need to be there?
+mobile2212	How did they get onto our floor?

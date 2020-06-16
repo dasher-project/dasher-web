@@ -1,0 +1,320 @@
+mobile8	Hopefully it cheered you up a bit.
+mobile9	We are working on this as we speak.
+mobile11	Interesting, are you around for a late lunch?
+mobile22	Spoke with Greg.
+mobile30	Evaluating KMI lease offer on Sonoran project.
+mobile32	OK to make changes, change out original.
+mobile35	I heard it was at 5?
+mobile64	Fuel is retained in kind from the shippers.
+mobile82	How are we handling others in that group?
+mobile89	Is she done yet?
+mobile95	Thanks for the quick turnaround.
+mobile104	I better go.
+mobile108	I think we are dong OK.
+mobile111	Not just 1 to 2.
+mobile124	I didn't hear from Ginger this week.
+mobile125	Thus have nothing to destroy.
+mobile126	Very foggy this AM.
+mobile130	Yes, I am playing.
+mobile135	We will sign tomorrow and fund Tuesday.
+mobile137	I'm still in FW.
+mobile138	Can you rough out a slide on rating agencies?
+mobile144	It will probably be tomorrow.
+mobile148	I would like to attend if so.
+mobile156	I am trying again.
+mobile160	I am on my way to Heaven.
+mobile174	I will bring John Brindle.
+mobile178	Need you or John to step out.
+mobile179	We probably have to discuss trade behavior and margin.
+mobile197	Of course not
+mobile202	I will review them on Monday.
+mobile205	My only constraint is Chad's noon soccer game.
+mobile206	No problem Maria, please contact Rick.
+mobile211	Then we can go to Zainy Brainy.
+mobile228	She called and wants to come over this AM.
+mobile233	I'm on my way back there to do so.
+mobile240	Be back tomorrow and maybe we can visit.
+mobile245	Neal, can you help with this?
+mobile253	Best of luck and stay in touch.
+mobile257	Scotty and I will be in NYC.
+mobile264	How would you explain the difference between the two?
+mobile266	Is Kathy here?
+mobile274	I'm still in Dallas!
+mobile281	It reads like she is in.
+mobile283	Is Cassandra there today?
+mobile287	I like Nick and Everett.
+mobile288	Shouldn't be too hard though.
+mobile300	I will call in 20 to 30 minutes.
+mobile318	We need a process to deal with this.
+mobile320	Not even close.
+mobile321	I have an AM doctor's appointment.
+mobile322	See you next week.
+mobile334	They are more efficiently pooled.
+mobile343	I will call you Monday morning to discuss.
+mobile352	I didn't understand we were borrowing them.
+mobile362	I think Tim wants to move quickly.
+mobile363	If Motley is in we are out of money.
+mobile370	What period does the max rate assumption cover?
+mobile395	Just wanted to touch base.
+mobile396	Not like you'll get paid for it.
+mobile399	Thanks again for your help.
+mobile402	Has Brian had his contract yet?
+mobile405	What a crazy day.
+mobile415	The contract is a bit complicated.
+mobile416	Steve Gilbert is working on this.
+mobile426	Tax gave us the same feedback.
+mobile431	I will be thinking of you.
+mobile432	Let's have this meeting today/tonight.
+mobile442	Need anything from Target?
+mobile461	Couldn't risk the uncertainty.
+mobile476	We will have some good detail by January 7.
+mobile478	Would you please send runner to get this?
+mobile491	Budget allocation from Glisan has been postponed.
+mobile496	Will you and KB be around this afternoon?
+mobile499	Could you resend?
+mobile506	Jane, what about this Thursday for lunch?
+mobile519	What is happening to the stock price?
+mobile531	Shelley Leeds Rickets this AM.
+mobile536	And I can't turn my phone on.
+mobile537	A letter is being sent today.
+mobile538	I might have something at the office.
+mobile558	Presuming we can afford headcount?
+mobile565	I am now officially a Blackberry addict.
+mobile569	Take what you can get.
+mobile571	Boy, I couldn't write too much on this thing!
+mobile576	Should systems manage the migration?
+mobile581	Shelley (making good use of my jury duty time)
+mobile582	Need before board meeting.
+mobile588	I think that is the right answer.
+mobile596	I'm glad you liked it.
+mobile600	I am out of town on business.
+mobile601	I've never worked with her.
+mobile607	I'm glad she likes her tree.
+mobile617	I think your outlined measures sound fine.
+mobile620	We have lots of paper stuff.
+mobile626	Ava, LA was Socal meeting.
+mobile638	I'll presume it is dead until I hear otherwise.
+mobile646	I thought it had gone to all of Enron.
+mobile647	What will happen to this project?
+mobile648	Just bought out Toys R Us.
+mobile664	I am unavailable for the 1PM meeting.
+mobile683	Met with partners in San Francisco.
+mobile695	Going well here.
+mobile702	I told you silly.
+mobile713	Thursday works better for me.
+mobile718	One assistant and one HR associate.
+mobile719	Joel Ephross on issues reacquiring economic interests/swaps from Jedi2/Whitewing.
+mobile721	Chase back office and their restart plan updates individually.
+mobile724	FERC has not issued an order yet.
+mobile732	Tomorrow is fine
+mobile750	Out of office but have people working on info.
+mobile753	Did he get a signing bonus?
+mobile760	I thought so.
+mobile766	Sure was good talking to you this AM.
+mobile771	Never mind, I already deleted it.
+mobile779	Still not resolved.
+mobile797	Just playing with you!
+mobile803	Looking for some gift hints from you.
+mobile807	They may want to discuss with you.
+mobile811	What's your phone number?
+mobile817	Have you talked to Somerholder?
+mobile821	Thanks for checking with me.
+mobile833	Please respond if anyone has a different view.
+mobile834	On the plane, doors closing.
+mobile836	Lisa Mellencamp on any issues regarding pending litigation.
+mobile839	Treasa knows the details.
+mobile853	The meteor shower was incredible last night.
+mobile854	Let me know where you might be.
+mobile856	Good to know it exists.
+mobile878	The SoCal meeting was very beneficial.
+mobile882	But I believe answer will be yes.
+mobile896	She has absolutely everything.
+mobile906	She just came.
+mobile911	Please send to Gary Smith.
+mobile923	Please pass along my thanks, though.
+mobile928	No sign of Chuck and not responding to messages.
+mobile947	I'm on a conference call.
+mobile950	No need to send to FL.
+mobile953	What does Hunter think?
+mobile955	Money wise that is.
+mobile956	Will let you know how call goes in morning.
+mobile971	Marisa sent the invoices.
+mobile973	Just got this.
+mobile980	In a meeting with your guys now.
+mobile985	How long can you guys shop?
+mobile1003	Hopefully this can wait until Monday.
+mobile1007	I am not concerned with the Brown money.
+mobile1016	We can work around these plans if you prefer.
+mobile1018	I am freaking out!
+mobile1041	Just told them I thought it would be impossible.
+mobile1046	Rosco was great.
+mobile1055	You have a lot of holes in your plan.
+mobile1059	I was planning to attend.
+mobile1060	That would be great.
+mobile1061	Fannin is a mess by the Dome and elsewhere.
+mobile1072	I changed that in one prior draft.
+mobile1073	TXU is off everyone else OK.
+mobile1075	Probably will be working.
+mobile1077	See you in Enron House when I get back.
+mobile1103	Don't know how that happened.
+mobile1104	You snooze you lose!
+mobile1112	Are you OK?
+mobile1113	Might include proposals with respect to Alaska.
+mobile1118	I will if I want to.
+mobile1122	Jan, sorry for the inconvenience.
+mobile1125	We are on a plane coming back.
+mobile1127	Finally, I would delete the paragraph about lawyers.
+mobile1128	Also, regarding the cash flow from Canada.
+mobile1152	Trader Support Group
+mobile1154	Jordan is taking Christina Mordant's last job, corporate development.
+mobile1171	Things are OK.
+mobile1178	It's not working very well.
+mobile1197	She is a Baylor graduate and is very nice.
+mobile1199	We've already eliminated his speech therapy.
+mobile1201	FYI on the demand letter I signed earlier.
+mobile1202	Ava please put on my calendar.
+mobile1206	Confirmed with Mark Taylor.
+mobile1231	I'll meet you at Bill Sperry's office at 12:30.
+mobile1234	Got here early.
+mobile1247	Both of us are still here.
+mobile1252	Barry, hope that you had a great Christmas.
+mobile1258	The rest is a byproduct of slapshot.
+mobile1264	We will keep trying.
+mobile1268	Email the consent to me.
+mobile1273	How are things with you?
+mobile1275	Michael said his day was rotten.
+mobile1286	I want per MMBTU.
+mobile1290	I am not aware of any.
+mobile1293	Perhaps there was a glitch.
+mobile1299	What number should he call you on?
+mobile1300	We are proceeding with a great reception so far.
+mobile1301	You can reply via email.
+mobile1312	We haven't sold the US business as yet.
+mobile1313	I would like to discuss.
+mobile1318	I think these will be just fine.
+mobile1320	Ava, do we need to worry about this?
+mobile1347	Maybe stuff we do more of next year.
+mobile1372	Tried to call but couldn't reach you.
+mobile1373	Let me know if I can help.
+mobile1375	I had a last minute meeting come up.
+mobile1386	I need to go to Stan's office.
+mobile1397	Are we ready for this on Monday?
+mobile1398	That is not true.
+mobile1400	I will handle this afternoon.
+mobile1435	Let's wait until Monday.
+mobile1440	That would likely be an expensive option.
+mobile1443	I decided that I am going to stay here!
+mobile1454	You haven't seen 120 in some time.
+mobile1471	Hope that you have a great TG.
+mobile1484	I think I'm OK.
+mobile1487	Your voice cheered me up.
+mobile1489	Meeting with Alaska Governor Tony Knowles on November 30th.
+mobile1493	Coal switching to NG and power guys stimulating demand.
+mobile1498	We will keep you posted.
+mobile1502	Do we have anyone in Portland?
+mobile1507	OK I thought it was in Washington state.
+mobile1509	We are sitting in Weil's offices, waiting to negotiate.
+mobile1529	We will address tomorrow with Stan.
+mobile1532	Back at you.
+mobile1537	Sorry for the delay.
+mobile1542	Please coordinate with him.
+mobile1558	If possible, I'd like to get Amy's opinion.
+mobile1561	I'll get with him by phone to confirm.
+mobile1573	Am I getting a good package?
+mobile1577	GP is general partner in NB.
+mobile1579	Let me know if I can be of help.
+mobile1580	Hope all is well.
+mobile1584	The party at AA is Roger Willard.
+mobile1595	I'll send you minutes.
+mobile1619	I don't know that I will be back Monday.
+mobile1634	I appreciate you moving so quickly on this.
+mobile1654	Did you set up my corporate account for me?
+mobile1661	Mike is putting pressure on me.
+mobile1682	Can you supplement the answer to the visa question?
+mobile1684	I will call.
+mobile1690	Remember blackberry doesn't work so well at home.
+mobile1693	Please revise accordingly.
+mobile1699	On call with S&P now.
+mobile1706	Sorry for the unfriendly greeting in the lobby.
+mobile1707	I need to talk to Tom Carlton, their decision-maker.
+mobile1716	See you on the third.
+mobile1733	We're using Weil.
+mobile1739	What is up with ENE?
+mobile1743	We are all doing reasonably well, I think.
+mobile1746	The other figure is the top 15 contracts.
+mobile1751	Go for the dollars.
+mobile1758	I didn't think we had.
+mobile1760	I called Tom at 8:30 this morning.
+mobile1767	Do you need to be there?
+mobile1769	Hope you had a good weekend.
+mobile1788	Need to watch closely.
+mobile1794	Does Dan know about Julia changing groups?
+mobile1795	Can you bring these to 49C1?
+mobile1803	Nothing from Mom.
+mobile1807	She was going to leave at 8 or 9.
+mobile1809	November 14 works for me.
+mobile1816	Also it appears no payment is required tomorrow.
+mobile1820	I forgot one person when we spoke on Friday.
+mobile1826	I will need to have my memory refreshed.
+mobile1827	Are you there?
+mobile1847	If so Whitt is done?
+mobile1880	We in the process of making a change.
+mobile1885	In isolation, all of these things are trivial.
+mobile1894	We are somewhat emasculated bystanders.
+mobile1895	But we should pay them the 4500.
+mobile1903	Man I don't want to get sick again.
+mobile1915	Are you back in town?
+mobile1920	I think FMV is probably less than fifty.
+mobile1929	What a pain.
+mobile1930	I thought you needed him to carry two people.
+mobile1932	Pressure to finish my review!
+mobile1934	San Francisco was Interconnect meeting.
+mobile1939	I have 30 minutes then.
+mobile1944	What are the units?
+mobile1947	See you tomorrow.
+mobile1961	Check with Vince Strohmeyer.
+mobile1968	I'm taking Wednesday off.
+mobile1975	I am monitoring email.
+mobile1978	Call me anytime for information.
+mobile1980	I am staying at the W Hotel.
+mobile1981	Will it be delivered?
+mobile2002	Brian is working this.
+mobile2003	On a comparative basis I can't justify more.
+mobile2006	I think you need to push Wasaff.
+mobile2007	Make sure they are current.
+mobile2008	Was wondering if you and Natalie connected?
+mobile2017	Sheila please talk to Avashe.
+mobile2025	Okay I'll go for a ticket.
+mobile2028	John, please send this to Shelly.
+mobile2040	Lisa now has everything.
+mobile2042	I'll give it to you tomorrow.
+mobile2045	I'm still here.
+mobile2051	I'm glad you are involved!
+mobile2052	He doesn't want to give the trading positions.
+mobile2056	I'll call you when I get to the office.
+mobile2058	It will all be public someday.
+mobile2061	You are welcome in Palacios this weekend, of course.
+mobile2062	Thanks, having a good time.
+mobile2065	Please set something up.
+mobile2071	What is the shower at Patsy's for?
+mobile2077	No, at least not to my knowledge.
+mobile2086	I vote for the latter.
+mobile2130	No there will be plenty of others.
+mobile2148	They are specifically concerned about the current intercompany notes.
+mobile2153	But I hope to see you at Kari's house.
+mobile2157	See you soon
+mobile2159	Thai sounds good.
+mobile2164	I can be there within the hour.
+mobile2167	Do you want to fax it to my hotel?
+mobile2172	I meant to try and explain, not to redo.
+mobile2173	Cool is it not.
+mobile2174	See you later.
+mobile2183	Did you differ from me?
+mobile2194	Just in case we haven't invited any of them.
+mobile2196	713 622 6405
+mobile2204	I doubt that it is forecasted.
+mobile2211	I'll email later tonight.
+mobile2216	Reclass both please.
+mobile2232	Neil's work email is nmann@erac.com.
+mobile2236	Will you come get me?
+mobile2239	It's still going on - quite boring though.
