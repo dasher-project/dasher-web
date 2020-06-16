@@ -225,12 +225,13 @@ export default class UserInterface {
         if (!this._keyboardMode) {
             // In keyboard mode, the control panel and all its HTML still exists
             // it just never gets added to the body so it doesn't get rendered.
-            this._controlPanel.set_parent(this._header);
+            const form = new Piece('form', this._header);
+            this._controlPanel.set_parent(form);
         }
         if (this._loading !== null) {
             this._panels.main.$.piece.add_child(this._loading);
         }
-        this._controlPanel.select_panel("main");
+        this._controlPanel.select_panel();
     }
 
     _load_controls() {
@@ -242,8 +243,6 @@ export default class UserInterface {
             const piece = new Piece('div', this._header);
             piece.add_child(this._panels.main.prediction.piece);
         }
-
-        this._load_settings_management_controls();
 
         this._panels.main.prediction.listener = index => {
             this._controllerPointer.predictor = this.predictors[index].item;
@@ -259,64 +258,6 @@ export default class UserInterface {
             this._load_speech_controls();
         }
         this._load_developer_controls();
-    }
-
-    _load_settings_management_controls() {
-        const resultNode = this._panels.manage.result.$.piece.node;
-        const outcomeNode = this._panels.manage.result.outcome.$.piece.node;
-        const detailNode = this._panels.manage.result.detail.$.piece.node;
-        resultNode.classList.add("header__result");
-        let fadeTimeout = undefined;
-        const show_result = (outcome, detail) => {
-            if (fadeTimeout !== undefined) {
-                clearTimeout(fadeTimeout);
-            }
-            outcomeNode.textContent = outcome;
-            detailNode.textContent = detail === undefined ? "" : detail;
-            resultNode.classList.remove("header__result-stale");
-            if (detail === undefined) {
-                fadeTimeout = setTimeout(
-                    () => resultNode.classList.add("header__result-stale"),
-                    1000);
-            }
-        };
-
-        this._panels.manage.copy.listener = () => {
-            if (navigator.clipboard === undefined) {
-                show_result("Copy failed", "No clipboard access");
-            }
-            else {
-                navigator.clipboard.writeText(
-                    this._controlPanel.json_stringify()
-                ).then(ok => show_result("Copied OK", ok)
-                ).catch(error => show_result("Copy failed", error));
-            }
-        }
-
-        this._panels.manage.paste.listener = () => {
-            if (navigator.clipboard === undefined) {
-                show_result("Paste failed", "No clipboard access");
-            }
-            else {
-                navigator.clipboard.readText()
-                .then(text => {
-                    let settings;
-                    try {
-                        settings = JSON.parse(text);
-                    }
-                    catch {
-                        show_result("Paste isn't JSON", text);
-                        settings = undefined;
-                    }
-                    if (settings !== undefined) {
-                        this._controlPanel.set_values(settings);
-                        show_result("Paste OK");
-                        // , JSON.stringify(settings, undefined, 4));
-                    }
-                })
-                .catch(error => show_result("Paste failed", error));
-            }
-        }
     }
 
     _select_behaviour(index) {
