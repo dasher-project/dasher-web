@@ -116,6 +116,8 @@ export default {
         "y": {$:{
             "order": 7, "control": "number", "value":"0"}},
         "advance":{$:{
-            "order": 8, "control": "button"}}
+            "order": 8, "control": "button"}},
+        "webasm":{$:{
+            "order": 9, "control": "button"}}
     }
 };
