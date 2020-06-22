@@ -21,6 +21,9 @@ export default class MessageStore {
         console.log(messages);
       });
     }
+    testDeleteMessage(){
+      this.delete_from_browser(17,true);
+    }
 
     /*************/
     addMessage(message){
@@ -76,6 +79,20 @@ export default class MessageStore {
               }
           }
         )
+      });
+    }
+
+    delete_from_browser(msgID,showResult){
+      this._open_object_store("readwrite").catch(() => {}).then(store => {
+
+          const deleteRequest = store.delete(msgID);
+          deleteRequest.onsuccess = event => {
+              if (showResult) {
+                  this._show_result(
+                      "Saved OK.",
+                  );
+              }
+          };
       });
     }
 

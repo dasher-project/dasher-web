@@ -15,7 +15,8 @@ export default class DasherWebASM {
     testAPI(){
       //this.testWebASM();
       //this.messageStore.testSaveMesage("This is a new message");
-      this.messageStore.testLoadMessages();
+      //this.messageStore.testLoadMessages();
+      this.messageStore.testDeleteMessage();
     }
     testWebASM(){
       var result = Module.ccall(
