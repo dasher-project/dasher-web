@@ -9,8 +9,6 @@ export default class MessageStore {
     constructor() {
       this._databaseName = 'messageStore5';
       this._databaseVersion = 1;
-      this._objectStoreKey = 0;
-      this._everLoaded = false;
     }
     //TESTS
     testSaveMesage(message){
@@ -19,7 +17,9 @@ export default class MessageStore {
       this.save_to_browser(messageData,true);
     }
     testLoadMessages(){
-      this.load_from_browser();
+      this.load_from_browser().catch(() => {}).then(messages => {
+        console.log(messages);
+      });
     }
 
     /*************/
@@ -30,7 +30,9 @@ export default class MessageStore {
     }
 
     viewMessageStore(){
-
+      this.load_from_browser().catch(() => {}).then(messages => {
+        console.log(messages);
+      });
     }
     editMessageStore(){
       //To do- for now, export file, make changes, import new file.
@@ -39,15 +41,14 @@ export default class MessageStore {
 
     }
     exportToFile(){
-
+      this.load_from_browser().catch(() => {}).then(messages => {
+        console.log(messages);
+        this._download(JSON.stringify(messages));
+      });
     }
 
     save_to_browser(entry,showResult) {
         this._open_object_store("readwrite").catch(() => {}).then(store => {
-
-            //const putRequest = store.put(
-                //this.getSampleData(), this._objectStoreKey);
-            //let entry = [this.getSampleData()];
 
             const putRequest = store.add(entry);
             putRequest.onsuccess = event => {
@@ -60,15 +61,22 @@ export default class MessageStore {
         });
     }
 
-    load_from_browser() {
+    load_from_browser() { return new Promise((resolve, reject) => {
+        let allMessages = [];
         this._open_object_store("readonly").catch(() => {}).then(store =>
-            store.get(this._objectStoreKey).onsuccess = event => {
-                this._show_result("Loaded OK.");
-                // , JSON.stringify( event.target.result, undefined, 4));
-                console.log(event.target.result);
-                this._everLoaded = true;
-            }
+          store.openCursor().onsuccess = function(event) {
+              let cursor = event.target.result;
+              if(cursor) {
+                  allMessages.push(cursor.value);
+                  console.log(cursor.value);
+                  cursor.continue();
+              }
+              else{
+                resolve(allMessages);
+              }
+          }
         )
+      });
     }
 
     _open_object_store(mode) { return new Promise((resolve, reject) => {
