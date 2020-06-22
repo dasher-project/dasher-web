@@ -7,45 +7,38 @@
 */
 export default class MessageStore {
     constructor() {
-      this._databaseName = 'messageStore5';
+      this._databaseName = 'messageStore';
       this._databaseVersion = 1;
+      this._downloadFilename = 'dasher.json';
     }
     //TESTS
-    testSaveMesage(message){
-      let datetime = new Date();
-      let messageData = { msg: message, datetime: datetime};
-      this.save_to_browser(messageData,true);
-    }
-    testLoadMessages(){
-      this.load_from_browser().catch(() => {}).then(messages => {
-        console.log(messages);
-      });
-    }
-    testDeleteMessage(){
-      this.delete_from_browser(17,true);
-    }
-    testFileImport(){
+    test(){
+      //this._delete_from_browser(17,true);
       this.importToDatabase();
     }
 
-    /*************/
+    /*********************************************************/
     addMessage(message){
       let datetime = new Date();
       let messageData = { msg: message, datetime: datetime};
-      this.save_to_browser(messageData,true);
+      this._save_to_browser(messageData,true);
     }
-
+    
     viewMessageStore(){
-      this.load_from_browser().catch(() => {}).then(messages => {
+      this._load_from_browser().catch(() => {}).then(messages => {
+        //TODO - present these message in another place other than the console
         console.log(messages);
       });
     }
+
     editMessageStore(){
-      //To do- for now, export file, make changes, import new file.
+      //TODO - use the selected msgID to delete the entry
+      //use the function _delete_from_browser
     }
+
     importToDatabase(){
       //Prompt for the file
-      this.importFile().catch(() => {}).then(messages => {
+      this._importFile().catch(() => {}).then(messages => {
         //Open the Database
         this._open_object_store("readwrite").catch(() => {}).then(store => {
           //Clear the database
@@ -59,7 +52,14 @@ export default class MessageStore {
         });
       });
     }
-    importFile(){return new Promise((resolve, reject) => {
+
+    exportToFile(){
+      this._load_from_browser().catch(() => {}).then(messages => {
+        this._download(JSON.stringify(messages));
+      });
+    }
+    /*********************************************************/
+    _importFile(){return new Promise((resolve, reject) => {
         var input = document.createElement('input');
         input.type = 'file';
         input.onchange = e => {
@@ -68,22 +68,15 @@ export default class MessageStore {
           reader.readAsText(file,'UTF-8');
           reader.onload = readerEvent => {
               var content = readerEvent.target.result;
-
               resolve(JSON.parse(content));
           }
         }
         input.click();
       });
     }
-    exportToFile(){
-      this.load_from_browser().catch(() => {}).then(messages => {
-        this._download(JSON.stringify(messages));
-      });
-    }
 
-    save_to_browser(entry,showResult) {
+    _save_to_browser(entry,showResult) {
         this._open_object_store("readwrite").catch(() => {}).then(store => {
-
             const putRequest = store.add(entry);
             putRequest.onsuccess = event => {
                 if (showResult) {
@@ -95,14 +88,13 @@ export default class MessageStore {
         });
     }
 
-    load_from_browser() { return new Promise((resolve, reject) => {
+    _load_from_browser() { return new Promise((resolve, reject) => {
         let allMessages = [];
         this._open_object_store("readonly").catch(() => {}).then(store =>
           store.openCursor().onsuccess = function(event) {
               let cursor = event.target.result;
               if(cursor) {
                   allMessages.push(cursor.value);
-                  console.log(cursor.value);
                   cursor.continue();
               }
               else{
@@ -113,7 +105,7 @@ export default class MessageStore {
       });
     }
 
-    delete_from_browser(msgID,showResult){
+    _delete_from_browser(msgID,showResult){
       this._open_object_store("readwrite").catch(() => {}).then(store => {
 
           const deleteRequest = store.delete(msgID);
@@ -128,57 +120,53 @@ export default class MessageStore {
     }
 
     _open_object_store(mode) { return new Promise((resolve, reject) => {
-        // Code is inside the Promise constructor but `this` is still the
-        // ControlPanelManager instance because we're also inside a lambda.
-        if (!window.indexedDB) {
-            this._show_result("No database access", window.indexedDB);
-            reject(window.indexedDB);
-            return;
-        }
-        const request = window.indexedDB.open(
-            this._databaseName, this._databaseVersion);
-        request.onerror = event => {
-            this._show_result(`Failed to open database`, event.target.error);
-            reject(event.target.error);
-            return;
-        };
+      if (!window.indexedDB) {
+          this._show_result("No database access", window.indexedDB);
+          reject(window.indexedDB);
+          return;
+      }
+      const request = window.indexedDB.open(
+          this._databaseName, this._databaseVersion);
+      request.onerror = event => {
+          this._show_result(`Failed to open database`, event.target.error);
+          reject(event.target.error);
+          return;
+      };
 
-        request.onupgradeneeded = event => {
-            // Object store has the same name as the database.
-            const database = event.target.result;
-            let objectStore = database.createObjectStore(this._databaseName,
-              { keyPath: "msgID", autoIncrement: true});
-
-            objectStore.createIndex("msg", "msg", { unique: false });
-            objectStore.createIndex("datetime", "datetime", { unique: false });
-        };
-
-        request.onsuccess = event => {
+      request.onupgradeneeded = event => {
+          // Object store has the same name as the database.
           const database = event.target.result;
-          const transaction = database.transaction(
-            [this._databaseName], mode);
-          transaction.onerror = event => {
-            this._show_result("Transaction failed", event.target.error);
-          }
-          resolve(transaction.objectStore(this._databaseName));
-        };
+          let objectStore = database.createObjectStore(this._databaseName,
+            { keyPath: "msgID", autoIncrement: true});
+
+          objectStore.createIndex("msg", "msg", { unique: false });
+          objectStore.createIndex("datetime", "datetime", { unique: false });
+      };
+
+      request.onsuccess = event => {
+        const database = event.target.result;
+        const transaction = database.transaction(
+          [this._databaseName], mode);
+        transaction.onerror = event => {
+          this._show_result("Transaction failed", event.target.error);
+        }
+        resolve(transaction.objectStore(this._databaseName));
+      };
     });}
 
   _show_result(outcome, detail){
     console.log(outcome);
     console.log(detail);
   }
+
   _download(text) {
-    let filename = 'dasher.txt';
+    let filename = this._downloadFilename;
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
-
     element.style.display = 'none';
     document.body.appendChild(element);
-
     element.click();
-
     document.body.removeChild(element);
-}
+  }
 }
