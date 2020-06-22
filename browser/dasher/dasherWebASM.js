@@ -6,11 +6,15 @@
  * c/c++ libraries that were compiled and loaded using WebASM.
  * See webasm directory.
 */
+import MessageStore from './messageStore.js'
+
 export default class DasherWebASM {
     constructor() {
+      this.messageStore = new MessageStore();
     }
     testAPI(){
-      this.testWebASM();
+      //this.testWebASM();
+      this.messageStore.testLoadMessages();
     }
     testWebASM(){
       var result = Module.ccall(
