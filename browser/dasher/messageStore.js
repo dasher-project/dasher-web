@@ -7,26 +7,26 @@
 */
 export default class MessageStore {
     constructor() {
-      this._databaseName = 'messageStore';
+      this._databaseName = 'messageStore5';
       this._databaseVersion = 1;
       this._objectStoreKey = 0;
       this._everLoaded = false;
     }
     //TESTS
-    getSampleData(){
-      return {test:'hello world',time:'06-22-20'};
-    }
-    testSaveMesage(){
-      this.save_to_browser(true);
+    testSaveMesage(message){
+      let datetime = new Date();
+      let messageData = { msg: message, datetime: datetime};
+      this.save_to_browser(messageData,true);
     }
     testLoadMessages(){
       this.load_from_browser();
     }
 
     /*************/
-
-    addMessage(){
-
+    addMessage(message){
+      let datetime = new Date();
+      let messageData = { msg: message, datetime: datetime};
+      this.save_to_browser(messageData,true);
     }
 
     viewMessageStore(){
@@ -42,18 +42,18 @@ export default class MessageStore {
 
     }
 
-    save_to_browser(showResult) {
+    save_to_browser(entry,showResult) {
         this._open_object_store("readwrite").catch(() => {}).then(store => {
-            const putRequest = store.put(
-                this.getSampleData(), this._objectStoreKey);
+
+            //const putRequest = store.put(
+                //this.getSampleData(), this._objectStoreKey);
+            //let entry = [this.getSampleData()];
+
+            const putRequest = store.add(entry);
             putRequest.onsuccess = event => {
                 if (showResult) {
                     this._show_result(
                         "Saved OK.",
-                        // Only set a detail if the key isn't as expected.
-                        event.target.result === this._objectStoreKey ?
-                        undefined :
-                        event.target.result
                     );
                 }
             };
@@ -87,40 +87,24 @@ export default class MessageStore {
             return;
         };
 
-        let justUpgraded = false;
         request.onupgradeneeded = event => {
             // Object store has the same name as the database.
             const database = event.target.result;
-            database.createObjectStore(this._databaseName);
+            let objectStore = database.createObjectStore(this._databaseName,
+              { keyPath: "msgID", autoIncrement: true});
 
-            justUpgraded = true;
+            objectStore.createIndex("msg", "msg", { unique: false });
+            objectStore.createIndex("datetime", "datetime", { unique: false });
         };
 
         request.onsuccess = event => {
-            const database = event.target.result;
-
-            const get_store = () => {
-                const transaction = database.transaction(
-                    [this._databaseName], mode);
-                transaction.onerror = event => {
-                    this._show_result("Transaction failed", event.target.error);
-                }
-                resolve(transaction.objectStore(this._databaseName));
-            }
-
-            if (justUpgraded) {
-                const transaction = database.transaction(
-                    [this._databaseName], "readwrite");
-                transaction.onerror = event => {
-                    this._show_result("Create failed", event.target.error);
-                };
-                transaction.objectStore(this._databaseName).add(
-                    this.getSampleData(), this._objectStoreKey);
-                transaction.oncomplete = get_store;
-            }
-            else {
-                get_store();
-            }
+          const database = event.target.result;
+          const transaction = database.transaction(
+            [this._databaseName], mode);
+          transaction.onerror = event => {
+            this._show_result("Transaction failed", event.target.error);
+          }
+          resolve(transaction.objectStore(this._databaseName));
         };
     });}
 
@@ -128,4 +112,17 @@ export default class MessageStore {
     console.log(outcome);
     console.log(detail);
   }
+  _download(text) {
+    let filename = 'dasher.txt';
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
 }
