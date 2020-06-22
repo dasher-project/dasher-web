@@ -24,6 +24,9 @@ export default class MessageStore {
     testDeleteMessage(){
       this.delete_from_browser(17,true);
     }
+    testFileImport(){
+      this.importToDatabase();
+    }
 
     /*************/
     addMessage(message){
@@ -40,12 +43,40 @@ export default class MessageStore {
     editMessageStore(){
       //To do- for now, export file, make changes, import new file.
     }
-    importFile(){
+    importToDatabase(){
+      //Prompt for the file
+      this.importFile().catch(() => {}).then(messages => {
+        //Open the Database
+        this._open_object_store("readwrite").catch(() => {}).then(store => {
+          //Clear the database
+          const clearRequest = store.clear();
+          clearRequest.onsuccess = event => {
+            //Add each message in file to the database
+            messages.forEach(msg => {
+              store.add(msg);
+            });
+          };
+        });
+      });
+    }
+    importFile(){return new Promise((resolve, reject) => {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => {
+          var file = e.target.files[0];
+          var reader = new FileReader();
+          reader.readAsText(file,'UTF-8');
+          reader.onload = readerEvent => {
+              var content = readerEvent.target.result;
 
+              resolve(JSON.parse(content));
+          }
+        }
+        input.click();
+      });
     }
     exportToFile(){
       this.load_from_browser().catch(() => {}).then(messages => {
-        console.log(messages);
         this._download(JSON.stringify(messages));
       });
     }
