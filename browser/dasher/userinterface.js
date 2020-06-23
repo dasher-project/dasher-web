@@ -18,8 +18,6 @@ import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
 
-import DasherWebASM from './dasherWebASM.js'
-
 import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
@@ -94,9 +92,6 @@ export default class UserInterface {
         this._header = undefined;
 
         this._stopCallback = null;
-
-        //Dasher API (webasm) tester
-        this._dasherWebASM = new DasherWebASM();
     }
 
     get header() {
@@ -153,7 +148,7 @@ export default class UserInterface {
         this._messageDisplay.node.textContent = (
             message === undefined ? null : message);
     }
-
+    
     get predictors() {
         return this._predictors;
     }
@@ -170,7 +165,7 @@ export default class UserInterface {
         this._load_message();
         this._load_view();
         this._load_control_panel(loadingID);
-
+        
         this._load_controls();
         this._load_pointer();
         this._load_speed_controls();
@@ -233,7 +228,7 @@ export default class UserInterface {
         }
         this._controlPanel.select_panel();
     }
-
+    
     _load_controls() {
         if (this._keyboardMode) {
             // In keyboard mode, the prediction select control is the only
@@ -337,8 +332,6 @@ export default class UserInterface {
             }
         };
 
-        panel.webasm.listener = this.clicked_DasherWebASM.bind(this);
-
         this._load_advance_controls();
         this._load_diagnostic();
     }
@@ -357,7 +350,7 @@ export default class UserInterface {
             if (y !== null) { testY = y; }
             if (this._pointer !== undefined) {
                 this._pointer.rawX = testX;
-                this._pointer.rawY = testY;
+                this._pointer.rawY = testY;    
             }
         };
 
@@ -381,9 +374,9 @@ export default class UserInterface {
             " height:", "Height", " ", "Go"
         ]);
         this._sizesTextNode = diagnosticSpans[0].firstChild;
-        this._heightTextNode =
+        this._heightTextNode = 
             diagnosticSpans[diagnosticSpans.length - 3].firstChild;
-        this._stopGoTextNode =
+        this._stopGoTextNode = 
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
 
         this._diagnosticSpans = diagnosticSpans;
@@ -623,11 +616,6 @@ export default class UserInterface {
         this._panels.developer.random.node.textContent = "Go Random";
     }
 
-    //Web ASM button was clicked.
-    clicked_DasherWebASM() {
-      this._dasherWebASM.testAPI();
-    }
-
     _new_ZoomBox(startRender) {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
@@ -638,7 +626,7 @@ export default class UserInterface {
 
         // Setter invocation.
         this.zoomBox = zoomBox;
-
+        
         // The populate() method is async, so that a predictor could be called.
         this._controller.populate(this.zoomBox, this._limits)
         .then(() => this._start_render(startRender))
