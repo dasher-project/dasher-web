@@ -115,24 +115,18 @@ export default async function (
     if (!(contextKey in predictorContexts)) {
 	// Rebuild current context.
 	//
-	// My current understanding of the predictor API is that we are given
-	// history, where all the characters up until the last have been
-	// committed. We check whether we already have a context for the last
-	// character and if not - update the model.
+	// We currently don't update the model, instead we simply update the
+	// context (view).
 	const historyCodepoints = codePoints.slice(-modelMaxOrder);
 	currentContext = model.createContext();
 	for (let i = 0; i < historyCodepoints.length; ++i) {
 	    const symbol = historyCodepoints.toString();
-	    if (i < historyCodepoints.length - 1) {
-		model.addSymbolToContext(currentContext,
-					 vocab.symbols_.indexOf(symbol));
-	    } else {
-		model.addSymbolAndUpdate(currentContext,
-					 vocab.symbols_.indexOf(symbol));
-	    }
+	    model.addSymbolToContext(currentContext,
+				     vocab.symbols_.indexOf(symbol));
 	}
 	currentProbs = model.getProbs(currentContext);
 	predictorContexts[contextKey] = currentProbs;
+	currentContext = null;
     } else {
 	// We already have this context. Fetch the probabilities to avoid
 	// recomputing them.
