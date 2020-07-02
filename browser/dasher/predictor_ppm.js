@@ -46,13 +46,16 @@ let vocab = null
 function initVocabulary(palette) {
     console.log("Initializing vocabulary ...")
     vocab = new Vocabulary()
+    let paletteCodePoints = palette.codePoints;
     for (let i = 0; i < trainingText.length; ++i) {
-	const symbol = trainingText.codePointAt(i).toString();
-	vocab.addSymbol(symbol);
+	const codepoint = trainingText.codePointAt(i);
+	if (paletteCodePoints.includes(codepoint)) {
+	    const symbol = codepoint.toString();
+	    vocab.addSymbol(symbol);
+	}
     }
-    let codePoints = palette.codePoints;
-    for (let i = 0; i < codePoints.length; ++i) {
-	const symbol = codePoints[i].toString();
+    for (let i = 0; i < paletteCodePoints.length; ++i) {
+	const symbol = paletteCodePoints[i].toString();
 	vocab.addSymbol(symbol);
     }
     return vocab
@@ -141,10 +144,8 @@ export default async function (
     const numVocabSymbols = currentProbs.length - 1;
     for (let i = 1; i < numVocabSymbols; ++i) {
 	const codepoint = Number(vocab.symbols_[i]);
-	if (palette.codePoints.includes(codepoint)) {
-	    set_weight(codepoint, currentProbs[i] * numVocabSymbols,
-		       currentContext);
-	}
+	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
+		   currentContext);
     }
     return;
 }
