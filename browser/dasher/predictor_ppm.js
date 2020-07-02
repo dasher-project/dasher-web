@@ -33,6 +33,10 @@ and how would i be going for work? i have a favor to ask. best of luck and
 stay in touch. yes I am here actually. love got it I better go. I'll confirm
 nine three six five nine seven three nine zero five two one for your information
 I'm fine. will call later to explain. today has been hard for me
+I'm glad she likes her tree. Can I meet with you at 4:00? Next time ask Jim to
+call me. Is it far? Will you come get me? I am getting lots of questions.
+OK thanks. These are big storms and traffic isn't moving. What's up? I'm still
+here. Thanks anyway. Not at this time. Will it be delivered? Sounds right.
 `;
 
 // Computes vocabulary from the supplied palette and the short training text
@@ -142,9 +146,11 @@ export default async function (
     //   C is the alphabet.
     const numVocabSymbols = currentProbs.length - 1;
     for (let i = 1; i < numVocabSymbols; ++i) {
-	const codepoint = Number(vocab.symbols_[i])
-	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
-		   currentContext);
+	const codepoint = Number(vocab.symbols_[i]);
+	if (palette.codePoints.includes(codepoint)) {
+	    set_weight(codepoint, currentProbs[i] * numVocabSymbols,
+		       currentContext);
+	}
     }
     return;
 }
