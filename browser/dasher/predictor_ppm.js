@@ -147,5 +147,4 @@ export default async function (
 	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
 		   currentContext);
     }
-    return;
 }
