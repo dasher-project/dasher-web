@@ -21,6 +21,7 @@ import ZoomBox from './zoombox.js';
 import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
+import predictor_ppm from './predictor_ppm.js';
 
 import Speech from './speech.js';
 
@@ -36,6 +37,8 @@ const defaultPredictorList = [{
     "label": "None", "item": predictor_dummy
 }, {
     "label": "Random", "item": predictor_test
+}, {
+    "label": "PPM", "item": predictor_ppm
 }];
 
 export default class UserInterface {
