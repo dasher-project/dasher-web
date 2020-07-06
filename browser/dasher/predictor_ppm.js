@@ -37,6 +37,8 @@ I'm glad she likes her tree. Can I meet with you at 4:00? Next time ask Jim to
 call me. Is it far? Will you come get me? I am getting lots of questions.
 OK thanks. These are big storms and traffic isn't moving. What's up? I'm still
 here. Thanks anyway. Not at this time. Will it be delivered? Sounds right.
+It will probably be tomorrow. Thanks again for your help. Going well here.
+Perhaps there was a glitch. Sorry for the delay. Is it far?
 `;
 
 // Computes vocabulary from the supplied palette and the short training text
@@ -72,11 +74,17 @@ const modelMaxOrder = 5;  // History length.
 function bootstrapModel(vocab) {
     console.log("Initializing LM ...")
     model = new PPMLanguageModel(vocab, modelMaxOrder);
-    let context = model.createContext()
+    let context = model.createContext();
+    let numSymbols = 0;
     for (let i = 0; i < trainingText.length; ++i) {
+	if (trainingText[i] == "\n") {
+	    continue;  // Ignore newlines.
+	}
 	const symbol = trainingText.codePointAt(i).toString();
 	model.addSymbolAndUpdate(context, vocab.symbols_.indexOf(symbol));
+	numSymbols++;
     }
+    console.log("Processed " + numSymbols + " symbols.");
     return model;
 }
 
