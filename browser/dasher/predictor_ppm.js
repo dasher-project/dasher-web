@@ -126,10 +126,8 @@ function debugTopCandidates(probs, top_n) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
-const verbose = false;
-let predictorContexts = {};
-let currentContext = null;
-const emptyContextKey = "<EMPTY>";
+const verbose = true;
+const numBest = 5;  // Number of best candidates to display in verbose mode.
 
 export default async function (
     codePoints, text, predictorData, palette, set_weight
@@ -142,44 +140,22 @@ export default async function (
 	// compute initial probabilities. Cache this information.
 	vocab = initVocabulary(palette);
 	model = bootstrapModel(vocab);
-	currentContext = model.createContext();
-	const currentProbs = model.getProbs(currentContext);
-	predictorContexts[emptyContextKey] = currentProbs;
     }
 
-    // Fetch the last symbol in history and construct a silly context key. It is
-    // very silly because we rely on the entire history of the input for
-    // construction. Should fix this later.
-    let contextKey = emptyContextKey;
-    if (codePoints.length > 0) {
-	const historyCodepoints = codePoints.slice(-modelMaxOrder);
-	contextKey = historyCodepoints.join("");
-    }
+    let context = model.createContext();
+    for (let i = 0; i < codePoints.length; ++i) {
+	const symbol = codePoints.toString();
+	model.addSymbolToContext(context, vocab.symbols_.indexOf(symbol));
 
-    // Check whether the context needs to be updated.
-    let currentProbs = null;
-    if (!(contextKey in predictorContexts)) {
-	// Rebuild current context.
-	//
-	// We currently don't update the model, instead we simply update the
-	// context (view).
-	const historyCodepoints = codePoints.slice(-modelMaxOrder);
-	currentContext = model.createContext();
-	for (let i = 0; i < historyCodepoints.length; ++i) {
-	    const symbol = historyCodepoints.toString();
-	    model.addSymbolToContext(currentContext,
-				     vocab.symbols_.indexOf(symbol));
-	}
-	currentProbs = model.getProbs(currentContext);
-	predictorContexts[contextKey] = [...currentProbs];
-	currentContext = null;
-    } else {
-	// We already have this context. Fetch the probabilities to avoid
-	// recomputing them.
-	currentProbs = predictorContexts[contextKey];
     }
+    const currentProbs = model.getProbs(context);
     if (verbose) {
-	console.log(debugTopCandidates(currentProbs, 3));
+	let contextText = "";
+	if (text.length > 0) {
+	    contextText = text.slice(-modelMaxOrder);
+	}
+	console.log("[" + contextText + "]: " +
+		    debugTopCandidates(currentProbs, numBest));
     }
 
     // Update the probabilities for the universe of symbols (as defined by vocab
@@ -190,7 +166,6 @@ export default async function (
     const numVocabSymbols = currentProbs.length - 1;
     for (let i = 1; i < numVocabSymbols; ++i) {
 	const codepoint = Number(vocab.symbols_[i]);
-	set_weight(codepoint, currentProbs[i] * numVocabSymbols,
-		   currentContext);
+	set_weight(codepoint, currentProbs[i] * numVocabSymbols, null);
     }
 }
