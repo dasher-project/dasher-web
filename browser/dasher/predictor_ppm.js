@@ -43,11 +43,11 @@ Perhaps there was a glitch. Sorry for the delay. Is it far?
 
 // Computes vocabulary from the supplied palette and the short training text
 // above.
-let vocab = null
+let vocab = null;
 
 function initVocabulary(palette) {
-    console.log("Initializing vocabulary ...")
-    vocab = new Vocabulary()
+    console.log("Initializing vocabulary ...");
+    vocab = new Vocabulary();
     let paletteCodePoints = palette.codePoints;
     for (let i = 0; i < trainingText.length; ++i) {
 	const codepoint = trainingText.codePointAt(i);
@@ -61,7 +61,7 @@ function initVocabulary(palette) {
 	vocab.addSymbol(symbol);
     }
     console.log("Added " + vocab.size() + " symbols.");
-    return vocab
+    return vocab;
 }
 
 //
@@ -72,7 +72,7 @@ let model = null;
 const modelMaxOrder = 5;  // History length.
 
 function bootstrapModel(vocab) {
-    console.log("Initializing LM ...")
+    console.log("Initializing LM ...");
     model = new PPMLanguageModel(vocab, modelMaxOrder);
     let context = model.createContext();
     let numSymbols = 0;
