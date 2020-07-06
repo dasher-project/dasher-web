@@ -202,6 +202,7 @@ export default class PPMLanguageModel {
    * @final @private
    */
   addSymbolToNode_(node, symbol) {
+    _assert(node != null, "Node is undefined!");
     let symbolNode = node.findChildWithSymbol(symbol);
     if (symbolNode != null) {
       // Update the counts for the given node and also for all the backoff nodes
@@ -295,6 +296,7 @@ export default class PPMLanguageModel {
     if (symbol <= rootSymbol) {  // Only add valid symbols.
       return;
     }
+    _assert(context != null, "Invalid context!");
     _assert(symbol < this.vocab_.size(), "Invalid symbol: " + symbol);
     const symbolNode = this.addSymbolToNode_(context.head_, symbol);
     _assert(symbolNode == context.head_.findChildWithSymbol(symbol));

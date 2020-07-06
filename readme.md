@@ -71,10 +71,6 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
     However, it seems desirable that the controlpanelspecification object can be
     serialised to JSON, which it mightn't be if the above change is made.
 
--   Replace the Control _construct*() methods with more Control subclasses. Then
-    refactor a lot of the other `if this.$.control ===` code to be done by
-    subclasses too.
-
 -   Maybe arrange_children on resize. Also there are some cases in which the
     white rectangle doesn't extend to the edge of the zooming area.
 -   Improve the Viewer textWidth to be based on a bounding box from the font

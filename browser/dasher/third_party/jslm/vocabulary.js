@@ -88,4 +88,4 @@ class Vocabulary {
 /**
  * Exported APIs.
  */
-export { rootSymbol, Vocabulary };
+export { rootSymbol, Vocabulary }
