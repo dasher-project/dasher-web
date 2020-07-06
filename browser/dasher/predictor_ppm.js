@@ -9,37 +9,14 @@ by `jslm` library.
 
 */
 
+import {bufferAlice} from './third_party/gutenberg/alice.js'
+import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js'
 import PPMLanguageModel from './third_party/jslm/ppm_language_model.js'
 import {Vocabulary} from './third_party/jslm/vocabulary.js'
 
-//
-// Simple priors on the symbols are computed using a very short training text
-// assembled from Enron Mobile dataset.
-//
-const trainingText = `
-Have a good evening. Are you going to join us for lunch?
-OK to make changes, change out original. This looks fine. See you next week.
-Thanks I needed that today! I'm looking forward to the long weekend! I like it.
-Nice weather for it. Hi. How is it going? I better go. Hope all is well.
-Best of luck and stay in touch. Just got this. Things are OK. Are you there?
-Please coordinate with him. I think I'm OK. Nothing from Mom. I'm still here.
-See you soon. See you later. Will you come get me? I am on my way. hi rob.
-I'm going to sleep. Still waiting on decision. Are you sure? I am all over it.
-Will follow up today. Nothing but good news everyday. please call. agreed.
-I want to thank everyone involved. Hey, how are you doing? Sorry about that!
-Can you help me here? Can we meet? Are you feeling better? i am trying again.
-I will be back Friday. and how would i be going for work. sounds good to me
-and how would i be going for work? i have a favor to ask. best of luck and
-stay in touch. yes I am here actually. love got it I better go. I'll confirm
-nine three six five nine seven three nine zero five two one for your information
-I'm fine. will call later to explain. today has been hard for me
-I'm glad she likes her tree. Can I meet with you at 4:00? Next time ask Jim to
-call me. Is it far? Will you come get me? I am getting lots of questions.
-OK thanks. These are big storms and traffic isn't moving. What's up? I'm still
-here. Thanks anyway. Not at this time. Will it be delivered? Sounds right.
-It will probably be tomorrow. Thanks again for your help. Going well here.
-Perhaps there was a glitch. Sorry for the delay. Is it far?
-`;
+// Simple priors on the symbols are computed using text corpora files stored as
+// strings under `third_party/gutenberg` directory.
+const trainingText = bufferAlice + bufferSherlockHolmes;
 
 // Computes vocabulary from the supplied palette and the short training text
 // above.
