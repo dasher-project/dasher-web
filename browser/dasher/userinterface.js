@@ -238,10 +238,12 @@ export default class UserInterface {
         if (this._keyboardMode) {
             // In keyboard mode, the prediction select control is the only
             // control to be shown. The control panel parent isn't set, in
-            // keyboard mode. So, pull the prediction select control out and put
-            // it under the header, which is shown in keyboard mode.
-            const piece = new Piece('div', this._header);
-            piece.add_child(this._panels.main.prediction.piece);
+            // keyboard mode. So, pull the prediction select control out and
+            // insert it as the first child of the message holder, which is
+            // shown in keyboard mode. (The `false` parameter specifies don't
+            // append, i.e. insert instead.)
+            this._messageDiv.add_child(
+                this._panels.main.prediction.piece, false);
         }
 
         this._panels.main.prediction.listener = index => {

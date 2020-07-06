@@ -49,10 +49,10 @@ The user interface is laid out as follows, in a browser.
     width: 100%;
     display: flex;
 }
-#message-holder label {flex: none;}
-#message-holder textarea {flex: auto;}
+#message-holder > * {flex: none;}
+#message-holder > textarea {flex: auto;}
 
-#user-interface.keyboard #message-holder label {display: none;}
+#user-interface.keyboard #message-holder > label {display: none;}
 
 svg {
     border: 1px black solid;
