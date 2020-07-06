@@ -65,7 +65,7 @@ function initVocabulary(palette) {
 // Boostraps PPM model using training text.
 //
 
-let model = null
+let model = null;
 const modelMaxOrder = 5;  // History length.
 
 function bootstrapModel(vocab) {
@@ -96,7 +96,7 @@ function topCandidates(probs, top_n) {
 	const best_index = probs_and_pos[i].index;
 	const best_prob = probs_and_pos[i].prob;
 	const symbol = String.fromCodePoint(Number(vocab.symbols_[best_index]));
-	const cand_buf = symbol + " (" + best_prob + ")";
+	const cand_buf = "\"" + symbol + "\" (" + best_prob + ")";
 	cands.push(cand_buf);
     }
     return cands;
@@ -151,7 +151,7 @@ export default async function (
 				     vocab.symbols_.indexOf(symbol));
 	}
 	currentProbs = model.getProbs(currentContext);
-	predictorContexts[contextKey] = currentProbs;
+	predictorContexts[contextKey] = [...currentProbs];
 	currentContext = null;
     } else {
 	// We already have this context. Fetch the probabilities to avoid
