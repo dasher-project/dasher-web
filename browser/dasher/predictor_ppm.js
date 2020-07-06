@@ -58,6 +58,7 @@ function initVocabulary(palette) {
 	const symbol = paletteCodePoints[i].toString();
 	vocab.addSymbol(symbol);
     }
+    console.log("Added " + vocab.size() + " symbols.");
     return vocab
 }
 
