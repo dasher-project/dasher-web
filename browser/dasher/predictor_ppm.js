@@ -105,10 +105,20 @@ function topCandidates(probs, top_n) {
 	const best_index = probs_and_pos[i].index;
 	const best_prob = probs_and_pos[i].prob;
 	const symbol = String.fromCodePoint(Number(vocab.symbols_[best_index]));
-	const cand_buf = "\"" + symbol + "\" (" + best_prob + ")";
-	cands.push(cand_buf);
+	cands.push({ symbol: symbol, prob: best_prob });
     }
     return cands;
+}
+
+// Same as above, but prepares the array for fancy debug output.
+function debugTopCandidates(probs, top_n) {
+    const cands = topCandidates(probs, top_n);
+    let debugCands = [];
+    for (let i = 0; i < top_n; ++i) {
+	const cand_buf = "'" + cands[i].symbol + "' (" + cands[i].prob + ")";
+	debugCands.push(cand_buf);
+    }
+    return debugCands;
 }
 
 //
@@ -116,6 +126,7 @@ function topCandidates(probs, top_n) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
+const verbose = false;
 let predictorContexts = {};
 let currentContext = null;
 const emptyContextKey = "<EMPTY>";
@@ -166,6 +177,9 @@ export default async function (
 	// We already have this context. Fetch the probabilities to avoid
 	// recomputing them.
 	currentProbs = predictorContexts[contextKey];
+    }
+    if (verbose) {
+	console.log(debugTopCandidates(currentProbs, 3));
     }
 
     // Update the probabilities for the universe of symbols (as defined by vocab
