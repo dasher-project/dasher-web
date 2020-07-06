@@ -79,6 +79,29 @@ function bootstrapModel(vocab) {
     return model;
 }
 
+// Returns top-N (`top_n`) candidate symbols given the probabilities (`probs`).
+// This is debugging API.
+function topCandidates(probs, top_n) {
+    probs[0] = -1000.0;  // Ignore first element.
+    let probs_and_pos = probs.map(function(prob, index) {
+	return { index: index, prob: prob };
+    });
+    probs_and_pos.sort(function(a, b) {
+	// Note: By default the sort function will treat elements as strings.
+	// Following will explicitly treat them as floating point numbers.
+	return b.prob - a.prob;
+    });
+    let cands = [];
+    for (let i = 0; i < top_n; ++i) {
+	const best_index = probs_and_pos[i].index;
+	const best_prob = probs_and_pos[i].prob;
+	const symbol = String.fromCodePoint(Number(vocab.symbols_[best_index]));
+	const cand_buf = symbol + " (" + best_prob + ")";
+	cands.push(cand_buf);
+    }
+    return cands;
+}
+
 //
 // Actual prediction interface:
 //
