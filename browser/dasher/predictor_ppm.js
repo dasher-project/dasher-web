@@ -69,20 +69,20 @@ function bootstrapModel(vocab) {
 // This is debugging API.
 function topCandidates(probs, top_n) {
     probs[0] = -1000.0;  // Ignore first element.
-    let probs_and_pos = probs.map(function(prob, index) {
+    let probsAndPos = probs.map(function(prob, index) {
 	return { index: index, prob: prob };
     });
-    probs_and_pos.sort(function(a, b) {
+    probsAndPos.sort(function(a, b) {
 	// Note: By default the sort function will treat elements as strings.
 	// Following will explicitly treat them as floating point numbers.
 	return b.prob - a.prob;
     });
     let cands = [];
     for (let i = 0; i < top_n; ++i) {
-	const best_index = probs_and_pos[i].index;
-	const best_prob = probs_and_pos[i].prob;
-	const symbol = String.fromCodePoint(Number(vocab.symbols_[best_index]));
-	cands.push({ symbol: symbol, prob: best_prob });
+	const bestIndex = probsAndPos[i].index;
+	const bestProb = probsAndPos[i].prob;
+	const symbol = String.fromCodePoint(Number(vocab.symbols_[bestIndex]));
+	cands.push({ symbol: symbol, prob: bestProb });
     }
     return cands;
 }
@@ -92,10 +92,32 @@ function debugTopCandidates(probs, top_n) {
     const cands = topCandidates(probs, top_n);
     let debugCands = [];
     for (let i = 0; i < top_n; ++i) {
-	const cand_buf = "'" + cands[i].symbol + "' (" + cands[i].prob + ")";
-	debugCands.push(cand_buf);
+	const candBuf = "'" + cands[i].symbol + "' (" + cands[i].prob + ")";
+	debugCands.push(candBuf);
     }
     return debugCands;
+}
+
+// Given a text prints its most $n$ likely continuations in generative mode.
+function generateText(seedText, maxLength, topN) {
+    let context = model.createContext();
+    for (let i = 0; i < seedText.length; ++i) {
+	const codepoint = seedText.codePointAt(i);
+	const symbol = vocab.symbols_.indexOf(codepoint.toString());
+	model.addSymbolToContext(context, symbol);
+    }
+    let text = seedText;
+    for (let i = 0; i < maxLength; ++i) {
+	const probs = model.getProbs(context);
+	const cands = topCandidates(probs, topN);
+	const randomIndex = Math.floor(Math.random() * topN);
+	const bestChar = cands[randomIndex].symbol;
+	text += bestChar;
+	const codepointStr = bestChar.codePointAt(0).toString();
+	model.addSymbolToContext(context,
+				 vocab.symbols_.indexOf(codepointStr));
+    }
+    return text;
 }
 
 //
@@ -103,7 +125,7 @@ function debugTopCandidates(probs, top_n) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
-const verbose = true;
+const verbose = false;  // Set this to `false` to remove verbose logging.
 const numBest = 5;  // Number of best candidates to display in verbose mode.
 
 export default async function (
@@ -117,13 +139,18 @@ export default async function (
 	// compute initial probabilities. Cache this information.
 	vocab = initVocabulary(palette);
 	model = bootstrapModel(vocab);
+	if (verbose) {
+	    const randomText = generateText(
+		/* seedText */"I", /* maxLength */300, /* topN */2);
+	    console.log("Random text: \"" + randomText + "\"");
+	}
     }
 
     let context = model.createContext();
     for (let i = 0; i < codePoints.length; ++i) {
-	const symbol = codePoints.toString();
-	model.addSymbolToContext(context, vocab.symbols_.indexOf(symbol));
-
+	const codepoint = codePoints[i].toString();
+	const symbol = vocab.symbols_.indexOf(codepoint);
+	model.addSymbolToContext(context, symbol);
     }
     const currentProbs = model.getProbs(context);
     if (verbose) {
