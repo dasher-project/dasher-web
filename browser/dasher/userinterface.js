@@ -165,6 +165,11 @@ export default class UserInterface {
         this._header = new Piece('div', this._parent);
         this.header.classList.add('header');
 
+        // In keyboard mode, the control panel and all its HTML still exist but
+        // never gets added to the body so it doesn't get rendered.
+        this._controlPanelParent = (
+            this._keyboardMode ? null : new Piece('form', this._header));
+
         this._load_message();
         this._load_view();
         this._load_control_panel(loadingID);
@@ -201,7 +206,7 @@ export default class UserInterface {
             'label', {'for':identifierMessage}, messageLabelText);
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows': this._keyboardMode ? 1 : 6, 'cols':24,
+            'rows': this._keyboardMode ? 1 : 2, 'cols':80,
             'placeholder':"Message will appear here ..."
         });
     }
@@ -220,11 +225,8 @@ export default class UserInterface {
             loadingID === null ? null :
             new Piece(document.getElementById(loadingID))
         );
-        if (!this._keyboardMode) {
-            // In keyboard mode, the control panel and all its HTML still exists
-            // it just never gets added to the body so it doesn't get rendered.
-            const form = new Piece('form', this._header);
-            this._controlPanel.set_parent(form);
+        if (this._controlPanelParent !== null) {
+            this._controlPanel.set_parent(this._controlPanelParent);
         }
         if (this._loading !== null) {
             this._panels.main.$.piece.add_child(this._loading);

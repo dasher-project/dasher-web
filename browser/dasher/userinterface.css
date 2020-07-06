@@ -45,25 +45,13 @@ The user interface is laid out as follows, in a browser.
     flex: none;
 }
 
-.header {
-    display: flex;
-    flex-direction: row-reverse;
+#message-holder {
     width: 100%;
+    display: flex;
 }
+#message-holder label {flex: none;}
+#message-holder textarea {flex: auto;}
 
-/*
-#user-interface.keyboard .header {
-    background-color: sandybrown;
-}
-*/
-#user-interface.keyboard .header > *:nth-child(2) {
-    /* background-color: palegoldenrod; */
-    flex: auto;
-}
-
-/* #message-holder {float: right;} */
-
-#message-holder label {display: block; flex: none;}
 #user-interface.keyboard #message-holder label {display: none;}
 
 svg {
