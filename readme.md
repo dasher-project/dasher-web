@@ -24,6 +24,14 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
         non-linear.
     -   Also make the zoom faster if the pointer is to the left of the origin, 
         i.e. zooming out.
+-   Tests.  
+    At time of writing, there are no tests. Some tests that there could be:
+
+    -   Test the control panel as a user interface, saving and loading settings
+        and so on.
+    -   Test the PPM in isolation.
+    -   Test the zooming UI maybe by screen capturing with Chrome Puppeteer.
+    -   Capture and replay render cycles.
 
 ## Simple Backlog
 -   Maybe replace the current userinterface.js stopCallback and pointer.js
