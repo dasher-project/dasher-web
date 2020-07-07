@@ -143,7 +143,7 @@ function generateText(seedText, maxLength, topN) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
-const verbose = true;  // Set this to `false` to remove verbose logging.
+const verbose = false;  // Set this to `false` to remove verbose logging.
 const numBest = 5;  // Number of best candidates to display in verbose mode.
 
 export default async function (
@@ -164,6 +164,9 @@ export default async function (
 	}
     }
 
+    // Brute-force initialization of the entire length of the context. This is
+    // suboptimal because the long history prefix will eventually be ignored. To
+    // optimize at a later stage.
     let context = model.createContext();
     for (let i = 0; i < codePoints.length; ++i) {
 	const codepoint = codePoints[i];
@@ -184,6 +187,14 @@ export default async function (
     //
     //   P(c_i|c_{i-n},...,c_{i-1}), c \in C, where $n$ is the model order and
     //   C is the alphabet.
+    //
+    // TODO(agutkin): Figure out from the calling code what is the total weight
+    // mass that we need to redistribute across the palette. In other words, if
+    // the weight setting is sparse, allowing weight of unity for the
+    // unpredicted symbol, what weights should we set on the high probability
+    // symbols. At the moment, the following logic will weight the candidates
+    // according to the correct probability mass, which is probably not how the
+    // caller is treating the box sizes.
     const numVocabSymbols = currentProbs.length - 1;
     for (let i = 1; i < numVocabSymbols; ++i) {
 	const codepoint = Number(vocab.symbols_[i]);
