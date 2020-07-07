@@ -2,12 +2,22 @@
 // Copyright 2020 Google LLC
 // MIT licensed, see https://opensource.org/licenses/MIT
 
-/*
-
-Basic predictor based on Prediction by Partial Matching (PPM) algorithm provided
-by `jslm` library.
-
-*/
+//
+// Basic predictor based on Prediction by Partial Matching (PPM) algorithm provided
+// by `jslm` library.
+//
+// TODO(agutkin):
+//   - Expose PPM-C configuration: In particular, exposing the following will
+//     be useful:
+//
+//       o Smoothing parameters $\alpha$ and $\beta$.
+//       o Exclusion mechanism.
+//
+//     While $\alpha$ and $\beta$ values have been specifically tuned by the
+//     original Dasher authors for the AAC scenario and probably do not require
+//     further tuning, the exclusion mechanism still needs to be evaluated in
+//     this version of Dasher (what we do know is that exclusion mechanism works
+//     well for large training sets).
 
 import {bufferAlice} from './third_party/gutenberg/alice.js'
 import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js'
