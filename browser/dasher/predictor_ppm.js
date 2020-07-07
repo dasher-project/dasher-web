@@ -19,8 +19,10 @@ import {Vocabulary} from './third_party/jslm/vocabulary.js'
 const trainingText = bufferAlice + bufferSherlockHolmes;
 
 // Computes vocabulary from the supplied palette and the short training text
-// above.
+// above. Also precompute some helper dictionaries so that we don't have to
+// convert between codepoints and vocabulary IDs back and forth.
 let vocab = null;
+let codepointToVocabId = {};
 
 function initVocabulary(palette) {
     console.log("Initializing vocabulary ...");
@@ -30,12 +32,19 @@ function initVocabulary(palette) {
 	const codepoint = trainingText.codePointAt(i);
 	if (paletteCodePoints.includes(codepoint)) {
 	    const symbol = codepoint.toString();
-	    vocab.addSymbol(symbol);
+	    const vocab_id = vocab.addSymbol(symbol);
+	    if (!(codepoint in codepointToVocabId)) {
+		codepointToVocabId[codepoint] = vocab_id;
+	    }
 	}
     }
     for (let i = 0; i < paletteCodePoints.length; ++i) {
-	const symbol = paletteCodePoints[i].toString();
-	vocab.addSymbol(symbol);
+	const codepoint = paletteCodePoints[i];
+	const symbol = codepoint.toString();
+	const vocab_id = vocab.addSymbol(symbol);
+	if (!(codepoint in codepointToVocabId)) {
+	    codepointToVocabId[codepoint] = vocab_id;
+	}
     }
     console.log("Added " + vocab.size() + " symbols.");
     return vocab;
