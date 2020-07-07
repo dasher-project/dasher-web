@@ -18,6 +18,8 @@
 //     further tuning, the exclusion mechanism still needs to be evaluated in
 //     this version of Dasher (what we do know is that exclusion mechanism works
 //     well for large training sets).
+//   - Make maximum model order configurable (currently it is hardcoded to 5).
+//   - Verbosity (``debugging'' mode).
 
 import {bufferAlice} from './third_party/gutenberg/alice.js'
 import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js'
