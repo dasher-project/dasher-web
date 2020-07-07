@@ -62,15 +62,25 @@ function bootstrapModel(vocab) {
     model = new PPMLanguageModel(vocab, modelMaxOrder);
     let context = model.createContext();
     let numSymbols = 0;
+    let numSkipped = 0;
     for (let i = 0; i < trainingText.length; ++i) {
 	if (trainingText[i] == "\n") {
+	    numSkipped++;
 	    continue;  // Ignore newlines.
 	}
-	const symbol = trainingText.codePointAt(i).toString();
-	model.addSymbolAndUpdate(context, vocab.symbols_.indexOf(symbol));
+	const codepoint = trainingText.codePointAt(i);
+	if (!(codepoint in codepointToVocabId)) {
+	    // Skip symbols not in the palette. This is not great because some
+	    // of the skipped symbols may be useful for prediction, but it helps
+	    // keep the model lean and mean.
+	    numSkipped++;
+	    continue;
+	}
+	model.addSymbolAndUpdate(context, codepointToVocabId[codepoint]);
 	numSymbols++;
     }
-    console.log("Processed " + numSymbols + " symbols.");
+    console.log("Processed " + numSymbols + " symbols (skipped " +
+		numSkipped + ").");
     return model;
 }
 
@@ -112,8 +122,7 @@ function generateText(seedText, maxLength, topN) {
     let context = model.createContext();
     for (let i = 0; i < seedText.length; ++i) {
 	const codepoint = seedText.codePointAt(i);
-	const symbol = vocab.symbols_.indexOf(codepoint.toString());
-	model.addSymbolToContext(context, symbol);
+	model.addSymbolToContext(context, codepointToVocabId[codepoint]);
     }
     let text = seedText;
     for (let i = 0; i < maxLength; ++i) {
@@ -122,9 +131,8 @@ function generateText(seedText, maxLength, topN) {
 	const randomIndex = Math.floor(Math.random() * topN);
 	const bestChar = cands[randomIndex].symbol;
 	text += bestChar;
-	const codepointStr = bestChar.codePointAt(0).toString();
-	model.addSymbolToContext(context,
-				 vocab.symbols_.indexOf(codepointStr));
+	const codepoint = bestChar.codePointAt(0);
+	model.addSymbolToContext(context, codepointToVocabId[codepoint]);
     }
     return text;
 }
@@ -134,7 +142,7 @@ function generateText(seedText, maxLength, topN) {
 //
 // Current context specifies the context in which the prediction is to happen,
 // i.e. the history.
-const verbose = false;  // Set this to `false` to remove verbose logging.
+const verbose = true;  // Set this to `false` to remove verbose logging.
 const numBest = 5;  // Number of best candidates to display in verbose mode.
 
 export default async function (
