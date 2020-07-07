@@ -18,9 +18,10 @@ import {Vocabulary} from './third_party/jslm/vocabulary.js'
 // strings under `third_party/gutenberg` directory.
 const trainingText = bufferAlice + bufferSherlockHolmes;
 
-// Computes vocabulary from the supplied palette and the short training text
-// above. Also precompute some helper dictionaries so that we don't have to
-// convert between codepoints and vocabulary IDs back and forth.
+// Computes vocabulary from the supplied palette and the short
+// training text above. Also precomputes helper dictionaries so that
+// we don't have to convert between (integer) codepoints and (integer)
+// vocabulary IDs back and forth.
 let vocab = null;
 let codepointToVocabId = {};
 
@@ -85,7 +86,7 @@ function bootstrapModel(vocab) {
 }
 
 // Returns top-N (`top_n`) candidate symbols given the probabilities (`probs`).
-// This is debugging API.
+// This is debugging API only used verbose mode.
 function topCandidates(probs, top_n) {
     probs[0] = -1000.0;  // Ignore first element.
     let probsAndPos = probs.map(function(prob, index) {
@@ -165,9 +166,8 @@ export default async function (
 
     let context = model.createContext();
     for (let i = 0; i < codePoints.length; ++i) {
-	const codepoint = codePoints[i].toString();
-	const symbol = vocab.symbols_.indexOf(codepoint);
-	model.addSymbolToContext(context, symbol);
+	const codepoint = codePoints[i];
+	model.addSymbolToContext(context, codepointToVocabId[codepoint]);
     }
     const currentProbs = model.getProbs(context);
     if (verbose) {
