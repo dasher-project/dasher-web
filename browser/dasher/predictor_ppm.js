@@ -6,10 +6,12 @@
 // Basic predictor based on Prediction by Partial Matching (PPM)
 // algorithm provided by `jslm` library. Unlike other predictor
 // implementations, this predictor exports two APIs:
-//   - The actual predictor API similar to the other implementations in
-//     (`ppmModelPredict`),
-//   - Function for resetting and retraining the model from the static data
-//     and additional text supplied by the caller (`ppmModelReset`).
+//
+//   - The actual predictor API similar to the other implementations
+//     (in `ppmModelPredict`),
+//   - Function for resetting and retraining the model from the static
+//     data and additional text supplied by the caller
+//     (`ppmModelReset`).
 //
 // TODO(agutkin):
 //   - Expose PPM-C configuration: In particular, exposing the following will
