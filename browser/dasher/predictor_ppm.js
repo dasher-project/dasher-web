@@ -3,8 +3,13 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 //
-// Basic predictor based on Prediction by Partial Matching (PPM) algorithm provided
-// by `jslm` library.
+// Basic predictor based on Prediction by Partial Matching (PPM)
+// algorithm provided by `jslm` library. Unlike other predictor
+// implementations, this predictor exports two APIs:
+//   - The actual predictor API similar to the other implementations in
+//     (`ppmModelPredict`),
+//   - Function for resetting and retraining the model from the static data
+//     and additional text supplied by the caller (`ppmModelReset`).
 //
 // TODO(agutkin):
 //   - Expose PPM-C configuration: In particular, exposing the following will
@@ -174,7 +179,7 @@ function generateText(seedText, maxLength, topN) {
 const verbose = false;  // Set this to `false` to remove verbose logging.
 const numBest = 5;  // Number of best candidates to display in verbose mode.
 
-export default async function (
+export async function ppmModelPredict(
     codePoints, text, predictorData, palette, set_weight
 ) {
     console.log(`text: "${text}"`);
@@ -228,4 +233,11 @@ export default async function (
 	const codepoint = Number(vocab.symbols_[i]);
 	set_weight(codepoint, currentProbs[i] * numVocabSymbols, null);
     }
+}
+
+// Resets the model: reinitializes the vocabulary and retrains the model from
+// static text and the text supplied by the caller (`otherText`).
+export function ppmModelReset(palette, otherText) {
+    vocab = initVocabulary(palette);
+    model = bootstrapModel(vocab, otherText);
 }
