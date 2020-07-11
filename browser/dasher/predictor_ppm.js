@@ -28,7 +28,7 @@ import {Vocabulary} from './third_party/jslm/vocabulary.js'
 
 // Simple priors on the symbols are computed using text corpora files stored as
 // strings under `third_party/gutenberg` directory.
-const trainingText = bufferAlice + bufferSherlockHolmes;
+const staticTrainingText = bufferAlice + bufferSherlockHolmes;
 
 // Computes vocabulary from the supplied palette and the short
 // training text above. Also precomputes helper dictionaries so that
@@ -41,8 +41,8 @@ function initVocabulary(palette) {
     console.log("Initializing vocabulary ...");
     vocab = new Vocabulary();
     let paletteCodePoints = palette.codePoints;
-    for (let i = 0; i < trainingText.length; ++i) {
-	const codepoint = trainingText.codePointAt(i);
+    for (let i = 0; i < staticTrainingText.length; ++i) {
+	const codepoint = staticTrainingText.codePointAt(i);
 	if (paletteCodePoints.includes(codepoint)) {
 	    const symbol = codepoint.toString();
 	    const vocab_id = vocab.addSymbol(symbol);
@@ -64,15 +64,13 @@ function initVocabulary(palette) {
 }
 
 //
-// Boostraps PPM model using training text.
+// Boostraps PPM model from vocabulary and the supplied text.
 //
 
 let model = null;
 const modelMaxOrder = 5;  // History length.
 
-function bootstrapModel(vocab) {
-    console.log("Initializing LM ...");
-    model = new PPMLanguageModel(vocab, modelMaxOrder);
+function updateModelFromText(model, vocab, trainingText) {
     let context = model.createContext();
     let numSymbols = 0;
     let numSkipped = 0;
@@ -92,8 +90,26 @@ function bootstrapModel(vocab) {
 	model.addSymbolAndUpdate(context, codepointToVocabId[codepoint]);
 	numSymbols++;
     }
-    console.log("Processed " + numSymbols + " symbols (skipped " +
-		numSkipped + ").");
+    return { numSkipped: numSkipped, numSymbols: numSymbols };
+}
+
+// Boostraps PPM model given the vocabulary `vocab`, static training
+// text and any other text (`otherText`) supplied by the caller.
+function bootstrapModel(vocab, otherText) {
+    console.log("Initializing LM ...");
+    let totalNumSymbols = 0;
+    let totalNumSkipped = 0;
+    model = new PPMLanguageModel(vocab, modelMaxOrder);
+    let counts = updateModelFromText(model, vocab, staticTrainingText);
+    totalNumSymbols += counts.numSymbols;
+    totalNumSkipped += counts.numSkipped;
+    if (otherText && otherText.length > 0) {
+	counts = updateModelFromText(model, vocab, otherText);
+	totalNumSymbols += counts.numSymbols;
+	totalNumSkipped += counts.numSkipped;
+    }
+    console.log("Processed " + totalNumSymbols + " symbols (skipped " +
+		totalNumSkipped + ").");
     return model;
 }
 
@@ -168,7 +184,7 @@ export default async function (
 	// Initialize vocabulary, the model, setup initial (empty) context and
 	// compute initial probabilities. Cache this information.
 	vocab = initVocabulary(palette);
-	model = bootstrapModel(vocab);
+	model = bootstrapModel(vocab, text);
 	if (verbose) {
 	    const randomText = generateText(
 		/* seedText */"I", /* maxLength */300, /* topN */2);
