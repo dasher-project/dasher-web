@@ -17,8 +17,10 @@ A zooming user interface is one that can be described in the following terms.
     zooming area can be represented by, for example, Cartesian X and Y
     co-ordinates.
 
-    The zooming area is a rectangular portion of an, in principle, infinite
-    space.
+-   The zooming area is a rectangular portion of an, in principle, infinite
+    space. The edges of the zooming area can be referred to as the
+    **Zooming Area Limits**, or just as the limits if this is obvious from
+    context.
 
 -   There will be a number of rectangles in the zooming area. A rectangle can be
     referred to as a **Zoom Box**, or just as a box if this is obvious from
@@ -39,7 +41,9 @@ A zooming user interface is one that can be described in the following terms.
 -   The zooming area has a designated **Origin** point. The origin can be
     represented by the Cartesian co-ordinates (0, 0) for example.
 
-    The origin isn't necessarily at the visual centre of the zooming area.
+    The origin isn't necessarily at the visual centre of the zooming area. The
+    zooming area limits can be expressed as the distances from the origin to
+    each of its four edges.
 
 -   The **User** controls the movement of zoom boxes in the zooming area. The
     user can also specify preference **Settings**, for example in a control
@@ -69,21 +73,6 @@ following terms.
         Every other zoom box has a level of one more than the level of its
         parent.
 
--   Every zoom box has an associated text, referred to as its **Box Text**. Box
-    texts can be empty. The root box text is empty.
-
--   Some zoom boxes have an associated **Incremental Text**.
-
-    -   If a box has an incremental text, then its box text is its incremental
-        text appended to the box text of its parent.
-    
-    -   If a box doesn't have an incremental text, then its box text is the same
-        as the box text of its parent.
-    
-    Zoom boxes without box text are used to group other boxes. A zoom box that
-    doesn't have an associated text is therefore sometimes referred to as a
-    **Group** box.
-
 -   Zoom boxes move; the origin doesn't move. The origin might, at any time be
     inside one or more zoom box rectangles. The hierarchical structure of the
     zoom boxes means that:
@@ -108,26 +97,51 @@ following terms.
 One application of the zooming user interface, see above, is text entry. A
 zooming user interface can be described in the following terms.
 
--   There is a **Working Text** that the user is editing. The working text is 
-    sometimes called the message but that term isn't used here, for clarity.
+-   There is a **Working Text** that the user is editing. The working text is
+    sometimes called the message but that term isn't used in this discussion.
 
+-   Every zoom box has an associated text, referred to as its **Box Text**. Box
+    texts can be empty. The root box text is empty.
+
+-   Some zoom boxes have an associated **Incremental Text** in addition to their
+    box text.
+
+    -   If a box has an incremental text, then its box text will be its
+        incremental text appended to the box text of its parent.
+    
+    -   If a box doesn't have an incremental text, then its box text will be the
+        same as the box text of its parent.
+    
 -   If there is a zoom box that is across the origin, see above, its box text
     will be the working message.
+    **That is a fundamental feature of the zooming user interface.**
+
+-   Zoom boxes without an incremental text could be used for either of the
+    following purposes, for example.
+
+    -   As a **Group** for their child boxes. For example, boxes with
+        incremental texts that are numerals, 0 to 9, are in a separate group to
+        boxes with incremental texts that are capital letters, A to Z.
+    
+    -   To enable the user to select an action within a zooming interaction. For
+        example, sending the working text to a speech synthesis function. Dasher
+        Version Six doesn't support action boxes at time of writing.
 
 # Dimension Terms
-The zooming area of a zooming user interface, see above, is two dimensional. The
+The zooming area of a zooming user interface, see above, is two-dimensional. The
 following terms can be used in descriptions.
 
 -   The two dimensions can be referred to:
 
+    -   As horizontal and vertical.
     -   In Cartesian terms, as X and Y.
     -   In lay terms, as left-right and up-down.
 
 -   In the zooming area of a zooming user interface, one dimension will be
     designated as the **Sequential Dimension**.
 
-    In the Dasher Version Six user interface at time of writing, the sequential
-    dimension is Cartesian X, left-right.
+    In the Dasher Version Six user interface at time of writing, horizontal is
+    designated as the sequential dimension.
 
     In some other versions of Dasher, the user can select which dimension is
     designated as the sequential dimension.
@@ -135,14 +149,59 @@ following terms can be used in descriptions.
 -   The other dimension, which will be perpendicular to the sequential
     dimension, is always designated as the **Lateral Dimension**.
 
-    In the Dasher Version Six user interface at time of writing, the lateral
-    dimension is Cartesian Y, up-down.
+    In the Dasher Version Six user interface at time of writing, vertical is
+    designated as the lateral dimension.
 
--   Sequential Forward Direction.
+-   The line that passes through the origin and is parallel to the sequential
+    dimension can be referred to as the **Sequential Axis**.
 
--   Sequential Reverse Direction.
+-   The line that passes through the origin and is parallel to the lateral
+    dimension can be referred to as the **Lateral Axis**.
+
+-   In the sequential dimension, one direction will be designated as the
+    **Forward** direction.
+
+    In the Dasher Version Six user interface at time of writing, the sequential
+    forward direction is Cartesian positive X, which is to the right.
+
+    In some other versions of Dasher, the user can select whether positive or
+    negative is designated as the sequential forward direction.
+
+-   The opposite to the forward direction in the sequential dimension will be
+    designated as the **Reverse** direction.
+
+    In the Dasher Version Six user interface at time of writing, the sequential
+    reverse direction is Cartesian negative X, which is to the left.
+
+# Position and Size Terms
+The position and size of a zoom box in a zooming user interface, see above, can
+be described by the following parameters.
+
+>   Or say characteristics.
+
+A zoom box rectangle has four sides:
+
+-   Two sides, referred to as the **Front** and the **Back**, will be
+    perpendicular to the sequential axis. By definition: a vector from the
+    middle of the front to the middle of the back will be parallel to the
+    sequential axis and in the forward direction.
+
+    The distance from the origin to the front side, in the sequential forward
+    direction, can be referred to as the **Front Position** of the zoom box.
+
+-   The other two sides will be perpendicular to the lateral axis.
+
+    The distance between these sides can be referred to as the **Lateral Size**.
+    The lateral size is a scalar value, i.e. it is unsigned.
+
+    The distance from the origin to a midpoint between these sides, in the
+    lateral dimension can be referred to as the **Lateral Centre**.
 
 
+
+
+In Dasher Version Six and in general if the sequential forward direction is to
+the left, the following will apply.
 
 
 
@@ -155,20 +214,8 @@ following terms can be used in descriptions.
 # Pointer and Solver Terminology
 
 
+    **That is a fundamental feature of Dasher Version Six.**
 
-
-# Box Terminology
-
--   Leading Edge.
-
-    Parallel to the lateral axis. Leading edge position in the sequential
-    dimension.
-
--   Sequential Position.
-
--   Lateral Size.
-
--   Lateral Centre.
 
 
 
@@ -203,16 +250,6 @@ The sizing rules of the solver are:
     >   position and Solver Zero.
 
 
-
--   Sequential Axis.
-
-    The line that passes through the origin and is parallel to the sequential
-    dimension.
-
--   Lateral Axis.
-
-    The line that passes through the origin and is parallel to the lateral
-    dimension.
 
 -   Forward Motion.
 
