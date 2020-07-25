@@ -7,7 +7,7 @@ Dasher Version Six is an implementation of the Dasher zooming text entry system.
 The following terms are used with the following meanings in the Dasher Version
 Six project documentation.
 
-
+>   Maybe call it a specification instead.
 
 
 # Zooming User Interface Description
@@ -94,8 +94,8 @@ following terms.
     the origin is the box that is described as being across the origin.
 
 # Text Terms
-One application of the zooming user interface, see above, is text entry. A
-zooming user interface can be described in the following terms.
+One application of the zooming user interface, see above, is text entry. Text
+entry in a zooming user interface can be described in the following terms.
 
 -   There is a **Working Text** that the user is editing. The working text is
     sometimes called the message but that term isn't used in this discussion.
@@ -112,9 +112,18 @@ zooming user interface can be described in the following terms.
     -   If a box doesn't have an incremental text, then its box text will be the
         same as the box text of its parent.
     
+    In Dasher Version Six at time of writing, incremental texts are always
+    single characters.
+    
 -   If there is a zoom box that is across the origin, see above, its box text
-    will be the working message.
+    will be the working text.
     **That is a fundamental feature of the zooming user interface.**
+
+    When the zoom boxes move so that a different box is across the origin, the
+    working text changes to the text of that box.
+
+    If there isn't a zoom box that is across the origin, then the working text
+    is empty.
 
 -   Zoom boxes without an incremental text could be used for either of the
     following purposes, for example.
@@ -150,7 +159,7 @@ following terms can be used in descriptions.
     dimension, is always designated as the **Lateral Dimension**.
 
     In the Dasher Version Six user interface at time of writing, vertical is
-    designated as the lateral dimension.
+    always designated as the lateral dimension.
 
 -   The line that passes through the origin and is parallel to the sequential
     dimension can be referred to as the **Sequential Axis**.
@@ -167,7 +176,7 @@ following terms can be used in descriptions.
     In some other versions of Dasher, the user can select whether positive or
     negative is designated as the sequential forward direction.
 
--   The opposite to the forward direction in the sequential dimension will be
+-   The opposite to the forward direction in the sequential dimension is always
     designated as the **Reverse** direction.
 
     In the Dasher Version Six user interface at time of writing, the sequential
@@ -175,15 +184,13 @@ following terms can be used in descriptions.
 
 # Position and Size Terms
 The position and size of a zoom box in a zooming user interface, see above, can
-be described by the following parameters.
-
->   Or say characteristics.
+be described in the following terms.
 
 A zoom box rectangle has four sides:
 
 -   Two sides, referred to as the **Front** and the **Back**, will be
     perpendicular to the sequential axis. By definition: a vector from the
-    middle of the front to the middle of the back will be parallel to the
+    middle of the front to the middle of the back would be parallel to the
     sequential axis and in the forward direction.
 
     The distance from the origin to the front side, in the sequential forward
@@ -197,16 +204,149 @@ A zoom box rectangle has four sides:
     The distance from the origin to a midpoint between these sides, in the
     lateral dimension can be referred to as the **Lateral Centre**.
 
+# Zooming Rules
+The positions and sizes of zoom boxes in a zooming user interface, see above,
+conform to a set of rules.
+**That is a fundamental feature of Dasher Version Six.**
+
+These rules apply to the formal representations of boxes. They don't necessarily
+apply to the visual representations. This is discussed a little more after the
+rule descriptions.
+
+## Zooming Rule Set Description
+The rule set is as follows.
+
+-   The **Size Map Rule** is that there is a deterministic mapping from box
+    front position to box lateral size. The rule applies from position to size,
+    but doesn't apply from size to position. Some outcomes of this rule are as
+    follows.
+
+    -   All boxes with the same front position have the same lateral size.
+
+    -   In Dasher Version Six, and in general if the sequential forward direction
+        is to the right:  
+        All boxes with the same left position have the same height.
+    
+    In relation to a specific front position, the corresponding lateral size can
+    be referred to as the **Mapped Size**.
+
+-   The **Size Increase Rule** is that if the mapped size for a first front
+    position is smaller that the mapped size for a second front position, then
+    the first front position must be further forward than the second front
+    position. Some outcomes of this rule are as follows.
+
+    -   If one box has a smaller lateral size than another, then its front
+        position will be further forward.
+
+    -   In Dasher Version Six, and in general if the sequential forward
+        direction is to the right:  
+        If one box has a smaller height than another, then its front position
+        will be further to the right.
+
+-   The **Minimum Size Rule** is that there is a front position for which the
+    mapped size is the lowest mapped size of all front positions. This position
+    can be referred to as the **Minimum Size Position**, and the corresponding
+    mapped size can be referred to as the **Minimum Mapped Size**. Some outcomes
+    of this rule and the size increase rule, above, are as follows.
+
+    -   Any box whose front position is at, or further forward than, the minimum
+        size position has the minimum mapped size.
+    
+    -   When a box is at the minimum size position and it moves in the reverse
+        direction, its lateral size increases. If it continues to move in the
+        reverse direction, its lateral size continues to increase.
+    
+    -   When a box is moving in the forward direction, its lateral size
+        decreases until it reaches a minimum.
+
+    -   In Dasher Version Six, and in general if the sequential forward
+        direction is to the right:
+
+        -   When a box is moving to the right, its height decreases until it
+            reaches a minimum.
+        
+        -   If there are two boxes, one whose front is to the left of the other,
+            then either both boxes have the minimum height, or the box to the
+            left has a larger height.
+
+## Zooming Rule Set Discussion
+The visual representations of boxes in a zooming user interface don't
+necessarily appear to follow the zooming rule set, see above. For example, in
+Dasher Version Six the following apply.
+
+There is a minimum height below which a box's rectangle won't be rendered, but
+the box's text will still be rendered. The minimum render height is greater than
+or equal to the minimum mapped size as defined by the minimum size rule, above.
+This means that a shrinking box, i.e. a box moving to the right, will reach a
+minimum render height, when its rectangle disappears but its text is still
+rendered.
 
 
 
-In Dasher Version Six and in general if the sequential forward direction is to
-the left, the following will apply.
+
+
+
+The rules can be stated in relative terms, supposing that there are two zoom
+boxes, as follows.
+
+
+-   If one box has a front position that is further forward than the other, then
+    either of the following will be true.
+
+    -   The box that is further forward has a smaller lateral size than the
+        other box.
+
+    -   Both boxes have a lateral size of zero.
+
+The rules can instead be stated in terms of a single box that moves, as follows.
+
+-   There is a front position at which a box has a lateral size of zero,
+    referred to as the **Zero Position**.
+
+-   If a box's moves further in 
+
+-   The lateral size of a box increases as its front moves in the reverse
+    direction, and decreases as its front moves in the forward direction.
+
+
+
+
+
+
+
+-   Each rule is stated first in generic terms, then as it applies in Dasher
+    Version Six at time of writing.
+
+
+
+
+
+-   All boxes with the same front position have the same lateral size.
+
+
+    
+    In Dasher Version Six and in general if the sequential forward direction is
+    to the right: Boxes increase in height as they move to the left, and
+    decrease in height as they move to the right.
+
+-   
+
+
+
+-   There is a front position at which the lateral size of a box would be zero.
+
+
+
+
 
 
 
 >   Spawning here?
-
+>
+>   Spawning starts with the root box. The root box is never removed.
+>
+>   A parent box can be trimmed when it has a child that is larger than the
+>   zooming area limits.
 
 
 
@@ -222,20 +362,11 @@ the left, the following will apply.
 # Size and Position Rules
 The sizing rules of the solver are:
 
--   Boxes with the same position in the sequential dimension have the same size
-    in the lateral dimension.
-
-    In the default setup: boxes with the same left-right position have the same
-    height.
 
 -   Solved size.
 
     >   definition goes here
 
--   Solved size in the lateral dimension decreases as position in the sequential
-    dimension increases, and vice versa.
-
-    In the default setup: the solved size decreases to the right.
 
 -   Solver Zero.
 
@@ -300,6 +431,8 @@ Not all of a box gets drawn, necessarily.
 
 Trailing edge always drawn at Solver Zero.
 
+
+Colour Scheme, would be related to Palette.
 
 # Technologies
 Dasher Version Six is built on web technologies: HTML5, CSS,
