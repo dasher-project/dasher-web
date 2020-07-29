@@ -58,7 +58,7 @@ loads.
     -   The loading script chain for the custom keyboard has the following
         files.
 
-        1.  [captivewebview.js](../captive-web-view/forAndroid/captivewebview/src/main/assets/library/captivewebview.js)
+        1.  [captivewebview.js](https://github.com/vmware/captive-web-view/blob/master/forAndroid/captivewebview/src/main/assets/library/captivewebview.js)
 
             This file is part of the Captive Web View project and is included as
             a Git submodule into the Dasher Version Six code.
@@ -74,17 +74,19 @@ loads.
 
 4.  User Interface Builder.
 
+    The user interface builder:
 
-        [../browser/dasher/userinterface.js](../browser/dasher/userinterface.js)
+    -   Creates all the remaining HTML nodes that are needed in the UI, either
+        directly or by instantiating the Control Panel.
+    -   Attaches listeners to the control panel.
+    -   Initialises the viewer and controller.
+    -   Does everything else, pretty much.
 
+    This is the user interface builder:  
+    [../browser/dasher/userinterface.js](../browser/dasher/userinterface.js)
 
-
-    The loading script builds the user interface. Loading scripts are written in
-    JavaScript. 
-
-
-Runs a JS UI builder.
-
+    **There is a strategic backlog item to overhaul this, see the
+    [../readme.md](../readme.md) file.**
 
 
 
