@@ -1,16 +1,19 @@
-# Dasher Version Six Terminology
+# Dasher Version Six Specification
 
 **Just notes at this time**
 
 Dasher Version Six is an implementation of the Dasher zooming text entry system.
 
+This document is a retroactive and forward-looking specification. A substantial
+part of this document defines terms that should be used in discussions of Dasher
+Version Six.
+
+# Terminology
 The following terms are used with the following meanings in the Dasher Version
-Six project documentation.
+Six project documentation. Some terms are also illustrated in the diagrams at
+the end of this section.
 
->   Maybe call it a specification instead.
-
-
-# Zooming User Interface Description
+## Zooming User Interface
 A zooming user interface is one that can be described in the following terms.
 
 -   There is a two-dimensional space, the **Zooming Area**. Points in the
@@ -49,7 +52,7 @@ A zooming user interface is one that can be described in the following terms.
     user can also specify preference **Settings**, for example in a control
     panel section of the user interface.
     
-# Zoom Box Terms
+## Zoom Box Terms
 Zoom boxes in a zooming user interface, see above, can be described in the
 following terms.
 
@@ -68,6 +71,9 @@ following terms.
 
     -   In relation to another box with the same parent, a zoom box can be
         referred to as a **Sibling Box**.
+    
+        The rectangle of a zoom box never overlaps with any of the rectangles of
+        any sibling box.
     
     -   Every zoom box has a numeric **Level**. The root box has level zero.
         Every other zoom box has a level of one more than the level of its
@@ -93,7 +99,7 @@ following terms.
     Put another way, the zoom box with the highest level number that contains
     the origin is the box that is described as being across the origin.
 
-# Text Terms
+## Text Terms
 One application of the zooming user interface, see above, is text entry. Text
 entry in a zooming user interface can be described in the following terms.
 
@@ -136,7 +142,7 @@ entry in a zooming user interface can be described in the following terms.
         example, sending the working text to a speech synthesis function. Dasher
         Version Six doesn't support action boxes at time of writing.
 
-# Dimension Terms
+## Dimension Terms
 The zooming area of a zooming user interface, see above, is two-dimensional. The
 following terms can be used in descriptions.
 
@@ -149,11 +155,10 @@ following terms can be used in descriptions.
 -   In the zooming area of a zooming user interface, one dimension will be
     designated as the **Sequential Dimension**.
 
-    In the Dasher Version Six user interface at time of writing, horizontal is
-    designated as the sequential dimension.
-
-    In some other versions of Dasher, the user can select which dimension is
-    designated as the sequential dimension.
+    In some versions of Dasher, the user can select which dimension is
+    designated as the sequential dimension. In the Dasher Version Six user
+    interface at time of writing, horizontal is designated as the sequential
+    dimension and the user cannot change it.
 
 -   The other dimension, which will be perpendicular to the sequential
     dimension, is always designated as the **Lateral Dimension**.
@@ -170,11 +175,10 @@ following terms can be used in descriptions.
 -   In the sequential dimension, one direction will be designated as the
     **Forward** direction.
 
-    In the Dasher Version Six user interface at time of writing, the sequential
+    In some versions of Dasher, the user can change which select whether
+    positive or negative is designated as the sequential forward direction. In
+    the Dasher Version Six user interface at time of writing, the sequential
     forward direction is Cartesian positive X, which is to the right.
-
-    In some other versions of Dasher, the user can select whether positive or
-    negative is designated as the sequential forward direction.
 
 -   The opposite to the forward direction in the sequential dimension is always
     designated as the **Reverse** direction.
@@ -182,7 +186,7 @@ following terms can be used in descriptions.
     In the Dasher Version Six user interface at time of writing, the sequential
     reverse direction is Cartesian negative X, which is to the left.
 
-# Position and Size Terms
+## Position and Size Terms
 The position and size of a zoom box in a zooming user interface, see above, can
 be described in the following terms.
 
@@ -203,6 +207,35 @@ A zoom box rectangle has four sides:
 
     The distance from the origin to a midpoint between these sides, in the
     lateral dimension can be referred to as the **Lateral Centre**.
+
+## Diagram for Zoom Box Terms and Text Terms
+The following diagram illustrates some of the terms defined above. It is based
+on a screen capture image of the Dasher Version Six zooming area.
+
+![](ZoomBoxTerminology.svg)
+
+Notes on the diagram:
+
+-   In generic terms:
+
+    -   Left is the Front Position.
+    -   Middle is the Lateral Centre.
+    -   Height is the Lateral Size.
+
+-   There are sibling boxes in between "ha" and "he": "hb", "hc", and "hd". They
+    were too small to render at the time of capture. The same is true of sibling
+    boxes in between "he" and "hi".
+
+-   ZoomBox outlines have been switched on, for clarity. Outlines aren't shown
+    by default.
+
+## Diagram for Dimension Terms, and Position and Size Terms
+The following diagram illustrates some of the terms defined above.
+
+![](DimensionTerminology.svg)
+
+In this diagram, the lateral and sequential dimensions, and the forward and
+reverse direction, reflect the Dasher Version Six user interface designations.
 
 # Zooming Rules
 The positions and sizes of zoom boxes in a zooming user interface, see above,
