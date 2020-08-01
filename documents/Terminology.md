@@ -346,65 +346,130 @@ This means that a shrinking box, i.e. a box moving to the right, will reach a
 minimum render height, when its rectangle disappears but its text is still
 rendered.
 
+## Zooming Solver Definition
+A logical outcome of the size map rule, see above, is that there can be a
+**Zooming Solver** that provides the following functions.
 
+-   **Solve Lateral Size**: given a front position value, return the
+    corresponding mapped size.
 
+-   **Solve Front Position** given a lateral size, return the front position to
+    which the lateral size would correspond as the mapped size.
 
+Adding the the minimum size rule, see above, means the following.
 
+-   The solve lateral size function will return the minimum mapped size for any
+    front position that is forward of the minimum size position.
 
-The rules can be stated in relative terms, supposing that there are two zoom
-boxes, as follows.
+-   The solve front position function will return the minimum size position for
+    any lateral size that is equal to or less than the minimum mapped size.
 
+Note that the solver doesn't provide any function related to lateral centre
+position, nor to the back of a box.
 
--   If one box has a front position that is further forward than the other, then
-    either of the following will be true.
+## Zooming Solver Terms
+Zooming solvers can be defined in the following terms.
 
-    -   The box that is further forward has a smaller lateral size than the
-        other box.
+-   An algorithm that conforms to the zooming rule set, see above, and provides
+    the above solver functions, can be referred to as a **Solver Algorithm** or
+    just a solver algorithm, or an algorithm, if this is obvious from context.
 
-    -   Both boxes have a lateral size of zero.
+- A solver algorithm can have parameters, referred to as
+    **Solver Parameters**.
 
-The rules can instead be stated in terms of a single box that moves, as follows.
+A single zooming UI implementation could include a number of different solver
+algorithms. The user could be given an option to select between different solver
+algorithms, and the option to set or select values for solver parameters.
 
--   There is a front position at which a box has a lateral size of zero,
-    referred to as the **Zero Position**.
+Here are some examples of algorithms and parameters.
 
--   If a box's moves further in 
+-   The minimum size position could be a parameter to any solver algorithm. The
+    minimum size position can also be referred to as the **Solver Limit** in
+    this context.
 
--   The lateral size of a box increases as its front moves in the reverse
-    direction, and decreases as its front moves in the forward direction.
+-   The minimum mapped size could be a parameter to any solver algorithm.
 
+-   A **Simple Linear Solver Algorithm** can be defined as follows.
 
+    The algorithm has the following parameters.
 
-
-
-
-
--   Each rule is stated first in generic terms, then as it applies in Dasher
-    Version Six at time of writing.
-
-
-
-
-
--   All boxes with the same front position have the same lateral size.
-
-
+    -   **Reference Position**.  
+        The parameter's value represents a possible front position such that the
+        solver limit is forward of the reference position.
     
-    In Dasher Version Six and in general if the sequential forward direction is
-    to the right: Boxes increase in height as they move to the left, and
-    decrease in height as they move to the right.
+    -   **Reference Size**.  
+        The parameter's value represents a possible lateral size such that the
+        references size is larger than the minimum mapped size.
 
--   
+    Based on the parameters, the following intermediate values can be
+    calculated.
+
+    -   Reference position offset, **RPO**, is the difference between the
+        reference position and the solver limit in the reverse direction.
+    
+    -   Reference size offset, **RSO**, is the reference size minus the minimum
+        mapped size.
+
+    The solve lateral size function would execute as follows for a given front
+    position, *P*.
+
+    1.  If P is forward of the solver limit, return the minimum mapped size.
+
+        Otherwise, continue with the following steps.
+
+    2.  Calculate the current position offset, *CPO*, as the difference between
+        P and the solver limit, in the reverse direction.
+
+    3.  Calculate the solved size offset, *SSO*, as CPO divided by RPO then
+        multiplied by RSO.
+    
+    4.  Return SSO plus the minimum mapped size.
+
+    The solve front position function would execute as follows for a given
+    lateral size, *L*.
+
+    1.  Calculate the current size offset, *CSO*, as L minus the minimum mapped
+        size.
+
+    2.  If CSO is negative, return the minimum size position.
+
+        Otherwise, continue with the following steps.
+    
+    3.  Calculate the solved position offset, *SPO*, as CSO divided by RSO then
+        multiplied by RPO.
+    
+    4.  Apply SPO as a change in the reverse direction to the minimum size
+        position to calculate the return value.
+
+    The parameters and calculations are illustrated in the linear solver
+    diagram, below.
 
 
-
--   There is a front position at which the lateral size of a box would be zero.
-
-
-
-
+>
+>   Stepped Linear Solver Algorithm.
+>
+>   Square Solver Algorithm.
 
 
+## Linear Solver Diagram
+The following diagram illustrates the parameters and calculations made by a
+simple linear solver algorithm.
+
+![Diagram 4: Linear Solver](LinearSolver.svg)
+
+Notes on the diagram:
+
+-   The lateral and sequential dimensions, and the forward and reverse
+    directions, reflect the Dasher Version Six user interface designations.
+
+-   P.n labels show the order of calculations for the solve lateral size
+    function.
+
+-   L.n labels show the order of calculations for the solve front position
+    function.
+
+-   The terms CPO, SSO, CSO, and SPO, are defined in the Simple Linear Solver
+    Algorithm description, above.
 
 >   Spawning here? Adding and removing boxes.
 >
