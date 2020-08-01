@@ -20,6 +20,24 @@ A zooming user interface is one that can be described in the following terms.
     zooming area can be represented by, for example, Cartesian X and Y
     co-ordinates.
 
+    The relationship between the zooming area and other elements in a zooming
+    user interface (UI), can be any combination of the following.
+
+    -   Other elements of the zooming UI are adjacent to the zooming area.
+
+    -   Other elements of the zooming UI are superimposed in front of the
+        zooming area.
+
+    For example, in Dasher Version Six proof-of-concept:
+    
+    -   In the browser UI, the control panel and message bar are adjacent to and
+        above the zooming area, and the copyright and license statement is
+        adjacent to and below the zooming area.
+
+    -   In the custom keyboard UI, the prediction selector and message bar are
+        adjacent to and above the zooming area, and the next-keyboard button is
+        superimposed in front of the zooming area.
+
 -   The zooming area is a rectangular portion of an, in principle, infinite
     space. The edges of the zooming area can be referred to as the
     **Zooming Area Limits**, or just as the limits if this is obvious from
@@ -52,6 +70,19 @@ A zooming user interface is one that can be described in the following terms.
     user can also specify preference **Settings**, for example in a control
     panel section of the user interface.
     
+
+## Zooming User Interface Diagram
+The following diagram illustrates the relationship between the zooming area and other user interface elements in the Dasher Version Six browser proof-of-concept.
+
+![Diagram 1: Zooming User Interface](DimensionTerminology.svg)
+
+Notes on the diagram:
+
+-   The pointer isn't shown.
+
+-   ZoomBox outlines have been switched on for clarity of illustration. Outlines
+    aren't shown by default.
+
 ## Zoom Box Terms
 Zoom boxes in a zooming user interface, see above, can be described in the
 following terms.
@@ -212,7 +243,7 @@ A zoom box rectangle has four sides:
 The following diagram illustrates some of the terms defined above. It is based
 on a screen capture image of the Dasher Version Six zooming area.
 
-![](ZoomBoxTerminology.svg)
+![Diagram 2: Zoom Box Terms and Text Terms](ZoomBoxTerminology.svg)
 
 Notes on the diagram:
 
@@ -232,10 +263,10 @@ Notes on the diagram:
 ## Diagram for Dimension Terms, and Position and Size Terms
 The following diagram illustrates some of the terms defined above.
 
-![](DimensionTerminology.svg)
+![Diagram 3: Dimension Terms, and Position and Size Terms](DimensionTerminology.svg)
 
 In this diagram, the lateral and sequential dimensions, and the forward and
-reverse direction, reflect the Dasher Version Six user interface designations.
+reverse directions, reflect the Dasher Version Six user interface designations.
 
 # Zooming Rules
 The positions and sizes of zoom boxes in a zooming user interface, see above,
@@ -256,8 +287,8 @@ The rule set is as follows.
 
     -   All boxes with the same front position have the same lateral size.
 
-    -   In Dasher Version Six, and in general if the sequential forward direction
-        is to the right:  
+    -   In Dasher Version Six, and in general if the sequential forward
+        direction is to the right:  
         All boxes with the same left position have the same height.
     
     In relation to a specific front position, the corresponding lateral size can
@@ -273,14 +304,15 @@ The rule set is as follows.
 
     -   In Dasher Version Six, and in general if the sequential forward
         direction is to the right:  
-        If one box has a smaller height than another, then its front position
-        will be further to the right.
+        If one box has a smaller height than another, then its front will be
+        further to the right.
 
 -   The **Minimum Size Rule** is that there is a front position for which the
-    mapped size is the lowest mapped size of all front positions. This position
-    can be referred to as the **Minimum Size Position**, and the corresponding
-    mapped size can be referred to as the **Minimum Mapped Size**. Some outcomes
-    of this rule and the size increase rule, above, are as follows.
+    mapped size is the lowest mapped size of any possible front positions. This
+    position can be referred to as the **Minimum Size Position**, and the
+    corresponding mapped size can be referred to as the **Minimum Mapped Size**.
+    Some outcomes of this rule and the size increase rule, above, are as
+    follows.
 
     -   Any box whose front position is at, or further forward than, the minimum
         size position has the minimum mapped size.
@@ -374,13 +406,15 @@ The rules can instead be stated in terms of a single box that moves, as follows.
 
 
 
->   Spawning here?
+>   Spawning here? Adding and removing boxes.
 >
->   Spawning starts with the root box. The root box is never removed.
+>   Spawning starts with the root box. The root box is never removed. The root
+>   box never leaves the zooming area.
 >
 >   A parent box can be trimmed when it has a child that is larger than the
 >   zooming area limits.
-
+>
+>   The Back Rule is that the back of a box is at the zooming area limit.
 
 
 
