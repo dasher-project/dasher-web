@@ -611,8 +611,8 @@ The algorithm has the same parameters as the simple linear solver algorithm, see
 above, but chosen so that reference position offset is equal to reference size
 offset.
 
-Some versions of Dasher appear to implement something like a square solver
-algorithm.
+Some versions of Dasher other than Dasher Version Six appear to implement
+something like a square solver algorithm.
 
 
 >   Spawning here? Adding and removing boxes.
