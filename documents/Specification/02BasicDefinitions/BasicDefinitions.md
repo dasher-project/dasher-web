@@ -2,8 +2,9 @@
 This document is part of the Dasher Version Six Specification. It defines and
 illustrates basic terms that are used in the specification.
 
-See also the [previous section](../ZoomingUserInterface/ZoomingUserInterface.md)
-of the specification, and the [table of contents](../).
+See also the
+[previous section](../01ZoomingUserInterface/ZoomingUserInterface.md) of the
+specification, and the [table of contents](../).
 
 ## Zoom Box Terms
 Zoom boxes in a zooming user interface, see above, can be described in the

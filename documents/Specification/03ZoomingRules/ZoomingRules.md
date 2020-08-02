@@ -8,7 +8,7 @@ apply to the visual representations. This is discussed a little more after the
 rule descriptions.
 
 Some terms used here are defined in earlier parts of the specification. See the
-[previous section](../BasicDefinitions/BasicDefinitions.md), and the
+[previous section](../02BasicDefinitions/BasicDefinitions.md), and the
 [table of contents](../).
 
 ## Zooming Rule Set Description
