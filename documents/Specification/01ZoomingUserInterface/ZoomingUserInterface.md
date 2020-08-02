@@ -80,4 +80,6 @@ Notes on the diagram:
 
 # Next Section
 The next section in the specification is the
-[Basic Definitions](../BasicDefinitions/BasicDefinitions.md).
+[Basic Definitions](../02BasicDefinitions/BasicDefinitions.md).
+
+See also the [table of contents](../).

@@ -193,4 +193,6 @@ reverse directions, reflect the Dasher Version Six user interface designations.
 
 # Next Section
 The next section in the specification is the
-[Zooming Rules](../ZoomingRules/ZoomingRules.md).
+[Zooming Rules](../03ZoomingRules/ZoomingRules.md).
+
+See also the [table of contents](../).
