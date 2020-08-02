@@ -381,77 +381,70 @@ A single zooming UI implementation could include a number of different solver
 algorithms. The user could be given an option to select between different solver
 algorithms, and the option to set or select values for solver parameters.
 
-Here are some examples of algorithms and parameters.
+## Zooming Solver Algorithm Examples
+Here are some examples of zooming solver algorithms and parameters.
 
--   The minimum size position could be a parameter to any solver algorithm. The
-    minimum size position can also be referred to as the **Solver Limit** in
-    this context.
+### Simple Linear Solver Algorithm
+A simple linear solver algorithm can be defined as follows.
 
--   The minimum mapped size could be a parameter to any solver algorithm.
+The algorithm has the following parameters.
 
--   A **Simple Linear Solver Algorithm** can be defined as follows.
+-   Minimum size position, see above. The minimum size position can also be
+    referred to as the **Solver Limit** in this context.
 
-    The algorithm has the following parameters.
+-   Minimum mapped size, see above.
 
-    -   **Reference Position**.  
-        The parameter's value represents a possible front position such that the
-        solver limit is forward of the reference position.
-    
-    -   **Reference Size**.  
-        The parameter's value represents a possible lateral size such that the
-        references size is larger than the minimum mapped size.
+-   **Reference Position**.  
+    The parameter's value represents a possible front position such that the
+    solver limit is forward of the reference position.
 
-    Based on the parameters, the following intermediate values can be
-    calculated.
+-   **Reference Size**.  
+    The parameter's value represents a possible lateral size such that the
+    references size is larger than the minimum mapped size.
 
-    -   Reference position offset, **RPO**, is the difference between the
-        reference position and the solver limit in the reverse direction.
-    
-    -   Reference size offset, **RSO**, is the reference size minus the minimum
-        mapped size.
+Based on the parameters, the following intermediate values can be calculated.
 
-    The solve lateral size function would execute as follows for a given front
-    position, *P*.
+-   **Reference position offset (RPO)**, is the difference between the reference
+    position and the solver limit in the reverse direction.
 
-    1.  If P is forward of the solver limit, return the minimum mapped size.
+-   **Reference size offse (RSO)**, is the reference size minus the minimum
+    mapped size.
 
-        Otherwise, continue with the following steps.
+The solve lateral size function would execute as follows for a given front
+position, *P*.
 
-    2.  Calculate the current position offset, *CPO*, as the difference between
-        P and the solver limit, in the reverse direction.
+1.  If P is forward of the solver limit, return the minimum mapped size.
 
-    3.  Calculate the solved size offset, *SSO*, as CPO divided by RPO then
-        multiplied by RSO.
-    
-    4.  Return SSO plus the minimum mapped size.
+    Otherwise, continue with the following steps.
 
-    The solve front position function would execute as follows for a given
-    lateral size, *L*.
+2.  Calculate the current position offset, *CPO*, as the difference between P
+    and the solver limit, in the reverse direction.
 
-    1.  Calculate the current size offset, *CSO*, as L minus the minimum mapped
-        size.
+3.  Calculate the solved size offset, *SSO*, as CPO divided by RPO then
+    multiplied by RSO.
 
-    2.  If CSO is negative, return the minimum size position.
+4.  Return SSO plus the minimum mapped size.
 
-        Otherwise, continue with the following steps.
-    
-    3.  Calculate the solved position offset, *SPO*, as CSO divided by RSO then
-        multiplied by RPO.
-    
-    4.  Apply SPO as a change in the reverse direction to the minimum size
-        position to calculate the return value.
+The solve front position function would execute as follows for a given lateral
+size, *L*.
 
-    The parameters and calculations are illustrated in the linear solver
-    diagram, below.
+1.  Calculate the current size offset, *CSO*, as L minus the minimum mapped
+    size.
 
+2.  If CSO is negative, return the minimum size position.
 
->
->   Stepped Linear Solver Algorithm.
->
->   Square Solver Algorithm.
+    Otherwise, continue with the following steps.
 
+3.  Calculate the solved position offset, *SPO*, as CSO divided by RSO then
+    multiplied by RPO.
 
-## Linear Solver Diagram
+4.  Apply SPO as a change in the reverse direction to the minimum size position
+    to calculate the return value.
+
+The parameters and calculations are illustrated in the linear solver diagram,
+below.
+
+### Linear Solver Diagram
 The following diagram illustrates the parameters and calculations made by a
 simple linear solver algorithm.
 
@@ -471,6 +464,157 @@ Notes on the diagram:
 -   The terms CPO, SSO, CSO, and SPO, are defined in the Simple Linear Solver
     Algorithm description, above.
 
+### Stepped Linear Solver Algorithm
+A stepped linear solver algorithm can be defined as follows.
+
+The algorithm has the following parameters.
+
+-   Minimum size position, see above.
+
+-   Minimum mapped size, see above.
+
+-   **Reference Position List**.  
+    The parameter's value represents a list of possible front position such
+    that:
+
+    -   No value occurs more than once in the list.
+
+    -   The list is sorted by forward position, from least forward to furthest
+        forward.
+
+    -   The solver limit is forward of the last position in the list.
+
+-   **Reference Size List**.  
+    The parameter's value represents a list of possible lateral sizes such that:
+
+    -   There are the same number of items in the list as in the reference
+        position list.
+
+    -   No value occurs more than once in the list.
+
+    -   The list is sorted in order of decreasing magnitude.
+
+    -   The last size in the list is larger than the minimum mapped size.
+    
+The solve lateral size function would execute as follows for a given front
+position, *P*.
+
+1.  If P is forward of the solver limit, return the minimum mapped size.
+
+    Otherwise, continue with the following steps.
+
+2.  If P is forward of last reference position, then apply the solve lateral
+    size function in the simple linear solver algorithm to P, with the following
+    parameters.
+
+    -   Give the last reference position as the simple reference position.
+
+    -   Give the last reference size as the simple reference size.
+
+    Otherwise, continue with the following steps.
+
+3.  If the first item in the reference position list is forward of P, then apply
+    the solve lateral size function in the simple linear solver algorithm to P,
+    with the following parameters.
+
+    -   Give the first reference position as the simple reference position.
+
+    -   Give the first reference size as the simple reference size.
+
+    -   Give the second reference position as the minimum size position.
+
+    -   Give the second reference size as the minimum mapped size.
+
+    Otherwise, continue with the following steps.
+
+4.  Find in the reference position list the first value, *PF* that is forward of
+    P or equal to P. Take the index of PF in the list as *PFI*
+    
+    Note that there is guaranteed to be a reference position that meets this
+    condition, otherwise a previous step would have already returned a solved
+    size. Also, the reference position will be the second in the list, or later.
+
+5.  Apply the solve lateral size function in the simple linear solver algorithm
+    to P, with the following parameters.
+
+    -   Give the value at index (PFI minus one) in the reference position list
+        as the simple reference position.
+
+    -   Give the value at index (PFI minus one) in the reference size list as
+        the simple reference size.
+
+    -   Give PF as the minimum size position.
+
+    -   Give the value at index PFI in the reference size list as the minimum
+        mapped size.
+
+The solve front position function would execute as follows for a given lateral
+size, *L*.
+
+1.  If L is smaller than the minimum mapped size, return the minimum size
+    position.
+
+    Otherwise, continue with the following steps.
+
+2.  If L is smaller than the last reference size, then apply the solve front
+    position function in the simple linear solver algorithm to L, with the
+    following parameters.
+
+    -   Give the last reference position as the simple reference position.
+
+    -   Give the last reference size as the simple reference size.
+
+    Otherwise, continue with the following steps.
+
+3.  If L is larger than the first item in the reference size list, then apply
+    the solve front position function in the simple linear solver algorithm to
+    L, with the following parameters.
+
+    -   Give the first reference position as the simple reference position.
+
+    -   Give the first reference size as the simple reference size.
+
+    -   Give the second reference position as the minimum size position.
+
+    -   Give the second reference size as the minimum mapped size.
+
+    Otherwise, continue with the following steps.
+
+4.  Find in the reference size list the first value, *SF* that is smaller than
+    or equal to L. Take the index of SF in the list as *SFI*
+
+    Note that there is guaranteed to be a reference size that meets this
+    condition, otherwise a previous step would have already returned a solved
+    position. Also, the reference size will be the second in the list, or later.
+
+5.  Apply the solve front position function in the simple linear solver
+    algorithm to L, with the following parameters.
+
+    -   Give the value at index (SFI minus one) in the reference position list
+        as the simple reference position.
+
+    -   Give the value at index (SFI minus one) in the reference size list as
+        the simple reference size.
+
+    -   Give the value at index SFI in the reference position list as the
+        minimum size position.
+
+    -   Give SF as the minimum mapped size.
+
+Dasher Version Six implements a stepped linear solver algorithm. There are two
+choices of reference position list and reference size list.  
+
+### Square Solver Algorithm
+A square solver algorithm can be defined as follows.
+
+The algorithm has the same parameters as the simple linear solver algorithm, see
+above, but chosen so that reference position offset is equal to reference size
+offset.
+
+Some versions of Dasher appear to implement something like a square solver
+algorithm.
+
+
 >   Spawning here? Adding and removing boxes.
 >
 >   Spawning starts with the root box. The root box is never removed. The root
@@ -483,34 +627,9 @@ Notes on the diagram:
 
 
 
-# Pointer and Solver Terminology
+# Pointer Terminology
 
 
-    **That is a fundamental feature of Dasher Version Six.**
-
-
-
-
-# Size and Position Rules
-The sizing rules of the solver are:
-
-
--   Solved size.
-
-    >   definition goes here
-
-
--   Solver Zero.
-
-    The position in the sequential dimension at which the solved size in the
-    lateral dimension is zero. Positions
-
-
--   Solver Algorithm.
-
-    >   User could choose.  
-    >   Square solver: lateral size is equal to distance between the sequential
-    >   position and Solver Zero.
 
 
 
@@ -561,8 +680,10 @@ The sizing rules of the solver are:
 
 Not all of a box gets drawn, necessarily.
 
-Trailing edge always drawn at Solver Zero.
+Trailing edge always drawn at Solver Limit.
 
+Something about not trimming or deleting boxes being necessary if they are to
+appear in the viewer.
 
 Colour Scheme, would be related to Palette.
 
