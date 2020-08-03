@@ -80,3 +80,15 @@ This means that a shrinking box, i.e. a box moving to the right, will reach a
 minimum render height, when its rectangle disappears but its text is still
 rendered.
 
+# Next Section
+The next section in the specification is the
+[Zooming Solver](../04ZoomingSolver/ZoomingSolver.md).
+
+See also the [table of contents](../).
+
+# Document Information
+This document is part of the Dasher project and is under revision control here:  
+[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
+
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)

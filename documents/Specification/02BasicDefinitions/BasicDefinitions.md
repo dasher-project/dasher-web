@@ -191,9 +191,15 @@ The following diagram illustrates some of the terms defined above.
 In this diagram, the lateral and sequential dimensions, and the forward and
 reverse directions, reflect the Dasher Version Six user interface designations.
 
-
 # Next Section
 The next section in the specification is the
 [Zooming Rules](../03ZoomingRules/ZoomingRules.md).
 
 See also the [table of contents](../).
+
+# Document Information
+This document is part of the Dasher project and is under revision control here:  
+[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
+
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
