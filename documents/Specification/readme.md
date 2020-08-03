@@ -7,7 +7,7 @@ The specification is divided into sections. These can be read in order.
 1.  [Zooming User Interface](01ZoomingUserInterface/ZoomingUserInterface.md)
 2.  [Basic Definitions](02BasicDefinitions/BasicDefinitions.md)
 3.  [Zooming Rules](03ZoomingRules/ZoomingRules.md)
-4.  [Zooming Solver](03ZoomingSolver/ZoomingSolver.md)
+4.  [Zooming Solver](04ZoomingSolver/ZoomingSolver.md)
 
 # Document Information
 The Dasher Version Six specification is part of the Dasher project and is under
