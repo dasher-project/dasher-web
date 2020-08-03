@@ -1,6 +1,18 @@
 # Dasher Version Six Specification
+Dasher Version Six is an implementation of the Dasher zooming text entry system.
 
-## Table of Contents
+## Sections
+The specification is divided into sections. These can be read in order.
+
 1.  [Zooming User Interface](01ZoomingUserInterface/ZoomingUserInterface.md)
 2.  [Basic Definitions](02BasicDefinitions/BasicDefinitions.md)
 3.  [Zooming Rules](03ZoomingRules/ZoomingRules.md)
+4.  [Zooming Solver](03ZoomingSolver/ZoomingSolver.md)
+
+# Document Information
+The Dasher Version Six specification is part of the Dasher project and is under
+revision control here:  
+[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
+
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
