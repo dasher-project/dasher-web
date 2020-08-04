@@ -1,6 +1,29 @@
 # Just notes
 
 
+
+# User Control
+This document is part of the Dasher Version Six Specification. It describes ...
+
+
+>   Maybe call it Run Time or Execution Cycle or Run Loop or Zooming Controller.
+
+
+The zooming UI execution can be defined as a run loop in which the following
+take place.
+
+1.  Controller invocation trigger.
+
+    In the Dasher Version Six proof-of-concept code, at time of writing, the
+    controller is invoked every 400 milliseconds. In other words, the invocation
+    trigger is that 0.4s have passed since the previous invocation.
+
+
+
+>
+>   Refer to "arrangement" in the run loop, not cascading. Or "parent solving"
+>   and "child arrangement"
+
 >   Spawning here? Adding and removing boxes.
 >
 >   Spawning starts with the root box. The root box is never removed. The root
@@ -42,11 +65,6 @@
 
     Occurs when the pointer isn't on the lateral axis.
 
--   Solver Zero.
-
-    The boundary beyond which the solver would give a box zero height.
-
-
 
 -   Message Bar is where the working text is shown.
 
@@ -84,8 +102,8 @@ JavaScript, and SVG.
 
 
 # Document Information
-This diagram is part of the Dasher project and is under revision control here:  
-[https://github.com/dasher-project/redash/tree/master/documents](https://github.com/dasher-project/redash/tree/master/documents)
+This document is part of the Dasher project and is under revision control here:  
+[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
 
 (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
