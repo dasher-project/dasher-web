@@ -92,9 +92,9 @@ entry in a zooming user interface can be described in the following terms.
         incremental texts that are numerals, 0 to 9, are in a separate group to
         boxes with incremental texts that are capital letters, A to Z.
     
-    -   To enable the user to select an action within a zooming interaction. For
-        example, sending the working text to a speech synthesis function. Dasher
-        Version Six doesn't support action boxes at time of writing.
+    -   To enable the user to select an **Action** within a zooming interaction.
+        For example, sending the working text to a speech synthesis function.
+        Dasher Version Six doesn't support action boxes at time of writing.
 
 ## Dimension Terms
 The zooming area of a zooming user interface, see above, is two-dimensional. The
