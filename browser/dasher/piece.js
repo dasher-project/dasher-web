@@ -26,6 +26,11 @@ export default class Piece {
     static create(tag, parent, attributes, text, nameSpace) {
         if (nameSpace === undefined) {
             nameSpace = Piece.NS_for_tag(tag);
+            if (nameSpace === undefined) {
+                throw new Error(
+                    `Unknown name space for <${tag}>.` +
+                    ' Add it to Piece.nameSpaces in the piece.js file.');
+            }
         }
         else {
             const mappedNS = Piece.nameSpaces[nameSpace];
@@ -44,7 +49,8 @@ export default class Piece {
             document.createElementNS(nameSpace, tag));
         Piece.set_attributes(element, attributes);
         const textNode = (
-            text === undefined ? undefined : document.createTextNode(text));
+            text === undefined || text === null ? undefined :
+            document.createTextNode(text));
         if (element === undefined) {
             element = textNode;
         }
@@ -102,8 +108,33 @@ export default class Piece {
 
     static set_attributes(element, attributes) {
         if (attributes !== undefined && element !== undefined) {
+            // There seems to be a strange behaviour in Safari and WKWebView
+            // that, if you first set type='color' then set value='#hexColour',
+            // the picker control will always show black as the initial colour.
+            // However, if you first set the value, and then set the type, the
+            // initial colour will reflect the value correctly.  
+            // The following code works around the behaviour by filtering out
+            // the type setting, if the element is an input control of type
+            // color. Then the filtered out attribute setting is applied after.
+            const attributes2 = (
+                element.tagName.toLowerCase() === 'input' ? {} : null);
+
             for (const [key, value] of Object.entries(attributes)) {
-                element.setAttribute(key, value);
+                if (
+                    attributes2 !== null &&
+                    key.toLowerCase() === 'type' &&
+                    value === 'color'
+                ) {
+                    attributes2[key] = value;
+                }
+                else {
+                    element.setAttribute(key, value);
+                }
+            }
+            if (attributes2 !== null) {
+                for (const [key, value] of Object.entries(attributes2)) {
+                    element.setAttribute(key, value);
+                }
             }
         }
         return element;
@@ -141,8 +172,8 @@ Piece.nameSpaces = {
     'html': {
         'url': 'http://www.w3.org/1999/xhtml',
         'tags': [
-            'div', 'span', 'button', 'h1', 'input', 'label', 'option', 'select',
-            'textarea'
+            'div', 'fieldset', 'form', 'span', 'button', 'h1', 'input', 'label',
+            'legend', 'option', 'pre', 'select', 'textarea'
         ]
     },
     'svg': {

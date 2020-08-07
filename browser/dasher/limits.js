@@ -15,7 +15,16 @@ export default class Limits {
         this._ratios = null;
         this._showDiagnostic = false;
 
+        this._minimumFontSizePixels = undefined;
+        this._maximumFontSizePixels = undefined;
+        this._drawThresholdRect = undefined;
+        this._spawnThreshold = undefined;
+        this._textLeft = 5;
+        this._targetRight = true;
+        this._spawnMargin = undefined;
+
         this._gradients = undefined;
+        this._solverRight = undefined;
 
         this._svgPiece = null;
         this._heightGradientPolyline = null;
@@ -39,6 +48,8 @@ export default class Limits {
         this._showDiagnostic = showDiagnostic;
         this._show_gradients();
     }
+
+    get solverRight() {return this._solverRight;}
 
     get svgPiece() {return this._svgPiece;}
     set svgPiece(svgPiece) {
@@ -72,6 +83,10 @@ export default class Limits {
         }).sort((first, second) => first.left - second.left);
         // Previous line will sort from lowest to highest. In practice, lowest
         // means most negative. The left-most will be gradients[0].
+        this._solverRight = (
+            this._gradients === undefined ? undefined :
+            this._gradients[this._gradients.length - 1].left
+        );
 
         this._show_gradients();
     }
@@ -105,6 +120,41 @@ export default class Limits {
             (accumulated, {left, height}) => `${accumulated} ${left},${height}`,
             "")
         });
+    }
+
+    get minimumFontSizePixels() {return this._minimumFontSizePixels;}
+    set minimumFontSizePixels(minimumFontSizePixels) {
+        this._minimumFontSizePixels = minimumFontSizePixels;
+    }
+
+    get maximumFontSizePixels() {return this._maximumFontSizePixels;}
+    set maximumFontSizePixels(maximumFontSizePixels) {
+        this._maximumFontSizePixels = maximumFontSizePixels;
+    }
+
+    get drawThresholdRect() {return this._drawThresholdRect;}
+    set drawThresholdRect(drawThresholdRect) {
+        this._drawThresholdRect = drawThresholdRect;
+    }
+
+    get spawnThreshold() {return this._spawnThreshold;}
+    set spawnThreshold(spawnThreshold) {
+        this._spawnThreshold = spawnThreshold;
+    }
+
+    get textLeft() {return this._textLeft;}
+    set textLeft(textLeft) {
+        this._textLeft = textLeft;
+    }
+
+    get targetRight() {return this._targetRight;}
+    set targetRight(targetRight) {
+        this._targetRight = targetRight;
+    }
+
+    get spawnMargin() {return this._spawnMargin;}
+    set spawnMargin(spawnMargin) {
+        this._spawnMargin = spawnMargin;
     }
 
     // Calculate height, given left position.

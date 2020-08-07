@@ -2,219 +2,97 @@
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 /*
-A predictor instance must have a `get` method that returns an array of objects
-each with the following properties.
+This code could be used as a base for other predictors. The predictor
+programming interface is as follows.
 
--   `codePoint`, the next text, like a letter, as a Unicode code point value.
--   `weight`, the visual weighting to be given to this box.
--   `group`, a group name like "capital" or null if this item doesn't represent
-    a group.
--   Other custom properties for the use of the predictor, next time around.
-    The Predictor class here adds one custom property: `boosted`.
+There is a single function by which a prediction will be requested. The function
+takes the following parameters.
+
+-   `codePoints` the message for which the next character is to be predicted, as
+    an array of Unicode code point numbers.
+-   `text` the same message but as a string.
+-   `predictorData` user data set by the predictor function by calling
+    set_weight(), see below.
+-   `palette` reference to the Palette object that is in use. This could be used
+    for example, to find out how many characters are in the palette by reading
+    the codePoints.length property.
+-   `set_weight` callback to invoke to predict weights, as follows.
+
+        set_weight(codePoint, weight, predictorData)
+
+    Where:
+
+    -   `codePoint` is the code point for which a prediction is being made.
+    -   `weight` to assign.
+    -   `predictorData` user data object that will be stored in the ZoomBox that
+        represents the predicted code point. It will be passed back to this
+        function as a parameter when predictions following the predicted code
+        point are requested.
+
+Unpredicted characters each get an implicit weight of one.
+
 */
 
 const codePointSpace = " ".codePointAt(0);
 const codePointStop = ".".codePointAt(0);
 
-export default class Predictor {
-    async get(points, text, prediction) {
-        const boosted = prediction === null ? null : prediction.boosted;
-        const only = prediction === null ? null : prediction.group;
-
-        const returns = [];
-        const returnGroups = [];
-        for (const group of Predictor.characterGroups) {
-            if (group.name === boosted || group.name === only) {
-                const baseWeight = 2 / group.codePoints.length;
-                group.codePoints.forEach(codePoint => {
-                    returns.push({
-                        "codePoint": codePoint,
-                        "group": null,
-                        "member": group.name,
-                        "boosted": group.boost,
-                        "weight": 1,
-                        "baseWeight": baseWeight
-                    });
-                    returnGroups.push(null);
-                });
-            }
-            else if (only === null) {
-                returns.push({
-                    "codePoint": null,
-                    "group": group.name,
-                    "boosted": group.name,
-                    "weight": group.codePoints.length,
-                    "baseWeight": group.codePoints.length / 10,
-                    "predicted": false
-                });
-                returnGroups.push(group);
-            }
-        }
-        let boostPredicted = false;
-
-        // This is order n-squared which isn't good but proves the approach.
-        const characterWeights = await this.get_character_weights(
-            points, text, prediction);
-        characterWeights.forEach((weight, codePoint) => {
-            let found = false;
-            for (const [index, returning] of returns.entries()) {
-                const returnGroup = returnGroups[index];
-                if (returnGroup === null) {
-                    if (returning.codePoint === codePoint) {
-                        returning.weight = weight;
-                        found = true;
-                        boostPredicted = true;
-                        break;
-                    }
-                }
-                else {
-                    // Optimise if returnGroup has firstPoint and lastPoint
-                    if (returnGroup.codePoints.includes(codePoint)) {
-                        returning.weight += (weight - 1);
-                        found = true;
-                        returning.predicted = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!found) {
-                for(const checkGroup of Predictor.characterGroups) {
-                    if (checkGroup.codePoints.includes(codePoint)) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                throw new Error(
-                    `Code point with weight not found: ${codePoint}` +
-                    ` "${String.fromCodePoint(codePoint)}".`);
-            }
-        });
-
-        // Reduce weights of items that didn't appear in the prediction.
-        for (const returning of returns) {
-            if (returning.codePoint === null) {
-                if (!returning.predicted) {
-                    returning.weight = returning.baseWeight;
-                }
-            }
-            else {
-                if (!boostPredicted) {
-                    returning.weight = returning.baseWeight;
-                }
-            }
-        }
-
-        return returns;
-    }
-
-    // Base class get... doesn't use the `text` parameter but subclass
-    // implementations might.
-    async get_character_weights(points, text, prediction) {
-        const lastIndex = points.length - 1;
-
-        // Check if the message ends full stop, space.
-        const stopSpace = (
-            lastIndex >= 1 &&
-            points[lastIndex - 1] === codePointStop &&
-            points[lastIndex] === codePointSpace
-        );
-
-        if (prediction === null || stopSpace) {
-            // Start of input, or after full stop space, favour capital letters.
-            return capitalWeights;
-        }
-
-        const weightGroup = (
-            prediction.group === null ? prediction.member : prediction.boosted);
-
-        return Predictor.characterGroupMap[weightGroup].weights;
-    }
-
-    static is_space(codePoint) {
-        return Predictor.characterGroupMap.space.codePoints.includes(codePoint);
-    }
-}
-
 const vowelTexts = ["a", "e", "i", "o", "u"];
 const vowelCodePoints = vowelTexts.map(text => text.codePointAt(0));
 
-Predictor.characterGroups = [
-    {
-        "name": "small", "boost": "small",
-        "firstPoint": "a".codePointAt(0), "lastPoint": "z".codePointAt(0)
-    }, {
-        "name": "capital", "boost": "small",
-        "firstPoint": "A".codePointAt(0), "lastPoint": "Z".codePointAt(0)
-    }, {
-        "name": "numeral", "boost": "numeral",
-        "firstPoint": "0".codePointAt(0), "lastPoint": "9".codePointAt(0)
-    }, {
-        "name": "contraction", "boost": "small", "texts": [
-            "'", "-"
-        ]
-    }, {
-        "name": "punctuation", "boost": "space", "texts": [
-            ",", ".", "&", "!", "?"
-        ]
-    }, {
-        "name": "space", "boost": "small", "texts": [
-            " ", "\n"
-        ]
-    }
-];
+// Gets generated from the palette on first invocation.
+let capitalCodePoints;
 
-// Create an object for easy mapping from group name to group object.
-Predictor.characterGroupMap = {};
-Predictor.characterGroups.forEach(group => {
-    Predictor.characterGroupMap[group.name] = group;
-});
-Predictor.characterGroupMap.space = Predictor.characterGroupMap.space;
+const vowelWeight = 5;
+const capitalWeight = 5;
 
-// Fill in basic attributes for groups: texts and codePoints.
-Predictor.characterGroups.forEach(group => {
-    if (!("texts" in group)) {
-        group.texts = [];
-        for (
-            let codePoint = group.firstPoint;
-            codePoint <= group.lastPoint;
-            codePoint++
-        ) {
-            group.texts.push(String.fromCodePoint(codePoint));
-        }
-    }
-    group.codePoints = group.texts.map(text => text.codePointAt(0));
-});
+export default async function (
+    codePoints, text, predictorData, palette, set_weight
+) {
+    // if (predictorData !== undefined) {
+    //     console.log(`predictor "${text}" ${predictorData}`);
+    // }
 
-// Compute additional attributes for groups: weights under this group.
-const vowelWeight = 2;
-const spaceWeight = 1;
-Predictor.characterGroups.forEach(group => {
-    const boosted = Predictor.characterGroupMap[group.boost];
-
-    // Start predicting each character in the boosted group under this group.
-    group.weights = new Map();
-    boosted.codePoints.forEach(point => group.weights.set(point, 1));
-
-    // Utility function.
-    function adjust(codePoints, factor) {
-        codePoints.forEach(adjustPoint => {
-            const weighting = group.weights.get(adjustPoint);
-            if (weighting !== undefined) {
-                group.weights.set(adjustPoint, weighting * factor);
-            }
+    if (capitalCodePoints === undefined) {
+        // It isn't completely clear that JS RE can detect letters in any
+        // language. For now, the test for a capital is both of these
+        // conditions:
+        //
+        // -   Must be the same if converted to upper case.
+        // -   Must be different if converted to lower case.
+        //
+        // The second clause filters out numerals, spaces, and the like.
+        capitalCodePoints = palette.codePoints.filter(palettePoint => {
+            const paletteText = String.fromCodePoint(palettePoint);
+            return (
+                paletteText === paletteText.toUpperCase() &&
+                paletteText !== paletteText.toLowerCase()
+            );
         });
+        // console.log(capitalCodePoints);
     }
 
-    // Add weights for vowels and spaces.
-    adjust(vowelCodePoints, vowelWeight);
-    adjust(Predictor.characterGroupMap.space.codePoints, spaceWeight);
-});
+    const lastIndex = codePoints.length - 1;
 
-const capitalWeights = new Map();
-Predictor.characterGroupMap.capital.codePoints.forEach(
-    point => capitalWeights.set(point, 1)
-);
-capitalWeights.set(codePointSpace, spaceWeight);
+    // Check if the message ends full stop, space.
+    const stopSpace = (
+        lastIndex >= 1 &&
+        codePoints[lastIndex - 1] === codePointStop &&
+        codePoints[lastIndex] === codePointSpace
+    );
+
+    // At the start of input, or after full stop space, favour capital letters.
+    const capitalReason = (
+        lastIndex < 0 ? "start" : stopSpace ? "stop space" : null);
+    
+    if (capitalReason === null) {
+        // Otherwise favour vowels.
+        vowelCodePoints.forEach(
+            point => set_weight(point, vowelWeight, "vowel"));    
+    }
+    else {
+        capitalCodePoints.forEach(
+            point => set_weight(point, capitalWeight, capitalReason));
+    }
+
+    return;
+}

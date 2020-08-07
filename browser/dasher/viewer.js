@@ -4,9 +4,30 @@
 import Piece from "./piece.js";
 
 export default class Viewer {
-    static view(svgPiece) {
-        // Add an SVG group to hold the root zoom box.
-        return new Piece('g', svgPiece);
+    static view(svgPiece, limits) {
+        const return_ = {
+            "lower": new Piece('g', svgPiece, {"id": "view-lower"})
+        };
+        return_.rect = new Piece('rect', svgPiece, {
+            "y": "-50%", "height": "100%", "fill": "white",
+            "id": 'solver-right-mask'
+        });
+        return_.line = new Piece('line', svgPiece, {
+            "y1": "-50%", "y2": "50%", "stroke": "black", "stroke-width":"1px",
+            "id": 'solver-right-border'
+        });
+        Viewer.configure_view(return_, limits);
+        return_.upper = new Piece('g', svgPiece, {"id": "view-upper"});
+        return return_;
+    }
+    static configure_view(view, limits) {
+        view.rect.set_attributes({
+            "x": limits.solverRight, "width": limits.right - limits.solverRight,
+            "fill-opacity": limits.showDiagnostic ? 0.5 : 1
+        });
+        view.line.set_attributes({
+            "x1": limits.solverRight, "x2": limits.solverRight
+        });
     }
 
     constructor(zoomBox, view) {
@@ -17,31 +38,72 @@ export default class Viewer {
 
     _clear() {
         // Principal graphics.
-        this._group = null;
+        this._groupLower = null;
+        this._groupUpper = null;
         this._rect = null;
         this._text = null;
 
         // Diagnostic graphics.
         this._spawnMargin = null;
         this._width = null;
+        this._textBox = null;
+
+        this._textWidth = 0;
+        this._renderLeft = 0;
     }
+
+    get lower() {return this._groupLower;}
+    get upper() {return this._groupUpper;}
+
+    // Following is too slow, due to the getBoundingClientRect apparently.
+    // _set_text_width() {
+    //     if (this._text === null) {
+    //         this._textWidth = 0;
+    //     }
+    //     else {
+    //         const textBounds = this._text.node.getBoundingClientRect();
+    //         // console.log(this._zoomBox.text, this._textBounds);
+    //         // edge += this._textBounds.width;
+    //         this._textWidth = textBounds.width;
+    //     }
+    //     return this._textWidth;
+    // }
 
     draw(limits) {
-        this._draw_one(null, limits, 0);
+        Viewer.configure_view(this._view, limits);
+        this._draw_one(null, limits.left, limits, 0);
     }
 
-    _draw_one(after, limits, level) {
+    _draw_one(after, parentEdge, limits, level) {
         if (this._should_render(limits)) {
-            this._render_group(after, limits, level);
-            this._zoomBox.each_childBox(child => {
-                if (child.viewer === null) {
-                    child.viewer = new Viewer(child, this._view);
-                }
-                child.viewer._draw_one(this._group.node, limits, level + 1);
-            });
+            // if (this._zoomBox.message[0] === "M") {
+            //     console.log(
+            //         'predging', this._zoomBox.text, this._zoomBox.message,
+            //         parentEdge, limits.textLeft);
+            // }
+            this._render_group(after, parentEdge, limits, level);
+            const childEdge = (
+                this._renderLeft + limits.textLeft + this._textWidth);
+            const edge = childEdge > parentEdge ? childEdge : parentEdge;
+            // if (this._zoomBox.message[0] === "M") {
+            //     console.log(
+            //         'edging', this._zoomBox.text, this._zoomBox.message,
+            //         childEdge, this._renderLeft,
+            //         limits.textLeft, this._textWidth);
+            // }
+            if (this._zoomBox.childBoxes !== undefined) {
+                this._zoomBox.childBoxes.forEach(child => {
+                    if (!child.dimension_undefined()) {
+                        if (child.viewer === null) {
+                            child.viewer = new Viewer(child, this._view);
+                        }
+                        child.viewer._draw_one(this, edge, limits, level + 1);
+                    }
+                });
+            }
         }
         else {
-            this.erase();            
+            this.erase();
         }
     }
 
@@ -65,11 +127,6 @@ export default class Viewer {
         if (this._zoomBox.top > limits.bottom) {
             return false;
         }
-        if (this._zoomBox.renderHeightThreshold !== undefined) {
-            if (this._zoomBox.height < this._zoomBox.renderHeightThreshold) {
-                return false;
-            }
-        }
 
         if (this._zoomBox.width <= 0) {
             return false;
@@ -78,19 +135,25 @@ export default class Viewer {
         return true;
     }
 
-    _render_group(after, limits, level) {
-        if (this._group === null) {
+    _render_group(after, edge, limits, level) {
+        if (this._groupLower === null) {
             // Use an SVG group <g> element because its translate can be
             // smoothed with a CSS transition, which a <text> element's x and y
             // attributes cannot. TOTH https://stackoverflow.com/a/53452940
             // Reference:
             // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
 
-            this._group = new Piece('g');
+            this._groupLower = new Piece('g', undefined, {"id": [
+                "group-lower", this._zoomBox.message, this._zoomBox.text
+            ].join("_") });
+            this._groupUpper = new Piece('g', undefined, {"id": [
+                "group-upper", this._zoomBox.message, this._zoomBox.text
+            ].join("_") });
         }
 
         const box = this._zoomBox;
-        const margin = (box.spawnMargin === undefined ? 0 : box.spawnMargin);
+        const margin = (
+            limits.spawnMargin === undefined ? 0 : limits.spawnMargin);
         const limitLeft = limits.left + (level * margin);
         const renderLeft = box.left < limitLeft ? limitLeft : box.left;
 
@@ -99,7 +162,7 @@ export default class Viewer {
         const [trimTop, trimBottom, renderMiddle] = this._trims(
             limitTop, limits.bottom, margin);
         
-        this._group.node.style.transform = 
+        this._groupLower.node.style.transform = 
             `translate(${renderLeft}px, ${renderMiddle}px)`;
         // ToDo: Try changing the above to a transform list, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
@@ -109,23 +172,39 @@ export default class Viewer {
         //         this.message, renderMiddle, limitTop, margin, limits.top);
         // }
 
-        const parent = this._group.node.parentElement;
-        const viewerNode = this._view.node
-        if (!Object.is(parent, viewerNode)) {
-            if (after === null) {
-                viewerNode.insertBefore(
-                    this._group.node, viewerNode.firstChild);
-            }
-            else {
-                after.insertAdjacentElement('afterend', this._group.node);
-            }
-        }
+        const textLeft = (
+            renderLeft + limits.textLeft < edge ?
+            edge - renderLeft : limits.textLeft);
+        this._groupUpper.node.style.transform = 
+            `translate(${renderLeft + textLeft}px, ${renderMiddle}px)`;
 
-        this._render_rect(
-            trimTop, trimBottom, limits.width, box.middle - renderMiddle);
-        this._render_text();
+        this._renderLeft = renderLeft;
+
+        this._insert_group(
+            this._groupLower, this._view.lower,
+            after === null ? null : after.lower.node);
+        this._insert_group(
+            this._groupUpper, this._view.upper,
+            after === null ? null : after.upper.node);
+
+            this._render_rect(
+            trimTop, trimBottom,
+            limits.drawThresholdRect, limits.width,
+            box.middle - renderMiddle
+        );
+
+        // if (this._zoomBox.message[0] === "M") {
+        //     console.log(
+        //         "grouping", this._zoomBox.text, this._zoomBox.message, edge, renderLeft,
+        //         limits.textLeft, textLeft);
+        // }
+
+        this._render_text(
+            0,
+            limits.minimumFontSizePixels, limits.maximumFontSizePixels);
         this._render_diagnostics(
-            limits.showDiagnostic, box.middle - renderMiddle);
+            limits.showDiagnostic, box.middle - renderMiddle,
+            limits.spawnMargin);
     }
 
     _trims(limitTop, limitBottom, margin) {
@@ -146,21 +225,43 @@ export default class Viewer {
         return [trimTop, trimBottom, renderMiddle];
     }
 
-    _render_rect(trimTop, trimBottom, width, renderOffset) {
+    _insert_group(group, base, after) {
+        const parent = group.node.parentElement;
+        const baseNode = base.node;
+        if (!Object.is(parent, baseNode)) {
+            if (after === null) {
+                baseNode.insertBefore(group.node, baseNode.firstChild);
+            }
+            else {
+                after.insertAdjacentElement('afterend', group.node);
+            }
+        }
+    }
+
+    _render_rect(trimTop, trimBottom, threshold, width, renderOffset) {
         const box = this._zoomBox;
-        if (box.colour === null) {
+        if (
+            (box.colour === null && box.cssClass === null) ||
+            (threshold !== undefined && box.height < threshold)
+        ) {
             if (this._rect !== null) {
                 this._rect.remove();
                 this._rect = null;
             }
             return;
-
         }
 
         if (this._rect === null) {
-            this._rect = new Piece('rect', this._group, {
-                "x": 0, "fill": box.colour
-            });
+            const attributes = { "x": 0 };
+            if (box.colour !== null) {
+                attributes.fill = box.colour;
+            }
+            this._rect = new Piece('rect', undefined, attributes);
+            if (box.cssClass !== null) {
+                this._rect.node.classList.add(box.cssClass)
+            }
+            this._rect.node.classList.add('zoom__rect')
+            this._groupLower.add_child(this._rect, false);
 
             this._rect.node.addEventListener('click', event =>
                 console.log('rect', 'click', box, event)
@@ -171,6 +272,9 @@ export default class Viewer {
         this._rect.node.classList.toggle('trim-bottom', trimBottom !== 0);
 
         const drawY = (box.height / -2) + renderOffset + trimTop;
+        if (isNaN(drawY)) {
+            console.log('drawY nan.');
+        }
         const drawHeight = box.height - (trimTop + trimBottom);
 
         // if (drawHeight < 0) {
@@ -191,37 +295,56 @@ export default class Viewer {
         });
     }
 
-    _render_text() {
+    _render_text(textLeft, minimumFontSizePixels, maximumFontSizePixels) {
         const box = this._zoomBox;
         if (box.text === null) {
             if (this._text !== null) {
                 this._text.remove();
                 this._text = null;
+                this._textWidth = 0;
             }
             return;
         }
 
         if (this._text === null) {
-            this._text = new Piece('text', this._group, {
-                "x": 5, "y": 0, "fill": "black",
+            this._text = new Piece('text', this._groupUpper, {
+                "x": textLeft, "y": 0, "fill": "black",
                 "alignment-baseline": "middle"
             }, box.text);
         }
 
-        const fontSize = (
-            box.spawnMargin !== undefined && box.height > box.spawnMargin ?
-            box.spawnMargin : box.height
-        ) * 0.9;
+        let fontSize = box.height * 0.9;
+        if (
+            minimumFontSizePixels !== undefined &&
+            fontSize < minimumFontSizePixels
+        ) {
+            fontSize = minimumFontSizePixels;
+        }
+        if (
+            maximumFontSizePixels !== undefined &&
+            fontSize > maximumFontSizePixels
+        ) {
+            fontSize = maximumFontSizePixels;
+        }
+
+        // Very crude estimation.
+        this._textWidth = fontSize;
+        //
+        // Better estimation, but too slow.
+        // const textBounds = this._text.node.getBoundingClientRect();
+        // console.log(this._textWidth, textBounds.width);
+
         this._text.node.setAttribute('font-size', `${fontSize}px`);
+        this._text.node.setAttribute('x', textLeft);
     }
 
-    _render_diagnostics(show, renderOffset) {
+    _render_diagnostics(show, renderOffset, spawnMargin) {
         const box = this._zoomBox;
         const y1 = renderOffset + (box.height / -2);
         const y2 = renderOffset + (box.height / 2);
 
         this._width = Piece.toggle(
-            this._width, show, () => new Piece('line',  this._group, {
+            this._width, show, () => new Piece('line',  this._groupLower, {
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4",
                 "class": 'diagnostic-width'
@@ -235,15 +358,27 @@ export default class Viewer {
         }
 
         this._spawnMargin = Piece.toggle(
-            this._spawnMargin, show && (box.spawnMargin !== undefined),
-            () => new Piece('line', this._group, {
-                x1:"0", x2:`${box.spawnMargin}`,
+            this._spawnMargin, show && (spawnMargin !== undefined),
+            () => new Piece('line', this._groupLower, {
+                x1:"0", x2:`${spawnMargin}`,
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
             })
-        )
+        );
         if (this._spawnMargin !== null) {
             this._spawnMargin.set_attributes({y1: `${y1}`, y2: `${y2}`});
+        }
+
+        this._textBox = Piece.toggle(
+            this._textBox, show && this._textWidth > 0,
+            () => new Piece('line', this._groupUpper, {
+                x1:0, y1: "0", y2: "0",
+                stroke:"white", "stroke-width":"2px",
+                "stroke-dasharray":"4"
+            })
+        );
+        if (this._textBox !== null) {
+            this._textBox.set_attributes({x2: this._textWidth});
         }
 
         /* The following animation code doesn't seem to work.
@@ -266,11 +401,13 @@ export default class Viewer {
     }
 
     erase() {
-        if (this._group !== null) {
-            this._group.remove();
-            // console.log('erase', this._zoomBox.message);
+        if (this._groupLower !== null) {
+            this._groupLower.remove();
+            this._groupUpper.remove();
             this._clear();
         }
-        this._zoomBox.each_childBox(child => child.erase());
+        if (this._zoomBox.childBoxes !== undefined) {
+            this._zoomBox.childBoxes.forEach(child => child.erase());
+        }
     }
 }

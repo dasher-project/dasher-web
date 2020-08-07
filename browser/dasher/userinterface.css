@@ -3,79 +3,19 @@
 MIT licensed, see https://opensource.org/licenses/MIT
 */
 
+@import url(controlpanel.css);
+
 html {font-family: sans-serif;}
 p.small-print {font-size: 0.7rem;}
 p.small-print a {text-decoration: none;}
 
+select {font-size: large;}
+#user-interface.keyboard select {font-size: small;}
+select + label {margin-left: 0.5rem;}
+
 h1 {margin-top: 0.5rem; margin-bottom: 0.5rem;}
 button { margin: 0.25rem; }
-#message-holder { float: right;}
-#message-holder label {display: block;}
-#user-interface.keyboard #message-holder label {display: none;}
 
-svg {
-    border: 1px black solid;
-}
-
-:root {
-    /* This value also appears in the index.js file, in the _transitionMillis
-     * property, and it's good if they're the same.
-     */
-    --transition: 0.4s;
-}
-
-svg rect {
-    transition: y var(--transition) linear, height var(--transition) linear;
-    stroke-width: 1px;
-    stroke: black;
-    /* stroke-dasharray: 3; */
-}
-svg rect#catcher {
-    stroke-width: 0;
-}
-
-svg text {
-    /* Making text.x transition doesn't work. For an explanation and solution
-     * see: https://stackoverflow.com/a/53452940
-     * transition: x 0.2s linear;
-     *
-     * text.font-size will make a transition no problem.
-     */
-    transition: font-size var(--transition) linear;
-}
-svg g {
-    transition: var(--transition) linear;
-}
-
-body {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-}
-
-._hidden {
-    display: none;
-}
-
-/* TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/index.css#L22
- */
-input[type="number"] {
-    width: 3em;
-    text-align: right;
-    margin-left: 1em;
-}
-
-/*
-If the user clicks on an input control that is inside a custom keyboard, and the
-input itself requires a keyboard to set values, that seems to be a catastrophe.
-
-Make sure that can't happen by not showing any such controls.
-*/
-#user-interface.keyboard input[type="number"] {
-    display: none;
-}
 
 /*
 The user interface is laid out as follows, in a browser.
@@ -103,4 +43,118 @@ The user interface is laid out as follows, in a browser.
 #user-interface > *:nth-child(3) {
     /* background-color: aqua; */
     flex: none;
+}
+
+#message-holder {
+    width: 100%;
+    display: flex;
+}
+#message-holder > * {flex: none;}
+#message-holder > textarea {flex: auto;}
+
+#user-interface.keyboard #message-holder > label {display: none;}
+
+svg {
+    border: 1px black solid;
+}
+
+:root {
+    /* This value also appears in the index.js file, in the _transitionMillis
+     * property, and it's good if they're the same.
+     */
+    --transition: 0.4s;
+}
+
+svg rect {
+    transition:
+        y var(--transition) linear,
+        height var(--transition) linear,
+        fill var(--transition) linear,
+        stroke-width var(--transition) linear,
+        stroke var(--transition) linear;
+    /* stroke-dasharray: 3; */
+}
+
+svg text {
+    /* Making text.x transition doesn't work. For an explanation and solution
+     * see: https://stackoverflow.com/a/53452940
+     * transition: x 0.2s linear;
+     *
+     * text.font-size will make a transition no problem.
+     */
+    transition: font-size var(--transition) linear;
+}
+svg g {
+    transition: var(--transition) linear;
+}
+svg text#resume-message-text {
+    font-size: x-large;
+    transition: fill-opacity var(--transition) linear;
+}
+svg rect#resume-message-background {
+    fill: var(--field-colour);
+    /* rx: 15px; Seems not to work in Safari. */
+    transition: fill-opacity var(--transition) linear;
+}
+
+body {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+._hidden {
+    display: none;
+}
+
+/* TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/index.css#L22
+ */
+input[type="number"] {
+    width: 3em;
+    text-align: right;
+}
+input[type="number"] + label {
+    padding-left: 0.25em;
+}
+
+/*
+If the user clicks on an input control that is inside a custom keyboard, and the
+input itself requires a keyboard to set values, that seems to be a catastrophe.
+
+Make sure that can't happen by not showing any such controls.
+*/
+#user-interface.keyboard input[type="number"] {
+    display: none;
+}
+
+/* Control Panel styling that in principle only applies to this user interface.
+ */
+
+.control-panel__structure-colour-fill {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr 1fr 1fr;
+    margin-bottom: 0.5em;
+}
+
+.control-panel__structure-colour-fill label {
+    text-align: right;
+    align-self: center;
+}
+
+.control-panel__structure-colour-sequence { display: inline; }
+.control-panel__structure-colour-zoom__rect {
+    display: inline;
+    padding-left: 0.5em;
+}
+
+.control-panel__structure-speech select {
+    display: block;
+}
+
+.control-panel__structure-manage-settings-divider,
+.control-panel__structure-developer-divider
+{
+    height: 0px;
 }

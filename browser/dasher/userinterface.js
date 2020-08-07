@@ -11,16 +11,35 @@ Whichever HTML file loads this script must also load the userinterface.css file.
 
 import Limits from './limits.js';
 import Piece from './piece.js';
+import Palette from './palette.js';
 import Pointer from './pointer.js';
 import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
-import Predictor from './predictor.js';
+
+import predictor_dummy from './predictor_dummy.js'
+import predictor_basic from './predictor.js';
+import predictor_test from './predictor_test.js';
+import {ppmModelPredict} from './predictor_ppm.js';
 
 import Speech from './speech.js';
 
+import panels from "./controlpanelspecification.js"
+import ControlPanel from "./controlpanel.js";
+
 const messageLabelText = "Message:";
+const speechAnnouncement = "Speech is now active.";
+
+const defaultPredictorList = [{
+    "label": "Basic", "item": predictor_basic
+}, {
+    "label": "None", "item": predictor_dummy
+}, {
+    "label": "Random", "item": predictor_test
+}, {
+    "label": "PPM", "item": ppmModelPredict
+}];
 
 export default class UserInterface {
     constructor(parent) {
@@ -30,8 +49,6 @@ export default class UserInterface {
         this._keyboardMode = parent.classList.contains("keyboard");
 
         this._zoomBox = null;
-        this._predictors = null;
-        this._predictorSelect = null;
 
         this._speakOnStop = false;
         this._speech = null;
@@ -42,20 +59,22 @@ export default class UserInterface {
         // load().
         this._controllerPointer = undefined;
         this._controller = null;
+        this._frozenClickListener = null;
 
         this._view = undefined;
+        // this._cssNode = document.createElement('style');
+        // document.head.append(this._cssNode);
+
+        this._speedLeftRightInput = undefined;
 
         // Spawn and render parameters in mystery SVG units.
-        this._spawnMargin = 30;
-        this._renderHeightThreshold = 20;
-
         this._limits = new Limits();
-        this._limits.ratios = [
-            {left:1 / 2, height: 0.01},
-            {left:1 / 5, height: 0.05},
-            {left:1 / -6, height: 0.5},
-            {left:1 / -3, height: 1}
-        ];
+        this._limits.minimumFontSizePixels = 20;
+        this._limits.maximumFontSizePixels = 30;
+        this._limits.drawThresholdRect = 10;
+        this._limits.spawnThreshold = 4;
+        this._limits.textLeft = 5;
+        this._limits.spawnMargin = 30;
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
@@ -63,16 +82,19 @@ export default class UserInterface {
 
         this._message = undefined;
         this._messageDisplay = null;
-        this._divDiagnostic = null;
-        this._controls = [];
+        this._diagnosticSpans = null;
+        this._controlPanel = new ControlPanel(panels);
+        this._panels = this._controlPanel.load();
+
+        this._palette = new Palette().build();
+
+        // Predictors setter invocation, only OK after controlPanel is loaded.
+        this.predictors = defaultPredictorList;
 
         this._svgRect = undefined;
         this._header = undefined;
 
         this._stopCallback = null;
-
-        //Second screen
-        this._opener = null;
     }
 
     get header() {
@@ -134,35 +156,30 @@ export default class UserInterface {
         return this._predictors;
     }
     set predictors(predictors) {
-        this._predictors = predictors;
-        if (this._predictorSelect !== null) {
-            this._load_predictor_controls();
-        }
+        this._predictors = predictors.slice();
+        this._panels.main.prediction.optionStrings = this.predictors.map(
+            predictor => predictor.label);
     }
 
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
-        this._loading = (
-            loadingID === null ? null :
-            new Piece(document.getElementById(loadingID))
-        );
-        if (this._loading !== null) {
-            this._header.add_child(this._loading);
-        }
+        this.header.classList.add('header');
+
+        // In keyboard mode, the control panel and all its HTML still exist but
+        // never gets added to the body so it doesn't get rendered.
+        this._controlPanelParent = (
+            this._keyboardMode ? null : new Piece('form', this._header));
 
         this._load_message();
-        // Next call also creates some divisions in the header.
         this._load_view();
-
-        this._load_predictors();
+        this._load_control_panel(loadingID);
 
         this._load_controls();
-        const diagnosticSpans = this._load_diagnostic();
-        this._load_pointer(diagnosticSpans);
-        this._load_settings();
+        this._load_pointer();
+        this._load_speed_controls();
 
         this._controllerPointer = new ControllerPointer(
-        this._pointer, this._get_predictor(0));
+            this._pointer, this.predictors[0].item);
 
         // Grab the footer, which holds some small print, and re-insert it. The
         // small print has to be in the static HTML too.
@@ -173,25 +190,11 @@ export default class UserInterface {
 
         // Next part of loading is after a time out so that the browser gets an
         // opportunity to render the layout first.
-        setTimeout(() => this._load1(), 0);
+        setTimeout(this._finish_load.bind(this), 0);
 
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
-    }
-
-    _load_predictors() {
-        if (this.predictors === null || this.predictors.length <= 0) {
-            this.predictors = [{
-                "label": "Basic prediction", "item": new Predictor()
-            // }, {
-            //     "label": "Delete me", "item": new Predictor()
-            }];
-        }
-    }
-    _get_predictor(index) {
-        const predictor = this.predictors[index].item;
-        return predictor.get.bind(predictor);
     }
 
     _load_message() {
@@ -203,176 +206,178 @@ export default class UserInterface {
             'label', {'for':identifierMessage}, messageLabelText);
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows': this._keyboardMode ? 1 : 6, 'cols':24,
+            'rows': this._keyboardMode ? 1 : 2, 'cols':80,
             'placeholder':"Message will appear here ..."
         });
     }
 
+    _load_view() {
+        // This element is the root of the whole zooming area.
+        this._svg = new Piece('svg', this._parent);
+        // Touching and dragging in a mobile web view will scroll or pan the
+        // screen, by default. Next line suppresses that. Reference:
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
+        this._svg.node.style['touch-action'] = 'none';
+    }
+
+    _load_control_panel(loadingID) {
+        this._loading = (
+            loadingID === null ? null :
+            new Piece(document.getElementById(loadingID))
+        );
+        if (this._controlPanelParent !== null) {
+            this._controlPanel.set_parent(this._controlPanelParent);
+        }
+        if (this._loading !== null) {
+            this._panels.main.$.piece.add_child(this._loading);
+        }
+        this._controlPanel.select_panel();
+    }
+
     _load_controls() {
         if (this._keyboardMode) {
-            this._limits.showDiagnostic = false;
-            this._load_predictor_controls(this._header);
-            return;
+            // In keyboard mode, the prediction select control is the only
+            // control to be shown. The control panel parent isn't set, in
+            // keyboard mode. So, pull the prediction select control out and
+            // insert it as the first child of the message holder, which is
+            // shown in keyboard mode. (The `false` parameter specifies don't
+            // append, i.e. insert instead.)
+            this._messageDiv.add_child(
+                this._panels.main.prediction.piece, false);
         }
-        this._load_input(
-            this._divControls, "checkbox", "show-diagnostic", "Show diagnostic",
-            checked => {
-                this._limits.showDiagnostic = checked;
-                this._diagnostic_div_display();
-                if (!checked) {
-                    this._messageLabel.firstChild.nodeValue = messageLabelText;
-                }
-            }, false);
-        this._buttonRandom = this._load_button(
-            "Go Random", () => this.clicked_random());
-        this._buttonPointer = this._load_button(
-            "Pointer", () => this.clicked_pointer());
         this._buttonPointer = this._load_button(
             "Popup", () => this.clicked_popup());
 
-        this._load_predictor_controls(this._divControls);
+        this._panels.main.prediction.listener = index => {
+            this._controllerPointer.predictor = this.predictors[index].item;
+        };
 
-        new Speech().initialise(this._load_speech.bind(this));
+        this._panels.main.behaviour.optionStrings = ["A","B"];
+        this._panels.main.behaviour.listener = index => this._select_behaviour(
+            index);
+
+        if (!this._keyboardMode) {
+            // There's a defect in speech.js that crashes in the Android
+            // keyboard.
+            this._load_speech_controls();
+        }
+        this._load_developer_controls();
+    }
+
+    _select_behaviour(index) {
+        this._limits.targetRight = (index === 0);
+        this._pointer.multiplierLeftRight = (index === 0 ? 0.1 : 0.2);
+        // if (this._speedLeftRightInput !== undefined) {
+        const speedLeftRightInput = this._panels.speed.horizontal.node;
+        if (speedLeftRightInput !== undefined) {
+            speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+        }
+        this._limits.ratios = UserInterface._ratios[index];
+    }
+
+    _load_speech_controls() {
+        this._panels.speech.stop.listener = checked => {
+            if (checked && this._speech !== null && !this._speakOnStop) {
+                this._speech.speak(
+                    speechAnnouncement,
+                    this._panels.speech.voice.node.selectedIndex
+                );
+            }
+            this._speakOnStop = checked;
+        };
+        this._panels.speech.voice.listener = index => {
+            if (this._speakOnStop && this._speech !== null) {
+                this._speech.speak(speechAnnouncement, index);
+            }
+        };
+
+        new Speech().initialise(speech => {
+            this._speech = speech;
+
+            // To Do: Probably disable everything if !speech.available. Maybe
+            // add convenience methods to Control to: hide the control. Hiding
+            // could work by removing it from its parent ...
+
+            this._panels.speech.stop.active = speech.available;
+            if (speech.available) {
+                this._panels.speech.voice.optionStrings = speech.voices.map(
+                    voice => `${voice.name} (${voice.lang})`);
+            }
+            else {
+                this._panels.speech.voice.optionStrings = [
+                    'Speech unavailable'];
+            }
+        });
+    }
+
+    _load_developer_controls() {
+        const panel = this._panels.developer;
+        panel.pointer.listener = this.clicked_pointer.bind(this);
+        panel.random.listener = this.clicked_random.bind(this);
+        panel.showDiagnostic.listener = checked => {
+            this._limits.showDiagnostic = checked;
+            this._diagnostic_div_display();
+            if (!checked) {
+                this._messageLabel.firstChild.nodeValue = messageLabelText;
+            }
+        };
+        panel.frozen.listener = checked => {
+            if (this._controllerPointer === undefined) {
+                return;
+            }
+            this._controllerPointer.frozen = (
+                checked ? report => console.log("Frozen", report) : null);
+            if (checked) {
+                const catcher = document.getElementById("catcher");
+                this._frozenClickListener = () => {
+                    console.log('catchclick');
+                    this._controllerPointer.report_frozen(
+                        this.zoomBox, this._limits, false);
+                };
+                catcher.addEventListener("click", this._frozenClickListener);
+            }
+            else {
+                catcher.removeEventListener("click", this._frozenClickListener);
+            }
+        };
+
+        this._load_advance_controls();
+        this._load_diagnostic();
     }
 
     _diagnostic_div_display() {
-        const diagnosticDiv = this._divDiagnostic;
-        if (diagnosticDiv !== null) {
-            diagnosticDiv.node.classList.toggle(
-                '_hidden', !this._limits.showDiagnostic);
-        }
+        this._panels.developer.diagnostic.$.piece.node.classList.toggle(
+            '_hidden', !this._limits.showDiagnostic);
     }
 
-    _load_input(parent, type, identifier, label, callback, initialValue) {
-        const attributes = {
-            'type':type, 'disabled': true,
-            'id':identifier, 'name':identifier
+    _load_advance_controls() {
+        const panel = this._panels.developer;
+        let testX = 0;
+        let testY = 0;
+        const updateXY = (x, y) => {
+            if (x !== null) { testX = x; }
+            if (y !== null) { testY = y; }
+            if (this._pointer !== undefined) {
+                this._pointer.rawX = testX;
+                this._pointer.rawY = testY;
+            }
         };
 
-        if (type === "checkbox" && initialValue) {
-            attributes.checked = true;
-            // else omit the `checked` attribute so that the check box starts
-            // clear.
-        }
-
-        // TOTH https://github.com/sjjhsjjh/blender-driver/blob/master/user_interface/demonstration/UserInterface.js#L96
-        const isFloat = (
-            type === "number" && initialValue !== undefined &&
-            initialValue.includes("."));
-        const parseValue = isFloat ? parseFloat : parseInt;
-        if (initialValue !== undefined) {
-            attributes.value = parseValue(initialValue);
-        }
-        if (type === "number") {
-            attributes.step = isFloat ? 0.1 : 1;
-        }
-
-        const labelFirst = (type !== "checkbox" && type !== "number");
-        if (labelFirst) {
-            parent.create('label', {'for':identifier}, label);
-        }
-        const control = parent.create('input', attributes);
-        this._controls.push(control);
-        if (!labelFirst) {
-            parent.create('label', {'for':identifier}, label);
-        }
-
-        if (initialValue !== undefined) {
-            callback(initialValue);
-        }
-
-        if (type === "checkbox") {
-            control.addEventListener(
-                'change', (event) => callback(event.target.checked));
-        }
-        else {
-            control.addEventListener(
-                'change', (event) => callback(event.target.value));
-        }
-
-        return control;
-    }
-
-    _load_button(label, callback) {
-        const button = this._divControls.create(
-            'button', {'type': 'button', 'disabled': true}, label);
-        button.addEventListener('click', callback);
-        this._controls.push(button);
-        return button;
-    }
-
-    _load_speech(speech) {
-        if (this._speech === null) {
-            this._speech = speech;
-            this._speakCheckbox = this._load_input(
-                this._divControls, "checkbox", "speak", "Speak on stop",
-                checked => {
-                    if (checked && !this._speakOnStop) {
-                        speech.speak("Speech is now active.");
-                    }
-                    this._speakOnStop = checked;
-                }, false);
-            this._voiceSelect = new Piece(
-                this._divControls.create('select'));
-            this._voiceSelect.node.addEventListener('input', () => {
-                if (this._speakOnStop) {
-                    speech.speak(
-                        "Speech is now active.",
-                        this._voiceSelect.node.selectedIndex);
-                }
-            });
-        }
-
-        if (speech.available) {
-            this._speakCheckbox.removeAttribute('disabled');
-            this._voiceSelect.remove_childs();
-            speech.voices.forEach(voice => {
-                this._voiceSelect.create(
-                    'option', undefined, `${voice.name} (${voice.lang})`);
-            });
-        }
-    }
-
-    _load_predictor_controls(parentPiece) {
-        if (this._predictorSelect === null) {
-            this._predictorSelect = new Piece(parentPiece.create('select'));
-            this._predictorSelect.node.addEventListener('input', event => {
-                if (this._controllerPointer !== undefined) {
-                    this._controllerPointer.predictor = this._get_predictor(
-                        event.target.selectedIndex);
-                }
-            });
-        }
-
-        this._predictorSelect.remove_childs();
-        this.predictors.forEach(predictor =>
-            this._predictorSelect.node.add(new Option(predictor.label))
-        );
-    }
-
-    _load_settings() {
-        if (this._keyboardMode) {
-            // Can't show settings in input controls in keyboard mode. The input
-            // would itself require a keyboard. Set some slower default values.
-            this._pointer.multiplierLeftRight = 0.2;
-            this._pointer.multiplierUpDown = 0.2;
-            return;
-        }
-
-        this._divSettings.create('span', {}, "Speed:");
-        this._load_input(
-            this._divSettings, "number", "multiplier-left-right", "Left-Right",
-            value => this._pointer.multiplierLeftRight = value, "0.3");
-        this._load_input(
-            this._divSettings, "number", "multiplier-up-down", "Up-Down",
-            value => this._pointer.multiplierUpDown = value, "0.3");
+        panel.x.listener = value => updateXY(value, null);
+        panel.y.listener = value => updateXY(null, value);
+        panel.advance.listener = () => {
+            updateXY(null, null);
+            this._start_render(false);
+        };
     }
 
     _load_diagnostic() {
+        this._diagnostic_div_display();
         // Diagnostic area in which to display various numbers. This is an array
         // so that the values can be updated.
-        this._diagnostic_div_display();
-        const diagnosticSpans = this._divDiagnostic.create('span', {}, [
+        const diagnosticSpans = this._panels.developer.diagnostic.$.piece
+        .create(
+            'span', {}, [
             "loading sizes ...",
             " ", "pointer type", "(" , "X", ", ", "Y", ")",
             " height:", "Height", " ", "Go"
@@ -382,29 +387,14 @@ export default class UserInterface {
             diagnosticSpans[diagnosticSpans.length - 3].firstChild;
         this._stopGoTextNode =
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
-        return diagnosticSpans;
+
+        this._diagnosticSpans = diagnosticSpans;
     }
 
-    _load_view() {
-        this._divControls = new Piece('div', this._header);
-        this._divSettings = new Piece('div', this._header);
-        this._divDiagnostic = new Piece('div', this._header);
-
-        this._svg = new Piece('svg', this._parent);
-        // Touching and dragging in a mobile web view will scroll or pan the
-        // screen, by default. Next line suppresses that. Reference:
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-        this._svg.node.style['touch-action'] = 'none';
-
-        // Initialise the view first. It will insert an SVG group to hold what
-        // it draws.
-        this._view = Viewer.view(this._svg);
-    }
-
-    _load_pointer(diagnosticSpans) {
+    _load_pointer() {
         // Instantiate the pointer. It will draw the cross hairs and pointer
         // line, always in front of the zoombox as drawn by the viewer.
-        this._pointer = new Pointer(this._svg);
+        this._pointer = new Pointer();
         this._pointer.touchEndCallback = (() => {
             if (
                 this._speakOnStop &&
@@ -412,43 +402,70 @@ export default class UserInterface {
                 this.message !== null
             ) {
                 this._speech.speak(
-                    this.message, this._voiceSelect.node.selectedIndex);
+                    this.message, this._panels.speech.voice.node.selectedIndex);
             }
         });
-        diagnosticSpans[2].firstChild.nodeValue = (
+        this._diagnosticSpans[2].firstChild.nodeValue = (
             this._pointer.touch ? "touch" : "mouse");
-        this._pointer.xTextNode = diagnosticSpans[4].firstChild;
-        this._pointer.yTextNode = diagnosticSpans[6].firstChild;
+        this._pointer.xTextNode = this._diagnosticSpans[4].firstChild;
+        this._pointer.yTextNode = this._diagnosticSpans[6].firstChild;
 
         this._pointer.activateCallback = this.activate_render.bind(this);
     }
 
-    _load1() {
+    _load_speed_controls() {
+        // Speed controls can only be set up after the pointer has been loaded.
+
+        if (this._keyboardMode) {
+            // Can't show settings in input controls in keyboard mode. The input
+            // would itself require a keyboard. Set some slower default values.
+            this._pointer.multiplierLeftRight = 0.2;
+            this._pointer.multiplierUpDown = 0.2;
+            this._select_behaviour(1);
+            return;
+        }
+
+        this._panels.speed.horizontal.listener = value => {
+            this._pointer.multiplierLeftRight = value
+        };
+        this._select_behaviour(0);
+        this._panels.speed.vertical.listener = value => {
+            this._pointer.multiplierUpDown = value;
+        };
+    }
+
+    _finish_load() {
         this._limits.svgPiece = this._svg;
         this._on_resize();
         window.addEventListener('resize', this._on_resize.bind(this));
+
+        // Initialise the view. It will insert a couple of SVG groups, and some
+        // other business.
+        this._view = Viewer.view(this._svg, this._limits);
+        //
+        // Set the pointer's SVG so it can draw the cross hairs and pointer.
+        // Those go last so that they are on top of everything else.
+        this._pointer.svgPiece = this._svg;
 
         // Remove the loading... element and add the proper heading to show that
         // loading has finished.
         if (this._loading !== null) {
             this._loading.remove();
-            const h1 = Piece.create(
-                'h1', undefined, undefined, "Proof of Concept");
-            this._messageDiv.node.insertAdjacentElement('afterend', h1);
+            const h1 = new Piece(
+                'h1', undefined, undefined, "Dasher Six beta");
+            this._panels.main.$.piece.add_child(h1, false);
         }
 
         // Previous lines could have changed the size of the svg so, after a
         // time out for rendering, process a resize.
         setTimeout(() => {
             this._on_resize();
-            if (this._keyboardMode) {
-                this.clicked_pointer();
-            }
+            this.clicked_pointer();
         }, 0);
 
         // Activate intervals and controls.
         this._intervalRender = null;
-        this._controls.forEach(control => control.removeAttribute('disabled'));
+        this._controlPanel.enable_controls();
     }
 
     _start_render(continuous) {
@@ -469,28 +486,34 @@ export default class UserInterface {
             // origin.
             const originHolder = this.zoomBox.holder(0, 0);
             if (this._pointer.going && (
-                originHolder === undefined ||
-                originHolder === null ||
-                originHolder.message === null ||
-                originHolder.message === undefined
+                originHolder === undefined || (
+                    originHolder !== null && (
+                        originHolder.message === null ||
+                        originHolder.message === undefined
+                    )
+                )
             )) {
                 console.log(
                     'No message', originHolder,
                     (originHolder === null || originHolder === undefined) ?
                     "N/A" : originHolder.message);
             }
-
-            //Process the current input
-            this._process_input(originHolder);
+            this.message = (
+                originHolder === null ? undefined : originHolder.message);
 
             // Process one draw cycle.
             this.zoomBox.viewer.draw(this._limits);
 
             // Check if the root box should change, either to a child or to a
-            // previously trimmed parent. Note that the current root should
-            // be de-rendered if it is being replace by a child.
+            // previously trimmed parent. Note that the current root should be
+            // de-rendered if it is being replace by a child.
+            //
+            // First, check if a previously trimmed parent should be pulled
+            // back.
             let root = this.zoomBox.parent_root(this._limits);
             if (root === null) {
+                // If the code gets here then there isn't a parent to pull back.
+                // Check if a child of the root should become the root.
                 root = this.zoomBox.child_root(this._limits);
                 if (root !== null) {
                     // Could de-render by setting this.zoomBox to null and
@@ -498,6 +521,11 @@ export default class UserInterface {
                     // result in a suspension of the render interval.
                     this.zoomBox.erase();
                 }
+            }
+            else {
+                // Previously trimmed parent is being pulled back. Get its
+                // dimensions recalculated by the controller.
+                this._controller.build(root, this.zoomBox, this._limits);
             }
 
             if (root !== null) {
@@ -544,20 +572,8 @@ export default class UserInterface {
         if (this._intervalRender === null && this.zoomBox !== null) {
             this._start_render(true);
         }
-
     }
-    _process_input(originHolder){
-      if(originHolder !== null && this._opener !== null){
-        var html = "<html><head></head><body>"+originHolder.message+"</body></html>";
-        this._opener.document.open();
-        this._opener.document.write(html);
-        this._opener.document.close();
-      }
 
-      //Update the ui element
-      this.message = (
-          originHolder === null ? undefined : originHolder.message);
-    }
     // Go-Random button was clicked.
     clicked_random() {
         if (this._intervalRender === undefined) {
@@ -575,20 +591,19 @@ export default class UserInterface {
             // the random moving boxes.
             this._controllerRandom.going = true;
             this._controller = this._controllerRandom;
+            this._rootTemplate = this._controller.palette.rootTemplate;
             this._new_ZoomBox(true);
         }
 
         // The other button will switch to pointer mode.
-        this._buttonPointer.textContent = "Pointer";
+        this._panels.developer.pointer.node.textContent = "Pointer";
 
         // This button will either stop or go.
-        this._buttonRandom.textContent = (
+        this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
     }
-    clicked_popup() {
-       this._opener = window.open("","wildebeast","width=300,height=300,scrollbars=1,resizable=1");
-    }
 
+    // Pointer button was clicked.
     clicked_pointer() {
         if (this._intervalRender === undefined) {
             return;
@@ -597,45 +612,33 @@ export default class UserInterface {
         if (!Object.is(this._controller, this._controllerPointer)) {
             // Current mode is random. Change this button's label to indicate
             // what it does if clicked again.
-            if (!this._keyboardMode) {
-                this._buttonPointer.textContent = "Reset";
-            }
+            this._panels.developer.pointer.node.textContent = "Reset";
         }
 
         this._controller = this._controllerPointer;
         // Next line will discard the current zoom box, which will effect a
         // reset, if the mode was already pointer.
+        this._rootTemplate = this._palette.rootTemplate;
         this._new_ZoomBox(false);
 
         // The other button will switch to random mode.
-        if (!this._keyboardMode) {
-            this._buttonRandom.textContent = "Go Random";
-        }
+        this._panels.developer.random.node.textContent = "Go Random";
     }
 
     _new_ZoomBox(startRender) {
         // Setter invocation that will de-render the current box, if any.
         this.zoomBox = null;
 
-        const zoomBox = new ZoomBox(this._controller.rootSpecification);
-        zoomBox.spawnMargin = this._spawnMargin;
-        zoomBox.renderHeightThreshold = this._renderHeightThreshold;
+        // Root template is set at the same time as the controller.
+        const zoomBox = new ZoomBox(this._rootTemplate, [], 0, 0);
         zoomBox.viewer = new Viewer(zoomBox, this._view);
 
-        this._set_zoomBox_size(zoomBox);
-
+        // Setter invocation.
         this.zoomBox = zoomBox;
 
-        this.zoomBox.ready
-        .then(ready => {
-            if (ready) {
-                this._controller.populate(zoomBox, this._limits);
-                this._start_render(startRender);
-            }
-            else {
-                throw new Error("ZoomBox ready false.")
-            }
-         })
+        // The populate() method is async, so that a predictor could be called.
+        this._controller.populate(this.zoomBox, this._limits)
+        .then(() => this._start_render(startRender))
         .catch(error => {
             // The thrown error mightn't be noticed, if the console isn't
             // visible. So, set it into the message too.
@@ -666,11 +669,19 @@ export default class UserInterface {
         this._svgRect = boundingClientRect;
         this._pointer.svgBoundingBox = boundingClientRect;
         this._limits.set(boundingClientRect.width, boundingClientRect.height);
+        if (this._view !== undefined) {
+            // Redraw the solver-right mask and border.
+            Viewer.configure_view(this._view, this._limits);
+        }
     }
 
     _on_resize() {
         this.svgRect = this._svg.node.getBoundingClientRect();
-        this._set_zoomBox_size(this.zoomBox);
+
+        if (this._controller !== null) {
+            this._controller.populate(this.zoomBox, this._limits);
+        }
+
         // Change the svg viewBox so that the origin is in the centre.
         this._svg.node.setAttribute('viewBox',
                 `${this.svgRect.width * -0.5} ${this.svgRect.height * -0.5}` +
@@ -688,29 +699,18 @@ export default class UserInterface {
         // Reference for innerHeight property.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
     }
-    _set_zoomBox_size(zoomBox) {
-        if (Object.is(this._controller, this._controllerPointer)) {
-            // Comment out one or other of the following.
-
-            // // Set left; solve height.
-            // const width = this._spawnMargin * 2;
-            // const left = this._limits.right - width;
-            // const height = this._limits.solve_height(left);
-
-            // Set height; solve left.
-            const height = this.svgRect.height / 4;
-            const left = this._limits.solve_left(height);
-            const width = this._limits.right - left;
-
-            zoomBox.set_dimensions(left, width, 0, height);
-        }
-        else if (Object.is(this._controller, this._controllerRandom)) {
-            zoomBox.set_dimensions(
-                this.svgRect.width * -0.5,
-                this.svgRect.width,
-                0, this.svgRect.height
-            );
-        }
-    }
 
 }
+
+UserInterface._ratios = [[
+    {left:1 / 3, height: 0.01},
+    {left:1 / 5, height: 0.05},
+    {left:1 / -6, height: 0.5},
+    {left:1 / -3, height: 1}
+], [
+    {left:0.34, height: 0.01},
+    {left:0.33, height: 0.02},
+    {left:0.16, height: 0.25},
+    {left:0, height: 0.475},
+    {left:-0.16, height: 1}
+]];
