@@ -95,6 +95,8 @@ export default class UserInterface {
         this._header = undefined;
 
         this._stopCallback = null;
+        //Second screen
+        this._opener = null;
     }
 
     get header() {
@@ -245,8 +247,6 @@ export default class UserInterface {
             this._messageDiv.add_child(
                 this._panels.main.prediction.piece, false);
         }
-        this._buttonPointer = this._load_button(
-            "Popup", () => this.clicked_popup());
 
         this._panels.main.prediction.listener = index => {
             this._controllerPointer.predictor = this.predictors[index].item;
@@ -340,6 +340,7 @@ export default class UserInterface {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
         };
+        panel.popup.listener = this.clicked_popup.bind(this);
 
         this._load_advance_controls();
         this._load_diagnostic();
@@ -501,6 +502,8 @@ export default class UserInterface {
             this.message = (
                 originHolder === null ? undefined : originHolder.message);
 
+            //Process the current input
+            this._process_input(originHolder);
             // Process one draw cycle.
             this.zoomBox.viewer.draw(this._limits);
 
@@ -573,6 +576,18 @@ export default class UserInterface {
             this._start_render(true);
         }
     }
+    _process_input(originHolder){
+      if(originHolder !== null && this._opener !== null){
+        var html = "<html><head></head><body>"+originHolder.message+"</body></html>";
+        this._opener.document.open();
+        this._opener.document.write(html);
+        this._opener.document.close();
+      }
+
+      //Update the ui element
+      this.message = (
+          originHolder === null ? undefined : originHolder.message);
+    }
 
     // Go-Random button was clicked.
     clicked_random() {
@@ -601,6 +616,9 @@ export default class UserInterface {
         // This button will either stop or go.
         this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
+    }
+    clicked_popup() {
+       this._opener = window.open("","wildebeast","width=300,height=300,scrollbars=1,resizable=1");
     }
 
     // Pointer button was clicked.

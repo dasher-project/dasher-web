@@ -49,7 +49,7 @@ export default {
 
     "speed":{
         $: {"order": 3, $:{"html":"div"}},
-        
+
         "horizontal":{$:{"order": 1, "control":"number",
                          "value": "0.2", "label":"Left-Right"}},
           "vertical":{$:{"order": 2, "control":"number",
@@ -116,6 +116,8 @@ export default {
         "y": {$:{
             "order": 7, "control": "number", "value":"0"}},
         "advance":{$:{
-            "order": 8, "control": "button"}}
+            "order": 8, "control": "button"}},
+        "popup":{$:{
+            "order": 9, "control": "button"}}
     }
 };
