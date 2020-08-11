@@ -157,9 +157,10 @@ export default class UserInterface {
 
         this._messageDisplay.load(this._header,this._keyboardMode);
         this._load_view();
-        this._load_control_panel(loadingID);
 
+        this._load_control_panel(loadingID);
         this._load_controls();
+
         this._load_pointer();
         this._load_speed_controls();
 
@@ -228,6 +229,7 @@ export default class UserInterface {
             // keyboard.
             this._load_speech_controls();
         }
+        this._load_display_controls();
         this._load_developer_controls();
     }
 
@@ -277,6 +279,11 @@ export default class UserInterface {
         });
     }
 
+    _load_display_controls(){
+        const panel = this._panels.display;
+        panel.popup.listener = this.clicked_popup.bind(this);
+    }
+
     _load_developer_controls() {
         const panel = this._panels.developer;
         panel.pointer.listener = this.clicked_pointer.bind(this);
@@ -307,7 +314,6 @@ export default class UserInterface {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
         };
-        panel.popup.listener = this.clicked_popup.bind(this);
 
         this._load_advance_controls();
         this._load_diagnostic();

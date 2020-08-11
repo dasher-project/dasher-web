@@ -95,9 +95,14 @@ export default {
                 "order": 8, "control": "button", "label": "Load now"}},
         }
     },
-
-    "developer": {
+    "display": {
         $: {"order": 6},
+
+        "popup":{$:{
+            "order": 0, "control": "button"}}
+    },
+    "developer": {
+        $: {"order": 7},
 
         "pointer":{$:{
             "order": 0, "control": "button"}},
@@ -116,8 +121,6 @@ export default {
         "y": {$:{
             "order": 7, "control": "number", "value":"0"}},
         "advance":{$:{
-            "order": 8, "control": "button"}},
-        "popup":{$:{
-            "order": 9, "control": "button"}}
+            "order": 8, "control": "button"}}
     }
 };
