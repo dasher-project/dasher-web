@@ -27,6 +27,7 @@ import Speech from './speech.js';
 
 import panels from "./controlpanelspecification.js"
 import ControlPanel from "./controlpanel.js";
+import MessageDisplay from "./messageDisplay.js";
 
 const messageLabelText = "Message:";
 const speechAnnouncement = "Speech is now active.";
@@ -81,7 +82,8 @@ export default class UserInterface {
         this._transitionMillis = 400;
 
         this._message = undefined;
-        this._messageDisplay = null;
+        this._messageDisplay = new MessageDisplay(this._limits);
+
         this._diagnosticSpans = null;
         this._controlPanel = new ControlPanel(panels);
         this._panels = this._controlPanel.load();
@@ -132,24 +134,7 @@ export default class UserInterface {
     }
     set message(message) {
         this._message = message;
-        if (this._messageDisplay === null) {
-            return;
-        }
-        if (this._limits.showDiagnostic) {
-            const description = (
-                message === "" ? "empty" :
-                message === undefined ? "undefined" :
-                message === null ? "null" :
-                null
-            );
-            const labels = [messageLabelText];
-            if (description !== null) {
-                labels.push(" (", description, ")");
-            }
-            this._messageLabel.firstChild.nodeValue = labels.join("");
-        }
-        this._messageDisplay.node.textContent = (
-            message === undefined ? null : message);
+        this._messageDisplay.update(message);
     }
 
     get predictors() {
@@ -170,11 +155,12 @@ export default class UserInterface {
         this._controlPanelParent = (
             this._keyboardMode ? null : new Piece('form', this._header));
 
-        this._load_message();
+        this._messageDisplay.load(this._header,this._keyboardMode);
         this._load_view();
-        this._load_control_panel(loadingID);
 
+        this._load_control_panel(loadingID);
         this._load_controls();
+
         this._load_pointer();
         this._load_speed_controls();
 
@@ -195,20 +181,6 @@ export default class UserInterface {
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
-    }
-
-    _load_message() {
-        // Textarea in which the message is displayed, and surrounding div.
-        this._messageDiv = new Piece(
-            'div', this._header, {'id':"message-holder"});
-        const identifierMessage = "message";
-        this._messageLabel = this._messageDiv.create(
-            'label', {'for':identifierMessage}, messageLabelText);
-        this._messageDisplay = new Piece('textarea', this._messageDiv, {
-            'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows': this._keyboardMode ? 1 : 2, 'cols':80,
-            'placeholder':"Message will appear here ..."
-        });
     }
 
     _load_view() {
@@ -240,10 +212,8 @@ export default class UserInterface {
             // control to be shown. The control panel parent isn't set, in
             // keyboard mode. So, pull the prediction select control out and
             // insert it as the first child of the message holder, which is
-            // shown in keyboard mode. (The `false` parameter specifies don't
-            // append, i.e. insert instead.)
-            this._messageDiv.add_child(
-                this._panels.main.prediction.piece, false);
+            // shown in keyboard mode.
+            this.messageDisplay.loadControls(this._panels.main.prediction.piece);
         }
 
         this._panels.main.prediction.listener = index => {
@@ -259,6 +229,7 @@ export default class UserInterface {
             // keyboard.
             this._load_speech_controls();
         }
+        this._load_display_controls();
         this._load_developer_controls();
     }
 
@@ -308,6 +279,11 @@ export default class UserInterface {
         });
     }
 
+    _load_display_controls(){
+        const panel = this._panels.display;
+        panel.popup.listener = this.clicked_popup.bind(this);
+    }
+
     _load_developer_controls() {
         const panel = this._panels.developer;
         panel.pointer.listener = this.clicked_pointer.bind(this);
@@ -316,7 +292,7 @@ export default class UserInterface {
             this._limits.showDiagnostic = checked;
             this._diagnostic_div_display();
             if (!checked) {
-                this._messageLabel.firstChild.nodeValue = messageLabelText;
+                this._messageDisplay.setLabelText(messageLabelText);
             }
         };
         panel.frozen.listener = checked => {
@@ -599,6 +575,9 @@ export default class UserInterface {
         // This button will either stop or go.
         this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
+    }
+    clicked_popup() {
+        this._messageDisplay.popupClicked();
     }
 
     // Pointer button was clicked.
