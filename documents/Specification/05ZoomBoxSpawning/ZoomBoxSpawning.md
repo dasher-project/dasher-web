@@ -1,6 +1,6 @@
 # Zoom Box Spawning
 This document is part of the Dasher Version Six Specification. It describes the
-addition and removal of zoom boxes.
+addition and removal of zoom boxes at run time.
 
 Some terms used here are defined in earlier parts of the specification. See the
 [previous section](../04ZoomingSolver/ZoomingSolver.md) of the specification,
@@ -24,7 +24,7 @@ are controlled by the user and the zooming rules, but the mechanism isn't
 discussed in this section.
 
 -   When the zooming UI is reset, or opens from a cold start, the root box is
-    spawned. This can be referred to as the **Root Spawn Trigger**.
+    spawned. This can be referred to as the **Root Spawning**.
 
 -   There is only ever one root box in the zooming area. However, the current
     root box will sometimes be replaced by a different box, which then becomes
@@ -42,7 +42,9 @@ discussed in this section.
 
 -   When a zoom box is increasing in lateral size, it could become a parent box,
     i.e. child boxes could be spawned under it. This can be referred to as the
-    **Child Spawn Trigger**.
+    **Child Spawning**.
+
+    >   Maybe change to dimension spawning condition.
 
 -   The deletion of child boxes from a parent box can be referred to as
     **Child Deletion**. It could take place in either of the following
@@ -71,23 +73,34 @@ discussed in this section.
     
     Note that the root box isn't a child box and doesn't have a weight.
 
+Child spawning and root spawning are the only triggers for zoom boxes to spawn.
+
 # Two-Stage Spawning
-There are two stages to zoom box spawning.
+There are two stages to zoom box spawning. Different properties of the spawned
+box are set in each stage.
 
--   **Weight Spawning** is the first spawning stage of every box.
+-   In the **Weight** spawning stage, whatever is required to generate the box's
+    child weight value is set.
 
-    At this stage, the following properties of the box are required:
+-   In the **Dimension** spawning stage, initial values for the box's front
+    position, lateral size, and lateral position are set.
 
-    -   Parent box, unless this is the root box.
+The spawning stages that a box goes through depend on what triggered its
+creation.
 
-    -   Box incremental text, if any.
+-   If the box was created by root spawning, it goes through dimension spawning
+    only. Initial values for dimensions are specified by the user interface,
+    directly or indirectly. A box created by root spawning never goes through
+    weight spawning.
 
-    >   Actually, at this stage only the palette position is known, and hence
-    >   the incremental text and box text.
-    >
-    >   Actually actually, what's required is whatever is needed to calculate
-    >   the box's child weight.
+-   If the box was created by child spawning, the box goes through weight
+    spawning when child spawning is triggered. The box might then go through
+    dimension spawning straight away, or dimension spawning might take place
+    later, or never.
 
+Dimension spawning of a zoom box triggers child spawning. After a box goes
+through dimension spawning, all its child boxes get instantiated, and each child
+box goes through, at least, its weight spawning stage.
 
 
 The following
@@ -110,6 +123,26 @@ The following
 -   When the lateral size of a box passes a specified value, the
     **Child Spawn Threshold**, all of its child boxes are spawned. The first
     step for each child box will be leaf spawning, see above.
+
+
+
+
+
+
+
+
+    At this stage, the following properties of the box are required:
+
+    -   Parent box, unless this is the root box.
+
+    -   Box incremental text, if any.
+
+    >   Actually, at this stage only the palette position is known, and hence
+    >   the incremental text and box text.
+    >
+    >   Actually actually, what's required is whatever is needed to calculate
+    >   the box's child weight.
+
 
 
 >   Near here say that it's sometimes necessary to spawn new box's child boxes

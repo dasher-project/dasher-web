@@ -64,7 +64,6 @@ A zooming user interface is one that can be described in the following terms.
 -   The **User** controls the movement of zoom boxes in the zooming area. The
     user can also specify preference **Settings**, for example in a control
     panel section of the user interface.
-    
 
 ## Zooming User Interface Diagram
 The following diagram illustrates the relationship between the zooming area and other user interface elements in the Dasher Version Six browser proof-of-concept.
