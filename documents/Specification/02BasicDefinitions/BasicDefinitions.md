@@ -84,7 +84,7 @@ entry in a zooming user interface can be described in the following terms.
     In Dasher Version Six at time of writing, incremental texts are always
     single characters.
     
--   Zoom boxes without an incremental text could be used for either of the
+-   Zoom boxes without incremental text could be used for either of the
     following purposes, for example.
 
     -   As a **Group** for their child boxes. For example, boxes with
