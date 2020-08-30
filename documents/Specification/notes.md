@@ -211,12 +211,12 @@ The following table shows the possible sequence colour specifiers, and their
 default display colour mappings as hexadecimal red-green-blue values, and named
 web colours.
 
-Sequence colour specifier | Default display colour mapping
---------------------------|-------------------------------
-             sequence-0-0 | `#90ee90` LightGreen
-             sequence-0-1 | `#98fb98` PaleGreen
-             sequence-1-0 | `#add8e6` LightBlue
-             sequence-1-1 | `#87ceeb` SkyBlue
+|Sequence colour specifier | Default display colour mapping
+|--------------------------|-------------------------------
+|             sequence-0-0 | `#90ee90` LightGreen
+|             sequence-0-1 | `#98fb98` PaleGreen
+|             sequence-1-0 | `#add8e6` LightBlue
+|             sequence-1-1 | `#87ceeb` SkyBlue
 
 See also [https://en.wikipedia.org/wiki/Web_colors](https://en.wikipedia.org/wiki/Web_colors).
 
