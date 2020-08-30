@@ -60,21 +60,9 @@ entry in a zooming user interface can be described in the following terms.
 -   There is a **Working Text** that the user is editing. The working text is
     sometimes called the message but that term isn't used in this discussion.
 
--   Every zoom box has an associated text, referred to as its **Box Text**. Box
-    texts can be empty. The root box text is empty.
+-   Every zoom box has a **Box Text**. The box text can be empty. The root box
+    text is empty.
 
--   Some zoom boxes have an associated **Incremental Text** in addition to their
-    box text.
-
-    -   If a box has an incremental text, then its box text will be its
-        incremental text appended to the box text of its parent.
-    
-    -   If a box doesn't have an incremental text, then its box text will be the
-        same as the box text of its parent.
-    
-    In Dasher Version Six at time of writing, incremental texts are always
-    single characters.
-    
 -   If there is a zoom box that is across the origin, see above, its box text
     will be the working text.
     **That is a fundamental feature of the zooming user interface.**
@@ -85,6 +73,17 @@ entry in a zooming user interface can be described in the following terms.
     If there isn't a zoom box that is across the origin, then the working text
     is empty.
 
+-   A zoom box can have **Incremental Text**, in addition to its box text.
+
+    -   If a box has incremental text, then its box text will be its incremental
+        text appended to the box text of its parent.
+    
+    -   If a box doesn't have incremental text, then its box text will be the
+        same as the box text of its parent.
+    
+    In Dasher Version Six at time of writing, incremental texts are always
+    single characters.
+    
 -   Zoom boxes without an incremental text could be used for either of the
     following purposes, for example.
 
