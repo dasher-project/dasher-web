@@ -18,7 +18,36 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
 # Backlog
 ## Strategic Backlog
+
 -   Language model integration.
+
+-   Document and sub-document hierarchy.
+
+    The userinterface.js file has too much code in it. The parts of the user
+    interface should be modular:
+
+    -   Control Panel, which is already fairly modular but is instantiated from
+        the userinterface.js file.
+    -   Zooming Area, whose code is in the userinterface.js file.
+    -   Message Bar, whose code is also in the userinterface.js file.
+    -   Small Print, which is only in the HTML.
+
+    The Control Panel, Zooming Area, and Message Bar should be instantiated from
+    a common builder class. Different loading contexts, like the browser and the
+    custom keyboard, should then each have a subclass of the builder.
+
+    The modules should also have a common interface for:
+
+    -   DOM hierarchy.
+    -   Data structure.
+    -   Event listeners.
+
+    The Control Panel already has a method, setParent(), that inserts its DOM
+    hierarchy into another. It's optional. The whole hierarchy can be
+    instantiated without being inserted into an HTML page. Parts of the
+    hierarchy are accessible, which is what enables the behaviour selector to be
+    inserted into the custom keyboard user interface, for example.
+
 -   Improve the zooming based on the PhD material, aka S parameter.
     -   As part of the previous item, or standalone, make the zoom rate
         non-linear.
@@ -36,10 +65,12 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 ## Simple Backlog
 -   Maybe replace the current userinterface.js stopCallback and pointer.js
     touchEndCallback mechanisms, and anything similar, with a custom DOMEvent.
+    Or replace them with an EventTarget instance.
     See:
 
     -   https://developer.mozilla.org/en-US/docs/Web/API/Event
     -   https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+    -   https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/EventTarget
 
     The root SVG item that holds the zooming user interface would be a suitable
     EventTarget from which to dispatch these events. Using an event instead of a
