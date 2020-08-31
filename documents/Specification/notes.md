@@ -49,6 +49,9 @@ nodes.
 
 ![](PaletteHierarchy.svg)
 
+Node paths are numbered from one in the diagram. Index values are zero-based in
+the code.
+
 Note that this is a simplified palette for the purposes of illustration. The
 palette in the Dasher Version Six proof-of-concept has about seventy principal
 nodes and five group nodes.
@@ -203,20 +206,29 @@ box in a parent gets the same sequence colour as the first child in the
 parent's subsequent sibling. This results in two adjacent boxes having the same
 sequence colour.)
 
-### Sequence Colours Example
+# Palette Example
+The following diagram and tables illustrate the above by reference to the zoom
+box palette in the Dasher Version Six proof-of-concept code.
+
+## Colour Specifiers Example
+
 In the Dasher Version Six proof-of-concept, the stub is "sequence", the ordinal
 and index maximum values are both one, and the separator is a hyphen, "-".
 
-The following table shows the possible sequence colour specifiers, and their
-default display colour mappings as hexadecimal red-green-blue values, and named
-web colours.
+The following table lists all the colour specifiers, and their default display
+colour mappings as hexadecimal red-green-blue values, and named web colours.
 
-|Sequence colour specifier | Default display colour mapping
-|--------------------------|-------------------------------
-|             sequence-0-0 | `#90ee90` LightGreen
-|             sequence-0-1 | `#98fb98` PaleGreen
-|             sequence-1-0 | `#add8e6` LightBlue
-|             sequence-1-1 | `#87ceeb` SkyBlue
+|Colour specifier | Default display colour mapping
+|-----------------|-------------------------------------
+|    sequence-0-0 | `#90ee90` LightGreen.
+|    sequence-0-1 | `#98fb98` PaleGreen.
+|    sequence-1-0 | `#add8e6` LightBlue.
+|    sequence-1-1 | `#87ceeb` SkyBlue.
+|         capital | `#ffff00` Yellow.
+|         numeral | `#f08080` LightCoral (red).
+|     contraction | `#fbb7f0` Pink but not a web colour.
+|     punctuation | `#32cd32` LimeGreen.
+|           space | `#d3d3d3` LightGray.
 
 See also [https://en.wikipedia.org/wiki/Web_colors](https://en.wikipedia.org/wiki/Web_colors).
 
