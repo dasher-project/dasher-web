@@ -96,6 +96,15 @@ JavaScript, and SVG.
 >   Also Kotlin and Swift for mobile solutions. Also define Standalone vs
 >   Browser vs Keyboard.
 
+# Palette interface
+
+In principle, a template can hold any property that:
+
+-   Doesn't depend on the box's parent.
+-   Doesn't depend on the box's position in the hierarchy.
+-   Doesn't change after the zoom box has been created.
+
+
 
 
 
