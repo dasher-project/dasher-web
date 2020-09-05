@@ -8,6 +8,7 @@ The specification is divided into sections. These can be read in order.
 2.  [Basic Definitions](02BasicDefinitions/BasicDefinitions.md)
 3.  [Zooming Rules](03ZoomingRules/ZoomingRules.md)
 4.  [Zooming Solver](04ZoomingSolver/ZoomingSolver.md)
+5.  [Zoom Box Palette](05ZoomBoxPalette/ZoomBoxPalette.md)
 
 # Document Information
 The Dasher Version Six specification is part of the Dasher project and is under
