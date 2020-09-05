@@ -1,18 +1,12 @@
-# Zoom Box Palette and Templates
-This document is part of the Dasher Version Six Specification. It describes the palette and template
-
+# Zoom Box Palette
+This document is part of the Dasher Version Six Specification. It introduces the
+zoom box palette. The palette sets the order of boxes and their structure within
+the zoom box hierarchy. It is utilised in spawning, which is discussed later in
+the specification.
 
 Some terms used here are defined in earlier parts of the specification. See the
 [previous section](../04ZoomingSolver/ZoomingSolver.md) of the specification,
 and the [table of contents](../).
-
-
-
-
-Understanding the palette is a prerequisite to understanding spawning.
-
-
-Structure of groups and non-groups.
 
 # Palette
 The order and structure of zoom boxes in the hierarchy is determined by a zoom
@@ -30,9 +24,12 @@ box **Palette**. The palette is a hierarchical tree structure with:
 
 The child nodes of a node are ordered in the palette.
 
-The Dasher Version Six proof-of-concept code has a single palette. In principle,
-there could be a number of palettes and the user could select which to use.
-Multiple palettes could improve support for multiple languages, for example.
+A zoooming user interface could in principle have multiple palettes and the user
+could select which to use. Multiple palettes could improve support for
+internationalisation and languages, for example. There is only one palette in
+the Dasher Version Six proof-of-concept implementation. The palette is suitable
+for English language text entry. It has approximately seventy principal nodes
+and five group nodes.
 
 ## Palette Diagram
 The following diagram shows a zoom box palette with the following
@@ -42,12 +39,12 @@ nodes.
 -   Principal nodes, A to G.
 -   Group nodes, H and J.
 
-![](PaletteHierarchy.svg)
+![Diagram 5: Palette Hierarchy](PaletteHierarchy.svg)
 
 Node paths are numbered from one in the diagram. Index values are zero-based in
 the code.
 
-Note that this is a simplified palette for the purposes of illustration. The
+Note that this is a very simple palette for the purposes of illustration. The
 palette in the Dasher Version Six proof-of-concept has about seventy principal
 nodes and five group nodes.
 
@@ -78,7 +75,7 @@ in the specification.
 The following diagram shows a live hierarchy based on the palette in the other
 diagram.
 
-![](HierarchyCorrespondence.svg)
+![Diagram 5: Hierarchy Correspondence](HierarchyCorrespondence.svg)
 
 The palette hierarchy is repeated at:
 
@@ -99,9 +96,9 @@ Some palette nodes have associated text, as follows.
 
 -   The palette root and group nodes don't have associated text.
 
-(In the Dasher Version Six proof-of-concept, the template text is always a single
-letter, numeral, punctuation mark, symbol, space, newline, or other character.
-Unicode representation is used throughout.)
+(In the Dasher Version Six proof-of-concept, the template text is always a
+single letter, numeral, punctuation mark, symbol, space, newline, or other
+character. Unicode representation is used throughout.)
 
 There is a relationship between incremental text in a zoom box and the palette
 node with which the box has a correspondence, as follows.
@@ -117,30 +114,69 @@ node with which the box has a correspondence, as follows.
 -   If the zoom box doesn't correspond to any palette node, then its incremental
     text will be something that isn't in the palette.
 
-# Colours
-Some palette nodes specify a **Symbolic Colour**, as follows.
+# Rectangle Colours
+The rectangle that forms part of the visual representation of a zoom box in the
+user interface will be filled with a colour.
 
--   Each group node specifies a symbolic colour, referred to as its 
-    **Template Colour**.
+The following diagram illustrates rectangle colours in a screen capture of the
+Dasher Version Six proof-of-concept browser user interface.
 
--   The palette root and principal nodes don't specify a symbolic colour.
+![Diagram 6: Rectangle Colour](RectangleColour.svg)
 
-Each zoom box has a **Colour Specifier**. There is a relationship between the
-colour specifier of a zoom box and the palette node with which the box has a
-correspondence, as follows.
+(Zoom box outlines have been switched on, for clarity. Outlines aren't shown by
+default.)
 
--   If the box corresponds to a group node, then the box's colour specifier will
-    be the node's template colour.
+## Colour Scheme Configuration
+It is required that the user can configure the colour scheme. To support this,
+there is a two-stage process for rectangle colours.
 
--   Otherwise, the box's colour specifier will depend on its position in the
-    live hierarchy. This type of colour specifier is referred to as a
-    **Sequence Colour**. See below for a discussion of sequence colours.
+-   The software sets a symbolic **Colour Specifier** for each zoom box
+    rectangle.
 
-If a zoom box is drawn, its colour specifier will be used to determine the
-colour with which its rectangle is filled, referred to as the
-**Display Colour**. There is a mapping from colour specifiers to display
-colours. The mapping has default values, and can be changed by the end user, for
-example in a control panel user interface.
+    There are two types of colour specifier.
+
+    -   **Template Colour** specifiers are fixed values, set in group nodes in
+        the palette. Only group nodes have a template colour. Zoom boxes that
+        correspond to group nodes will have template colour specifiers.
+    
+    -   **Sequence Colour** specifiers depend on the on the zoom box's position
+        in the live hierarchy. Zoom boxes that correspond to principal nodes in
+        the palette, or that don't correspond to nodes in the palette, will have
+        sequence colour specifiers.
+
+        Sequence colours are discussed in more detail below.
+    
+    In either case, the specifier will be a text string.
+    
+-   Each colour specifier is mapped to a **Display Colour** in the user
+    preferences. The display colour will be used if the zoom box is drawn in the
+    zooming area.
+
+There will always be a closed set of template colour and sequence colour
+specifiers. The specifiers aren't parameterised, nor do they support
+transformations such as lightening and darkening for example.
+
+There can be a default mapping of colour specifiers to display colours. The
+mapping can be changed by the end user, for example in a control panel user
+interface.
+
+## Colours and Correspondence
+Zoom boxes that correspond to the same group node in repetitions of the palette
+hierarchy always have the same colour specifier. This isn't the case for zoom
+boxes that correspond to the same principal node. Zoom boxes that correspond to
+the same principal node don't always have the same colour specifier.
+
+This is illustrated in the following screen capture from the Dasher Version Six
+proof of concept.
+
+![Diagram 7: Sequence Colours](SequenceColours.svg)
+
+The three called out zoom boxes correspond to the same principal node in the
+palette, and have the same box text, "a". Their rectangles aren't all the same
+colour because they are at different levels in the live hierarchy.
+
+In the above screen capture, ZoomBox outlines have been switched on, for
+clarity. Outlines aren't shown by default.
 
 ## Sequence Colours
 The sequence colours system is intended to ensure the following.
@@ -150,7 +186,7 @@ The sequence colours system is intended to ensure the following.
 
 -   The rectangles of adjacent sibling zoom boxes are never the same colour.
 
-The colour specifier of a sequence colour has the following parts.
+A sequence colour specifier has the following parts.
 
 -   **Stub**, a fixed text.
 -   **Ordinal**, a first integer with a value from zero up to a designated
@@ -161,8 +197,7 @@ The colour specifier of a sequence colour has the following parts.
 The specifier is generated by joining the above parts with a **Separator**
 character.
 
-The sequence colours of zoom boxes in the hierarchy can be determined as
-follows.
+The sequence colour of a zoom box in the hierarchy can be determined as follows.
 
 -   The stub and separator are the same for all boxes in the hierarchy. They are
     constant values.
@@ -174,17 +209,16 @@ follows.
     -   A child box's ordinal value can be determined as follows.
 
         1.  Determine the box's *ordinal parent* by ascending the zoom box
-            hierarchy from child to parent until a box is reached whose colour
-            specifier isn't a template colour.
+            hierarchy from child to parent until a box is reached that doesn't correspond to a group node in the palette.
 
-            Note that the root box colour specifier isn't a template colour.
-            This guarantees that there is always an ordinal parent.
+            Note that the root box doesn't correspond to a group node, so there
+            will always be an ordinal parent.
         
         2.  Add one to the ordinal value of the ordinal parent.
 
         3.  If the result is less than or equal to the maximum ordinal value,
-            then it is the child box's ordinal value. Otherwise, the child box's
-            ordinal value is zero.
+            then take the result as the child box's ordinal value. Otherwise,
+            take zero as the child box's ordinal value.
 
 -   The index value is determined as follows:
 
@@ -202,16 +236,27 @@ parent's subsequent sibling. This results in two adjacent boxes having the same
 sequence colour.)
 
 # Palette Example
-The following diagram and tables illustrate the above by reference to the zoom
-box palette in the Dasher Version Six proof-of-concept code.
+The zoom box palette in the Dasher Version Six proof-of-concept code can be used
+as an example to illustrate the above descriptions.
 
-## Colour Specifiers Example
+## Example Palette Diagram
+The following diagram is a representation of the zoom box palette in the Dasher Version Six proof-of-concept.
 
-In the Dasher Version Six proof-of-concept, the stub is "sequence", the ordinal
-and index maximum values are both one, and the separator is a hyphen, "-".
+![Diagram 8: Palette Example](PaletteExample.svg)
 
-The following table lists all the colour specifiers, and their default display
-colour mappings as hexadecimal red-green-blue values, and named web colours.
+Group nodes are shown as ellipses. Each is labelled with its template colour
+specifier, and filled with its default display colour.
+
+Principal nodes are shown as squares. Each is labelled with its template text.
+Their display colours would be based on the sequence colour specifiers, which
+are shown adjacent.
+
+Paths have zero-based labels in this diagram, as they do in the code.
+
+## Colour Specifiers Table
+The following table lists the colour specifiers in the Dasher Version Six
+proof-of-concept. For each specifier, the default display colour mapping is
+shown, as a hexadecimal red-green-blue value, and as a named web colour.
 
 |Colour specifier | Default display colour mapping
 |-----------------|-------------------------------------
@@ -225,7 +270,14 @@ colour mappings as hexadecimal red-green-blue values, and named web colours.
 |     punctuation | `#32cd32` LimeGreen.
 |           space | `#d3d3d3` LightGray.
 
-See also [https://en.wikipedia.org/wiki/Web_colors](https://en.wikipedia.org/wiki/Web_colors).
+For the sequence colour specifiers:
+
+-   The stub is "sequence".
+-   The ordinal and index maximum values are both one.
+-   The separator is a hyphen, "-".
+
+For information about web colours, see the Wikipedia page:
+[https://en.wikipedia.org/wiki/Web_colors](https://en.wikipedia.org/wiki/Web_colors).
 
 
 
