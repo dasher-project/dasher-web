@@ -274,7 +274,8 @@ Some versions of Dasher other than Dasher Version Six appear to implement
 something like a square solver algorithm.
 
 # Next Section
-The next section in the specification is TBD.
+The next section in the specification is the
+[Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md).
 
 See also the [table of contents](../).
 

@@ -12,13 +12,16 @@ and the [table of contents](../).
 The order and structure of zoom boxes in the hierarchy is determined by a zoom
 box **Palette**. The palette is a hierarchical tree structure with:
 
+-   Child, parent, and sibling relationships between nodes, similar to the zoom
+    box hierarchy as described earlier in the specification.
+
 -   A single root node, referred to as the **Palette Root**.
 
 -   Zero or more **Group** nodes. Each group node is either a child of the
     palette root, or the child of another group node. Each group node has a
     number of child nodes. Group nodes are never leaf nodes.
 
--   One ore more **Principal** nodes. Each principal node is either a child of
+-   One or more **Principal** nodes. Each principal node is either a child of
     the palette root, or the child of a group node. Principal nodes don't have
     child nodes. Principal nodes are always leaf nodes.
 
@@ -30,6 +33,40 @@ internationalisation and languages, for example. There is only one palette in
 the Dasher Version Six proof-of-concept implementation. The palette is suitable
 for English language text entry. It has approximately seventy principal nodes
 and five group nodes.
+
+## Role of the Palette
+The zoom box palette determines the following.
+
+-   Structure of the zoom box hierarchy.
+-   Order of child boxes in a parent box.
+-   Colour of zoom box rectangles in the hierarchy.
+-   Which texts will always appear as incremental texts, in every level of the
+    hierarchy.
+
+For example, the following are part of the palette in the Dasher Version Six
+browser proof-of-concept.
+
+-   Capital letters are a group contained by a parent box.
+-   Small letters appear in alphabetic order, before the capital group.
+-   The rectangle of the capitals group box is yellow, by default.
+-   The currency sign for pounds sterling appears in every level of the
+    hierarchy.
+
+The zoom box palette doesn't determine, for example, the relative size of boxes
+in the hierarchy. That is determined by the language prediction model and other
+factors that are outside the palette. Those factors are discussed later in the
+specification.
+
+Although texts that are in the palette will be present in every level of the
+hierarchy, their zoom boxes may at times be too small to render. This depends on
+the zooming interaction, controlled by the user, and on the relative size
+determination factors.
+
+Note that texts that aren't in the palette can still be present as
+incremental texts in the zoom box hierarchy.
+
+It looks like the Dasher Version Six proof-of-concept doesn't support the
+inclusion of texts that are outside the palette.
 
 ## Palette Diagram
 The following diagram shows a zoom box palette with the following
@@ -54,12 +91,17 @@ the palette. Where the palette hierarchy reaches a leaf node but the live
 hierarchy doesn't, the palette hierarchy will be repeated. The live zoom box
 will then take the place of the palette root in the repetition.
 
+The palette hierarchy is static, both in order and in depth. If a zooming user
+interface supported multiple palettes, then each would be static. The live zoom
+box hierarchy has static order, but dynamic depth. New levels can be added, and
+existing levels can be removed.
+
 A live zoom box can be described as having a **correspondence** with a palette
 node that is in the same position in the hierarchy.
 
 In the case that the palette hierarchy is repeated, the zoom box at the root of
 the repetition could in theory be said to have a correspondence with both the
-palette root and with a palette leaf node. In practice, the zoom box will in
+palette root and with a palette leaf node. In practice, that zoom box will in
 general be treated as having a correspondence with the leaf node. Only the live
 root will in general be treated as having a correspondence with the palette
 root. 
@@ -67,7 +109,7 @@ root.
 Note that it's possible for the live hierarchy to have zoom boxes that don't
 correspond to any node in the palette. In other words, not every zoom box
 necessarily corresponds to a palette node. Non-corresponding zoom boxes are
-needed, for example, to support the case that a character that isn't in the
+needed, for example, to support the case that a text that isn't in the
 palette is returned by a language prediction model. This is discussed elsewhere
 in the specification.
 
@@ -172,8 +214,8 @@ proof of concept.
 ![Diagram 7: Sequence Colours](SequenceColours.svg)
 
 The three called out zoom boxes correspond to the same principal node in the
-palette, and have the same box text, "a". Their rectangles aren't all the same
-colour because they are at different levels in the live hierarchy.
+palette, and have the same incremental text, "a". Their rectangles aren't all
+the same colour because they are at different levels in the live hierarchy.
 
 In the above screen capture, ZoomBox outlines have been switched on, for
 clarity. Outlines aren't shown by default.
@@ -279,62 +321,18 @@ For the sequence colour specifiers:
 For information about web colours, see the Wikipedia page:
 [https://en.wikipedia.org/wiki/Web_colors](https://en.wikipedia.org/wiki/Web_colors).
 
+# Palette Interface
+Requirements for the palette programming interface are discussed elsewhere in
+the specification.
 
+# Next Section
+The next section in the specification is TBD.
 
+See also the [table of contents](../).
 
+# Document Information
+This document is part of the Dasher project and is under revision control here:  
+[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
 
-# Templates
-Each node in the palette hierarchy there is a 
-
-
-
-The relative sizes of boxes in the hierarchy is determined by other factors,
-outside the palette. Those factors are discussed later in the specification.
-
-
-
-
-
-
-Palette interface
-
-
-
-The root, child, parent, and sibling terms apply equally to the palette
-structure.
-
-
-
--   Each node in the palette hierarchy is a zoom box template. Each node in the
-    live hierarchy is a zoom box.
-
--   The palette hierarchy is static and of limited depth. It has leaf nodes
-    beyond which it doesn't extend. The live hierarchy is dynamic. A new
-    hierarchy could be spawned under any current leaf node, depending on the
-    actions of the user.
-
-The live zoom box hierarchy in the user interface will follow the palette
-structure. Beyond a live node that corresponds to a palette leaf node, the
-palette hierarchy starts again from the root.
-
-
-
-Each zoom box in the hierarchy can be based on a zoom box **Template**.
-
-The template can provide values for some of the box's properties, such as the
-incremental text and the rectangle colour.
-
-In principle, a template can hold any property that:
-
--   Doesn't depend on the box's parent.
--   Doesn't depend on the box's position in the hierarchy.
--   Doesn't change after the zoom box has been created.
-
-
-
-
-
-
-In principle, characters that are in the palette will always be present in every
-level of the hierarchy. In practice, they may be too small to render. Characters
-that aren't in the palette can still be present in the hierarchy.
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
