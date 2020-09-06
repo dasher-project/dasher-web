@@ -22,8 +22,9 @@ box **Palette**. The palette is a hierarchical tree structure with:
     number of child nodes. Group nodes are never leaf nodes.
 
 -   One or more **Principal** nodes. Each principal node is either a child of
-    the palette root, or the child of a group node. Principal nodes don't have
-    child nodes. Principal nodes are always leaf nodes.
+    the palette root, or a child of a group node. Principal nodes don't have
+    child nodes. Principal nodes are always leaf nodes. All leaf nodes in a
+    palette hierarchy are principal nodes.
 
 The child nodes of a node are ordered in the palette.
 
