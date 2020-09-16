@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=testing)](https://travis-ci.com/dasher-project/redash)
+
 # Dasher in Web Technologies
 Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
@@ -51,16 +53,13 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 -   Improve the zooming based on the PhD material, aka S parameter.
     -   As part of the previous item, or standalone, make the zoom rate
         non-linear.
-    -   Also make the zoom faster if the pointer is to the left of the origin, 
+    -   Also make the zoom faster if the pointer is to the left of the origin,
         i.e. zooming out.
--   Tests.  
-    At time of writing, there are no tests. Some tests that there could be:
 
-    -   Test the control panel as a user interface, saving and loading settings
-        and so on.
-    -   Test the PPM in isolation.
-    -   Test the zooming UI maybe by screen capturing with Chrome Puppeteer.
-    -   Capture and replay render cycles.
+## Testing
+-   Tests are performed using `jest` and `Travis-CI`. See `tests` sub-directory
+for more information.
+
 
 ## Simple Backlog
 -   Maybe replace the current userinterface.js stopCallback and pointer.js
@@ -94,9 +93,9 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 
     -   The main part of the change might be CSS only. Specifically, add a
         control-panel__parent Modifier in which the display isn't flex.
-    
+
     -   Some other changes would be required:
-    
+
         -   Add a UI control to toggle the modifier.
         -   Change the ControlPanel select_panel() method to do something other
             than scrollTo.
@@ -125,7 +124,7 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 -   More use of built-in .append and .remove in piece.js module. See:
 
     -   https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
-    
+
 
 -   Standalone app for Android. Make it the same as the standalone app for iOS,
     i.e. based on a Captive Web View.
