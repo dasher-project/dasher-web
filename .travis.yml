@@ -1,7 +1,11 @@
 language: node_js
 node_js:
-  - '13'
+- '13'
 script:
-  - cd tests
-  - npm install
-  - npm run test
+- cd tests
+- npm install
+- npm run test
+notifications:
+  slack:
+    rooms:
+      secure: hqdnmoQJAR43EilaOxj3yHoHc1CjDQHKFGC+fl4NxPEJX49I8uxelQXjssE++DuP/88r/nib/YHkDhpdwZnDVdV0suVgAHpogPzv9FrkkDZKgPmrpXvVajxSbvSi2zS3BkkMvTlYA/ujS3Pgk+9iDjofzX+nyOHiEgZz33kC4mYdPGyCsiVZy7QU04bXd05HkRI1TJvOXf66ShWVj/yLgCSeyE2YI2McCqopjnS3dacZdFehHobVYNpR8TpMBKf54dHT3ssr4AZqZChlZX2042wDtOvGmeY+D+uWj8ubY1S2NuHS5uO4gwkf26pd3JBoHbjR7ZFemaypiHodTuHcgD20eg1yLD521icKyhftfDAK6HzoMJNAufMGvopyryNuFkNDZ3NpnPWkkGutKb3MkQxmge0sg3NZh2CWs8CZSmyeTcgAs4A4SMapfoDlcp8XTIi0SopXQQe5wVANUyOF1VS3jD8GEC/oiBEVwtglQtzKoKmL2+d2V2Q9cqjNBNRUOsii49B1gTNi0JOQrIDM+wQjfNLJZyUSALjilKOeSwyXMdhFyUHk8axzPGRRnf52DFdiNPDVO6JfTDFnQmxlf1g2mpE1xh2YV/16BSyYHS+xEtICNhv2LFqXmVkonw5EbZDkMC0ILWqndB/6X0Mq6XGhHDHs2jM0Z5uZjmFnXAE=

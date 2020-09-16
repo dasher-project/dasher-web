@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=testing)](https://travis-ci.com/dasher-project/redash)
+[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=master)](https://travis-ci.com/dasher-project/redash)
 
 ![Dasher](tests/screenshot.png)
 
