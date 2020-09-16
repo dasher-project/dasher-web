@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=testing)](https://travis-ci.com/dasher-project/redash)
 
-![Dasher](tests/Screenshot.png)
+![Dasher](tests/screenshot.png)
 
 
 # Dasher in Web Technologies
