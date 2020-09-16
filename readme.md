@@ -56,11 +56,6 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
     -   Also make the zoom faster if the pointer is to the left of the origin,
         i.e. zooming out.
 
-## Testing
--   Tests are performed using `jest` and `Travis-CI`. See `tests` sub-directory
-for more information.
-
-
 ## Simple Backlog
 -   Maybe replace the current userinterface.js stopCallback and pointer.js
     touchEndCallback mechanisms, and anything similar, with a custom DOMEvent.
@@ -138,7 +133,30 @@ for more information.
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
 
-# Notes for developers
+# Development
+
+## Delivery Requirements
+-   Interested in helping with the backlog? This project is open source and
+we would love your help. Just a few things..
+
+## Testing
+-   Tests are performed using `jest` and `Travis-CI`. See `tests` sub-directory
+for more information.
+-   Make sure you run the tests locally, and they pass, before
+pushing any commits. Results of CI tests are posted to the Slack channel.
+-   It is the developers responsibility to ensure tests pass before requesting
+a code review and subsequent pull request. All new functionality should have
+
+
+## Code Review
+-   Before
+
+## Pull Request
+-   Pull Requests to add/improve code will requires:
+1. Code Review
+2. Tests Passing
+
+## Notes for developers
 To run the proof-of-concept under development, you might need to start an HTTP
 server. This is due to security restrictions on running JavaScript, and
 especially importing modules, from file:// URLs.
