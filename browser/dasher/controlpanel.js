@@ -296,7 +296,7 @@ class Control {
         const foundIndex = (
             selectedString === undefined ? -1 :
             this._optionStrings.indexOf(selectedString));
-        
+
         if (foundIndex === -1) {
             this._selectedIndex = selectedIndex;
             this._selectedString = undefined;
@@ -381,7 +381,7 @@ export default class ControlPanel {
                     structure.$ = Object.assign({}, $, structure.$);
                 }
             }
-    
+
             if (structure.$.childOrder === undefined) {
                 structure.$.childOrder = Object.entries(structure)
                 .filter(kv => kv[0] !== "$")
@@ -400,7 +400,7 @@ export default class ControlPanel {
 
             if (structure.$.html !== undefined) {
                 structure.$.piece = new Piece(
-                    structure.$.html, statePiece, {}, 
+                    structure.$.html, statePiece, {},
                     structure.$.html === "span" ?
                     Control.make_label(structure.$, path, true) :
                     undefined);
@@ -566,6 +566,9 @@ export default class ControlPanel {
         if (path.length === 0) {
             // Top of the structure; descend structure with same settings.
             return settings;
+        }
+        if (settings === undefined){
+          return false;
         }
 
         const name = path[path.length - 1];
@@ -884,7 +887,7 @@ const afterInstantiate = {
         let nowOn = !!checkboxControl.$.value;
         let nowColour = colorControl.$.value;
         const name = path[path.length - 1];
-    
+
         function rule() {
             return [
                 'rect.', name, " {",
@@ -892,7 +895,7 @@ const afterInstantiate = {
                 "stroke: ", nowColour, ";}"
             ].join("");
         }
-    
+
         const sheet = this.add_CSS_node().sheet;
         const inserted = sheet.insertRule(rule(), sheet.cssRules.length);
 
