@@ -21,6 +21,7 @@ export default class Limits {
         this._spawnThreshold = undefined;
         this._textLeft = 5;
         this._targetRight = true;
+        this._spawnMargin = undefined;
 
         this._gradients = undefined;
         this._solverRight = undefined;
@@ -151,7 +152,10 @@ export default class Limits {
         this._targetRight = targetRight;
     }
 
-
+    get spawnMargin() {return this._spawnMargin;}
+    set spawnMargin(spawnMargin) {
+        this._spawnMargin = spawnMargin;
+    }
 
     // Calculate height, given left position.
     solve_height(left) {

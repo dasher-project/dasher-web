@@ -8,17 +8,17 @@ bridge to Captive Web View for iOS.
 
 const codePointSpace = " ".codePointAt(0);
 
-import Predictor from './predictor.js'
+import predictor_basic from './predictor.js';
 
-export default class PredictorCompletions extends Predictor {
+export default class PredictorCompletions {
 
      constructor(bridge_send) {
-         super();
          this._bridge_send = bridge_send;
      }
 
-    // Override.
-    async get_character_weights(points, text, prediction) {
+    async get_character_weights(
+        codePoints, text, predictorData, palette, set_weight
+    ) {
 
         let response = await this._bridge_send({
             "command": "predict", "input" : text === undefined ? "" : text
@@ -32,8 +32,9 @@ export default class PredictorCompletions extends Predictor {
             response.replacements === undefined ||
             response.replacements.length <= 0
         ) {
-            // No suggested replacements, fall back to the base predictor.
-            return super.get_character_weights(points, text, prediction);
+            // No suggested replacements, fall back to the basic predictor.
+            return predictor_basic(
+                codePoints, text, predictorData, palette, set_weight);
         }
 
         // In the response:
@@ -58,12 +59,18 @@ export default class PredictorCompletions extends Predictor {
         // Only the `heed` most likely replacements are considered.
         const heed = 5;
 
+        // Previously used for returning predicted weights. Now used to prevent
+        // calling set_weight twice for the same point, and for a diagnostic
+        // log.
         const weights = new Map();
         let weight = mostWeight;
         for (const [index, replacement] of response.replacements.entries()) {
             if (index >= heed) {
                 break;
             }
+
+            // If this replacement is shorter than the replaced length it means
+            // the message could have been a whole word.
             const point = (
                 replacement.length <= suffix ?
                 codePointSpace :
@@ -71,6 +78,7 @@ export default class PredictorCompletions extends Predictor {
             );
             const weighting = weights.get(point);
             if (weighting === undefined) {
+                set_weight(point, weight)
                 weights.set(point, weight);
             }
             weight -= weightDecrement;
@@ -84,7 +92,7 @@ export default class PredictorCompletions extends Predictor {
         // console.
         // console.log(weights);
 
-        return weights;
+        return;
     }
 
 }

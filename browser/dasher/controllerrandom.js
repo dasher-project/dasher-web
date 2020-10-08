@@ -1,35 +1,43 @@
 // (c) 2020 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
-import ZoomBox from "./zoombox.js";
-import ControllerPointer from "./controllerpointer.js";
+import Palette from "./palette.js";
+
+class PaletteSmall extends Palette {
+    // Override:
+    constructor(texts) {
+        super();
+        this._groupDefinitions = [{"name": null, "texts": texts}];
+    }
+
+    // Override:
+    build() {
+        super.build();
+        this.rootTemplate.childTemplates.forEach(
+            template => template.childTemplates = []
+        );
+        // console.log("PaletteSmall", this.rootTemplate);
+        return this;
+    }
+
+    // Override:
+    get groupDefinitions() {return this._groupDefinitions;}
+}
 
 export default class ControllerRandom {
     constructor(texts) {
-        this._texts = texts;
+        this._palette = new PaletteSmall(texts).build();
+        this._rectHeight = undefined;
         this._going = true;
-        this._rootSpecification = {spawner:this};
     }
 
-    get rootSpecification() {return this._rootSpecification;}
-
-    async child_specifications() {return this._texts.map((character, index) => {
-        const xChange = 1 - ((index % 2) * 2);
-        return {
-            colour: null,
-            cssClass: `${ControllerPointer.sequenceStubCSS}-${index % 2}-0`,
-            text: character, message: [character.codePointAt(0)],
-            weight: 1,
-            controllerSettings: {"xChange":xChange, "yChange":xChange},
-            spawner: null
-        };
-    });}
+    get palette() {return this._palette;}
 
     get going() {return this._going;}
     set going(going) {this._going = going;}
 
     control(rootBox) {
-        if (!this.going) {
+        if (this._rectHeight === undefined || !this.going) {
             return;
         }
 
@@ -38,27 +46,27 @@ export default class ControllerRandom {
         const widthMin = this._rectHeight * 2;
         const widthMax = rootBox.width;
         let top = rootBox.top;
-        rootBox.each_childBox(zoomBox => {
-            const xChange = zoomBox.controllerSettings.xChange;
-            const yChange = zoomBox.controllerSettings.yChange;
+        rootBox.childBoxes.forEach(childBox => {
+            const xChange = childBox.controllerData.xChange;
+            const yChange = childBox.controllerData.yChange;
             const xDelta = (50 + Math.random() * 250) * xChange;
             const yDelta = heightMin * Math.random() * yChange;
 
             let left;
-            let width = zoomBox.width + xDelta;
+            let width = childBox.width + xDelta;
             if (
                 (width < widthMin && xChange < 0) ||
                 (width > widthMax && xChange > 0)
             ) {
                 // Reverse direction; don't move.
-                zoomBox.controllerSettings.xChange *= -1;
+                childBox.controllerData.xChange *= -1;
                 width = undefined;
             }
             else {
                 left = (rootBox.left + rootBox.width) - width;
             }
 
-            let height = zoomBox.height;
+            let height = childBox.height;
             if (
                 (height + yDelta < heightMin && yChange < 0) ||
                 (height + yDelta > heightMax && yChange > 0)
@@ -66,35 +74,42 @@ export default class ControllerRandom {
                 // Reverse direction, don't change height. But, top will
                 // still have to change because adjacent child boxes will
                 // have moved probably.
-                zoomBox.controllerSettings.yChange *= -1;
+                childBox.controllerData.yChange *= -1;
             }
             else {
                 height += yDelta;
             }
 
-            zoomBox.set_dimensions(left, width, top + (height / 2), height);
+            childBox.set_dimensions(left, width, top + (height / 2), height);
 
             top += height;
         });
-
     }
 
-    populate(rootBox) {
-        this._rectHeight = (rootBox.height / rootBox.childCount) * 0.75;
-        rootBox.spawnMargin = undefined;
+    async populate(rootBox, limits) {
+        rootBox.set_dimensions(
+            limits.width * -0.45,
+            limits.width * 0.9,
+            0, limits.height * 0.9
+        );
+
+        rootBox.instantiate_child_boxes(() => {});
+
+        this._rectHeight = (rootBox.height / rootBox.childBoxes.length) * 0.75;
 
         let top = rootBox.top;
         const width = this._rectHeight * 2;
         const left = (rootBox.left + rootBox.width) - width;
-        rootBox.childSpecifications.forEach((specification, index) => {
-            const zoomBox = new ZoomBox(specification);
-            zoomBox.inherit(rootBox);
-            zoomBox.set_dimensions(
+        rootBox.childBoxes.forEach((childBox, index) => {
+            const xChange = 1 - ((index % 2) * 2);
+            childBox.controllerData = {"xChange":xChange, "yChange":xChange};
+            childBox.set_dimensions(
                 left, width, top + (this._rectHeight / 2), this._rectHeight
             );
-            top += this._rectHeight;
+            // Next line will set childBoxes to an empty array
+            childBox.instantiate_child_boxes();
 
-            rootBox.childBoxes[index] = zoomBox;
+            top += this._rectHeight;
         });
     }
 }

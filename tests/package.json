@@ -1,0 +1,16 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Testing Framework for (re)Dasher",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.3.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^5.2.1"
+  }
+}

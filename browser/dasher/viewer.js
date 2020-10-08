@@ -91,12 +91,16 @@ export default class Viewer {
             //         childEdge, this._renderLeft,
             //         limits.textLeft, this._textWidth);
             // }
-            this._zoomBox.each_childBox(child => {
-                if (child.viewer === null) {
-                    child.viewer = new Viewer(child, this._view);
-                }
-                child.viewer._draw_one(this, edge, limits, level + 1);
-            });
+            if (this._zoomBox.childBoxes !== undefined) {
+                this._zoomBox.childBoxes.forEach(child => {
+                    if (!child.dimension_undefined()) {
+                        if (child.viewer === null) {
+                            child.viewer = new Viewer(child, this._view);
+                        }
+                        child.viewer._draw_one(this, edge, limits, level + 1);
+                    }
+                });
+            }
         }
         else {
             this.erase();
@@ -148,7 +152,8 @@ export default class Viewer {
         }
 
         const box = this._zoomBox;
-        const margin = (box.spawnMargin === undefined ? 0 : box.spawnMargin);
+        const margin = (
+            limits.spawnMargin === undefined ? 0 : limits.spawnMargin);
         const limitLeft = limits.left + (level * margin);
         const renderLeft = box.left < limitLeft ? limitLeft : box.left;
 
@@ -198,7 +203,8 @@ export default class Viewer {
             0,
             limits.minimumFontSizePixels, limits.maximumFontSizePixels);
         this._render_diagnostics(
-            limits.showDiagnostic, box.middle - renderMiddle, 0);
+            limits.showDiagnostic, box.middle - renderMiddle,
+            limits.spawnMargin);
     }
 
     _trims(limitTop, limitBottom, margin) {
@@ -266,6 +272,9 @@ export default class Viewer {
         this._rect.node.classList.toggle('trim-bottom', trimBottom !== 0);
 
         const drawY = (box.height / -2) + renderOffset + trimTop;
+        if (isNaN(drawY)) {
+            console.log('drawY nan.');
+        }
         const drawHeight = box.height - (trimTop + trimBottom);
 
         // if (drawHeight < 0) {
@@ -329,7 +338,7 @@ export default class Viewer {
         this._text.node.setAttribute('x', textLeft);
     }
 
-    _render_diagnostics(show, renderOffset, textLeft) {
+    _render_diagnostics(show, renderOffset, spawnMargin) {
         const box = this._zoomBox;
         const y1 = renderOffset + (box.height / -2);
         const y2 = renderOffset + (box.height / 2);
@@ -349,9 +358,9 @@ export default class Viewer {
         }
 
         this._spawnMargin = Piece.toggle(
-            this._spawnMargin, show && (box.spawnMargin !== undefined),
+            this._spawnMargin, show && (spawnMargin !== undefined),
             () => new Piece('line', this._groupLower, {
-                x1:"0", x2:`${box.spawnMargin}`,
+                x1:"0", x2:`${spawnMargin}`,
                 stroke:"black", "stroke-width":"1px",
                 "stroke-dasharray":"4"
             })
@@ -363,13 +372,13 @@ export default class Viewer {
         this._textBox = Piece.toggle(
             this._textBox, show && this._textWidth > 0,
             () => new Piece('line', this._groupUpper, {
-                x1:textLeft, y1: "0", y2: "0",
+                x1:0, y1: "0", y2: "0",
                 stroke:"white", "stroke-width":"2px",
                 "stroke-dasharray":"4"
             })
         );
         if (this._textBox !== null) {
-            this._textBox.set_attributes({x2: textLeft + this._textWidth});
+            this._textBox.set_attributes({x2: this._textWidth});
         }
 
         /* The following animation code doesn't seem to work.
@@ -397,6 +406,8 @@ export default class Viewer {
             this._groupUpper.remove();
             this._clear();
         }
-        this._zoomBox.each_childBox(child => child.erase());
+        if (this._zoomBox.childBoxes !== undefined) {
+            this._zoomBox.childBoxes.forEach(child => child.erase());
+        }
     }
 }

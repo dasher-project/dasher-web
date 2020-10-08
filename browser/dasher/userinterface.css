@@ -3,6 +3,8 @@
 MIT licensed, see https://opensource.org/licenses/MIT
 */
 
+@import url(controlpanel.css);
+
 html {font-family: sans-serif;}
 p.small-print {font-size: 0.7rem;}
 p.small-print a {text-decoration: none;}
@@ -43,65 +45,14 @@ The user interface is laid out as follows, in a browser.
     flex: none;
 }
 
-.header {
-    display: flex;
-    flex-direction: row-reverse;
+#message-holder {
     width: 100%;
+    display: flex;
 }
+#message-holder > * {flex: none;}
+#message-holder > textarea {flex: auto;}
 
-/*
-#user-interface.keyboard .header {
-    background-color: sandybrown;
-}
-*/
-#user-interface.keyboard .header > *:nth-child(2) {
-    /* background-color: palegoldenrod; */
-    flex: auto;
-}
-
-.header__selectors {
-    flex: none;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    text-align: center;
-}
-@media (orientation: portrait) {
-    /* .header { background-color: peachpuff; } */
-    .header__selectors { grid-template-columns: repeat(2, 1fr); }
-}
-
-.header__selectors > div > .cwv-button {
-    /* background-color: plum; */
-    width: 90%;
-}
-.header__selector_selected {
-    outline: 1px var(--accent-colour) solid !important;
-    outline-offset: 1px;
-}
-
-input[type="color"] + label
-{
-    margin-left: 0.25rem;
-}
-
-.header__panel {
-    /* background-color: rebeccapurple; */
-    display: none;
-}
-.header__panel_selected {
-    /* background-color: wheat; */
-    display: block;
-    flex: auto;
-}
-
-.header__panel_selected.header__panel-colour div {
-    padding: 0.25em;
-    display: inline-block;
-}
-
-#message-holder label {display: block; flex: none;}
-#user-interface.keyboard #message-holder label {display: none;}
+#user-interface.keyboard #message-holder > label {display: none;}
 
 svg {
     border: 1px black solid;
@@ -163,7 +114,9 @@ body {
 input[type="number"] {
     width: 3em;
     text-align: right;
-    margin-left: 1em;
+}
+input[type="number"] + label {
+    padding-left: 0.25em;
 }
 
 /*
@@ -174,4 +127,34 @@ Make sure that can't happen by not showing any such controls.
 */
 #user-interface.keyboard input[type="number"] {
     display: none;
+}
+
+/* Control Panel styling that in principle only applies to this user interface.
+ */
+
+.control-panel__structure-colour-fill {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr 1fr 1fr;
+    margin-bottom: 0.5em;
+}
+
+.control-panel__structure-colour-fill label {
+    text-align: right;
+    align-self: center;
+}
+
+.control-panel__structure-colour-sequence { display: inline; }
+.control-panel__structure-colour-zoom__rect {
+    display: inline;
+    padding-left: 0.5em;
+}
+
+.control-panel__structure-speech select {
+    display: block;
+}
+
+.control-panel__structure-manage-settings-divider,
+.control-panel__structure-developer-divider
+{
+    height: 0px;
 }
