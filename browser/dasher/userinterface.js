@@ -213,7 +213,8 @@ export default class UserInterface {
             // keyboard mode. So, pull the prediction select control out and
             // insert it as the first child of the message holder, which is
             // shown in keyboard mode.
-            this.messageDisplay.loadControls(this._panels.main.prediction.piece);
+            this._messageDisplay.loadControls(
+                this._panels.main.prediction.piece);
         }
 
         this._panels.main.prediction.listener = index => {
