@@ -35,7 +35,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		049D59C023BB5DBE00C0171B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -78,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FFD724D244DFFF900CDE093 /* CaptiveWebView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +118,7 @@
 		049D59BB23BB5DAC00C0171B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3FFD724C244DFFF900CDE093 /* CaptiveWebView.framework */,
 				049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */,
 			);
 			name = Frameworks;
@@ -199,7 +201,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = "ACE Centre-North";
+				ORGANIZATIONNAME = "Ace Centre-North";
 				TargetAttributes = {
 					0400FFED23BB5788009AF4A0 = {
 						CreatedOnToolsVersion = 10.1;
@@ -296,7 +298,9 @@
 		0400FFF623BB5788009AF4A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -305,8 +309,9 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = Keyboard;
+				PRODUCT_NAME = "Dasher v6";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -316,7 +321,9 @@
 		0400FFF723BB5788009AF4A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -325,8 +332,9 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = Keyboard;
+				PRODUCT_NAME = "Dasher v6";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -336,7 +344,8 @@
 		04D77CC623BB56B700C25698 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -397,7 +406,8 @@
 		04D77CC723BB56B700C25698 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -454,6 +464,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
@@ -462,7 +473,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = Dasher;
+				PRODUCT_NAME = "Dasher v6 Keyboard";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -473,6 +484,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
@@ -481,7 +493,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = Dasher;
+				PRODUCT_NAME = "Dasher v6 Keyboard";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
