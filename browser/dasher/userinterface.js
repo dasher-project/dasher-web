@@ -24,6 +24,7 @@ import predictor_test from './predictor_test.js';
 import {ppmModelPredict} from './predictor_ppm.js';
 
 import Speech from './speech.js';
+import KeyHandler from './keyhandler.js';
 
 import panels from "./controlpanelspecification.js"
 import ControlPanel from "./controlpanel.js";
@@ -83,6 +84,8 @@ export default class UserInterface {
 
         this._message = undefined;
         this._messageDisplay = new MessageDisplay(this._limits);
+
+        this._keyHandler = new KeyHandler();
 
         this._diagnosticSpans = null;
         this._controlPanel = new ControlPanel(panels);
@@ -157,6 +160,8 @@ export default class UserInterface {
 
         this._messageDisplay.load(this._header,this._keyboardMode);
         this._load_view();
+
+        this._header.add_child(this._keyHandler.piece);
 
         this._load_control_panel(loadingID);
         this._load_controls();
@@ -315,6 +320,9 @@ export default class UserInterface {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
         };
+        panel.keyHandler.listener = checked => {
+            this._keyHandler.active = checked;
+        }
 
         this._load_advance_controls();
         this._load_diagnostic();
