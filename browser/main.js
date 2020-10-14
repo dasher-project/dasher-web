@@ -8,7 +8,7 @@ class Main {
     constructor(bridge) {
         const loading = document.getElementById('loading');
         this._bridge = bridge;
-        loading.firstChild.textContent = "ACE Keyboard";
+        loading.firstChild.textContent = "Dasher Keyboard";
 
         bridge.sendObject({"command": "ready"})
         .then(response => this._transcribe(response))
