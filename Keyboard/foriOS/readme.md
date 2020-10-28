@@ -5,7 +5,7 @@ This directory is for the proof-of-concept custom keyboard for iOS.
 Notes
 =====
 -   The iOS project has a workspace. This means that you should in general
-    **always open the workspace** CustomKeyboard.xcworkspace file, and **never
+    **always open the workspace** DasherKeyboard.xcworkspace file, and **never
     open the project**.
 
     Contents of the workspace are as follows.
