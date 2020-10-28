@@ -14,7 +14,8 @@ export default class MessageStore {
     //TESTS
     test(){
       //this._delete_from_browser(17,true);
-      this.importToDatabase();
+      //this.importToDatabase();
+      return this._databaseName;
     }
 
     /*********************************************************/
@@ -23,7 +24,7 @@ export default class MessageStore {
       let messageData = { msg: message, datetime: datetime};
       this._save_to_browser(messageData,true);
     }
-    
+
     viewMessageStore(){
       this._load_from_browser().catch(() => {}).then(messages => {
         //TODO - present these message in another place other than the console
