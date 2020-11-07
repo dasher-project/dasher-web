@@ -9,16 +9,45 @@ import UIKit
 import WebKit
 import CaptiveWebView
 
+
+let dateFormatter = { () -> DateFormatter in
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .long
+    return formatter
+}()
+
+// TOTH: https://stackoverflow.com/a/43061289/7657675
+extension Optional where Wrapped == String {
+    func quote() -> String? {
+        if let returning = self {
+            return "\"\(returning)\""
+        }
+        else {
+            return nil
+        }
+    }
+}
+
+//private func quote(_ text:String?) -> String {
+//    if let returning = text {
+//        return "\"\(returning)\""
+//    }
+//    else {
+//        return "nil"
+//    }
+//}
+
 class KeyboardViewController:
 UIInputViewController, CaptiveWebViewCommandHandler
 {
-    var wkWebView: WKWebView?
-    let dateFormatter = DateFormatter()
-
     // Just in case the web view doesn't load, there's a safety button to select
     // the next keyboard.
     @IBOutlet var safetyButton: UIButton!
-    var logLabel: UILabel!
+
+    var wkWebView: WKWebView?
+    var wkWebViewReady = false
+    var logLabel = UILabel(frame:CGRect(x: 0, y: 100, width: 400, height: 100))
     
     var heightConstraint: NSLayoutConstraint? = nil
 
@@ -34,11 +63,17 @@ UIInputViewController, CaptiveWebViewCommandHandler
         return self.inputView
     }
     
+    // Following doesn't get invoked if there is a Bluetooth keyboard connected.
+    // Maybe because this is a keyboard extension. The key presses seem to get
+    // sent to the principal app that is open, not to the custom keyboard.
+    override func pressesBegan(
+        _ presses: Set<UIPress>, with event: UIPressesEvent?
+    ) {
+        self.log("pressesBegan(\(presses),\(event))")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.dateFormatter.dateStyle = .short
-        self.dateFormatter.timeStyle = .long
 
         // Uncomment the next line to delete the log file on load. It's been
         // better to delete just before the view disappears, so that the log
@@ -80,8 +115,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
         // immediately get constrained.
         // The view and inputView don't get proper frames until viewDidAppear.
 
-        self.logLabel = UILabel(frame: CGRect(
-            x: 0, y: 100, width: 400, height: 100))
+//        self.logLabel = UILabel(frame: CGRect(
+//            x: 0, y: 100, width: 400, height: 100))
         self.logLabel.text = "viewDidLoad"
         self.logLabel.layer.borderColor = UIColor.green.cgColor
         self.logLabel.layer.borderWidth = 2.0
@@ -141,45 +176,139 @@ UIInputViewController, CaptiveWebViewCommandHandler
         ).isActive = true
     }
     
-    private func log(_ message: String) {
+//    struct AnyCodable:Codable {
+//        let codable:Codable
+//
+//        init(_ codable:Codable) {
+//            self.codable = codable
+//        }
+//        init(from decoder: Decoder) throws {
+//            self.codable = decoder.singleValueContainer().
+//        }
+//
+//        func encode(to encoder: Encoder) throws {
+//            try codable.encode(to: encoder)
+//        }
+//    }
+//
+    private struct LogEntry:Codable {
+        let time:String
+        let messages: [String]
+        let index:Int
+        let proxy:[String?]
+        
+        init(_ messages:[String], _ index:Int, _ documentProxy:UITextDocumentProxy) {
+            self.time = dateFormatter.string(from:Date())
+            self.messages = messages
+            self.index = index
+            self.proxy = [
+                documentProxy.documentContextBeforeInput,
+                documentProxy.documentContextAfterInput
+            ]
+        }
+        
+        init(_ message:String, _ index:Int, _ documentProxy:UITextDocumentProxy) {
+            self.init([message], index, documentProxy)
+        }
+   }
+
+
+    private struct AnyEncodable:Encodable {
+        let encodable:Encodable
+        
+        init(_ encodable:Encodable) {
+            self.encodable = encodable
+        }
+
+        func encode(to encoder: Encoder) throws {
+            try encodable.encode(to: encoder)
+        }
+    }
+    
+    private func log(_ messages:String?...) {
+        let encoder = JSONEncoder()
         let logPath = self.getLogPath()
         if !FileManager.default.fileExists(atPath: logPath.path) {
             // Initialise the log file to an empty array.
-            let fileData = try! JSONSerialization.data(
-                withJSONObject:[String]())
+            let fileData = try! encoder.encode([LogEntry]())
             try! fileData.write(to: logPath)
         }
-        let logAny = try! JSONSerialization.jsonObject(
-            with: Data(contentsOf: logPath))
-        var log = logAny as! [Any]
-        let entry: [String : Any] = [
-            "message": message, "index": log.count,
-            "time": self.dateFormatter.string(from: Date())]
-        log.insert(entry, at: 0)
-        if let webView = self.wkWebView {
-            CaptiveWebView.sendObject(to: webView, ["log": log])
+        let decoder = JSONDecoder()
+        var log:[LogEntry] = try! decoder.decode(
+            [LogEntry].self, from: Data(contentsOf: logPath))
+
+        let logEntry = LogEntry(messages.compactMap({$0}), log.count, textDocumentProxy)
+        log.insert(logEntry, at: 0)
+        
+        let sendLog:[[String:Any]]
+        do {
+            let encoded = try encoder.encode(log)
+            let any = try JSONSerialization.jsonObject(with: encoded, options: [])
+            if let dict = any as? [[String:Any]] {
+                sendLog = dict
+            }
+            else {
+                sendLog = [["uncast":"\(any)"]]
+            }
         }
-        if let uiLabel = self.logLabel {
-            uiLabel.text = log.map({
-                guard let dict = $0 as? Dictionary<String, Any> else {
-                    return String(describing: $0)
-                }
-                if
-                    let index = dict["index"] as? Int,
-                    let entryTime = dict["time"] as? String,
-                    let entryMessage = dict["message"] as? String
-                {
-                    return [
-                        "\(index) ", entryTime, " ", entryMessage].joined()
-                }
-                else {
-                    return String(describing: dict)
-                }
-            }).joined(separator: "\n")
+        catch {
+            sendLog = [["catch": error, "entry": "\(logEntry)"]]
         }
-        let fileData = try! JSONSerialization.data(withJSONObject:log)
+        
+        if wkWebViewReady, let webView = self.wkWebView {
+            CaptiveWebView.sendObject(to: webView, ["log": sendLog]) {
+                (result: Any?, resultError: Error?) in
+                if let error = resultError {
+                    self.showLog(["error":"\(error)", "entry":"\(logEntry)"])
+                }
+            }
+        }
+        else {
+            self.showLog(logEntry)
+        }
+        
+        let fileData = try! encoder.encode(log)
         try! fileData.write(to: logPath)
     }
+    private func log(_ message: String, _ textInput: UITextInput?) {
+        log(message, textInput == nil ? nil : quote(textInput))
+    }
+    
+    private func showLog(_ entries: Encodable) {
+        let encoder = JSONEncoder()
+        let text:String
+        do {
+            let encoded:Data = try encoder.encode(AnyEncodable(entries))
+            text = String(data:encoded, encoding:.utf8)
+                ?? "utf8 failed String(\(encoded),)"
+        }
+        catch {
+            text = "error:\(error) entries:\(entries)"
+        }
+//        logLabel.text = entries.map({
+//            guard let dict = $0 as? Dictionary<String, Any> else {
+//                return String(describing: $0)
+//            }
+//            if
+//                let index = dict["index"] as? Int,
+//                let entryTime = dict["time"] as? String,
+//                let entryMessage = dict["message"] as? String
+//            {
+//                return [
+//                    "\(index) ", entryTime, " ", entryMessage].joined()
+//            }
+//            else {
+//                return String(describing: dict)
+//            }
+//        }).joined(separator: "\n")
+        logLabel.text = text
+
+        if wkWebViewReady, let webView = self.wkWebView {
+            webView.layer.opacity = 0.5
+        }
+
+    }
+    
     private func logFrames(_ message: String) {
         var inputViewMessage = "nil"
         if let inputView = self.inputView {
@@ -206,17 +335,30 @@ UIInputViewController, CaptiveWebViewCommandHandler
     
     override func textWillChange(_ textInput: UITextInput?) {
         // The app is about to change the document's contents. Perform any preparation here.
-        // self.log("textWillChange")
+        self.log("textWillChange", textInput)
     }
     
     override func textDidChange(_ textInput: UITextInput?) {
         // The app has just changed the document's contents, the document context has been updated.
-        // self.log("textDidChange")
+        self.log("textDidChange", textInput)
+    }
+    
+    override func selectionDidChange(_ textInput: UITextInput?) {
+        self.log("selectionDidChange", textInput)
+    }
+
+    private func quote(_ textInput:UITextInput?) -> String? {
+        if let returning = textInput {
+            return "\"\(returning)\""
+        }
+        else {
+            return nil
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         let heightSet = self.setHeight(400)
 
         var dimensionsMessage = "Dimensions not set"
@@ -234,6 +376,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
         else {
             self.log("viewDidAppear null \(dimensionsMessage) \(heightSet)")
         }
+        self.log("viewDidAppear")
     }
     
     private func setHeight(_ height:CGFloat) -> Bool {
@@ -297,6 +440,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // unless something goes wrong.
         
         case "ready":
+            self.wkWebViewReady = true
             returning["predictorCommands"] = ["predict"]
             returning["showNextKeyboard"] = self.needsInputModeSwitchKey
             returning["showLog"] = true
