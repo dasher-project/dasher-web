@@ -38,6 +38,25 @@ Notes
     -   Archived instructions are here, for example:  
         [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)
 
+-   Custom keyboards can't be used to enter passwords, nor phone numbers.
+
+    See this page:  
+    [https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard/configuring_a_custom_keyboard_interface](https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard/configuring_a_custom_keyboard_interface)
+
+    Under the Support Different Input Types heading, it says:
+
+    >   Some text input views don’t allow custom keyboards:
+    >
+    >   -   Secure text field entries always show the system keyboard when the
+    >       user begins entering text in a secure text field, temporarily
+    >       removing your custom keyboard if it’s active. The system shows your
+    >       keyboard again when the user begins entering text into a non-secure
+    >       text field.
+    >
+    >   -   Text input fields configured with a keyboard type of
+    >       UIKeyboardType.phonePad or UIKeyboardType.namePhonePad show the
+    >       system keyboard.
+
 -   It seems like the Xcode debugger always crashes a second or two after the
     custom keyboard opens. If the keyboard is re-opened then it runs OK but you
     can't, for example, get any logging output in the Xcode console.
