@@ -176,28 +176,17 @@ UIInputViewController, CaptiveWebViewCommandHandler
         ).isActive = true
     }
     
-//    struct AnyCodable:Codable {
-//        let codable:Codable
-//
-//        init(_ codable:Codable) {
-//            self.codable = codable
-//        }
-//        init(from decoder: Decoder) throws {
-//            self.codable = decoder.singleValueContainer().
-//        }
-//
-//        func encode(to encoder: Encoder) throws {
-//            try codable.encode(to: encoder)
-//        }
-//    }
-//
     private struct LogEntry:Codable {
         let time:String
         let messages: [String]
         let index:Int
         let proxy:[String?]
         
-        init(_ messages:[String], _ index:Int, _ documentProxy:UITextDocumentProxy) {
+        init(
+            _ messages:[String],
+            _ index:Int,
+            _ documentProxy:UITextDocumentProxy
+        ) {
             self.time = dateFormatter.string(from:Date())
             self.messages = messages
             self.index = index
@@ -205,10 +194,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
                 documentProxy.documentContextBeforeInput,
                 documentProxy.documentContextAfterInput
             ]
-        }
-        
-        init(_ message:String, _ index:Int, _ documentProxy:UITextDocumentProxy) {
-            self.init([message], index, documentProxy)
         }
    }
 
@@ -237,7 +222,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
         var log:[LogEntry] = try! decoder.decode(
             [LogEntry].self, from: Data(contentsOf: logPath))
 
-        let logEntry = LogEntry(messages.compactMap({$0}), log.count, textDocumentProxy)
+        let logEntry = LogEntry(
+            messages.compactMap({$0}), log.count + 1, textDocumentProxy)
         log.insert(logEntry, at: 0)
         
         let sendLog:[[String:Any]]
@@ -264,14 +250,21 @@ UIInputViewController, CaptiveWebViewCommandHandler
             }
         }
         else {
-            self.showLog(logEntry)
+            self.showLog(log)
         }
         
         let fileData = try! encoder.encode(log)
         try! fileData.write(to: logPath)
     }
-    private func log(_ message: String, _ textInput: UITextInput?) {
-        log(message, textInput == nil ? nil : quote(textInput))
+    private func log(_ callbackName: String, _ textInput: UITextInput?) {
+        let description:String
+        if let input = textInput {
+            description = "\(input)"
+        }
+        else {
+            description = "null"
+        }
+        log([callbackName, "(", description, ")"].joined(separator: ""))
     }
     
     private func showLog(_ entries: Encodable) {
@@ -285,22 +278,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
         catch {
             text = "error:\(error) entries:\(entries)"
         }
-//        logLabel.text = entries.map({
-//            guard let dict = $0 as? Dictionary<String, Any> else {
-//                return String(describing: $0)
-//            }
-//            if
-//                let index = dict["index"] as? Int,
-//                let entryTime = dict["time"] as? String,
-//                let entryMessage = dict["message"] as? String
-//            {
-//                return [
-//                    "\(index) ", entryTime, " ", entryMessage].joined()
-//            }
-//            else {
-//                return String(describing: dict)
-//            }
-//        }).joined(separator: "\n")
         logLabel.text = text
 
         if wkWebViewReady, let webView = self.wkWebView {
@@ -344,16 +321,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
     }
     
     override func selectionDidChange(_ textInput: UITextInput?) {
+        // Never seems to get invoked.
         self.log("selectionDidChange", textInput)
-    }
-
-    private func quote(_ textInput:UITextInput?) -> String? {
-        if let returning = textInput {
-            return "\"\(returning)\""
-        }
-        else {
-            return nil
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
