@@ -29,9 +29,14 @@ Notes
 -   ToDo: Maybe change the Captive Web View load() return value in case the
     underlying load returns a null WKNavigation.
 
--   Instructions for custom keyboards for iOS are in the Apple developer
-    documentation archive here:  
-    [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)
+-   Instructions for custom keyboards for iOS can be found on the Apple
+    developer website.
+
+    -   Current instructions are here, for example:  
+        [https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard](https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard)
+
+    -   Archived instructions are here, for example:  
+        [https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html#//apple_ref/doc/uid/TP40014214-CH16-SW1)
 
 -   It seems like the Xcode debugger always crashes a second or two after the
     custom keyboard opens. If the keyboard is re-opened then it runs OK but you
