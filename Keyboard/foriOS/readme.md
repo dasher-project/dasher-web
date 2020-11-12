@@ -57,6 +57,15 @@ Notes
     >       UIKeyboardType.phonePad or UIKeyboardType.namePhonePad show the
     >       system keyboard.
 
+-   Developers have complained about lack of support for custom keyboards in the
+    past.
+
+    -   http://archagon.net/blog/2014/11/08/the-trials-and-tribulations-of-writing-a-3rd-party-ios-keyboard/
+
+    -   https://developer.apple.com/forums/thread/45121
+
+    The points about which they are complaining still apply.
+
 -   It seems like the Xcode debugger always crashes a second or two after the
     custom keyboard opens. If the keyboard is re-opened then it runs OK but you
     can't, for example, get any logging output in the Xcode console.

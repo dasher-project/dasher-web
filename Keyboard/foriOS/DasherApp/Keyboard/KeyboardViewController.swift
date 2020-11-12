@@ -29,14 +29,91 @@ extension Optional where Wrapped == String {
     }
 }
 
-//private func quote(_ text:String?) -> String {
-//    if let returning = text {
-//        return "\"\(returning)\""
-//    }
-//    else {
-//        return "nil"
-//    }
-//}
+extension Optional where Wrapped == UIKeyboardType {
+    func name() -> String? {
+        switch self {
+        case nil:
+            return nil
+        case .asciiCapable:
+            return "asciiCapable"
+        case .decimalPad:
+            return "decimalPad"
+        case .default:
+            return "default"
+        case .emailAddress:
+            return "emailAddress"
+        case .namePhonePad:
+            return "namePhonePad"
+        case .numberPad:
+            return "numberPad"
+        case .numbersAndPunctuation:
+            return "numbersAndPunctuation"
+        case .phonePad:
+            return "phonePad"
+        case .twitter:
+            return "twitter"
+        case .URL:
+            return "URL"
+        case .webSearch:
+            return "webSearch"
+        case .asciiCapableNumberPad:
+            return "asciiCapableNumberPad"
+        @unknown default:
+            return String(describing: self)
+        }
+    }
+}
+
+extension Optional where Wrapped == UIKeyboardAppearance {
+    func name() -> String? {
+        switch self {
+        case .dark:
+            return "dark"
+        case .none:
+            // This one is actually nil. You can tell by adding a case for nil.
+            return "none"
+        case .default:
+            return "default"
+        case .light:
+            return "light"
+        @unknown default:
+            return String(describing: self)
+        }
+    }
+}
+
+extension String {
+    func functionName() -> String {
+        if let index = firstIndex(of: "(") {
+            return String(prefix(upTo: index))
+        }
+        else {
+            return self
+        }
+    }
+}
+
+extension UITextDocumentProxy {
+    func asDictionary() -> [String:Any?] {
+        var returning = [
+            "hasText": hasText,
+            "identifier": documentIdentifier.uuidString,
+            "keyboardType": self.keyboardType.name(),
+            "keyboardAppearance": self.keyboardAppearance.name()
+        ] as [String:Any?]
+
+        var value:String? = nil
+        // For some reason, self.textContentType == nil was always false.
+        if let it = self.textContentType as? UITextContentType {
+            value = "\(it)"
+        }
+        // TOTH for how to set nil into a dictionary:
+        // https://stackoverflow.com/a/36542735/7657675
+        returning.updateValue(value, forKey: "textContentType")
+
+        return returning
+    }
+}
 
 class KeyboardViewController:
 UIInputViewController, CaptiveWebViewCommandHandler
@@ -52,7 +129,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
     var heightConstraint: NSLayoutConstraint? = nil
 
     override func updateViewConstraints() {
-        // self.log("updateViewConstraints")
         super.updateViewConstraints()
     }
     
@@ -69,8 +145,46 @@ UIInputViewController, CaptiveWebViewCommandHandler
     override func pressesBegan(
         _ presses: Set<UIPress>, with event: UIPressesEvent?
     ) {
-        self.log("pressesBegan(\(presses),\(event))")
+        self.log(callback: #function, "(\(presses),\(event))")
     }
+    
+    // TOTH KVO in Swift:
+    // https://nalexn.github.io/kvo-guide-for-key-value-observing/
+    class Observer: NSObject {
+        var observations: [NSKeyValueObservation]?
+        
+        init(_ controller:KeyboardViewController) {
+            super.init()
+
+            observations = [
+                controller.observe(\.obsInt, options: [.old, .new]) {
+                    observed, change in
+                    controller.log(
+                        "obsInt \(change.oldValue) \(change.newValue)")
+                },
+                controller.observe(\.obsTring, options: [.old, .new]) {
+                    observed, change in
+                    controller.log(
+                        "obsTring \(change.oldValue) \(change.newValue)")
+                },
+                controller.observe(
+                    \.textDocumentProxy.documentContextBeforeInput,
+                    options: [.old, .new]) {
+                    observed, change in
+                    controller.log(
+                        "obsBef \(change.oldValue) \(change.newValue)")
+                }
+                
+
+            ]
+
+        }
+    }
+    
+    @objc dynamic var obsInt:Int = 0
+    @objc dynamic var obsTring:String = "."
+
+    var observer:Observer? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,7 +272,11 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // self.constrain(view: webView, to: self.view, leftSide: true)
         }
 
-        self.log("viewDidLoad")
+        self.log(callback: #function)
+        
+        observer = Observer(self)
+        obsInt += 2
+        obsTring += "fid"
     }
     
     private func constrain(
@@ -192,6 +310,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
             self.index = index
             self.proxy = [
                 documentProxy.documentContextBeforeInput,
+                documentProxy.selectedText,
                 documentProxy.documentContextAfterInput
             ]
         }
@@ -256,6 +375,9 @@ UIInputViewController, CaptiveWebViewCommandHandler
         let fileData = try! encoder.encode(log)
         try! fileData.write(to: logPath)
     }
+    private func log(callback: String, _ notes: String...) {
+        log(([callback.functionName()] + notes).joined(separator: " "))
+    }
     private func log(_ callbackName: String, _ textInput: UITextInput?) {
         let description:String
         if let input = textInput {
@@ -264,7 +386,9 @@ UIInputViewController, CaptiveWebViewCommandHandler
         else {
             description = "null"
         }
-        log([callbackName, "(", description, ")"].joined(separator: ""))
+        log([
+            callbackName.functionName(), "(", description, ")"
+        ].joined(separator: ""))
     }
     
     private func showLog(_ entries: Encodable) {
@@ -311,18 +435,27 @@ UIInputViewController, CaptiveWebViewCommandHandler
     }
     
     override func textWillChange(_ textInput: UITextInput?) {
+        super.textWillChange(textInput)
         // The app is about to change the document's contents. Perform any preparation here.
-        self.log("textWillChange", textInput)
+        self.log(#function, textInput)
     }
     
     override func textDidChange(_ textInput: UITextInput?) {
+        super.textDidChange(textInput)
         // The app has just changed the document's contents, the document context has been updated.
-        self.log("textDidChange", textInput)
+        obsInt += 1
+        obsTring += ".\(obsInt)"
+        self.log(#function, textInput)
     }
     
+    override func selectionWillChange(_ textInput: UITextInput?) {
+        // Never seems to get invoked.
+        self.log(#function, textInput)
+    }
+
     override func selectionDidChange(_ textInput: UITextInput?) {
         // Never seems to get invoked.
-        self.log("selectionDidChange", textInput)
+        self.log(#function, textInput)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -340,12 +473,15 @@ UIInputViewController, CaptiveWebViewCommandHandler
             webView.layer.borderWidth = 0
             let loaded = CaptiveWebView.load(
                 in: webView, scheme: "local", file: "Keyboard.html")
-            self.log("viewDidAppear \(loaded) \(dimensionsMessage) \(heightSet)")
+            self.log(
+                callback: #function
+                , "\(loaded)", dimensionsMessage, "\(heightSet)")
         }
         else {
-            self.log("viewDidAppear null \(dimensionsMessage) \(heightSet)")
+            self.log(
+                callback: #function, "null", dimensionsMessage, "\(heightSet)")
         }
-        self.log("viewDidAppear")
+        self.log(callback: #function)
     }
     
     private func setHeight(_ height:CGFloat) -> Bool {
@@ -372,7 +508,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
         super.viewWillAppear(animated)
         self.logLabel.isHidden = false
         self.wkWebView?.isHidden = false
-        self.logFrames("viewWillAppear")
+        self.logFrames(#function.functionName())
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -387,10 +523,13 @@ UIInputViewController, CaptiveWebViewCommandHandler
         self.wkWebView?.removeFromSuperview()
         self.wkWebView = nil
 
-        let deleted = self.deleteLog()
-        self.log("viewWillDisappear \(deleted) Web view " + (
-            self.wkWebView == nil ? "removed" : "unreleased"))
+        self.log(
+            callback: #function, self.deleteLog(),
+            "Web view " + (self.wkWebView == nil ? "removed" : "unreleased")
+        )
     }
+    
+    @objc dynamic var delme = 3
     
     func handleCommand(_ commandDictionary: Dictionary<String, Any>)
         -> Dictionary<String, Any>
@@ -410,9 +549,16 @@ UIInputViewController, CaptiveWebViewCommandHandler
         
         case "ready":
             self.wkWebViewReady = true
-            returning["predictorCommands"] = ["predict"]
-            returning["showNextKeyboard"] = self.needsInputModeSwitchKey
-            returning["showLog"] = true
+            returning.merge([
+                "predictorCommands": "predict",
+                "showNextKeyboard": self.needsInputModeSwitchKey,
+                "showLog": true,
+                "documentProxy": textDocumentProxy.asDictionary()
+            ])
+            { (_, new) in new }
+
+            // self.textDocumentProxy.documentInputMode will be nil or something
+            // about the current selected language in the document.
         
         case Predictor.Command.name:
             do {
