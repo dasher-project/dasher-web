@@ -25,6 +25,15 @@ const KEY = {
 };
 Object.keys(KEY).forEach(key => KEY[key] = key);
 
+// Utility to facilitate using KEY properties as keys. This is here because the
+// following syntax isn't allowed in JavaScript.
+//
+//     const d = {KEY.command: KEY.insert, KEY.text: "typing"};
+//
+// But the following syntax is OK.
+//
+//     const d = assign({}, [[KEY.command, KEY.ready], [KEY.text, "typing"]]);
+//
 function assign(target, pairs) {
     pairs.forEach(([key, value]) => target[key] = value);
     return target;
@@ -43,11 +52,11 @@ class Keyboard {
         this._transcript = PageBuilder.add_transcript(undefined, true);
 
         bridge.receiveObjectCallback = command => {
-            if (command.log !== undefined) {
-                this._display_keyboard_log(command.log);
+            if (command.log === undefined || this._transcript === null) {
+                this._transcribe(command);
             }
             else {
-                this._transcribe(command);
+                this._display_keyboard_log(command.log);
             }
             return assign(command, [KEY.confirm, "Keyboard"]);
         };
@@ -63,18 +72,24 @@ class Keyboard {
     }
 
     _build_keyboard_log_panel() {
-        const builder = new PageBuilder('fieldset', undefined, document.body);
-        builder.node.classList.add('dck__native-transcript');
-        const holder = new PageBuilder(builder.add_node(
+        const panel = {builder: new PageBuilder('fieldset')};
+        panel.holder = new PageBuilder(panel.builder.add_node(
             'div', "Keyboard log will appear here."));
-        builder.add_node('legend', "Keyboard Log");
+        panel.builder.add_node('legend', "Keyboard Log");
 
-        this._keyboardLog = holder;
+        this._keyboardLogPanel = panel;
     }
 
     _display_keyboard_log(logEntries) {
-        this._keyboardLog.remove_childs();
-        const pre = this._keyboardLog.add_node(
+        if (logEntries === undefined || this._transcript === null) {
+            return false;
+        }
+        if (typeof logEntries !== typeof []) {
+            this._transcribe({entries: logEntries});
+            return false;
+        }
+        this._keyboardLogPanel.holder.remove_childs();
+        const pre = this._keyboardLogPanel.holder.add_node(
             'pre',
             logEntries.map(({index, messages, proxy}) => {
                 const message = messages.join(" ");
@@ -91,7 +106,7 @@ class Keyboard {
             }).join("\n")
         );
         pre.classList.add('cwv-transcript__log_line');
-        // this._keyboardLog.add_node('pre', JSON.stringify(logEntries, undefined, 4));
+        return true;
     }
 
     _transcribe(messageObject) {
@@ -118,8 +133,7 @@ class Keyboard {
             this._bridge.sendObject(sent) :
             Promise.reject(new Error("No Bridge!"))
         ).then(response => {
-            if (response.logContents != undefined) {
-                this._display_keyboard_log(response.logContents);
+            if (this._display_keyboard_log(response.logContents)) {
                 delete response.logContents;
             }
 
@@ -129,7 +143,7 @@ class Keyboard {
             return response;
         })
         .catch(error => {
-            this._transcribe(error);
+            this._transcribe({sent:sent, error: `${error}`});
             return error;
         });
     }
@@ -137,8 +151,22 @@ class Keyboard {
     _ready(loading, ui) {
         this._send([KEY.command, KEY.ready], true)
         .then(response => {
+            // On Android, the Chrome developer tools can be used to debug the
+            // keyboard web view. This means that there's no need to show the
+            // log in the web view. It's easier to use the console.  
+            // On iOS, it doesn't seem to be possible to connect the Safari
+            // developer tools to the keyboard web view. So, log output is
+            // needed for iOS.  
+            // The showLog flag tells the JS layer how to behave.
+            //
+            // -   showLog:false means don't show the log and log to the
+            //     console.
+            // -    showLog:true means show the log. You have to scroll up to
+            //      see it but it's better than nothing. Default is true.
             const showLog = response.showLog;
             if (showLog === undefined || showLog) {
+                PageBuilder.into(
+                    document.body, this._keyboardLogPanel.builder.node);
                 PageBuilder.into(document.body, this._transcript.node);
             }
             else {
@@ -176,7 +204,7 @@ class Keyboard {
 
             loading.remove();
         })
-        .catch(error => this._transcribe({"error": `${error}`}));
+        .catch(error => this._transcribe({error: `${error}`}));
     }
 
     _add_keyboard_button() {

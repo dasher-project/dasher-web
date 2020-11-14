@@ -9,14 +9,6 @@ import UIKit
 import WebKit
 import CaptiveWebView
 
-
-let dateFormatter = { () -> DateFormatter in
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .long
-    return formatter
-}()
-
 // Utility method for getting a nice string for an enumerated constant. The
 // enumeration doesn't seem to have a way to do this like an Android .name
 // property.
@@ -111,6 +103,66 @@ extension UITextDocumentProxy {
         returning.updateValue(value, forKey: "textContentType")
 
         return returning
+    }
+}
+
+// Next declaration instantiates and configures a date formatter in a Swift
+// closure, and calls the closure. This seems like the only way to get a static
+// singleton initialised.
+let dateFormatter = { () -> DateFormatter in
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .long
+    return formatter
+}()
+
+// Earlier versions of the code used dictionaries for log entries. It was a
+// bit error prone so it was replaced with a Codable. JSON is still used as
+// the writing and reading format.
+// This struct is automatically Codable because all its properties are
+// Codable.
+private struct LogEntry:Codable {
+    let time:String
+    let messages: [String]
+    let index:Int
+    let proxy:[String?]
+    
+    init(
+        _ messages:[String],
+        _ index:Int,
+        _ documentProxy:UITextDocumentProxy
+    ) {
+        self.time = dateFormatter.string(from:Date())
+        self.messages = messages
+        self.index = index
+        self.proxy = [
+            documentProxy.documentContextBeforeInput,
+            documentProxy.selectedText,
+            documentProxy.documentContextAfterInput
+        ]
+    }
+}
+
+extension Array where Element == LogEntry {
+    func jsonAble(
+        options:JSONSerialization.ReadingOptions = []
+    ) -> [[String:Any]]
+    {
+        do {
+            let encoder = JSONEncoder()
+            let encoded = try encoder.encode(self)
+            let any = try JSONSerialization.jsonObject(
+                with: encoded, options:options)
+            if let dict = any as? [[String:Any]] {
+                return dict
+            }
+            else {
+                return [["uncast":"\(any)"]]
+            }
+        }
+        catch {
+            return [["catch": error, "entry": "\(self)"]]
+        }
     }
 }
 
@@ -318,34 +370,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
             equalTo: leftSide ? right.centerXAnchor : right.rightAnchor
         ).isActive = true
     }
-
-    // Earlier versions of the code used dictionaries for log entries. It was a
-    // bit error prone so it was replaced with a Codable. JSON is still used as
-    // the writing and reading format.
-    // This struct is automatically Codable because all its properties are
-    // Codable.
-    private struct LogEntry:Codable {
-        let time:String
-        let messages: [String]
-        let index:Int
-        let proxy:[String?]
-        
-        init(
-            _ messages:[String],
-            _ index:Int,
-            _ documentProxy:UITextDocumentProxy
-        ) {
-            self.time = dateFormatter.string(from:Date())
-            self.messages = messages
-            self.index = index
-            self.proxy = [
-                documentProxy.documentContextBeforeInput,
-                documentProxy.selectedText,
-                documentProxy.documentContextAfterInput
-            ]
-        }
-    }
-
+    
     // You sometimes need to wrap an Encodable in a real type. It's something to
     // do with Encodable being a protocol, not a class.
     private struct AnyEncodable:Encodable {
@@ -365,25 +390,34 @@ UIInputViewController, CaptiveWebViewCommandHandler
     // Logs are written to a JSON file that is saved after every message. That
     // way, if the extension or app crashes, there's a chance of a clue.
     //
+    // Convenience function to get the path of the log file.
+    private func getLogPath() -> URL {
+        let fileManager = FileManager.default
+        let documentDirectory = fileManager.urls(for: .documentDirectory,
+                                                 in: .userDomainMask)[0]
+        return documentDirectory.appendingPathComponent("log.json")
+    }
+    //
+    private func readLog() -> (URL, [LogEntry]?) {
+        let logPath = self.getLogPath()
+        let log:[LogEntry]?
+        if FileManager.default.fileExists(atPath: logPath.path) {
+            let decoder = JSONDecoder()
+            log = try! decoder.decode([LogEntry].self,
+                                     from: Data(contentsOf: logPath))
+        }
+        else {
+            log = nil
+        }
+        return (logPath, log)
+    }
+    //
     // Main logging function.
     private func log(_ messages:String?...) {
-        // Read the log file.
-        //
-        // If the log file is absent, a new empty one will be created. The
-        // proper way to do that is to write an empty JSON array into it, which
-        // would need a JSON encoder. So, instantiate one here.
-        let encoder = JSONEncoder()
-        let logPath = self.getLogPath()
-        if !FileManager.default.fileExists(atPath: logPath.path) {
-            // Initialise the log file to an empty array.
-            let fileData = try! encoder.encode([LogEntry]())
-            try! fileData.write(to: logPath)
-        }
-        //
-        // Now actually read the file into an array of LogEntry.
-        let decoder = JSONDecoder()
-        var log:[LogEntry] = try! decoder.decode(
-            [LogEntry].self, from: Data(contentsOf: logPath))
+        let (logPath, logRead) = readLog()
+
+        // Next line makes a mutable and non-optional copy of the log as read.
+        var log = logRead ?? []
 
         // Create a LogEntry for the current log message. The compactMap filters
         // out any null elements.
@@ -393,28 +427,12 @@ UIInputViewController, CaptiveWebViewCommandHandler
         // Contents of the log file are most recent first.
         log.insert(logEntry, at: 0)
 
-        // Create a JSON representation of the whole log. That's what'll be
-        // sent to the web view to display.
-        let sendLog:[[String:Any]]
-        do {
-            // Re-use the JSON encoder instantiated at the top of the function.
-            let encoded = try encoder.encode(log)
-            let any = try JSONSerialization.jsonObject(with: encoded, options: [])
-            if let dict = any as? [[String:Any]] {
-                sendLog = dict
-            }
-            else {
-                sendLog = [["uncast":"\(any)"]]
-            }
-        }
-        catch {
-            sendLog = [["catch": error, "entry": "\(logEntry)"]]
-        }
-
         // Send the log to the web view, if it's finished loading and is ready
         // to receive and display.
         if wkWebViewReady, let webView = self.wkWebView {
-            CaptiveWebView.sendObject(to: webView, ["log": sendLog]) {
+            // The .jsonAble() method creates a representation that can be
+            // serialised.
+            CaptiveWebView.sendObject(to: webView, ["log": log.jsonAble()]) {
                 (result: Any?, resultError: Error?) in
                 if let error = resultError {
                     self.showLog(["error":"\(error)", "entry":"\(logEntry)"])
@@ -426,7 +444,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
         }
 
         // Write the new log.
-        let fileData = try! encoder.encode(log)
+        let fileData = try! JSONEncoder().encode(log)
         try! fileData.write(to: logPath)
     }
     //
@@ -478,14 +496,6 @@ UIInputViewController, CaptiveWebViewCommandHandler
             inputViewMessage = String(describing: inputView.frame)
         }
         self.log(message + " v:\(self.view.frame) i:\(inputViewMessage)")
-    }
-    //
-    // Convenience function to get the path of the log file.
-    private func getLogPath() -> URL {
-        let fileManager = FileManager.default
-        let documentDirectory = fileManager.urls(for: .documentDirectory,
-                                                 in: .userDomainMask)[0]
-        return documentDirectory.appendingPathComponent("log.json")
     }
     //
     // Delete the log file.
@@ -622,7 +632,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // Dasher UI gets reset so it makes sense.
             self.textDocumentProxy.insertText(
                 commandDictionary["text"] as! String)
-            returning ["removed"] = self.deleteLog()
+            returning["removed"] = self.deleteLog()
             
         case "nextKeyboard":
             // This is the Plan A of the safety button. The command could only
@@ -660,29 +670,20 @@ UIInputViewController, CaptiveWebViewCommandHandler
         }
 
         // Add the log to the response, so that it can be seen.
-        let logPath = self.getLogPath()
-        let fileManager = FileManager.default
+        let (logPath, logEntries) = self.readLog()
         let logSize: String
         do {
-            let attributes = try fileManager.attributesOfItem(
+            let attributes = try FileManager.default.attributesOfItem(
                 atPath: logPath.path)
             let logSizeNumber:NSNumber = attributes[.size] as? NSNumber ?? -1
             logSize = String(describing: logSizeNumber)
         } catch {
             logSize = error.localizedDescription
         }
-        let logContents:Any
-        do {
-            logContents = try JSONSerialization.jsonObject(
-                with: Data(contentsOf: logPath))
-            
-        } catch {
-            logContents = error.localizedDescription
-        }
         
         returning["logPath"] = String(describing: logPath)
         returning["logSize"] = logSize
-        returning["logContents"] = logContents
+        returning["logContents"] = logEntries?.jsonAble()
         
         returning["confirm"] = String(describing: type(of: self)) + " bridge OK."
         return returning

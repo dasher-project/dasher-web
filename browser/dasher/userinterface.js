@@ -323,7 +323,6 @@ export default class UserInterface {
         panel.keyHandler.listener = checked => {
             this._keyHandler.active = checked;
         }
-        this._keyHandler.active = true;
 
         this._load_advance_controls();
         this._load_diagnostic();
