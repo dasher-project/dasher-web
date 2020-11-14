@@ -208,7 +208,9 @@ export default class UserInterface {
         if (this._loading !== null) {
             this._panels.main.$.piece.add_child(this._loading);
         }
-        this._controlPanel.select_panel();
+        if (this._controlPanelParent !== null) {
+            this._controlPanel.select_panel();
+        }
     }
 
     _load_controls() {
