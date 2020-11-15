@@ -5,9 +5,7 @@ This directory has screen captures of Dasher Version Six.
 The following screen capture shows the Dasher Version Six custom keyboard for
 Android. The keyboard is running in the vanilla Contacts app.
 
-![**Screen Capture 1:** Dasher Version Six text input in the Android Contacts app](Keyboard_Android.png)
-
-<img src="Keyboard_Android.png" width="200"/>
+<img src="Keyboard_Android.png" width="300"/>
 
 Code for the custom keyboard for Android is in this repository. See:
 [../../Keyboard/forAndroid/](../../Keyboard/forAndroid/)
@@ -16,7 +14,7 @@ Code for the custom keyboard for Android is in this repository. See:
 The following screen capture shows the Dasher Version Six custom keyboard for
 iOS. The keyboard is running in the vanilla Contacts app.
 
-![**Screen Capture 2:** Dasher Version Six text input in the iOS Contacts app](Keyboard_iOS.png)
+<img src="Keyboard_iOS.png" width="300"/>
 
 The keyboard has access to the device's predictive text capability.
 
@@ -31,17 +29,17 @@ keyboard.
 The following screen capture shows the first screen in the standalone app. It is
 like an About screen.
 
-![**Screen Capture 3:** Standalone app for iOS, about screen](App_iOS1.png)
+<img src="App_iOS1.png" width="300"/>
 
 The following screen capture shows the second screen in the standalone app. It
 is an embedded web view running the Dasher Version Six user interface.
 
-![**Screen Capture 4:** Standalone app for iOS, Dasher user interface](App_iOS2.png)
+<img src="App_iOS2.png" width="300"/>
 
 Features like speech are available, as they are in the browser version. The
 standalone app, like the custom keyboard for iOS, has access to the device's
-predictive text. The app can be used offline, because all the web resources are
-packaged as app resources.
+predictive text. The app can be used offline, because the HTML, CSS, and
+JavaScript files are packaged as app resources.
 
 Code for the standalone app is in this repository, in the same location as the
 custom keyboard for iOS, above.
