@@ -7,6 +7,8 @@ Android. The keyboard is running in the vanilla Contacts app.
 
 ![**Screen Capture 1:** Dasher Version Six text input in the Android Contacts app](Keyboard_Android.png)
 
+<img src="Keyboard_Android.png" />
+
 Code for the custom keyboard for Android is in this repository. See:
 [../../Keyboard/forAndroid/](../../Keyboard/forAndroid/)
 
