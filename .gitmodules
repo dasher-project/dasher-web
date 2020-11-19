@@ -1,0 +1,3 @@
+[submodule "captive-web-view"]
+	path = captive-web-view
+	url = https://github.com/vmware/captive-web-view.git
