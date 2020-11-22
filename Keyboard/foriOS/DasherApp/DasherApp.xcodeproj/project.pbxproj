@@ -15,7 +15,7 @@
 		0457D9002455F6A700B883E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8FA2455F6A700B883E7 /* AppDelegate.swift */; };
 		0457D9052455F6B300B883E7 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D9032455F6B300B883E7 /* KeyboardViewController.swift */; };
 		0493224123BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
-		04A876EB2455FB51008E12AD /* Dasher v6.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Dasher v6.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		04A876EB2455FB51008E12AD /* Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04C4248923F9484300CCC4E4 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
 		04ECEA5F25670047000207E9 /* CaptiveWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 04ECEA5E25670047000207E9 /* CaptiveWebView */; };
 		04ECEA6225670135000207E9 /* CaptiveWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 04ECEA6125670135000207E9 /* CaptiveWebView */; };
@@ -39,7 +39,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				04A876EB2455FB51008E12AD /* Dasher v6.appex in Embed App Extensions */,
+				04A876EB2455FB51008E12AD /* Keyboard.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,7 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0400FFEE23BB5788009AF4A0 /* Dasher v6.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Dasher v6.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0400FFEE23BB5788009AF4A0 /* Keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0457D8F52455F6A700B883E7 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		0457D8F62455F6A700B883E7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0457D8F72455F6A700B883E7 /* Commands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		0457D9032455F6B300B883E7 /* KeyboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		0457D9042455F6B300B883E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0493224023BBA79C00A17898 /* browser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = browser; path = ../../../browser; sourceTree = "<group>"; };
-		04D77CB623BB56B500C25698 /* Dasher v6 Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dasher v6 Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D77CB623BB56B500C25698 /* Dasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F46D3B23EBE32C00B00168 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,8 +133,8 @@
 		04D77CB723BB56B500C25698 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04D77CB623BB56B500C25698 /* Dasher v6 Keyboard.app */,
-				0400FFEE23BB5788009AF4A0 /* Dasher v6.appex */,
+				04D77CB623BB56B500C25698 /* Dasher.app */,
+				0400FFEE23BB5788009AF4A0 /* Keyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,7 +159,7 @@
 				04ECEA6125670135000207E9 /* CaptiveWebView */,
 			);
 			productName = ACE;
-			productReference = 0400FFEE23BB5788009AF4A0 /* Dasher v6.appex */;
+			productReference = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		04D77CB523BB56B500C25698 /* App */ = {
@@ -181,7 +181,7 @@
 				04ECEA5E25670047000207E9 /* CaptiveWebView */,
 			);
 			productName = Keyboard;
-			productReference = 04D77CB623BB56B500C25698 /* Dasher v6 Keyboard.app */;
+			productReference = 04D77CB623BB56B500C25698 /* Dasher.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -305,7 +305,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = "Dasher v6";
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -328,7 +328,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = "Dasher v6";
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -468,7 +468,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = "Dasher v6 Keyboard";
+				PRODUCT_NAME = Dasher;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -489,7 +489,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = "Dasher v6 Keyboard";
+				PRODUCT_NAME = Dasher;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
