@@ -294,8 +294,8 @@ class Control {
 
     select_option(selectedString, selectedIndex) {
         const foundIndex = (
-            selectedString === undefined ? -1 :
-            this._optionStrings.indexOf(selectedString));
+            (selectedString === undefined || this._optionStrings === undefined)
+            ? -1 : this._optionStrings.indexOf(selectedString));
 
         if (foundIndex === -1) {
             this._selectedIndex = selectedIndex;

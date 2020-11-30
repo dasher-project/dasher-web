@@ -9,24 +9,172 @@ import UIKit
 import WebKit
 import CaptiveWebView
 
+// Utility method for getting a nice string for an enumerated constant. The
+// enumeration doesn't seem to have a way to do this like an Android .name
+// property.
+// TOTH for an extension to an optional value:
+// https://stackoverflow.com/a/43061289/7657675
+extension Optional where Wrapped == UIKeyboardType {
+    func name() -> String? {
+        switch self {
+        case nil:
+            return nil
+        case .asciiCapable:
+            return "asciiCapable"
+        case .decimalPad:
+            return "decimalPad"
+        case .default:
+            return "default"
+        case .emailAddress:
+            return "emailAddress"
+        case .namePhonePad:
+            return "namePhonePad"
+        case .numberPad:
+            return "numberPad"
+        case .numbersAndPunctuation:
+            return "numbersAndPunctuation"
+        case .phonePad:
+            return "phonePad"
+        case .twitter:
+            return "twitter"
+        case .URL:
+            return "URL"
+        case .webSearch:
+            return "webSearch"
+        case .asciiCapableNumberPad:
+            return "asciiCapableNumberPad"
+        @unknown default:
+            return String(describing: self)
+        }
+    }
+}
+
+// Utility method for getting a nice string for an enumerated constant.
+extension Optional where Wrapped == UIKeyboardAppearance {
+    func name() -> String? {
+        switch self {
+        case .dark:
+            return "dark"
+        case .none:
+            // This one is actually nil. You can tell by adding a case for nil.
+            return "none"
+        case .default:
+            return "default"
+        case .light:
+            return "light"
+        @unknown default:
+            return String(describing: self)
+        }
+    }
+}
+
+// Utility method for extracting the function name part of a #function value.
+// Used for logging.
+extension String {
+    func functionName() -> String {
+        if let index = firstIndex(of: "(") {
+            return String(prefix(upTo: index))
+        }
+        else {
+            return self
+        }
+    }
+}
+
+// Utility method for copying some properties from a type into a dictionary.
+extension UITextDocumentProxy {
+    func asDictionary() -> [String:Any?] {
+        var returning = [
+            "hasText": hasText,
+            "identifier": documentIdentifier.uuidString,
+            "keyboardType": self.keyboardType.name(),
+            "keyboardAppearance": self.keyboardAppearance.name()
+            // documentInputMode isn't included because it's always nil or
+            // something about the current selected language in the document.
+        ] as [String:Any?]
+
+        var value:String? = nil
+        // For some reason, self.textContentType == nil was always false.
+        if let it = self.textContentType as? UITextContentType {
+            value = "\(it)"
+        }
+        // TOTH for how to set nil into a dictionary:
+        // https://stackoverflow.com/a/36542735/7657675
+        returning.updateValue(value, forKey: "textContentType")
+
+        return returning
+    }
+}
+
+// Next declaration instantiates and configures a date formatter in a Swift
+// closure, and calls the closure. This seems like the only way to get a static
+// singleton initialised.
+let dateFormatter = { () -> DateFormatter in
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .long
+    return formatter
+}()
+
+// Earlier versions of the code used dictionaries for log entries. It was a
+// bit error prone so it was replaced with a Codable. JSON is still used as
+// the writing and reading format.
+// This struct is automatically Codable because all its properties are
+// Codable.
+private struct LogEntry:Codable {
+    let time:String
+    let messages: [String]
+    let index:Int
+    let proxy:[String?]
+    
+    init(
+        _ messages:[String],
+        _ index:Int,
+        _ documentProxy:UITextDocumentProxy
+    ) {
+        self.time = dateFormatter.string(from:Date())
+        self.messages = messages
+        self.index = index
+        self.proxy = [
+            documentProxy.documentContextBeforeInput,
+            documentProxy.selectedText,
+            documentProxy.documentContextAfterInput
+        ]
+    }
+}
+
+extension Array where Element == LogEntry {
+    func jsonAble(
+        options:JSONSerialization.ReadingOptions = []
+    ) -> [[String:Any]]
+    {
+        do {
+            let encoder = JSONEncoder()
+            let encoded = try encoder.encode(self)
+            let any = try JSONSerialization.jsonObject(
+                with: encoded, options:options)
+            if let dict = any as? [[String:Any]] {
+                return dict
+            }
+            else {
+                return [["uncast":"\(any)"]]
+            }
+        }
+        catch {
+            return [["catch": error, "entry": "\(self)"]]
+        }
+    }
+}
+
 class KeyboardViewController:
 UIInputViewController, CaptiveWebViewCommandHandler
 {
-    var wkWebView: WKWebView?
-    let dateFormatter = DateFormatter()
-
     // Just in case the web view doesn't load, there's a safety button to select
     // the next keyboard.
     @IBOutlet var safetyButton: UIButton!
-    var logLabel: UILabel!
-    
+
     var heightConstraint: NSLayoutConstraint? = nil
 
-    override func updateViewConstraints() {
-        // self.log("updateViewConstraints")
-        super.updateViewConstraints()
-    }
-    
     // Following property was to facilitate changing everything between using
     // `view` and `inputView`. As it's played out, it doesn't seem to make any
     // difference which of those properties is used.
@@ -34,11 +182,80 @@ UIInputViewController, CaptiveWebViewCommandHandler
         return self.inputView
     }
     
+    // Following doesn't get invoked if there is a Bluetooth keyboard connected.
+    // Maybe because this is a keyboard extension. The key presses seem to get
+    // sent to the principal app that is open, not to the custom keyboard.
+    override func pressesBegan(
+        _ presses: Set<UIPress>, with event: UIPressesEvent?
+    ) {
+        self.log(callback: #function, "(\(presses),\(String(describing: event)))")
+    }
+    
+    // Negative demonstration of Key Value Observing (KVO) starts here.
+    //
+    // These properties demonstrate that KVO works in Swift and that the syntax
+    // here is correct.
+    @objc dynamic var obsInt:Int = 0
+    @objc dynamic var obsTring:String = "."
+    //
+    // Next property will be an instance of the Observer class, below.
+    var observer:Observer? = nil
+    //
+    // TOTH KVO in Swift:
+    // https://nalexn.github.io/kvo-guide-for-key-value-observing/
+    class Observer: NSObject {
+        var observations: [NSKeyValueObservation]?
+        
+        init(_ controller:KeyboardViewController) {
+            super.init()
+
+            observations = [
+                controller.observe(\.obsInt, options: [.old, .new]) {
+                    observed, change in
+                    controller.log("obsInt",
+                                   String(describing: change.oldValue),
+                                   String(describing: change.newValue))
+                },
+                controller.observe(\.obsTring, options: [.old, .new]) {
+                    observed, change in
+                    controller.log("obsTring",
+                                   String(describing: change.oldValue),
+                                   String(describing: change.newValue))
+                },
+                
+                // Next observe() never gets invoked, either because the prefix
+                // of the key path would have to be moved in between controller
+                // and .observe, or because UITextDocumentProxy doesn't comply
+                // with Key Value Observing (KVO).
+                controller.observe(
+                    \.textDocumentProxy.documentContextBeforeInput,
+                    options: [.old, .new]) {
+                    observed, change in
+                    controller.log("obsBef",
+                                   String(describing: change.oldValue),
+                                   String(describing: change.newValue))
+                }
+
+            ]
+        }
+    }
+
+    // The actual web view in which the Dasher UI will run. It can't be
+    // initialised here because self hasn't been initialised and self will be
+    // its command handler.
+    var wkWebView: WKWebView?
+    
+    // Readiness flag used by the logging code.
+    var wkWebViewReady = false
+
+    // Native log is displayed in a UILabel. It should only be used
+    //
+    // -   Before the web view is loaded and reported itself ready.
+    // -   When the web view reports an error in response to a log command.
+    var logLabel = UILabel(frame:CGRect(x: 0, y: 100, width: 400, height: 100))
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.dateFormatter.dateStyle = .short
-        self.dateFormatter.timeStyle = .long
 
         // Uncomment the next line to delete the log file on load. It's been
         // better to delete just before the view disappears, so that the log
@@ -77,14 +294,18 @@ UIInputViewController, CaptiveWebViewCommandHandler
         // To be constructed, each of them needs a frame, but the view frame
         // will be all zeros at this point. So the log label and web view each
         // get an arbitrary frame just for construction purposes, and then
-        // immediately get constrained.
+        // get constrained here.
         // The view and inputView don't get proper frames until viewDidAppear.
-
-        self.logLabel = UILabel(frame: CGRect(
-            x: 0, y: 100, width: 400, height: 100))
-        self.logLabel.text = "viewDidLoad"
+        //
+        // The log label gets a green border to show that the constraints are
+        // working as expected. The border is only visible if the web view isn't
+        // there, or isn't completely opaque. The logging code reduces the web
+        // view's opacity if it returns an error to a log command, meaning that
+        // it hasn't displayed a log message, so the log message gets displayed
+        // in the native layer instead.
         self.logLabel.layer.borderColor = UIColor.green.cgColor
         self.logLabel.layer.borderWidth = 2.0
+        self.logLabel.text = "viewDidLoad"
 
         // Support multiple lines.
         // TOTH: https://stackoverflow.com/a/990244/7657675
@@ -108,6 +329,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // Opacity less than 1 allows the logLabel to be seen, which is
             // useful if you're chasing a defect where the web view is
             // unresponsive. The default is 1.
+            // The logging code can reduce opacity if it seems necessary to show
+            // the native log label.
 
             // Following line adds the web view to the self.view as a sub-view.
             // It's unclear whether it should be added to self.inputView instead.
@@ -123,9 +346,16 @@ UIInputViewController, CaptiveWebViewCommandHandler
             // self.constrain(view: webView, to: self.view, leftSide: true)
         }
 
-        self.log("viewDidLoad")
+        self.log(callback: #function)
+        
+        // Demonstration of KVO, see comments above.
+        observer = Observer(self)
+        obsInt += 1
+        obsTring += "segment"
     }
-    
+
+    // Utility method to constrain one view to another, or to the left half of
+    // another.
     private func constrain(
         view left: UIView, to right: UIView, leftSide:Bool = false
     ) {
@@ -141,45 +371,125 @@ UIInputViewController, CaptiveWebViewCommandHandler
         ).isActive = true
     }
     
-    private func log(_ message: String) {
+    // You sometimes need to wrap an Encodable in a real type. It's something to
+    // do with Encodable being a protocol, not a class.
+    private struct AnyEncodable:Encodable {
+        let encodable:Encodable
+        
+        init(_ encodable:Encodable) {
+            self.encodable = encodable
+        }
+
+        func encode(to encoder: Encoder) throws {
+            try encodable.encode(to: encoder)
+        }
+    }
+
+    // Logging code.
+    //
+    // Logs are written to a JSON file that is saved after every message. That
+    // way, if the extension or app crashes, there's a chance of a clue.
+    //
+    // Convenience function to get the path of the log file.
+    private func getLogPath() -> URL {
+        let fileManager = FileManager.default
+        let documentDirectory = fileManager.urls(for: .documentDirectory,
+                                                 in: .userDomainMask)[0]
+        return documentDirectory.appendingPathComponent("log.json")
+    }
+    //
+    private func readLog() -> (URL, [LogEntry]?) {
         let logPath = self.getLogPath()
-        if !FileManager.default.fileExists(atPath: logPath.path) {
-            // Initialise the log file to an empty array.
-            let fileData = try! JSONSerialization.data(
-                withJSONObject:[String]())
-            try! fileData.write(to: logPath)
+        let log:[LogEntry]?
+        if FileManager.default.fileExists(atPath: logPath.path) {
+            let decoder = JSONDecoder()
+            log = try! decoder.decode([LogEntry].self,
+                                     from: Data(contentsOf: logPath))
         }
-        let logAny = try! JSONSerialization.jsonObject(
-            with: Data(contentsOf: logPath))
-        var log = logAny as! [Any]
-        let entry: [String : Any] = [
-            "message": message, "index": log.count,
-            "time": self.dateFormatter.string(from: Date())]
-        log.insert(entry, at: 0)
-        if let webView = self.wkWebView {
-            CaptiveWebView.sendObject(to: webView, ["log": log])
+        else {
+            log = nil
         }
-        if let uiLabel = self.logLabel {
-            uiLabel.text = log.map({
-                guard let dict = $0 as? Dictionary<String, Any> else {
-                    return String(describing: $0)
+        return (logPath, log)
+    }
+    //
+    // Main logging function.
+    private func log(_ messages:String?...) {
+        let (logPath, logRead) = readLog()
+
+        // Next line makes a mutable and non-optional copy of the log as read.
+        var log = logRead ?? []
+
+        // Create a LogEntry for the current log message. The compactMap filters
+        // out any null elements.
+        let logEntry = LogEntry(
+            messages.compactMap({$0}), log.count + 1, textDocumentProxy)
+        //
+        // Contents of the log file are most recent first.
+        log.insert(logEntry, at: 0)
+
+        // Send the log to the web view, if it's finished loading and is ready
+        // to receive and display.
+        if wkWebViewReady, let webView = self.wkWebView {
+            // The .jsonAble() method creates a representation that can be
+            // serialised.
+            CaptiveWebView.sendObject(to: webView, ["log": log.jsonAble()]) {
+                (result: Any?, resultError: Error?) in
+                if let error = resultError {
+                    self.showLog(["error":"\(error)", "entry":"\(logEntry)"])
                 }
-                if
-                    let index = dict["index"] as? Int,
-                    let entryTime = dict["time"] as? String,
-                    let entryMessage = dict["message"] as? String
-                {
-                    return [
-                        "\(index) ", entryTime, " ", entryMessage].joined()
-                }
-                else {
-                    return String(describing: dict)
-                }
-            }).joined(separator: "\n")
+            }
         }
-        let fileData = try! JSONSerialization.data(withJSONObject:log)
+        else {
+            self.showLog(log)
+        }
+
+        // Write the new log.
+        let fileData = try! JSONEncoder().encode(log)
         try! fileData.write(to: logPath)
     }
+    //
+    // Convenience function for logging callback invocation.
+    private func log(callback: String, _ notes: String...) {
+        log(([callback.functionName()] + notes).joined(separator: " "))
+    }
+    //
+    // Convenience function for logging callback invocations that receive a
+    // UITextInput instance.
+    private func log(_ callbackName: String, _ textInput: UITextInput?) {
+        let description:String
+        if let input = textInput {
+            description = "\(input)"
+        }
+        else {
+            description = "null"
+        }
+        log([
+            callbackName.functionName(), "(", description, ")"
+        ].joined(separator: ""))
+    }
+    //
+    // Plan B log display function. Plan B is to set the log as text onto the
+    // log label, and make the web view transparent so the label can be seen.
+    private func showLog(_ entries: Encodable) {
+        let encoder = JSONEncoder()
+        let text:String
+        do {
+            let encoded:Data = try encoder.encode(AnyEncodable(entries))
+            text = String(data:encoded, encoding:.utf8)
+                ?? "utf8 failed String(\(encoded),)"
+        }
+        catch {
+            text = "error:\(error) entries:\(entries)"
+        }
+        logLabel.text = text
+
+        if wkWebViewReady, let webView = self.wkWebView {
+            webView.layer.opacity = 0.5
+        }
+
+    }
+    //
+    // Log a message and the frame sizes of the view and inputView.
     private func logFrames(_ message: String) {
         var inputViewMessage = "nil"
         if let inputView = self.inputView {
@@ -187,14 +497,8 @@ UIInputViewController, CaptiveWebViewCommandHandler
         }
         self.log(message + " v:\(self.view.frame) i:\(inputViewMessage)")
     }
-    
-    private func getLogPath() -> URL {
-        let fileManager = FileManager.default
-        let documentDirectory = fileManager.urls(for: .documentDirectory,
-                                                 in: .userDomainMask)[0]
-        return documentDirectory.appendingPathComponent("log.json")
-    }
-    
+    //
+    // Delete the log file.
     private func deleteLog() -> String {
         do {
             try FileManager.default.removeItem(at: self.getLogPath())
@@ -203,20 +507,43 @@ UIInputViewController, CaptiveWebViewCommandHandler
             return error.localizedDescription
         }
     }
-    
+
+    // Dummy callback implementations that log their calling. Some of these
+    // never get invoked.
+
     override func textWillChange(_ textInput: UITextInput?) {
+        super.textWillChange(textInput)
         // The app is about to change the document's contents. Perform any preparation here.
-        // self.log("textWillChange")
+        self.log(#function, textInput)
     }
     
     override func textDidChange(_ textInput: UITextInput?) {
+        super.textDidChange(textInput)
         // The app has just changed the document's contents, the document context has been updated.
-        // self.log("textDidChange")
+        
+        // KVO demonstration.
+        obsInt += 1
+        obsTring += ".\(obsInt)"
+        self.log(#function, textInput)
+    }
+    
+    override func selectionWillChange(_ textInput: UITextInput?) {
+        // Never seems to get invoked.
+        self.log(#function, textInput)
     }
 
+    override func selectionDidChange(_ textInput: UITextInput?) {
+        // Never seems to get invoked.
+        self.log(#function, textInput)
+    }
+
+    // The viewDidAppear is the first point at which the views have proper
+    // sizes. This means that the web view can be loaded. It will already be
+    // constrained to fill the framing view.
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        // Start with a default height.
         let heightSet = self.setHeight(400)
 
         var dimensionsMessage = "Dimensions not set"
@@ -225,17 +552,26 @@ UIInputViewController, CaptiveWebViewCommandHandler
             " w:\(uiView.frame.width) h:\(uiView.frame.height)"
         }
         if let webView = self.wkWebView {
+            // Remove the web view's diagnostic border and tell it to load the
+            // Dasher keyboard.
             webView.layer.borderColor = nil
             webView.layer.borderWidth = 0
             let loaded = CaptiveWebView.load(
                 in: webView, scheme: "local", file: "Keyboard.html")
-            self.log("viewDidAppear \(loaded) \(dimensionsMessage) \(heightSet)")
+            self.log(
+                callback: #function
+                , "\(loaded)", dimensionsMessage, "\(heightSet)")
         }
         else {
-            self.log("viewDidAppear null \(dimensionsMessage) \(heightSet)")
+            self.log(
+                callback: #function, "null", dimensionsMessage, "\(heightSet)")
         }
+        self.log(callback: #function)
     }
-    
+
+    // Utility method to set the height of the framing view, and hence the
+    // native log label and web view by constraints.
+    // The height is set by programmatically instantiating a height constraint.
     private func setHeight(_ height:CGFloat) -> Bool {
         guard let uiView = self.framingView else {
             return false
@@ -260,7 +596,7 @@ UIInputViewController, CaptiveWebViewCommandHandler
         super.viewWillAppear(animated)
         self.logLabel.isHidden = false
         self.wkWebView?.isHidden = false
-        self.logFrames("viewWillAppear")
+        self.logFrames(#function.functionName())
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -275,11 +611,15 @@ UIInputViewController, CaptiveWebViewCommandHandler
         self.wkWebView?.removeFromSuperview()
         self.wkWebView = nil
 
-        let deleted = self.deleteLog()
-        self.log("viewWillDisappear \(deleted) Web view " + (
-            self.wkWebView == nil ? "removed" : "unreleased"))
+        self.log(
+            callback: #function, self.deleteLog(),
+            "Web view " + (self.wkWebView == nil ? "removed" : "unreleased")
+        )
     }
-    
+
+    // Captive Web View command handler native end.
+    //
+    // Commands from the Dasher JS layer come here to be serviced.
     func handleCommand(_ commandDictionary: Dictionary<String, Any>)
         -> Dictionary<String, Any>
     {
@@ -287,21 +627,36 @@ UIInputViewController, CaptiveWebViewCommandHandler
         let command = commandDictionary["command"] as! String
         switch command {
         case "insert":
+            // Insert text into the principal app. This is what the whole piece
+            // is here to do. Also delete the log file here. Everything in the
+            // Dasher UI gets reset so it makes sense.
             self.textDocumentProxy.insertText(
                 commandDictionary["text"] as! String)
-            returning ["removed"] = self.deleteLog()
+            returning["removed"] = self.deleteLog()
             
         case "nextKeyboard":
-            self.advanceToNextInputMode()
+            // This is the Plan A of the safety button. The command could only
+            // be received if the ready response, below, set
+            // showNextKeyboard:True.
             // Advancing should bin the web view so the return won't happen,
             // unless something goes wrong.
+            self.advanceToNextInputMode()
         
         case "ready":
-            returning["predictorCommands"] = ["predict"]
-            returning["showNextKeyboard"] = self.needsInputModeSwitchKey
-            returning["showLog"] = true
-        
+            // The ready command is the first thing received from the JS layer.
+            // It means that the code in the web view is ready. Send it the
+            // configuration needed to finalise its UI.
+            self.wkWebViewReady = true
+            returning.merge([
+                "predictorCommands": "predict",
+                "showNextKeyboard": self.needsInputModeSwitchKey,
+                "showLog": true,
+                "documentProxy": textDocumentProxy.asDictionary()
+            ]){ (_, new) in new }
+
         case Predictor.Command.name:
+            // Call out to the native predictive text. This is just a
+            // pass-through.
             do {
                 let response = try Predictor.response(to: commandDictionary)
                 returning.merge(response) {(_, new) in new}
@@ -315,29 +670,20 @@ UIInputViewController, CaptiveWebViewCommandHandler
         }
 
         // Add the log to the response, so that it can be seen.
-        let logPath = self.getLogPath()
-        let fileManager = FileManager.default
+        let (logPath, logEntries) = self.readLog()
         let logSize: String
         do {
-            let attributes = try fileManager.attributesOfItem(
+            let attributes = try FileManager.default.attributesOfItem(
                 atPath: logPath.path)
             let logSizeNumber:NSNumber = attributes[.size] as? NSNumber ?? -1
             logSize = String(describing: logSizeNumber)
         } catch {
             logSize = error.localizedDescription
         }
-        let logContents:Any
-        do {
-            logContents = try JSONSerialization.jsonObject(
-                with: Data(contentsOf: logPath))
-            
-        } catch {
-            logContents = error.localizedDescription
-        }
         
         returning["logPath"] = String(describing: logPath)
         returning["logSize"] = logSize
-        returning["logContents"] = logContents
+        returning["logContents"] = logEntries?.jsonAble()
         
         returning["confirm"] = String(describing: type(of: self)) + " bridge OK."
         return returning

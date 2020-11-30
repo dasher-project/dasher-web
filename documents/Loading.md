@@ -86,13 +86,13 @@ loads.
     [../browser/dasher/userinterface.js](../browser/dasher/userinterface.js)
 
     **There is a strategic backlog item to overhaul this, see the
-    [../readme.md](../readme.md) file.**
+    [Backlog.md](Backlog.md) file.**
 
 
 
 
 # Document Information
-This diagram is part of the Dasher project and is under revision control here:  
+This document is part of the Dasher project and is under revision control here:  
 [https://github.com/dasher-project/redash/tree/master/documents](https://github.com/dasher-project/redash/tree/master/documents)
 
 (c) 2020 The ACE Centre-North, UK registered charity 1089313.  

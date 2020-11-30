@@ -121,6 +121,9 @@ export default {
         "y": {$:{
             "order": 7, "control": "number", "value":"0"}},
         "advance":{$:{
-            "order": 8, "control": "button"}}
+            "order": 8, "control": "button"}},
+        "keyHandler": {$:{
+            "order": 9, "control": "checkbox", "label": "Key handler"}},
+    
     }
 };

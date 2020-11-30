@@ -4,6 +4,7 @@ MIT licensed, see https://opensource.org/licenses/MIT
 */
 
 @import url(controlpanel.css);
+@import url(keyhandler.css);
 
 html {font-family: sans-serif;}
 p.small-print {font-size: 0.7rem;}
