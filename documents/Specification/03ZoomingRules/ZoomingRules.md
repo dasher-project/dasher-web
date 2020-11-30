@@ -68,6 +68,23 @@ The rule set is as follows.
             then either both boxes have the minimum height, or the box to the
             left has a larger height.
 
+## Zooming Rule Diagrams
+
+The following diagram illustrates the Size Map Rule and the Size Increase Rule.
+
+![Diagram 4:Size Map Rule and Size Increase Rule](SizeMapAndIncreaseRules.svg)
+
+Notes on the diagram:
+
+-   Size Map Rule: Boxes at the same position in the sequential dimension have
+    the same size in the lateral dimension.
+    
+    The rule applies regardless of hierarchy. For example, Box 7 is a child of
+    Box 6 but has the same size as Box 5, which is a sibling of Box 6.
+
+-   Size Increase Rule: A box with a smaller lateral size is forward of a box
+    with a larger lateral size.
+
 ## Zooming Rule Set Discussion
 The visual representations of boxes in a zooming user interface don't
 necessarily appear to follow the zooming rule set, see above. For example, in
