@@ -9,44 +9,155 @@ and the [table of contents](../).
 # Spawning Terms
 The following terms are used with the following meanings in the specification.
 
--   The instantiation of new zoom box objects can be referred to as
+## Basic Terms
+-   The instantiation of new zoom box objects is referred to here as
     **Spawning**.
 
--   The opposite of spawning can be referred to as **Deletion**.
+-   The removal of existing zoom box objects is referred to here as
+    **Deletion**.
 
--   Spawning and deletion relate to zoom box formal representation. They don't
-    relate to zoom box visual representation, except that visual representation
-    is dependent on formal representation.
+-   Spawning and deletion apply to the formal representations of zoom boxes,
+    not directly to the visual representations. However, indirectly:
 
-In the following definitions, zoom boxes will sometimes be described as
-increasing in lateral size, or as decreasing in lateral size. These size changes
-are controlled by the user and the zooming rules, but the mechanism isn't
-discussed in this section.
+    -   A zoom box can have a formal representation without having a visual
+        representation.
 
--   When the zooming UI is reset, or opens from a cold start, the root box is
-    spawned. This can be referred to as the **Root Spawning**.
+    -   A zoom box cannot have a visual representation without having a formal
+        representation.
+    
+    In other words, visual representations depend on formal representations but
+    not vice versa.
+
+    Visual representation of zoom boxes will be described later in the
+    specification.
+
+## Triggers
+There are two triggers for zoom box spawning.
+
+One trigger is **Root Spawning** which happens only when the zooming user
+interface is reset or opens from a cold start. Only one box is created by root
+spawning. The parameters and process of root spawning are described later in
+this section. The root box is never as such deleted, but see Root Replacement,
+below.
+
+The other trigger is based on a set of conditions. After root spawning, the user
+interface will become live. Zoom boxes will be moving and changing size in two
+dimensions. The conditions are defined in terms of zoom box sizes and positions
+and will be being met continuously when the user interface is live. The trigger
+based on these conditions is referred to as **Child Spawning**, because zoom
+boxes spawned by this trigger will always be child boxes. The child spawning conditions are described later in this section.
+
+There is one trigger for zoom box deletion, referred to as **Child Deletion**.
+Child deletion is also based on a set of conditions, and will take place
+continuously when the user interface is live. The child deletion conditions are
+described later in this section.
+
+## Properties and Two-Stage Spawning
+There are two stages to zoom box spawning. Different properties of the spawned
+box are set in each stage.
+
+Every child zoom box has a property, **Child Weight**, that is specific to
+spawning. The child weight expresses the relative lateral size of a zoom box
+compared to its siblings. The role of child weight in the spawning processing is
+described later in this section. Note that the root zoom box doesn't have a
+child weight property.
+
+Other zoom box properties that are mentioned in this section are defined earlier
+in the specification. Look for Box Text, Incremental Text, Front Position,
+Lateral Centre, and Lateral Size, for example, in the [Basic
+Definitions](../02BasicDefinitions/BasicDefinitions.md) section. That section
+also defines the terms used to describe the zoom box hierarchy, such as root,
+parent, child, and sibling.
+
+Thee stages of zoom box spawning are as follows.
+
+-   **Weight** spawning stage, at the end of which the box's child weight will
+    be established.
+
+>   Maybe say that palette correspondence is also set in weight spawning.
+
+-   **Dimension** spawning stage, during which the initial values for the box's
+    front position, lateral size, and lateral position are set.
+
+The stages are described in detail in this section.
+
+# Initialisation
+Spawning and deletion are dependent on some parts of user interface
+initialisation, including the zooming area limits having been set for example.
+The user interface will trigger root spawning, for example as part of its
+initialisation process, but mustn't trigger it before the dependencies are in
+place.
+
+(In the Dasher Version Six proof-of-concept, root spawning is triggered
+automatically towards the end of user interface initialisation. It can also be
+triggered by the user, from the control panel.)
+
+The processing is as follows.
+
+1.  The user interface triggers root spawning to instantiate the root box.
+
+    The following parameters are given by the user interface.
+
+    -   The lateral centre of the box, typically zero.
+
+    -   Either the lateral size of the box, or its front position.
+
+2.  The root box is assigned a correspondence to the palette root.
+
+    For a description of correspondence and the palette root, see the
+    [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
+
+    This gives the root box the following properties.
+
+    -   Box text, which will be "" the empty text.
+    -   Incremental text, which will be null.
+    -   Colour specifier, which will be the sequence colour with ordinal zero
+        and index zero.
+
+    For a description of colour specifiers and sequence colours, see the
+    [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
+    
+
+
+# Scratchpad
+
+
+    If the lateral size was given, then the zooming solver is invoked to
+    generate the front position. Vice versa, if the front position was given
+    then the zooming solver is invoked to generate the lateral size. See the
+    preceding sections in the specification for a description of the zooming
+    solver and zooming rules.
+
+    The root box is then instantiated with the given and calculated parameters.
+
+    The root box has thereby passed the dimension spawning stage, see above.
+    Note that the root box doesn't go t
+
+2.  
+
+
+
+
+# Root Replacement
+
 
 -   There is only ever one root box in the zooming area. However, the current
     root box will sometimes be replaced by a different box, which then becomes
-    the root box. This can be referred to as **Root Replacement**.
+    the root box. This is referred to as **Root Replacement**.
 
--   When the root box is increasing in lateral size, it could be replaced by
-    one of its child boxes. This type of root replacement can be referred to as
+-   When the root box is increasing in lateral size, it could be replaced by one
+    of its child boxes. This type of root replacement is referred to as
     **Root Descent**. The replaced root box is stored outside the zoom box
     hierarchy but isn't as such deleted.
 
--   When the root box is decreasing in lateral size, it could be replaced by
-    a zoom box that was stored during a previous root descent. This type of
-    root replacement can be referred to as **Root Ascent**. The outgoing root
-    box becomes a child of the replacement root box.
+-   When the root box is decreasing in lateral size, it could be replaced by a
+    zoom box that was stored during a previous root descent. This type of root
+    replacement is referred to as **Root Ascent**. The outgoing root box becomes
+    a child of the replacement root box.
 
--   When a zoom box is increasing in lateral size, it could become a parent box,
-    i.e. child boxes could be spawned under it. This can be referred to as the
-    **Child Spawning**.
 
-    >   Maybe change to dimension spawning condition.
 
--   The deletion of child boxes from a parent box can be referred to as
+-   The deletion of child boxes from a parent box is referred to as
     **Child Deletion**. It could take place in either of the following
     circumstances:
 
@@ -55,6 +166,9 @@ discussed in this section.
     -   When a sibling of the parent box is increasing in lateral size and the
         parent box gets pushed entirely outside the zooming area limits as a
         result.
+
+    >   But a box could get pushed outside by lateral motion as well as pushing.
+    >   Also, what happens when the box re-enters the zooming area limits?
 
 -   The lateral size of a child box will be calculated as a proportion of the
     lateral size of its parent box. The calculation will be based on a value
@@ -76,42 +190,25 @@ discussed in this section.
 Child spawning and root spawning are the only triggers for zoom boxes to spawn.
 
 # Two-Stage Spawning
-There are two stages to zoom box spawning. Different properties of the spawned
-box are set in each stage.
-
--   In the **Weight** spawning stage, whatever is required to generate the box's
-    child weight value is set.
-
--   In the **Dimension** spawning stage, initial values for the box's front
-    position, lateral size, and lateral position are set.
 
 The spawning stages that a box goes through depend on what triggered its
 creation.
 
--   If the box was created by root spawning, it goes through dimension spawning
+-   The box that is created by root spawning goes through dimension spawning
     only. Initial values for dimensions are specified by the user interface,
     directly or indirectly. A box created by root spawning never goes through
     weight spawning.
 
--   If the box was created by child spawning, the box goes through weight
-    spawning when child spawning is triggered. The box might then go through
-    dimension spawning straight away, or dimension spawning might take place
-    later, or never.
+-   A box that is created by child spawning goes through weight spawning when
+    child spawning is triggered. The box might then go through dimension
+    spawning straight away, or dimension spawning might take place later, or
+    never.
 
 Dimension spawning of a zoom box triggers child spawning. After a box goes
 through dimension spawning, all its child boxes get instantiated, and each child
-box goes through, at least, its weight spawning stage.
+box then goes through, at least, its weight spawning stage.
 
 
-The following
-    parameters will be given.
-
-    -   The lateral centre of the box.
-    
-    -   Either the lateral size of the box, or its front position.
-        
-    If the lateral size was specified, then the zooming solver will be invoked
-    to generate the front position, and vice versa.
     
     The back of the box isn't specified. Boxes always extend in the forward
     direction to the zooming area limits.
@@ -125,7 +222,7 @@ The following
     step for each child box will be leaf spawning, see above.
 
 
-
+Is dimension spawning of a box B triggered by the parent of B? Yes.
 
 
 
@@ -182,8 +279,14 @@ The box object is instantiated at a given lateral size, referred to as its
 
 
 
--   **Two-stage spawning**
-
 -   **Cascade Spawning**
 
+
+The sequential and lateral dimensions are explained earlier in the
+specification.
+
+In the following definitions, zoom boxes will sometimes be described as
+increasing in lateral size, or as decreasing in lateral size. These size changes
+are controlled by the user and the zooming rules, but the mechanism isn't
+discussed in this section.
 
