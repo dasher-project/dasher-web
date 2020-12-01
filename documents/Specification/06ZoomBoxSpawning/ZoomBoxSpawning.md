@@ -90,7 +90,7 @@ place.
 
 (In the Dasher Version Six proof-of-concept, root spawning is triggered
 automatically towards the end of user interface initialisation. It can also be
-triggered by the user, from the control panel.)
+triggered by the user, from the control panel developer options.)
 
 The processing is as follows.
 
@@ -100,12 +100,9 @@ The processing is as follows.
 
     -   The lateral centre of the box, typically zero.
 
-    -   Either the lateral size of the box, or its front position.
+    -   Either the front position of the box, or its lateral size.
 
 2.  The root box is assigned a correspondence to the palette root.
-
-    For a description of correspondence and the palette root, see the
-    [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
 
     This gives the root box the following properties.
 
@@ -114,19 +111,28 @@ The processing is as follows.
     -   Colour specifier, which will be the sequence colour with ordinal zero
         and index zero.
 
-    For a description of colour specifiers and sequence colours, see the
+    For descriptions ofcorrespondence, the palette root, colour specifiers and
+    sequence colours, see the
     [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
     
+3.  The dimensions of the root box are finalised.
 
+    The detail of finalisation depends on which optional parameter was given in
+    step 1.
+
+    -   If the front position was given, then the solve lateral size function is
+        invoked.
+    -   If the lateral size was given, then the solve front position function is
+        invoked.
+
+    For details of the solve functions, see the
+    [Zooming Solver](../04ZoomingSolver/ZoomingSolver.md) section.
+
+    This completes the dimension spawning stage of the root box.
 
 # Scratchpad
 
 
-    If the lateral size was given, then the zooming solver is invoked to
-    generate the front position. Vice versa, if the front position was given
-    then the zooming solver is invoked to generate the lateral size. See the
-    preceding sections in the specification for a description of the zooming
-    solver and zooming rules.
 
     The root box is then instantiated with the given and calculated parameters.
 
