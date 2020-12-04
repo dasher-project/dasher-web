@@ -57,7 +57,7 @@
 		0457D9032455F6B300B883E7 /* KeyboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		0457D9042455F6B300B883E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0493224023BBA79C00A17898 /* browser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = browser; path = ../../../browser; sourceTree = "<group>"; };
-		04D77CB623BB56B500C25698 /* Dasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D77CB623BB56B500C25698 /* Dasher v6.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dasher v6.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F46D3B23EBE32C00B00168 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,7 +133,7 @@
 		04D77CB723BB56B500C25698 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04D77CB623BB56B500C25698 /* Dasher.app */,
+				04D77CB623BB56B500C25698 /* Dasher v6.app */,
 				0400FFEE23BB5788009AF4A0 /* Keyboard.appex */,
 			);
 			name = Products;
@@ -170,6 +170,7 @@
 				04D77CB323BB56B500C25698 /* Frameworks */,
 				04D77CB423BB56B500C25698 /* Resources */,
 				04A876EE2455FB51008E12AD /* Embed App Extensions */,
+				3F81EE11257A308500063BEC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -181,7 +182,7 @@
 				04ECEA5E25670047000207E9 /* CaptiveWebView */,
 			);
 			productName = Keyboard;
-			productReference = 04D77CB623BB56B500C25698 /* Dasher.app */;
+			productReference = 04D77CB623BB56B500C25698 /* Dasher v6.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -245,6 +246,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3F81EE11257A308500063BEC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\n\ngit=$(sh /etc/profile; which git)\nnumber_of_commits=$(\"$git\" rev-list HEAD --count)\ngit_release_version=$(\"$git\" describe --tags --always --abbrev=0)\n\ntarget_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ndsym_plist=\"$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist\"\n\nfor plist in \"$target_plist\" \"$dsym_plist\"; do\n  if [ -f \"$plist\" ]; then\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $number_of_commits\" \"$plist\"\n    #/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString ${git_release_version#*v}\" \"$plist\"\n  fi\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0400FFEA23BB5788009AF4A0 /* Sources */ = {
@@ -458,7 +479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "Set by script in Build settings";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
@@ -479,7 +500,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "Set by script in Build settings";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
