@@ -29,6 +29,7 @@ export default class MessageStore {
       this._load_from_browser().catch(() => {}).then(messages => {
         //TODO - present these message in another place other than the console
         console.log(messages);
+        return messages;
       });
     }
 
