@@ -3,15 +3,14 @@ These are notes and documents for software developers contributing to the Dasher
 Version Six project. For an introduction to the project, see the [readme](../)
 in the parent directory.
 
-# Documents
-The following documents have been written for developers.
+# Developer Guides
+The following guides have been written for developers.
 
--   [Logical Specification](Specification/) of Dasher Version Six.
-    Unfinished at time of writing but still useful for terminology.
+-   [Specification](Specification/) of Dasher Version Six. Unfinished at time of
+    writing but still useful for terminology.
 
--   [Loading Sequence](Loading.md) describes how the Dasher
-    Version Six web code gets loaded in a browser, standalone app, or custom
-    keyboard.
+-   [Loading Notes](Loading.md) describes how the Dasher Version Six web code
+    gets loaded in a browser, standalone app, or custom keyboard.
 
 # Notes for developers of the browser code
 To run the browser proof-of-concept under development, you might need to start
@@ -45,3 +44,8 @@ chrome://inspect list and the Chrome developer tools can be used.
 There doesn't seem to be any way to do this with an iOS device, although it can
 be done on the simulator by entering the same address. An alternative may be to
 set up an intranet that is accessible to the mobile browser.
+
+# License
+Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see
+[https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
