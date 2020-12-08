@@ -13,6 +13,7 @@ export default class MessageStore {
     }
     //TESTS
     test(){
+      this.addMessage('Hi my name is redasher.');
       //this._delete_from_browser(17,true);
       //this.importToDatabase();
       return this._databaseName;
