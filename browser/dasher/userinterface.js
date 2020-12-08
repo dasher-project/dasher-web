@@ -142,7 +142,9 @@ export default class UserInterface {
         this._message = message;
         this._messageDisplay.update(message);
     }
-
+    _save_message(){
+      this._messageStore.addMessage(this.message);
+    }
     get predictors() {
         return this._predictors;
     }
@@ -297,12 +299,11 @@ export default class UserInterface {
     }
     _load_message_controls(){
         const panel = this._panels.message;
+        panel.add.listener = this._save_message.bind(this);
         panel.show.listener = this._messageStore.viewMessageStore.bind(this._messageStore);
         panel.import.listener = this._messageStore.importToDatabase.bind(this._messageStore);
         panel.export.listener = this._messageStore.exportToFile.bind(this._messageStore);
-        panel.test.listener = this._messageStore.test.bind(this._messageStore);
     }
-
     _load_developer_controls() {
         const panel = this._panels.developer;
         panel.pointer.listener = this.clicked_pointer.bind(this);

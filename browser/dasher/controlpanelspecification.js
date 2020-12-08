@@ -104,14 +104,16 @@ export default {
     "message": {
         $: {"order": 7},
 
-        "show":{$:{
+        "add":{$:{
             "order": 0, "control": "button"}},
-        "import":{$:{
+        "show":{$:{
             "order": 1, "control": "button"}},
+        "divider":{$:{
+            "order": 2, "html": "div"}},
+        "import":{$:{
+            "order": 3, "control": "button"}},
         "export":{$:{
-            "order": 2, "control": "button"}},
-        "test":{$:{
-            "order": 3, "control": "button"}}
+            "order": 4, "control": "button"}}
     },
     "developer": {
         $: {"order": 8},

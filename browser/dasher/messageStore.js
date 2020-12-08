@@ -28,9 +28,12 @@ export default class MessageStore {
 
     viewMessageStore(){
       this._load_from_browser().catch(() => {}).then(messages => {
-        //TODO - present these message in another place other than the console
-        console.log(messages);
-        return messages;
+        //TODO - present these messages in a usable format
+        let output = [];
+        messages.forEach((item, i) => {
+          output.push(JSON.stringify(item).replace(",","\n"));
+        });
+        alert(output.join("\n"));
       });
     }
 
