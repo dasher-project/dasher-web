@@ -42,7 +42,7 @@ below.
 
 The other trigger is based on a set of conditions. After root spawning, the user
 interface will become live. Zoom boxes will be moving and changing size in two
-dimensions. The conditions are defined in terms of zoom box sizes and positions
+dimensions. The conditions are defined in terms of zoom box sizes and positions,
 and will be being met continuously when the user interface is live. The trigger
 based on these conditions is referred to as **Child Spawning**, because zoom
 boxes spawned by this trigger will always be child boxes. The child spawning conditions are described later in this section.
@@ -64,24 +64,25 @@ child weight property.
 
 Other zoom box properties that are mentioned in this section are defined earlier
 in the specification. Look for Box Text, Incremental Text, Front Position,
-Lateral Centre, and Lateral Size, for example, in the [Basic
-Definitions](../02BasicDefinitions/BasicDefinitions.md) section. That section
-also defines the terms used to describe the zoom box hierarchy, such as root,
-parent, child, and sibling.
+Lateral Centre, and Lateral Size, for example, in the
+[Basic Definitions](../02BasicDefinitions/BasicDefinitions.md) section. That
+section also defines the terms used to describe the zoom box hierarchy, such as
+root, parent, child, and sibling.
 
-Thee stages of zoom box spawning are as follows.
+The stages of zoom box spawning are as follows.
 
--   **Weight** spawning stage, at the end of which the box's child weight will
-    be established.
-
->   Maybe say that palette correspondence is also set in weight spawning.
+-   **Weight** spawning stage, during which the following are set for the box.
+    -   Palette correspondence.
+    -   Text properties.
+    -   Colour specifier.
+    -   Child weight, unless it is the root box.
 
 -   **Dimension** spawning stage, during which the initial values for the box's
     front position, lateral size, and lateral position are set.
 
 The stages are described in detail in this section.
 
-# Initialisation
+# Root Spawning and Initialisation
 Spawning and deletion are dependent on some parts of user interface
 initialisation, including the zooming area limits having been set for example.
 The user interface will trigger root spawning, for example as part of its
@@ -90,19 +91,25 @@ place.
 
 (In the Dasher Version Six proof-of-concept, root spawning is triggered
 automatically towards the end of user interface initialisation. It can also be
-triggered by the user, from the control panel developer options.)
+triggered by the user, from the control panel developer options, by selecting
+the reset option.)
 
 The processing is as follows.
 
-1.  The user interface triggers root spawning to instantiate the root box.
+1.  The user interface triggers root spawning.
 
     The following parameters are given by the user interface.
 
-    -   The lateral centre of the box, typically zero.
+    -   The lateral centre of the box, typically zero to position the root box
+        in the centre of the zooming area.
 
     -   Either the front position of the box, or its lateral size.
 
-2.  The root box is assigned a correspondence to the palette root.
+2.  A new zoom box is instantiated and assigned as the root zoom box.
+
+    The new box will have zero child boxes, and no parent box.
+
+3.  The root box is assigned a correspondence to the palette root.
 
     This gives the root box the following properties.
 
@@ -110,12 +117,14 @@ The processing is as follows.
     -   Incremental text, which will be null.
     -   Colour specifier, which will be the sequence colour with ordinal zero
         and index zero.
-
-    For descriptions ofcorrespondence, the palette root, colour specifiers and
+    
+    For descriptions of correspondence, the palette root, colour specifiers and
     sequence colours, see the
     [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
+
+    This completes the weight spawning stage of the root box.
     
-3.  The dimensions of the root box are finalised.
+4.  The dimensions of the root box are finalised.
 
     The detail of finalisation depends on which optional parameter was given in
     step 1.
@@ -130,17 +139,36 @@ The processing is as follows.
 
     This completes the dimension spawning stage of the root box.
 
-# Scratchpad
+The root box is then checked for child spawning, see below. If the root box
+doesn't meet the child spawning conditions, then it will be the only box. The
+user interface will be live though, and the root box might meet the child
+spawning conditions later, depending on the actions of the user.
 
+# Child Spawning Conditions
+Child spawning takes place in a zoom box when it meets all the following
+conditions.
 
+-   The box has zero child boxes, which will be the case after:
+    -   Instantiation.
+    -   Child deletion, see below.
+-   All or part of the box is inside the zooming area limits.
+-   The box's lateral size is above a limit, referred to as the
+    **Child Spawning Threshold**.
 
-    The root box is then instantiated with the given and calculated parameters.
+The child spawning threshold value will come from the user interface. An option
+to set the value could be offered to the user.
 
-    The root box has thereby passed the dimension spawning stage, see above.
-    Note that the root box doesn't go t
+The child spawning conditions are checked:
 
-2.  
+-   When a zoom box completes dimension spawning, see below, it is checked.
 
+-   Every zoom box that changes position due to user interaction must be checked
+    at the time of change. This is discussed later in the specification.
+
+    >   TBD but in the section on end user controls.
+
+    Note that a box cannot change size without changing position. See the
+    [Zooming Rules](../03ZoomingRules/ZoomingRules.md) section.
 
 
 
@@ -197,13 +225,6 @@ Child spawning and root spawning are the only triggers for zoom boxes to spawn.
 
 # Two-Stage Spawning
 
-The spawning stages that a box goes through depend on what triggered its
-creation.
-
--   The box that is created by root spawning goes through dimension spawning
-    only. Initial values for dimensions are specified by the user interface,
-    directly or indirectly. A box created by root spawning never goes through
-    weight spawning.
 
 -   A box that is created by child spawning goes through weight spawning when
     child spawning is triggered. The box might then go through dimension
