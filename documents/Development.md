@@ -1,13 +1,20 @@
-# Development
+# Dasher Version Six Development
+These are notes and documents for software developers contributing to the Dasher
+Version Six project. For an introduction to the project, see the [readme](../)
+in the parent directory.
 
-## Documentation
+# Developer Guides
+The following guides have been written for developers.
 
-1. [Specifications](Specification/readme.md)
-2. [Loading](Specification/Loading.md)
+-   [Specification](Specification/) of Dasher Version Six. Unfinished at time of
+    writing but still useful for terminology.
 
-## Notes for developers
-To run the proof-of-concept under development, you might need to start an HTTP
-server. This is due to security restrictions on running JavaScript, and
+-   [Loading Notes](Loading.md) describes how the Dasher Version Six web code
+    gets loaded in a browser, standalone app, or custom keyboard.
+
+# Notes for developers of the browser code
+To run the browser proof-of-concept under development, you might need to start
+an HTTP server. This is due to security restrictions on running JavaScript, and
 especially importing modules, from file:// URLs.
 
 Python version 3 comes with an HTTP server that is suitable for this purpose. It
@@ -37,3 +44,8 @@ chrome://inspect list and the Chrome developer tools can be used.
 There doesn't seem to be any way to do this with an iOS device, although it can
 be done on the simulator by entering the same address. An alternative may be to
 set up an intranet that is accessible to the mobile browser.
+
+# License
+Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see
+[https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).

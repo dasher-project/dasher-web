@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,10 +15,10 @@
 		0457D9002455F6A700B883E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D8FA2455F6A700B883E7 /* AppDelegate.swift */; };
 		0457D9052455F6B300B883E7 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457D9032455F6B300B883E7 /* KeyboardViewController.swift */; };
 		0493224123BBA79C00A17898 /* browser in Resources */ = {isa = PBXBuildFile; fileRef = 0493224023BBA79C00A17898 /* browser */; };
-		049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; };
-		049D59BF23BB5DBE00C0171B /* CaptiveWebView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04A876EB2455FB51008E12AD /* Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04C4248923F9484300CCC4E4 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
+		04ECEA5F25670047000207E9 /* CaptiveWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 04ECEA5E25670047000207E9 /* CaptiveWebView */; };
+		04ECEA6225670135000207E9 /* CaptiveWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 04ECEA6125670135000207E9 /* CaptiveWebView */; };
 		26F46D3C23EBE32C00B00168 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F46D3B23EBE32C00B00168 /* Predictor.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,17 +33,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		049D59C023BB5DBE00C0171B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				049D59BF23BB5DBE00C0171B /* CaptiveWebView.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		04A876EE2455FB51008E12AD /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -68,8 +57,7 @@
 		0457D9032455F6B300B883E7 /* KeyboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		0457D9042455F6B300B883E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0493224023BBA79C00A17898 /* browser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = browser; path = ../../../browser; sourceTree = "<group>"; };
-		049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CaptiveWebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		04D77CB623BB56B500C25698 /* Dasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D77CB623BB56B500C25698 /* Dasher v6.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dasher v6.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F46D3B23EBE32C00B00168 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3FFD724D244DFFF900CDE093 /* CaptiveWebView.framework in Frameworks */,
+				04ECEA6225670135000207E9 /* CaptiveWebView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049D59BE23BB5DBE00C0171B /* CaptiveWebView.framework in Frameworks */,
+				04ECEA5F25670047000207E9 /* CaptiveWebView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,8 +106,6 @@
 		049D59BB23BB5DAC00C0171B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3FFD724C244DFFF900CDE093 /* CaptiveWebView.framework */,
-				049D59BC23BB5DAC00C0171B /* CaptiveWebView.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -147,7 +133,7 @@
 		04D77CB723BB56B500C25698 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04D77CB623BB56B500C25698 /* Dasher.app */,
+				04D77CB623BB56B500C25698 /* Dasher v6.app */,
 				0400FFEE23BB5788009AF4A0 /* Keyboard.appex */,
 			);
 			name = Products;
@@ -169,6 +155,9 @@
 			dependencies = (
 			);
 			name = Keyboard;
+			packageProductDependencies = (
+				04ECEA6125670135000207E9 /* CaptiveWebView */,
+			);
 			productName = ACE;
 			productReference = 0400FFEE23BB5788009AF4A0 /* Keyboard.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -180,7 +169,6 @@
 				04D77CB223BB56B500C25698 /* Sources */,
 				04D77CB323BB56B500C25698 /* Frameworks */,
 				04D77CB423BB56B500C25698 /* Resources */,
-				049D59C023BB5DBE00C0171B /* Embed Frameworks */,
 				04A876EE2455FB51008E12AD /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -189,8 +177,11 @@
 				04A876ED2455FB51008E12AD /* PBXTargetDependency */,
 			);
 			name = App;
+			packageProductDependencies = (
+				04ECEA5E25670047000207E9 /* CaptiveWebView */,
+			);
 			productName = Keyboard;
-			productReference = 04D77CB623BB56B500C25698 /* Dasher.app */;
+			productReference = 04D77CB623BB56B500C25698 /* Dasher v6.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -221,6 +212,9 @@
 				Base,
 			);
 			mainGroup = 04D77CAD23BB56B500C25698;
+			packageReferences = (
+				04ECEA5D25670047000207E9 /* XCRemoteSwiftPackageReference "captive-web-view" */,
+			);
 			productRefGroup = 04D77CB723BB56B500C25698 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -303,7 +297,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,7 +305,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = "Dasher v6";
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -326,7 +320,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,7 +328,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp.keyboard;
-				PRODUCT_NAME = "Dasher v6";
+				PRODUCT_NAME = Keyboard;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -464,16 +458,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "Set by script in Build settings";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = "Dasher v6 Keyboard";
+				PRODUCT_NAME = "Dasher v6";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -484,16 +479,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "Set by script in Build settings";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = K45HHA96ND;
 				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.org.acecentre.dasherapp;
-				PRODUCT_NAME = "Dasher v6 Keyboard";
+				PRODUCT_NAME = "Dasher v6";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -530,6 +526,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04ECEA5D25670047000207E9 /* XCRemoteSwiftPackageReference "captive-web-view" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vmware/captive-web-view";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04ECEA5E25670047000207E9 /* CaptiveWebView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ECEA5D25670047000207E9 /* XCRemoteSwiftPackageReference "captive-web-view" */;
+			productName = CaptiveWebView;
+		};
+		04ECEA6125670135000207E9 /* CaptiveWebView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04ECEA5D25670047000207E9 /* XCRemoteSwiftPackageReference "captive-web-view" */;
+			productName = CaptiveWebView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 04D77CAE23BB56B500C25698 /* Project object */;
 }

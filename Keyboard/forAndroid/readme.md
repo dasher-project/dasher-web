@@ -1,9 +1,9 @@
-Custom Keyboard for Android
-===========================
+# Custom Keyboard for Android
 This directory is for the proof-of-concept custom keyboard for Android.
 
-Notes
-=====
+# Build Instructions
+These instructions have been tested with version 4.1.1 of Android Studio.
+
 -   There is a dependency on the library for Android in the captive-web-view
     submodule. Build the dependency first, as follows.
 
@@ -19,6 +19,10 @@ Notes
         Gradle wrapper properties. Select OK and the project will build.
     
     5.  Execute the Gradle task: forAndroid/Tasks/upload/uploadArchives
+
+    The following screen capture shows the default location of the option.
+
+    ![**Screen Capture:** Location of the Captive Web View build task](../../documents/ScreenCaptures/IDE/AndroidStudio_CaptiveWebView_build.png)
 
     That should create a maven repository under the directory:
     `/where/you/cloned/redash/captive-web-view/m2repository/`
@@ -41,7 +45,7 @@ Notes
         and configure its build. It might take a minute or two first time.
 
 -   To install the keyboard via adb, execute the Gradle task:  
-    DasherKeyboard/DasherKeyboard (root)/Tasks/install/installDebug
+    DasherKeyboard/Tasks/install/installDebug
 
     Gradle tasks can be accessed from the Gradle assistant tab sidebar, which
     by default is at the top right of the Android Studio window.
@@ -59,8 +63,7 @@ Notes
     2.  Tap the keyboard icon in the bottom right corner.
     3.  Select 'Dasher Keyboard' in the alert.
 
-License
-=======
+# License
 Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).

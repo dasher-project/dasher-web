@@ -4,7 +4,4 @@
    <FileRef
       location = "group:DasherApp/DasherApp.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:../../captive-web-view/foriOS/CaptiveWebView/CaptiveWebView.xcodeproj">
-   </FileRef>
 </Workspace>

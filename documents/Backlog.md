@@ -112,3 +112,8 @@
 
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
+
+# License
+Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+MIT licensed, see
+[https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
