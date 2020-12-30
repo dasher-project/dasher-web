@@ -10,8 +10,7 @@ and the [table of contents](../).
 The following terms are used with the following meanings in the specification.
 
 ## Basic Terms
--   The instantiation of new zoom box objects is referred to here as
-    **Spawning**.
+-   The creation of new zoom box objects is referred to here as **Spawning**.
 
 -   The removal of existing zoom box objects is referred to here as
     **Deletion**.
@@ -56,7 +55,7 @@ described later in this section.
 There are two stages to zoom box spawning. Different properties of the spawned
 box are set in each stage.
 
-Every child zoom box has a property, **Child Weight**, that is specific to
+Every child zoom box has a **Child Weight** property that is specific to
 spawning. The child weight expresses the relative lateral size of a zoom box
 compared to its siblings. The role of child weight in the spawning processing is
 described later in this section. Note that the root zoom box doesn't have a
@@ -145,7 +144,7 @@ user interface will be live though, and the root box might meet the child
 spawning conditions later, depending on the actions of the user.
 
 # Child Spawning Conditions
-Child spawning takes place in a zoom box when it meets all the following
+Child spawning will take place in a zoom box when it meets all the following
 conditions.
 
 -   The box has zero child boxes, which will be the case after:
@@ -155,8 +154,15 @@ conditions.
 -   The box's lateral size is above a limit, referred to as the
     **Child Spawning Threshold**.
 
-The child spawning threshold value will come from the user interface. An option
-to set the value could be offered to the user.
+>   Second bullet could be replaced by the condition that the child deletion
+>   conditions aren't met, or vice versa.
+
+The child spawning threshold value will come from the user interface.
+
+>   Hmm. In practice, the child spawning threshold will determine the distance
+>   of prediction look ahead. Maybe a different rule could be used, like a
+>   threshold on prediction strength. For example, the threshold could be
+>   expressed as the child weight of the box being normalised to 20% or more.
 
 The child spawning conditions are checked:
 
@@ -170,6 +176,54 @@ The child spawning conditions are checked:
     Note that a box cannot change size without changing position. See the
     [Zooming Rules](../03ZoomingRules/ZoomingRules.md) section.
 
+>   Near here, say that a box that corresponds to a palette group node never
+>   meets the condition that it has zero child boxes.
+
+# Child Spawning
+When a zoom box meets the child spawning conditions, see above, the following
+processing takes place.
+
+Note that spawning processing is based on the zoom box palette. For a full
+description, see the [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md)
+section. The following points are most relevant here.
+
+-   The palette has a hierarchical tree structure that starts from a single
+    *palette root* node.
+-   Each child of the palette root is either a *principal* node or a *group*
+    node.
+-   Each principal node has a template text, in general a single character.
+-   Principal nodes don't have child nodes.
+-   Group nodes have child nodes but don't have template texts.
+
+## Hierarchy Instantiation
+First, a hierarchy based on the zoom box palette is instantiated under the box
+that has met the child spawning conditions, the *new parent box*, as follows.
+
+1.  For each child node in the palette root, a new zoom box is instantiated and
+    added as a child box of the new parent box. Each new box is assigned a
+    correspondence to the palette node for which it was instantiated.
+
+2.  Under each new child box that corresponds to a palette group node, hierarchy
+    instantiation is repeated recursively. Recursion starts at the group node,
+    not the palette root, and corresponding new zoom boxes are added as
+    "grandchild" boxes, under the new child box.
+
+3.  Each instantiated box that corresponds to a principal node is assigned an
+    initial child weight of one. This applies to new child boxes that were
+    instantiated directly or recursively. Child weights can change later in the
+    spawning process.
+
+>   Text assignment is next.
+
+## Predictor Invocation
+
+
+## Weight Normalisation
+
+
+## Finalisation
+
+>   Colours go here.
 
 
 # Root Replacement
