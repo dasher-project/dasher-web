@@ -34,7 +34,7 @@ Zooming solvers can be defined in the following terms.
     solver functions, can be referred to as a **Solver Algorithm** or just a
     solver algorithm, or an algorithm, if this is obvious from context.
 
-- A solver algorithm can have parameters, referred to as **Solver Parameters**.
+-   A solver algorithm can have parameters, referred to as **Solver Parameters**.
 
 A single zooming UI implementation could include a number of different solver
 algorithms. The user could be given an option to select between different solver
