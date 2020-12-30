@@ -69,7 +69,6 @@ The rule set is as follows.
             left has a larger height.
 
 ## Zooming Rule Diagrams
-
 The following diagram illustrates the Size Map Rule and the Size Increase Rule.
 
 ![Diagram 4:Size Map Rule and Size Increase Rule](SizeMapAndIncreaseRules.svg)
