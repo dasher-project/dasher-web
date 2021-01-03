@@ -105,6 +105,8 @@ In principle, a template can hold any property that:
 -   Doesn't change after the zoom box has been created.
 
 
+>   Mention the need for initialisation of the language model.
+
 
 
 

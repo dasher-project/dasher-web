@@ -108,14 +108,15 @@ The processing is as follows.
 
     The new box will have zero child boxes, and no parent box.
 
-3.  The root box is assigned a correspondence to the palette root.
+3.  The text properties of the root box are set, as follows.
 
-    This gives the root box the following properties.
+    -   Box text is "", the empty text.
+    -   Incremental text is null.
 
-    -   Box text, which will be "" the empty text.
-    -   Incremental text, which will be null.
-    -   Colour specifier, which will be the sequence colour with ordinal zero
-        and index zero.
+4.  The root box is assigned a correspondence to the palette root.
+
+    This gives the root box a colour specifier, which will be the sequence
+    colour with ordinal zero and index zero.
     
     For descriptions of correspondence, the palette root, colour specifiers and
     sequence colours, see the
@@ -123,7 +124,7 @@ The processing is as follows.
 
     This completes the weight spawning stage of the root box.
     
-4.  The dimensions of the root box are finalised.
+5.  The dimensions of the root box are finalised.
 
     The detail of finalisation depends on which optional parameter was given in
     step 1.
@@ -153,9 +154,6 @@ conditions.
 -   All or part of the box is inside the zooming area limits.
 -   The box's lateral size is above a limit, referred to as the
     **Child Spawning Threshold**.
-
->   Second bullet could be replaced by the condition that the child deletion
->   conditions aren't met, or vice versa.
 
 The child spawning threshold value will come from the user interface.
 
@@ -208,23 +206,145 @@ that has met the child spawning conditions, the *new parent box*, as follows.
     not the palette root, and corresponding new zoom boxes are added as
     "grandchild" boxes, under the new child box.
 
-3.  Each instantiated box that corresponds to a principal node is assigned an
-    initial child weight of one. This applies to new child boxes that were
+3.  Each newly instantiated box that corresponds to a principal node is assigned
+    an initial child weight of one. This applies to new child boxes that were
     instantiated directly or recursively. Child weights can change later in the
     spawning process.
 
->   Text assignment is next.
+    Boxes that correspond to group nodes are assigned a weight later in the
+    spawning process, see below.
 
-## Predictor Invocation
+4.  The incremental text of each newly instantiated box is set, as follows.
 
+    -   If the box corresponds to a principal node, the box incremental text
+        will be the same as the node template text.
+
+    -   If the box corresponds to a group node, the box will have no incremental
+        text.
+
+5.  The box text of each newly instantiated zoom box is set, as follows.
+
+    -   If the zoom box has incremental text, the box text will be the
+        incremental text appended to the box text of the box's parent.
+
+    -   If the zoom box doesn't have incremental text, the box text will be the
+        same as the box text of the box's parent.
+
+## Language Model Predictor Invocation
+After hierarchy instantiation, above, the next step is to invoke the predictor
+in the language model.
+
+There could be multiple language models in a zooming text entry system. The user
+could select between them, for example in a control panel user interface. The
+spawning code will invoke the predictor in whichever model is current at the
+time of child spawning.
+
+This specification describes the predictor interface between spawning and the
+language model, but doesn't describe any language model itself.
+
+The predictor will be invoked with the following parameters.
+
+-   *Message* text that has been entered so far, which will be the box text of
+    the zoom box under which the hierarchy was just instantiated.
+
+-   *Palette* root, in case the predictor needs access to, for example, the
+    number of principal nodes in the palette.
+
+-   *Set-weight* callback function by which the predictor can provide child
+    weight values and set modelling data back into the zoom box hierarchy.
+
+-   *Modelling data*, if any was stored by a previous set-weight invocation, see
+    following description.
+
+The message text could be provided as, for example:
+
+-   An array of Unicode code points.
+-   A JavaScript string or similar representation.
+
+The Dasher Version Six proof-of-concept provides both formats.
+
+The predictor will do the following.
+
+1.  Determine what characters are likely or unlikely to follow the message text.
+    The method by which the language model makes the determination isn't part of
+    the specification.
+
+2.  Invoke the set-weight callback multiple times. The callback has the
+    following parameters.
+
+    -   *Character* for which a weight is being set. This could be specified as
+        a Unicode code point, for example.
+
+    -   *Weight* value, which must be numeric and more than zero. The number can
+        be an integer or not. Any character for which a weight isn't set by the
+        predictor will have a weight of one as a default. Weight values will be
+        normalised later in the spawning process, see below.
+
+    -   *Modelling data*, if any, to store in the zoom box hierarchy. The format
+        of the modelling data is opaque to the spawning code.
+
+3.  Return control to the spawning code.
+
+For each invocation of the set-weight callback, the spawning code will do the
+following.
+
+1.  Check if there is a newly instantiated zoom box with the Character as its
+    incremental text. If there is, then designate that box as the
+    *weight target*.
+
+2.  If there isn't a weight target, then:
+
+    -   Instantiate a new zoom box and set its incremental text to be the
+        set-weight Character. Designate the new box as the weight target.
+
+    -   Set the parent of the weight target to be one of the following.
+
+        -   The zoom box under which a new hierarchy was just instantiated.
+        -   One of the newly instantiated boxes in the hierarchy that
+            corresponds to a group node in the palette.
+        
+        How the parent is set, i.e. where in the hierarchy the weight target
+        should be inserted, depends on the palette. For example, if the palette
+        has a group node for capital letters, and the set-weight character is a
+        capital letter, then the box that corresponds to the capitals group
+        should be the parent of the weight target.
+
+        >   That should be added to the palette section. It could be described
+        >   in terms of each group node having a filter. That actually could be
+        >   a better way to specify groups, instead of explicitly. The palette
+        >   could be initialised by dropping in every character in a list, and
+        >   inserting it into which group filter it matches.
+
+    -   Insert the weight target into the array of child boxes in its parent.
+
+        The point of insertion could be determined by checking the lexicographic
+        order compared to other child boxes of the same parent, for example.
+
+3.  Set the Weight value from the predictor as the child weight of the weight
+    target box.
+
+4.  Store the modelling data in the weight target box.
+
+    >   The requirement for user data storage in zoom boxes should be introduced
+    >   earlier in the specification.
+
+When the predictor returns control to the spawning code, after all invocations
+of the set-weight callback, the next step of spawning is processed.
 
 ## Weight Normalisation
+After language model predictor invocation, above, the next step is weight
+normalisation.
+
+
+
 
 
 ## Finalisation
 
 >   Colours go here.
 
+
+>   Example of predictor invocation goes here.
 
 # Root Replacement
 
@@ -257,6 +377,10 @@ that has met the child spawning conditions, the *new parent box*, as follows.
 
     >   But a box could get pushed outside by lateral motion as well as pushing.
     >   Also, what happens when the box re-enters the zooming area limits?
+
+    >   Near here, ensure that the child deletion conditions can't be met at the
+    >   same time as the child spawning conditions.
+
 
 -   The lateral size of a child box will be calculated as a proportion of the
     lateral size of its parent box. The calculation will be based on a value
