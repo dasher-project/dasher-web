@@ -110,6 +110,18 @@
 -   Standalone app for Mac Catalyst. Rebuild the standalone app for iOS with
     Catalyst support.
 
+-   Custom keyboard for macOS. See the following links.
+
+    -   [https://nshipster.com/accessibility-keyboard/](https://nshipster.com/accessibility-keyboard/)
+    -   [https://support.apple.com/en-gb/guide/mac-help/mh43606/10.15/mac/10.15](https://support.apple.com/en-gb/guide/mac-help/mh43606/10.15/mac/10.15)
+    -   [https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html#//apple_ref/doc/uid/10000172i-SW7-BCIEDDBJ](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html#//apple_ref/doc/uid/10000172i-SW7-BCIEDDBJ)
+
+-   Dasher Version Six zooming user interface in a browser extension. See the
+    following links.
+
+    -   [https://developer.apple.com/documentation/safariservices/safari_app_extensions/building_a_safari_app_extension](https://developer.apple.com/documentation/safariservices/safari_app_extensions/building_a_safari_app_extension)
+    -   [https://developer.chrome.com/docs/extensions/](https://developer.chrome.com/docs/extensions/)
+
 -   More use of Piece.toggle in zoombox.js module.
 -   Review "element" vs "node" in variable and function names.
 
