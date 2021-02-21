@@ -1,12 +1,11 @@
-Test embedding of a Drawio in an SVG.
+Test embedding of a Drawio in an PNG.
 
-![WebView.svg](WebView.svg)
+![WebView.png](WebView.png)
 
 Possible way to grant access to the Drawio aka Diagrams.net app on GitHub is to open this link:  
 https://app.diagrams.net/?mode=github
 
-To edit the above diagram, open this link:  
-http://jgraph.github.io/drawio-github/edit-diagram.html?org=dasher-project&action=open&ref=embed-drawio&repo=redash&path=documents/WebView.svg  
+To edit the above diagram, open this link: [Edit](http://jgraph.github.io/drawio-github/edit-diagram.html?org=dasher-project&action=open&ref=embed-drawio&repo=redash&path=documents/WebView.png)  
 **Don't enter your user name and password** in the fields on that page.
 
 You can't commit your work at the moment. See  
