@@ -1,0 +1,66 @@
+// Copyright 2021 MozoLM Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package mozolm.grpc;
+
+import "lm_scores.proto";
+
+option java_package = "com.google.mozolm.grpc";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+// Next available ID: 3
+message GetContextRequest {
+  // Initial state for getting state information.
+  int32 state = 1;
+
+  // Context string (from initial state) for info.
+  string context = 2;
+}
+
+// Next available ID: 2
+message NextState {
+  int64 next_state = 1;
+}
+
+// Next available ID: 4
+message UpdateLMScoresRequest {
+  // State where count should be updated.
+  int32 state = 1;
+
+  // String of symbols whose count should be updated at that state.
+  repeated int32 utf8_sym = 2;
+
+  // Count to add to state and symbol.
+  int32 count = 3;
+}
+
+service MozoLMServer {
+  // Returns the probs and normalization for given state.
+  rpc GetLMScores(GetContextRequest) returns (LMScores) {
+    // errors: invalid state;
+  }
+
+  // Returns the next state for symbol from context.
+  rpc GetNextState(GetContextRequest) returns (NextState) {
+    // errors: none.
+  }
+
+  // Updates the count and normalization for given state and utf8_sym.
+  rpc UpdateLMScores(UpdateLMScoresRequest) returns (LMScores) {
+    // errors: invalid utf8_sym or count <= 0.
+  }
+}
