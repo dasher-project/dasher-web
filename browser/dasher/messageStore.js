@@ -5,6 +5,7 @@
  *
  *
 */
+
 export default class MessageStore {
     constructor() {
       this._databaseName = 'messageStore';
@@ -13,6 +14,7 @@ export default class MessageStore {
     }
     //TESTS
     test(){
+      this.addMessage('Hi my name is redasher.');
       //this._delete_from_browser(17,true);
       //this.importToDatabase();
       return this._databaseName;
@@ -27,8 +29,13 @@ export default class MessageStore {
 
     viewMessageStore(){
       this._load_from_browser().catch(() => {}).then(messages => {
-        //TODO - present these message in another place other than the console
-        console.log(messages);
+        //Messages is an array of message objects
+        // msg:string,datetime:Date,msgID:string
+        //TODO - present these messages in a usable format
+        //For now- stringify the data, and attempt to break up
+        //so it fits into an alert window
+        const output = messages.map(m=>JSON.stringify(m).replace(",","\n"));
+        alert(output.join("\n"));
       });
     }
 
@@ -88,7 +95,7 @@ export default class MessageStore {
             };
         });
     }
-
+    //On success, resolves an array of message objects
     _load_from_browser() { return new Promise((resolve, reject) => {
         let allMessages = [];
         this._open_object_store("readonly").catch(() => {}).then(store =>

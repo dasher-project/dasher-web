@@ -19,6 +19,10 @@ loads.
     -   Web view control embedded in an application. Embeddable web view
         controls include Chromium and WebKit, for example.
     
+        The Android and iOS versions of Dasher Version Six make use of the
+        [Captive Web View](https://github.com/vmware/captive-web-view/) library
+        to facilitate use of web technologies in mobile applications.
+    
     The process starts with a loading document.
 
 2.  Loading Document.
@@ -58,7 +62,7 @@ loads.
     -   The loading script chain for the custom keyboard has the following
         files.
 
-        1.  [captivewebview.js](https://github.com/vmware/captive-web-view/blob/master/forAndroid/captivewebview/src/main/assets/library/captivewebview.js)
+        1.  [captivewebview.js](https://github.com/vmware/captive-web-view/blob/main/Sources/CaptiveWebView/Resources/library/captivewebview.js)
 
             This file is part of the Captive Web View project and is included as
             a Git submodule into the Dasher Version Six code.
@@ -68,7 +72,8 @@ loads.
         
         2.  [../browser/dasher/keyboard.js](../browser/dasher/keyboard.js)
 
-            This file uses an ES 6 `import` statement to execute the next script in the chain, which is the last one.
+            This file uses an ES 6 `import` statement to execute the next script
+            in the chain, which is the last one.
 
     The last script in the loading chain will be the user interface builder.
 
@@ -88,12 +93,9 @@ loads.
     **There is a strategic backlog item to overhaul this, see the
     [Backlog.md](Backlog.md) file.**
 
-
-
-
 # Document Information
 This document is part of the Dasher project and is under revision control here:  
 [https://github.com/dasher-project/redash/tree/master/documents](https://github.com/dasher-project/redash/tree/master/documents)
 
-(c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+(c) 2021 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
