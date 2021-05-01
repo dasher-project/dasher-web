@@ -28,7 +28,9 @@ import KeyHandler from './keyhandler.js';
 
 import panels from "./controlpanelspecification.js"
 import ControlPanel from "./controlpanel.js";
+
 import MessageDisplay from "./messageDisplay.js";
+import MessageStore from "./messageStore.js";
 
 const messageLabelText = "Message:";
 const speechAnnouncement = "Speech is now active.";
@@ -84,6 +86,7 @@ export default class UserInterface {
 
         this._message = undefined;
         this._messageDisplay = new MessageDisplay(this._limits);
+        this._messageStore = new MessageStore();
 
         this._keyHandler = new KeyHandler();
 
@@ -139,7 +142,9 @@ export default class UserInterface {
         this._message = message;
         this._messageDisplay.update(message);
     }
-
+    _save_message(){
+      this._messageStore.addMessage(this.message);
+    }
     get predictors() {
         return this._predictors;
     }
@@ -238,6 +243,7 @@ export default class UserInterface {
             this._load_speech_controls();
         }
         this._load_display_controls();
+        this._load_message_controls();
         this._load_developer_controls();
     }
 
@@ -289,9 +295,15 @@ export default class UserInterface {
 
     _load_display_controls(){
         const panel = this._panels.display;
-        panel.popup.listener = this.clicked_popup.bind(this);
+        panel.popup.listener = this._messageDisplay.popupClicked.bind(this._messageDisplay);
     }
-
+    _load_message_controls(){
+        const panel = this._panels.message;
+        panel.add.listener = this._save_message.bind(this);
+        panel.show.listener = this._messageStore.viewMessageStore.bind(this._messageStore);
+        panel.import.listener = this._messageStore.importToDatabase.bind(this._messageStore);
+        panel.export.listener = this._messageStore.exportToFile.bind(this._messageStore);
+    }
     _load_developer_controls() {
         const panel = this._panels.developer;
         panel.pointer.listener = this.clicked_pointer.bind(this);
@@ -586,9 +598,6 @@ export default class UserInterface {
         // This button will either stop or go.
         this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
-    }
-    clicked_popup() {
-        this._messageDisplay.popupClicked();
     }
 
     // Pointer button was clicked.

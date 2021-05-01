@@ -101,8 +101,22 @@ export default {
         "popup":{$:{
             "order": 0, "control": "button"}}
     },
-    "developer": {
+    "message": {
         $: {"order": 7},
+
+        "add":{$:{
+            "order": 0, "control": "button"}},
+        "show":{$:{
+            "order": 1, "control": "button"}},
+        "divider":{$:{
+            "order": 2, "html": "div"}},
+        "import":{$:{
+            "order": 3, "control": "button"}},
+        "export":{$:{
+            "order": 4, "control": "button"}}
+    },
+    "developer": {
+        $: {"order": 8},
 
         "pointer":{$:{
             "order": 0, "control": "button"}},
@@ -124,6 +138,6 @@ export default {
             "order": 8, "control": "button"}},
         "keyHandler": {$:{
             "order": 9, "control": "checkbox", "label": "Key handler"}},
-    
+
     }
 };
