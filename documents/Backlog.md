@@ -93,28 +93,11 @@
 -   Change the drawing of the X axis so it doesn't go all the way across the
     area. Original Dasher has a short horizontal line.
 -   Maybe shuffle letters left or right in the tail.
--   Store what is set in the standalone app to be used in the keyboard too.
 -   See about fixing the text alignment on Firefox.
 -   Change terminology of "origin holder" to maybe "delta target".
 -   More use of built-in .append and .remove in piece.js module. See:
 
     -   https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
-
-
--   Standalone app for Android. Make it the same as the standalone app for iOS,
-    i.e. based on a Captive Web View.
-
--   Standalone app for macOS. Make it the same as the standalone app for iOS,
-    i.e. based on a Captive Web View.
-
--   Standalone app for Mac Catalyst. Rebuild the standalone app for iOS with
-    Catalyst support.
-
--   Custom keyboard for macOS. See the following links.
-
-    -   [https://nshipster.com/accessibility-keyboard/](https://nshipster.com/accessibility-keyboard/)
-    -   [https://support.apple.com/en-gb/guide/mac-help/mh43606/10.15/mac/10.15](https://support.apple.com/en-gb/guide/mac-help/mh43606/10.15/mac/10.15)
-    -   [https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html#//apple_ref/doc/uid/10000172i-SW7-BCIEDDBJ](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html#//apple_ref/doc/uid/10000172i-SW7-BCIEDDBJ)
 
 -   Dasher Version Six zooming user interface in a browser extension. See the
     following links.
@@ -126,6 +109,6 @@
 -   Review "element" vs "node" in variable and function names.
 
 # License
-Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+Copyright (c) 2021 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
