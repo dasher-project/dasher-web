@@ -152,8 +152,8 @@ conditions.
     -   Instantiation.
     -   Child deletion, see below.
 -   All or part of the box is inside the zooming area limits.
--   The box's lateral size is above a limit, referred to as the
-    **Child Spawning Threshold**.
+-   The box's lateral size can be calculated and is above a limit, referred to
+    as the **Child Spawning Threshold**.
 
 The child spawning threshold value will come from the user interface.
 
@@ -192,6 +192,8 @@ section. The following points are most relevant here.
 -   Each principal node has a template text, in general a single character.
 -   Principal nodes don't have child nodes.
 -   Group nodes have child nodes but don't have template texts.
+
+>   Maybe insert a numbered list here, before the subsections.
 
 ## Hierarchy Instantiation
 First, a hierarchy based on the zoom box palette is instantiated under the box
@@ -331,18 +333,50 @@ following.
 When the predictor returns control to the spawning code, after all invocations
 of the set-weight callback, the next step of spawning is processed.
 
-## Weight Normalisation
-After language model predictor invocation, above, the next step is weight
-normalisation.
+## Colour assignment
+Each newly instantiated child box under a new parent box will have its rectangle
+colour assigned according to the palette.
 
+Rectangle colour assignment is described in the
+[Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
 
+Note that colour assignment cannot be processed before predictor invocation.
+That is because the predictor might insert additional child boxes and hence
+change the index numbering.
 
+## Weight Finalisation
+After language model predictor invocation, above, a following step is to
+finalise the weight values. This is processed as follows.
 
+-   New child boxes that correspond to palette principal nodes will have a child
+    weight, either the default value, one, or a value assigned by the language
+    model predictor, above. The child weight is the final weight in this case.
 
-## Finalisation
+-   New child boxes that correspond to palette group nodes won't have a child
+    weight. The final weight of each of these nodes will be calculated by
+    summing the final weight values of its own child boxes. If the palette had
+    more than two levels of hierarchy, this would be a recursive calculation.
 
->   Colours go here.
+The above calculations complete the weight spawning stage of all the newly
+instantiated child boxes.
 
+The new parent box's total weight will be the sum of all the final weight values
+of its child boxes. The total weight value will be used to check for cascade
+spawning, see below.
+
+The new parent box will be the child of another box, unless the new parent box
+is the root box, and therefore have a child weight. The total weight of the
+parent box is a separate and unrelated value to its child weight.
+
+>   Maybe have a diagram of total weights, final weights, and child weights.
+
+## Cascade Check
+After weight finalisation, above, a following step is to check for cascade
+spawning. This is processed as follows.
+
+1.  For each newly instantiated child zoom box, calculate its lateral size ...
+
+2.  
 
 >   Example of predictor invocation goes here.
 
