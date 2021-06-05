@@ -19,9 +19,11 @@ loads.
     -   Web view control embedded in an application. Embeddable web view
         controls include Chromium and WebKit, for example.
     
-        The Android and iOS versions of Dasher Version Six make use of the
-        [Captive Web View](https://github.com/vmware/captive-web-view/) library
-        to facilitate use of web technologies in mobile applications.
+        The
+        [Dasher Version Six custom keyboards](https://github.com/dasher-project/dasher-captivewebview)
+        for Android and iOS make use of the
+        [Captive Web View](https://github.com/vmware/captive-web-view/)
+        library to facilitate use of web technologies in mobile applications.
     
     The process starts with a loading document.
 
@@ -42,7 +44,7 @@ loads.
         The first script in the loading chain is the `index.js` file.
 
     -   Custom keyboard:
-        [../browser/Keyboard.html](../browser/Keyboard.html)  
+        [Keyboard.html](https://github.com/dasher-project/dasher-captivewebview/blob/main/Keyboard/WebResources/Keyboard.html)  
         The first script in the loading chain is the `captivewebview.js` file.
 
 3.  Loading Script Chain.
@@ -65,12 +67,12 @@ loads.
         1.  [captivewebview.js](https://github.com/vmware/captive-web-view/blob/main/Sources/CaptiveWebView/Resources/library/captivewebview.js)
 
             This file is part of the Captive Web View project and is included as
-            a Git submodule into the Dasher Version Six code.
+            a Git submodule into the Dasher Version Six custom keyboard code.
 
             The script causes the next file in the chain to be executed when the
             Captive Web View control has initialised.
         
-        2.  [../browser/dasher/keyboard.js](../browser/dasher/keyboard.js)
+        2.  [keyboard.js](https://github.com/dasher-project/dasher-captivewebview/blob/main/Keyboard/WebResources/keyboard.js)
 
             This file uses an ES 6 `import` statement to execute the next script
             in the chain, which is the last one.
