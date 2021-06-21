@@ -23,9 +23,9 @@ This concept for integration is based off the sample code found in the gRPC-web
 [Protocol Buffers](https://developers.google.com/protocol-buffers/).
 Install both `protoc` and `protoc-gen-grpc-web`
 #### Docker
-[Docker](https://www.docker.com).
+[Docker](https://www.docker.com)
 #### MozoLM-Server
-[mozolm Server Binaries](https://github.com/google-research/mozolm).
+[mozolm Server Binaries](https://github.com/google-research/mozolm)
 
 1. Create .js files frome the proto files
 ```
