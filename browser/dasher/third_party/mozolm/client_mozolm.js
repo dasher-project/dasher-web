@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {LMScores, GetContextRequest, NextState,
-       UpdateLMScoresRequest} = require('./service_pb.js');
-const {MozoLMServerClient} = require('./service_grpc_web_pb.js');
+const { LMScores, GetContextRequest, NextState,
+       UpdateLMScoresRequest, MozoLMServiceClient } = require('@copewithjeremy/mozolm-grpc-web');
 
 window.prob_dict = {};
 window.prob_vector = [];
 
 window.mozolm = function(context){ return new Promise(function(resolve, reject) {
-  var client = new MozoLMServerClient('http://' + window.location.hostname + ':8080',
+  var client = new MozoLMServiceClient('http://' + window.location.hostname + ':8080',
                                  null, null);
   // simple unary call
   var request = new GetContextRequest();
