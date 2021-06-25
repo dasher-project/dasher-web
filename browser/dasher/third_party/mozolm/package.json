@@ -4,7 +4,8 @@
   "description": "mozolm gRPC-Web simple example",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "npx webpack"
+    "prepare": "npx webpack",
+    "start": "./run.sh"
   },
   "devDependencies": {
     "@copewithjeremy/mozolm-grpc-web": "^1.1.4",
