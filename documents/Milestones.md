@@ -5,7 +5,9 @@ Below are the milestones that we have agreed with NL Net as well as the donation
 The charitable donations will then be split between Ace Centre and [Adam Spickard](https://github.com/aspickard). Adam will receive 80% of the donation for completing the technical tasks and Ace Centre will receive 20% to cover time spent project management and to cover producing promotional material.
 
 The total donation to be made by NL Net will be: €27850.
+
 Overall Ace Centre will receive: €4370
+
 Overall Adam will receive: €23480
 
 # Milestone 1
