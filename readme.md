@@ -29,7 +29,7 @@ request to help out!
 - Read the [developer guides](documents/Development.md) and be sure to check out the [specifications](documents/Specification/readme.md) to better understand the technologies driving Dasher.
 
 # Contributing
--  We'd love your help! Check out our housekeeping [rulebook](documents/Contributing.md) for best practices
+-  We'd love your help! Check out our housekeeping [rulebook](documents/Development.md) for best practices
 on contributing.
 
 

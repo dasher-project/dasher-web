@@ -115,7 +115,7 @@ Have a read of the [specification guide](https://github.com/dasher-project/redas
 
 ## How do I get going with the code?
 
-Read the [contributing guide](https://github.com/dasher-project/redash/blob/master/documents/Contributing.md).
+Read the [contributing guide](https://github.com/dasher-project/redash/blob/master/documents/Development.md).
 
 ## How does the current code all work?
 
