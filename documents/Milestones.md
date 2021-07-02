@@ -8,7 +8,7 @@ The total donation to be made by NL Net will be: €27850.
 Overall Ace Centre will receive: €4370
 Overall Adam will receive: €23480
 
-# Milestone 1
+# Milestone 1
 
 Donation for completing this milestone: €4200
 
