@@ -15,7 +15,7 @@ The addition of any features beyond the original functionality of Dasher will be
 
 # Architecture
 
-![Architecture](https://github.com/dasher-project/redash/blob/master/documents/Architecture.png)
+![Architecture](https://github.com/dasher-project/redash/blob/master/documents/images/Architecture.png)
 
 # Developer Guides
 
