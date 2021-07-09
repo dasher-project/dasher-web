@@ -1,7 +1,7 @@
 {
-  "name": "mozolm grpc-web example",
+  "name": "mozolm",
   "version": "0.1.0",
-  "description": "mozolm gRPC-Web simple example",
+  "description": "mozolm + gRPC-Web + Webpack + Envoy",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npx webpack",

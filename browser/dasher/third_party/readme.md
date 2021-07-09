@@ -24,15 +24,9 @@ This concept for integration is based off the sample code found in the gRPC-web
 ```
 $ npm install
 ```
-2. Start the envoy engine
-```
-$ docker run -d -v "$(pwd)"/envoy.yaml:/etc/envoy/envoy.yaml:ro -p 8080:8080 -p 9901:9901 envoyproxy/envoy:v1.17.0
-```
-5. Start the mozolm server
+2. Start the envoy engine & mozolm server
 Expect training file at: ~/training.txt
+See ./run.sh for more details
 ```
-docker run -d --init -v ~/:/data -p 9090:9090 gcr.io/mozolm-release/server_async \
-   --server_config="address_uri:\"0.0.0.0:9090\" model_hub_config { model_config { \
-     type:PPM_AS_FST storage { model_file:\"/data/training.txt\" ppm_options { \
-     max_order: 4 static_model: false } } } }"
+$ npm start
 ```
