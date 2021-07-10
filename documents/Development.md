@@ -59,7 +59,7 @@ chrome://inspect list and the Chrome developer tools can be used.
 
 There doesn't seem to be any way to do this with an iOS device, although it can
 be done on the simulator by entering the same address. An alternative may be to
-set up an intranet that is accessible to the mobile browser.## Delivery Requirements
+set up an intranet that is accessible to the mobile browser.
 
 ## Delivery Requirements
 
@@ -84,6 +84,6 @@ set up an intranet that is accessible to the mobile browser.## Delivery Requirem
 
 # License
 
-Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
+Copyright (c) 2021 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
