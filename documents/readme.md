@@ -7,4 +7,4 @@ This folder is the home of all Dasher docs.
 - [Milestone 1](./Milestone-1.md)
 - [Milestones](./Milestones.md)
 - [Onboarding for dasher development](./OnboardingForDasherDevelopment.md)
-- [Specification](./Specification/readme.md)
+- [Specification](./Specification/)
