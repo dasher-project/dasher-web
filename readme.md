@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=master)](https://travis-ci.com/dasher-project/redash)
+[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=master)](https://travis-ci.com/dasher-project/dasher-web)
 
 ![Dasher](tests/screenshot.png)
 
@@ -9,7 +9,7 @@ Proofs of concept for Dasher zooming text entry implemented in web technologies.
 -   Browser.
 
     To run the browser proof of concept, go here:
-    [https://dasher-project.github.io/redash/browser/](https://dasher-project.github.io/redash/browser/)
+    [https://dasher-project.github.io/dasher-web/browser/](https://dasher-project.github.io/dasher-web/browser/)
 
 -   Keyboard and app for iOS.
 
