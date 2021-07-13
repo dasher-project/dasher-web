@@ -53,7 +53,7 @@ A few reasons:
 
 ## So wheres the code?
 
-Code is currently being worked on in the redash repo. https://github.com/dasher-project/redash
+Code is currently being worked on in the dasher-web repo. https://github.com/dasher-project/dasher-web
 The language model can be found at https://github.com/google-research/mozolm
 
 ## Who's working on this?
@@ -111,12 +111,12 @@ Yes. All are [here](https://drive.google.com/drive/folders/1TxyeedQI6d37qSRt0Kj_
 
 ## What do all the terms mean in dasher? How _should_ it work?!
 
-Have a read of the [specification guide](https://github.com/dasher-project/redash/blob/master/documents/Specification/readme.md)
+Have a read of the [specification guide](https://github.com/dasher-project/dasher-web/blob/master/documents/Specification/readme.md)
 
 ## How do I get going with the code?
 
-Read the [contributing guide](https://github.com/dasher-project/redash/blob/master/documents/Development.md).
+Read the [contributing guide](https://github.com/dasher-project/dasher-web/blob/master/documents/Development.md).
 
 ## How does the current code all work?
 
-Read [This](https://github.com/dasher-project/redash/blob/master/documents/Loading.md).
+Read [This](https://github.com/dasher-project/dasher-web/blob/master/documents/Loading.md).

@@ -15,7 +15,7 @@ The addition of any features beyond the original functionality of Dasher will be
 
 # Architecture
 
-![Architecture](https://github.com/dasher-project/redash/blob/master/documents/images/Architecture.png)
+![Architecture](https://github.com/dasher-project/dasher-web/blob/master/documents/images/Architecture.png)
 
 # Developer Guides
 
@@ -36,7 +36,7 @@ especially importing modules, from file:// URLs.
 Python version 3 comes with an HTTP server that is suitable for this purpose. It
 could be started like this.
 
-    cd /path/where/you/cloned/redash/browser/
+    cd /path/where/you/cloned/dasher-web/browser/
     python3 -m http.server -b localhost
 
 You can then run the code in the browser on your desktop, by entering

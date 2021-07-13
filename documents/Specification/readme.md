@@ -13,7 +13,7 @@ The specification is divided into sections. These can be read in order.
 # Document Information
 The Dasher Version Six specification is part of the Dasher project and is under
 revision control here:  
-[https://github.com/dasher-project/redash](https://github.com/dasher-project/redash)
+[https://github.com/dasher-project/dasher-web](https://github.com/dasher-project/dasher-web)
 
 (c) 2020 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)

@@ -1,5 +1,5 @@
 Summary of Deliverables  
-Milestone 1 and its associated deliverables are available for viewing at https://github.com/dasher-project/redash/projects/1
+Milestone 1 and its associated deliverables are available for viewing at https://github.com/dasher-project/dasher-web/projects/1
 
 > A version control repository shall be created to house the Dasher-Web implementation.
 
@@ -15,7 +15,7 @@ Milestone 1 and its associated deliverables are available for viewing at https:/
 
 [You can see the developing doc here](./Development.md)
 
-https://github.com/dasher-project/redash/wiki/Onboarding-for-Dasher-Development
+https://github.com/dasher-project/dasher-web/wiki/Onboarding-for-Dasher-Development
 
 > A user experience survey shall be authored and publicly published on the Dasher-Web repository.
 
@@ -25,7 +25,7 @@ https://github.com/dasher-project/redash/wiki/Onboarding-for-Dasher-Development
 
 > Express licensing and development permission shall be gained from Cambridge Enterprise and published within the Dasher-Web repository.
 
-[You can see the email thread with the Cambridge team here](https://github.com/dasher-project/redash/issues/55)
+[You can see the email thread with the Cambridge team here](https://github.com/dasher-project/dasher-web/issues/55)
 
 > Several meetings have been carried out. Minutes and notes are gathered here
 
