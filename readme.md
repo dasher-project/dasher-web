@@ -1,10 +1,13 @@
-[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=master)](https://travis-ci.com/dasher-project/dasher-web)
+[![Build Status](https://travis-ci.com/dasher-project/redash.svg?branch=main)](https://travis-ci.com/dasher-project/dasher-web)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dasher-project/dasher-web/blob/main/LICENSE)
 
 ![Dasher](tests/screenshot.png)
 
 
 # Dasher in Web Technologies
-Proofs of concept for Dasher zooming text entry implemented in web technologies.
+[<img src="https://img.shields.io/badge/slack-@openaac-yellow.svg?logo=slack">](https://openaac.slack.com/)
+
+Base project for Dasher v6 (see also [CaptiveWebView for iOS/Androud](https://github.com/dasher-project/dasher-captivewebview), [Electron for Desktop](https://github.com/dasher-project/dasher-electron)). 
 
 -   Browser.
 
