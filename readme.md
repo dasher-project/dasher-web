@@ -7,7 +7,7 @@
 # Dasher in Web Technologies
 [<img src="https://img.shields.io/badge/slack-@openaac-yellow.svg?logo=slack">](https://openaac.slack.com/)
 
-Base project for Dasher v6 (see also [CaptiveWebView for iOS/Androud](https://github.com/dasher-project/dasher-captivewebview), [Electron for Desktop](https://github.com/dasher-project/dasher-electron)). 
+Base project for Dasher v6 (see also [CaptiveWebView for iOS/Android](https://github.com/dasher-project/dasher-captivewebview), [Electron for Desktop](https://github.com/dasher-project/dasher-electron)). 
 
 -   Browser.
 
