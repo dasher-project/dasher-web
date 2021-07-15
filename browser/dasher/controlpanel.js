@@ -15,7 +15,7 @@ class Control {
         this._node = undefined;
         this._valueListener = null;
         this._addedListener = null;
-        this._optionStrings = undefined;
+        this._optionGroups = undefined;
         this._active = undefined;
 
         this._selectedIndex = undefined;
@@ -104,10 +104,30 @@ class Control {
         this.active = !!this.active;
 
         // If option strings were set early, create <option> elements now.
-        if (this.optionStrings !== undefined) {
-            this.optionStrings.forEach(optionString => this.node.add(
-                new Option(optionString)
-            ));
+        if (this.optionGroups !== undefined) {
+            // Loop through each group
+            for (let [key, values] of Object.entries(optionGroups)) {
+                // 'root' is the magic key that puts its values in the root of the select
+                if(key === 'root') {
+                    values.forEach(optionString => {
+                        this.node.add(
+                            new Option(optionString)
+                        );
+                    })
+                // Otherwise it's a group of options
+                } else {
+                    const optGroup = document.createElement("optgroup");
+                    optGroup.label = key;
+
+                    values.forEach(optionString => {
+                        optGroup.append(
+                            new Option(optionString)
+                        );
+                    });
+
+                    this.node.add(optGroup);
+                }
+            }
         }
 
         this.select_option(
@@ -211,11 +231,11 @@ class Control {
         this.node.addEventListener(this._listenerType, this._addedListener);
     }
 
-    get optionStrings() {return this._optionStrings;}
-    set optionStrings(optionStrings) {
+    get optionGroups() {return this._optionGroups;}
+    set optionGroups(optionGroups) {
         // Only works with control:select instances.
 
-        this._optionStrings = optionStrings.slice();
+        this._optionGroups = optionGroups;
 
         if (this.node !== null && this.node.selectedIndex !== -1) {
             // Get the current value and preserve it in case the new options
@@ -228,8 +248,29 @@ class Control {
             this.piece.remove_all();
         }
         if (this.node !== null) {
-            this._optionStrings.forEach(optionString => this.node.add(
-                new Option(optionString)));
+            // Loop through each group
+            for (let [key, values] of Object.entries(optionGroups)) {
+                // 'root' is the magic key that puts its values in the root of the select
+                if(key === 'root') {
+                    values.forEach(optionString => {
+                        this.node.add(
+                            new Option(optionString)
+                        );
+                    })
+                // Otherwise it's a group of options
+                } else {
+                    const optGroup = document.createElement("optgroup");
+                    optGroup.label = key;
+
+                    values.forEach(optionString => {
+                        optGroup.append(
+                            new Option(optionString)
+                        );
+                    });
+
+                    this.node.add(optGroup);
+                }
+            }
         }
         this.select_option(this._selectedString, this._selectedIndex);
 
@@ -293,9 +334,11 @@ class Control {
     }
 
     select_option(selectedString, selectedIndex) {
+        const allOptionStrings = Object.values((this._optionGroups || {})).flat();
+
         const foundIndex = (
-            (selectedString === undefined || this._optionStrings === undefined)
-            ? -1 : this._optionStrings.indexOf(selectedString));
+            (selectedString === undefined || this._optionGroups === undefined)
+            ? -1 : allOptionStrings.indexOf(selectedString));
 
         if (foundIndex === -1) {
             this._selectedIndex = selectedIndex;
