@@ -150,8 +150,10 @@ export default class UserInterface {
     }
     set predictors(predictors) {
         this._predictors = predictors.slice();
-        this._panels.main.prediction.optionStrings = this.predictors.map(
-            predictor => predictor.label);
+        const predictorLabels = this.predictors.map(predictor => predictor.label)
+        this._panels.main.prediction.optionGroups = {
+            root: predictorLabels
+        }
     }
 
     load(loadingID, footerID) {
@@ -233,7 +235,7 @@ export default class UserInterface {
             this._controllerPointer.predictor = this.predictors[index].item;
         };
 
-        this._panels.main.behaviour.optionStrings = ["A","B"];
+        this._panels.main.behaviour.optionGroups = { root: ["A","B"]};
         this._panels.main.behaviour.listener = index => this._select_behaviour(
             index);
 
@@ -283,12 +285,24 @@ export default class UserInterface {
 
             this._panels.speech.stop.active = speech.available;
             if (speech.available) {
-                this._panels.speech.voice.optionStrings = speech.voices.map(
-                    voice => `${voice.name} (${voice.lang})`);
+                let voiceGroups = {};
+              
+                for (let i = 0; i < speech.voices.length; i++) {
+                    const currentVoice = speech.voices[i];
+              
+                    if (voiceGroups[currentVoice.lang] === undefined) {
+                        voiceGroups[currentVoice.lang] = [currentVoice.name];
+                    } else {
+                        voiceGroups[currentVoice.lang].push(currentVoice.name);
+                    }
+                }
+              
+                this._panels.speech.voice.optionGroups = voiceGroups;
             }
             else {
-                this._panels.speech.voice.optionStrings = [
-                    'Speech unavailable'];
+                this._panels.speech.voice.optionGroups = {
+                    root: ['Speech unavailable']
+                };
             }
         });
     }
