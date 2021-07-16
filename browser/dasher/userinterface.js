@@ -283,23 +283,23 @@ export default class UserInterface {
 
             this._panels.speech.stop.active = speech.available;
             if (speech.available) {
-                let voiceGroups = {};
 
+                let voiceGroups = [];
                 speech.voices.forEach(voice => {
+                    const currentLangGroup = voiceGroups.find(x => x.label == voice.lang);
 
-                    // Create a group for each voice.
-                    if (voiceGroups[voice.lang] === undefined) {
-                        voiceGroups[voice.lang] = [];
+                    if(currentLangGroup === undefined) {
+                        voiceGroups.push({
+                            label: voice.lang,
+                            values: [voice.name]
+                        });
+                    } else {
+                        currentLangGroup.values.push(voice.name)
                     }
-                    voiceGroups[voice.lang].push(voice.name);
                 })
               
-                this._panels.speech.voice.optionList = Object.entries(voiceGroups).map(([lang, voices]) => {
-                    return {
-                        label: lang,
-                        values: voices
-                    };
-                });
+                // Convert object to a list
+                this._panels.speech.voice.optionList = voiceGroups;
             }
             else {
                 this._panels.speech.voice.optionList = ['Speech unavailable'];
