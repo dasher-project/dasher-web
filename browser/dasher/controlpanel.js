@@ -15,7 +15,7 @@ class Control {
         this._node = undefined;
         this._valueListener = null;
         this._addedListener = null;
-        this._optionGroups = undefined;
+        this._optionList = undefined;
         this._active = undefined;
 
         this._selectedIndex = undefined;
@@ -104,30 +104,24 @@ class Control {
         this.active = !!this.active;
 
         // If option strings were set early, create <option> elements now.
-        if (this.optionGroups !== undefined) {
-            // Loop through each group
-            for (let [key, values] of Object.entries(optionGroups)) {
-                // 'root' is the magic key that puts its values in the root of the select
-                if(key === 'root') {
-                    values.forEach(optionString => {
-                        this.node.add(
-                            new Option(optionString)
+        if (this.optionList !== undefined) {
+
+            this.optionList.forEach(option => {
+                if(typeof option === 'string') {
+                    this.node.add(
+                        new Option(option)
+                    );
+                } else {
+                    const optGroup = document.createElement('optgroup');
+                    optGroup.label = option.label;
+                    option.values.forEach(current => {
+                        optGroup.append(
+                            new Option(current)
                         );
                     })
-                // Otherwise it's a group of options
-                } else {
-                    const optGroup = document.createElement("optgroup");
-                    optGroup.label = key;
-
-                    values.forEach(optionString => {
-                        optGroup.append(
-                            new Option(optionString)
-                        );
-                    });
-
-                    this.node.add(optGroup);
+                    this.node.add(optGroup)
                 }
-            }
+            })
         }
 
         this.select_option(
@@ -231,11 +225,11 @@ class Control {
         this.node.addEventListener(this._listenerType, this._addedListener);
     }
 
-    get optionGroups() {return this._optionGroups;}
-    set optionGroups(optionGroups) {
+    get optionList() {return this._optionList;}
+    set optionList(optionList) {
         // Only works with control:select instances.
 
-        this._optionGroups = optionGroups;
+        this._optionList = optionList;
 
         if (this.node !== null && this.node.selectedIndex !== -1) {
             // Get the current value and preserve it in case the new options
@@ -248,29 +242,26 @@ class Control {
             this.piece.remove_all();
         }
         if (this.node !== null) {
-            // Loop through each group
-            for (let [key, values] of Object.entries(optionGroups)) {
-                // 'root' is the magic key that puts its values in the root of the select
-                if(key === 'root') {
-                    values.forEach(optionString => {
-                        this.node.add(
-                            new Option(optionString)
+
+            optionList.forEach(option => {
+                if(typeof option === 'string') {
+                    this.node.add(
+                        new Option(option)
+                    );
+                } else {
+                    const optGroup = document.createElement('optgroup');
+                    optGroup.label = option.label;
+                    option.values.forEach(current => {
+                        optGroup.append(
+                            new Option(current)
                         );
                     })
-                // Otherwise it's a group of options
-                } else {
-                    const optGroup = document.createElement("optgroup");
-                    optGroup.label = key;
-
-                    values.forEach(optionString => {
-                        optGroup.append(
-                            new Option(optionString)
-                        );
-                    });
-
-                    this.node.add(optGroup);
+                    this.node.add(optGroup)
                 }
-            }
+            })
+        
+
+            
         }
         this.select_option(this._selectedString, this._selectedIndex);
 
@@ -334,10 +325,17 @@ class Control {
     }
 
     select_option(selectedString, selectedIndex) {
-        const allOptionStrings = Object.values((this._optionGroups || {})).flat();
+        const tempOptionList = this._optionList || [];
+        const allOptionStrings = tempOptionList.map(current => {
+            if(typeof current === 'string') {
+                return current;
+            }
+
+            return current.values;
+       })
 
         const foundIndex = (
-            (selectedString === undefined || this._optionGroups === undefined)
+            (selectedString === undefined || this._optionList === undefined)
             ? -1 : allOptionStrings.indexOf(selectedString));
 
         if (foundIndex === -1) {

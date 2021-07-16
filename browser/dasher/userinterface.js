@@ -150,10 +150,8 @@ export default class UserInterface {
     }
     set predictors(predictors) {
         this._predictors = predictors.slice();
-        const predictorLabels = this.predictors.map(predictor => predictor.label)
-        this._panels.main.prediction.optionGroups = {
-            root: predictorLabels
-        }
+        this._panels.main.prediction.optionList = this.predictors.map(
+            predictor => predictor.label);
     }
 
     load(loadingID, footerID) {
@@ -235,7 +233,7 @@ export default class UserInterface {
             this._controllerPointer.predictor = this.predictors[index].item;
         };
 
-        this._panels.main.behaviour.optionGroups = { root: ["A","B"]};
+        this._panels.main.behaviour.optionList = ["A","B"];
         this._panels.main.behaviour.listener = index => this._select_behaviour(
             index);
 
@@ -286,23 +284,25 @@ export default class UserInterface {
             this._panels.speech.stop.active = speech.available;
             if (speech.available) {
                 let voiceGroups = {};
-              
-                for (let i = 0; i < speech.voices.length; i++) {
-                    const currentVoice = speech.voices[i];
-              
-                    if (voiceGroups[currentVoice.lang] === undefined) {
-                        voiceGroups[currentVoice.lang] = [currentVoice.name];
-                    } else {
-                        voiceGroups[currentVoice.lang].push(currentVoice.name);
+
+                speech.voices.forEach(voice => {
+
+                    // Create a group for each voice.
+                    if (voiceGroups[voice.lang] === undefined) {
+                        voiceGroups[voice.lang] = [];
                     }
-                }
+                    voiceGroups[voice.lang].push(voice.name);
+                })
               
-                this._panels.speech.voice.optionGroups = voiceGroups;
+                this._panels.speech.voice.optionList = Object.entries(voiceGroups).map(([lang, voices]) => {
+                    return {
+                        label: lang,
+                        values: voices
+                    };
+                });
             }
             else {
-                this._panels.speech.voice.optionGroups = {
-                    root: ['Speech unavailable']
-                };
+                this._panels.speech.voice.optionList = ['Speech unavailable'];
             }
         });
     }
