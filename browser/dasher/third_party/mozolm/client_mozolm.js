@@ -19,8 +19,10 @@ window.prob_dict = {};
 window.prob_vector = [];
 
 window.mozolm = function(context){ return new Promise(function(resolve, reject) {
-  var client = new MozoLMServiceClient('http://' + window.location.hostname + ':8080',
-                                 null, null);
+  // If hostname isn't populated we're running from the electron app
+  const hostname = window.location.hostname || "localhost"
+  var client = new MozoLMServiceClient(`http://${hostname}:8080`, null, null);
+
   // simple unary call
   var request = new GetContextRequest();
   request.setContext(context);
