@@ -105,12 +105,14 @@ class Control {
 
         // If option strings were set early, create <option> elements now.
         if (this.optionList !== undefined) {
-
             this.optionList.forEach(option => {
+                // If the current option is a string we add that directly
                 if(typeof option === 'string') {
                     this.node.add(
                         new Option(option)
                     );
+                // If its not a string we assume its an object in the shape:
+                // { label: "Group Label", values: ['first', 'second'] }
                 } else {
                     const optGroup = document.createElement('optgroup');
                     optGroup.label = option.label;
@@ -244,10 +246,13 @@ class Control {
         if (this.node !== null) {
 
             optionList.forEach(option => {
+                // If the current option is a string we add that directly
                 if(typeof option === 'string') {
                     this.node.add(
                         new Option(option)
                     );
+                // If its not a string we assume its an object in the shape:
+                // { label: "Group Label", values: ['first', 'second'] }
                 } else {
                     const optGroup = document.createElement('optgroup');
                     optGroup.label = option.label;
@@ -325,6 +330,7 @@ class Control {
     }
 
     select_option(selectedString, selectedIndex) {
+        // Get a flattened list of all the options
         const tempOptionList = this._optionList || [];
         const allOptionStrings = tempOptionList.map(current => {
             if(typeof current === 'string') {
@@ -332,7 +338,7 @@ class Control {
             }
 
             return current.values;
-       })
+       }).flat();
 
         const foundIndex = (
             (selectedString === undefined || this._optionList === undefined)
