@@ -276,11 +276,6 @@ export default class UserInterface {
 
         new Speech().initialise(speech => {
             this._speech = speech;
-
-            // To Do: Probably disable everything if !speech.available. Maybe
-            // add convenience methods to Control to: hide the control. Hiding
-            // could work by removing it from its parent ...
-
             this._panels.speech.stop.active = speech.available;
             if (speech.available) {
 
@@ -294,12 +289,20 @@ export default class UserInterface {
                             values: [voice.name]
                         });
                     } else {
-                        currentLangGroup.values.push(voice.name)
+                        currentLangGroup.values.push(voice.name);
                     }
                 })
-              
-                // Convert object to a list
-                this._panels.speech.voice.optionList = voiceGroups;
+
+                // So, funny thing is that sometimes speech is available in
+                // principle but the voice list is empty. This happened to Jim
+                // with Chromium browser for Linux. See also:
+                // https://github.com/dasher-project/dasher-web/issues/101
+                this._panels.speech.voice.optionList = (
+                    voiceGroups.length > 0 ? voiceGroups :
+                    voiceGroups.length < 0
+                        ? [`Voices available: ${voiceGroups.length}.`]
+                        : ['No voices available.']
+                );
             }
             else {
                 this._panels.speech.voice.optionList = ['Speech unavailable'];
