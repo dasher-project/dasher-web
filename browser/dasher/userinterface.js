@@ -281,7 +281,7 @@ export default class UserInterface {
 
                 let voiceGroups = [];
                 speech.voices.forEach(voice => {
-                    const currentLangGroup = voiceGroups.find(x => x.label == voice.lang);
+                    const currentLangGroup = voiceGroups.find(x => x.label === voice.lang);
 
                     if(currentLangGroup === undefined) {
                         voiceGroups.push({
@@ -297,12 +297,13 @@ export default class UserInterface {
                 // principle but the voice list is empty. This happened to Jim
                 // with Chromium browser for Linux. See also:
                 // https://github.com/dasher-project/dasher-web/issues/101
-                this._panels.speech.voice.optionList = (
-                    voiceGroups.length > 0 ? voiceGroups :
-                    voiceGroups.length < 0
-                        ? [`Voices available: ${voiceGroups.length}.`]
-                        : ['No voices available.']
-                );
+                this._panels.speech.voice.optionList =
+                    (voiceGroups.length > 0) ? voiceGroups
+                    : voiceGroups.length === 0 ? ['No voices available.']
+                    : [`Voices available: ${voiceGroups.length}.`]
+                ;
+                // There's no way that voiceGroups.length should anything other
+                // than zero or a positive number but just in case.
             }
             else {
                 this._panels.speech.voice.optionList = ['Speech unavailable'];
