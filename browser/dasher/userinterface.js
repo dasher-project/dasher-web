@@ -56,6 +56,7 @@ export default class UserInterface {
 
         this._speakOnStop = false;
         this._speech = null;
+        this._voiceIndex = undefined;
 
         this._controllerRandom = new ControllerRandom(
             "abcdefghijklmnopqrstuvwxyz".split(""));
@@ -259,18 +260,38 @@ export default class UserInterface {
     }
 
     _load_speech_controls() {
-        this._panels.speech.stop.listener = checked => {
-            if (checked && this._speech !== null && !this._speakOnStop) {
-                this._speech.speak(
-                    speechAnnouncement,
-                    this._panels.speech.voice.node.selectedIndex
-                );
+        // Utility function to set the voiceIndex based on matching a name.
+        // Returns true if speech has been initialised or false otherwise.
+        const findVoice = name => {
+            if (this._speech === null) {
+                return false;
             }
+            this._voiceIndex = this._speech.voices.findIndex(
+                voice => voice.name === name
+            );
+            if (this._voiceIndex < 0) {
+                this._voiceIndex = 0;
+            }
+            return true;
+        }
+        //
+        // Speak on stop checkbox listener.
+        this._panels.speech.stop.listener = checked => {
+            if (checked) {
+                const found = findVoice(this._panels.speech.voice.node.value);
+                // Check for a state change from unchecked to checked.
+                if (found && !this._speakOnStop) {
+                    this._speech.speak(speechAnnouncement, this._voiceIndex);
+                }
+            }
+            // Set the underlying property.
             this._speakOnStop = checked;
         };
-        this._panels.speech.voice.listener = index => {
-            if (this._speakOnStop && this._speech !== null) {
-                this._speech.speak(speechAnnouncement, index);
+        //
+        // Voice selection listener.
+        this._panels.speech.voice.listener = (indexUNUSED, value) => {
+            if (findVoice(value) && this._speakOnStop) {
+                this._speech.speak(speechAnnouncement, this._voiceIndex);
             }
         };
 
@@ -416,8 +437,7 @@ export default class UserInterface {
                 this.message !== undefined &&
                 this.message !== null
             ) {
-                this._speech.speak(
-                    this.message, this._panels.speech.voice.node.selectedIndex);
+                this._speech.speak(this.message, this._voiceIndex);
             }
         });
         this._diagnosticSpans[2].firstChild.nodeValue = (
