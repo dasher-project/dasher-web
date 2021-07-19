@@ -1,4 +1,4 @@
-// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// (c) 2021 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 /*
@@ -56,6 +56,7 @@ export default class UserInterface {
 
         this._speakOnStop = false;
         this._speech = null;
+        this._voiceIndex = undefined;
 
         this._controllerRandom = new ControllerRandom(
             "abcdefghijklmnopqrstuvwxyz".split(""));
@@ -150,7 +151,7 @@ export default class UserInterface {
     }
     set predictors(predictors) {
         this._predictors = predictors.slice();
-        this._panels.main.prediction.optionStrings = this.predictors.map(
+        this._panels.main.prediction.optionList = this.predictors.map(
             predictor => predictor.label);
     }
 
@@ -233,7 +234,7 @@ export default class UserInterface {
             this._controllerPointer.predictor = this.predictors[index].item;
         };
 
-        this._panels.main.behaviour.optionStrings = ["A","B"];
+        this._panels.main.behaviour.optionList = ["A","B"];
         this._panels.main.behaviour.listener = index => this._select_behaviour(
             index);
 
@@ -259,36 +260,74 @@ export default class UserInterface {
     }
 
     _load_speech_controls() {
-        this._panels.speech.stop.listener = checked => {
-            if (checked && this._speech !== null && !this._speakOnStop) {
-                this._speech.speak(
-                    speechAnnouncement,
-                    this._panels.speech.voice.node.selectedIndex
-                );
+        // Utility function to set the voiceIndex based on matching a name.
+        // Returns true if speech has been initialised or false otherwise.
+        const findVoice = name => {
+            if (this._speech === null) {
+                return false;
             }
+            this._voiceIndex = this._speech.voices.findIndex(
+                voice => voice.name === name
+            );
+            if (this._voiceIndex < 0) {
+                this._voiceIndex = 0;
+            }
+            return true;
+        }
+        //
+        // Speak on stop checkbox listener.
+        this._panels.speech.stop.listener = checked => {
+            if (checked) {
+                const found = findVoice(this._panels.speech.voice.node.value);
+                // Check for a state change from unchecked to checked.
+                if (found && !this._speakOnStop) {
+                    this._speech.speak(speechAnnouncement, this._voiceIndex);
+                }
+            }
+            // Set the underlying property.
             this._speakOnStop = checked;
         };
-        this._panels.speech.voice.listener = index => {
-            if (this._speakOnStop && this._speech !== null) {
-                this._speech.speak(speechAnnouncement, index);
+        //
+        // Voice selection listener.
+        this._panels.speech.voice.listener = (indexUNUSED, value) => {
+            if (findVoice(value) && this._speakOnStop) {
+                this._speech.speak(speechAnnouncement, this._voiceIndex);
             }
         };
 
         new Speech().initialise(speech => {
             this._speech = speech;
-
-            // To Do: Probably disable everything if !speech.available. Maybe
-            // add convenience methods to Control to: hide the control. Hiding
-            // could work by removing it from its parent ...
-
             this._panels.speech.stop.active = speech.available;
             if (speech.available) {
-                this._panels.speech.voice.optionStrings = speech.voices.map(
-                    voice => `${voice.name} (${voice.lang})`);
+
+                let voiceGroups = [];
+                speech.voices.forEach(voice => {
+                    const currentLangGroup = voiceGroups.find(x => x.label === voice.lang);
+
+                    if(currentLangGroup === undefined) {
+                        voiceGroups.push({
+                            label: voice.lang,
+                            values: [voice.name]
+                        });
+                    } else {
+                        currentLangGroup.values.push(voice.name);
+                    }
+                })
+
+                // So, funny thing is that sometimes speech is available in
+                // principle but the voice list is empty. This happened to Jim
+                // with Chromium browser for Linux. See also:
+                // https://github.com/dasher-project/dasher-web/issues/101
+                this._panels.speech.voice.optionList =
+                    (voiceGroups.length > 0) ? voiceGroups
+                    : voiceGroups.length === 0 ? ['No voices available.']
+                    : [`Voices available: ${voiceGroups.length}.`]
+                ;
+                // There's no way that voiceGroups.length should anything other
+                // than zero or a positive number but just in case.
             }
             else {
-                this._panels.speech.voice.optionStrings = [
-                    'Speech unavailable'];
+                this._panels.speech.voice.optionList = ['Speech unavailable'];
             }
         });
     }
@@ -398,8 +437,7 @@ export default class UserInterface {
                 this.message !== undefined &&
                 this.message !== null
             ) {
-                this._speech.speak(
-                    this.message, this._panels.speech.voice.node.selectedIndex);
+                this._speech.speak(this.message, this._voiceIndex);
             }
         });
         this._diagnosticSpans[2].firstChild.nodeValue = (

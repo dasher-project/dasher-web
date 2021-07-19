@@ -1,4 +1,4 @@
-// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// (c) 2021 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 import Piece from './piece.js';
@@ -6,6 +6,7 @@ import Piece from './piece.js';
 import PageBuilder from "../pagebuilder.js";
 
 const pathJoin = "_";
+const stringType = typeof "";
 
 class Control {
     constructor(parentPiece, path, $) {
@@ -15,7 +16,7 @@ class Control {
         this._node = undefined;
         this._valueListener = null;
         this._addedListener = null;
-        this._optionStrings = undefined;
+        this._optionList = undefined;
         this._active = undefined;
 
         this._selectedIndex = undefined;
@@ -104,15 +105,44 @@ class Control {
         this.active = !!this.active;
 
         // If option strings were set early, create <option> elements now.
-        if (this.optionStrings !== undefined) {
-            this.optionStrings.forEach(optionString => this.node.add(
-                new Option(optionString)
-            ));
-        }
+        this._build_select();
 
         this.select_option(
             this.$.value === undefined ? undefined : this.$.value.value,
             this.$.value === undefined ? 0 : this.$.value.index);
+    }
+
+    _build_select() {
+        // Only works with control:select instances.
+
+        if (this.optionList === undefined) {
+            return;
+        }
+
+        // The this.node property will be a `select` HTML element, and have an
+        // add() method for appending child options and option groups. See:  
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLSelectElement/add
+        // The `optgroup` HTML element doesn't have the add() method, but does
+        // have append().  
+
+        // For each item in the list:  
+        // If it's a string, create an Option and add it to the node.  
+        // Otherwise, assume it's an object like:  
+        // { label: "Group Label", values: ['first', 'second'] }  
+        // Add an optgroup with the values as Option instances.
+        this.optionList.forEach(option => {
+            if (typeof option === stringType) {
+                this.node.add( new Option(option) );
+            }
+            else {
+                const optGroup = document.createElement('optgroup');
+                optGroup.label = option.label;
+                option.values.forEach(value => {
+                    optGroup.append( new Option(value) );
+                })
+                this.node.add(optGroup);
+            }
+        })
     }
 
     _with_label(parentPiece, build) {
@@ -211,11 +241,22 @@ class Control {
         this.node.addEventListener(this._listenerType, this._addedListener);
     }
 
-    get optionStrings() {return this._optionStrings;}
-    set optionStrings(optionStrings) {
+    get optionList() {return this._optionList;}
+    set optionList(optionList) {
         // Only works with control:select instances.
 
-        this._optionStrings = optionStrings.slice();
+        // optionList should be a list of String and Object values where the
+        // objects are like:  
+        // { label: "Group Label", values: ['first', 'second'] }
+
+        // First, set the underlying property to a deep copy of the new value.
+        // Calling slice() on a string creates a copy. Also, calling slice() on
+        // an array of string copies each string. See:  
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice#description
+        this._optionList = optionList.map( option =>
+            (typeof option === stringType) ? option.slice()
+            : { label: option.label.slice(), values: option.values.slice() }
+        );
 
         if (this.node !== null && this.node.selectedIndex !== -1) {
             // Get the current value and preserve it in case the new options
@@ -228,8 +269,7 @@ class Control {
             this.piece.remove_all();
         }
         if (this.node !== null) {
-            this._optionStrings.forEach(optionString => this.node.add(
-                new Option(optionString)));
+            this._build_select();
         }
         this.select_option(this._selectedString, this._selectedIndex);
 
@@ -293,9 +333,19 @@ class Control {
     }
 
     select_option(selectedString, selectedIndex) {
+        // Get a flattened list of all the options
+        const tempOptionList = this._optionList || [];
+        const allOptionStrings = tempOptionList.map(option => {
+            if (typeof option === stringType) {
+                return option;
+            }
+
+            return option.values;
+       }).flat();
+
         const foundIndex = (
-            (selectedString === undefined || this._optionStrings === undefined)
-            ? -1 : this._optionStrings.indexOf(selectedString));
+            (selectedString === undefined || this._optionList === undefined)
+            ? -1 : allOptionStrings.indexOf(selectedString));
 
         if (foundIndex === -1) {
             this._selectedIndex = selectedIndex;
