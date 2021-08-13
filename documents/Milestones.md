@@ -1,10 +1,10 @@
-[NL Net](https://nlnet.nl/) have kindly agreed to make charitable donations every time we complete a milestone.
+[NLNet](https://nlnet.nl/) have kindly agreed to make charitable donations every time we complete a milestone.
 
-Below are the milestones that we have agreed with NL Net as well as the donation amounts.
+Below are the milestones that we have agreed with NLnet as well as the donation amounts.
 
 The charitable donations will then be split between Ace Centre and [Adam Spickard](https://github.com/aspickard). Adam will receive 80% of the donation for completing the technical tasks and Ace Centre will receive 20% to cover time spent project management.
 
-The total donation to be made by NL Net will be: €26350.
+The total donation to be made by NLnet will be: €26350.
 
 Overall Ace Centre will receive: €5270
 Overall Adam will receive: €21080
@@ -55,12 +55,10 @@ Donation for completing this milestone: €4650
 This task is mainly concerned with improving user experience, based on the feedback of actual users.
 
 - Bugs and missing features discovered during user experience survey shall be remedied and released as a new version of Dasher-Web
-  - The fixes will be released in a new alpha version.
-- New release alpha of all the apps
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
 - Organise user feedback sessions and minute these sessions. Provide feedback to UX teams to iterate design aspects.
 - Security and accessibility issued raised in the report from Radically Open Security shall be remedied
-  - The fixes will be released in a new alpha version.
+- New alpha release of all the apps including the above changes
 
 # Milestone 5
 
