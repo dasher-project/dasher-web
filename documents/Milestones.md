@@ -42,10 +42,11 @@ Donation for completing this milestone: €4500
 
 Releases for various mobile operating systems: Android, iOS and generic Linux based mobile OS-es. The accessibility and security reviews are facilitated, and the recommendations are put back into Dasher.
 
-- Alpha releases for all mobile operating systems shall be released.
-- User experience survey results shall be formalized into a document and made publicly available within the Dasher-Web repository.
-- Bugs and missing features for the desktop Dasher-Web application shall be identified and documented as issues.
-- Security and accessibility findings shall be remedied, with updates being published to the Dasher-Web repository.
+- Dasher-web will be ported to various mobile operating systems
+  - Alpha releases for all mobile operating systems shall be released.
+- User experience feedback shall be formalized, and remedies shall be mocked out and published for reference in future tasks. These designs will be available within the Dasher-Web repository.
+- Bugs and missing features for the desktop Dasher-Web application shall be identified and documented as issues in the issue tracker (Github).
+- A v1 requirements document shall be produced that includes results form the survey and issues raised via the issue tracker (Github)
 
 # Milestone 4
 
@@ -53,22 +54,25 @@ Donation for completing this milestone: €4650
 
 This task is mainly concerned with improving user experience, based on the feedback of actual users.
 
-- Bugs and missing features shall be remedied and released as a new version of Dasher-Web, which will be publicly released via the associated dasher repositories.
-- User experience feedback shall be formalized, and remedies shall be mocked out and published for reference in future tasks. These designs will be available within the Dasher-Web repository.
-- Remaining security and accessibility findings shall be remedied as updates in their respective repositories.
-- New release of all the apps
+- Bugs and missing features discovered during user experience survey shall be remedied and released as a new version of Dasher-Web
+  - The fixes will be released in a new alpha version.
+- New release alpha of all the apps
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
 - Organise user feedback sessions and minute these sessions. Provide feedback to UX teams to iterate design aspects.
-
+- Security and accessibility issued raised in the report from Radically Open Security shall be remedied
+  - The fixes will be released in a new alpha version.
 # Milestone 5
 
 Donation for completing this milestone: €3900
 
 This tasks adds a number of features identified as missing by the users. Developers validate with the security team and accessibility team whether all recommendations have been solved.
 
-- Validate proper processing of outcomes of security audit and accessibility tests
-- Bugs and missing features shall be remedied and released as a new version of Dasher-Web, which will be publicly released via the associated dasher repositories.
+- Validate that the accessibility issues and security issues have been fully addressed
+  - Use the same auditing techniques used by Radically Open Security 
+- Remaining bugs and missing features raised in the issue tracker (Github) shall be added and fixed.
 - User driven features formalized previously shall be incorporated into Dasher-Web
+  - Release a beta version for all supported platforms
+- Start 3 month testing period of the beta in the field with clients and users
 
 # Milestone 6
 
@@ -76,6 +80,7 @@ Donation for completing this milestone: €3900
 
 This task wraps up the work done in the project, makes sure that any outstanding issues are solved, and releases the final desktop and mobile apps.
 
-- Bugs and missing features shall be remedied
-- Remaining user driven features formalized previously shall be incorporated into Dasher-Web.
+- Fix major issues raised during beta testing
+- Bugs and missing features that were outlined in the version 1 requirements document shall be added
+- Finalize user guide to go along with version 1 release.
 - Release version 1.0 release of desktop apps and mobile apps
