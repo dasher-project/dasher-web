@@ -32,7 +32,7 @@ This task creates desktop releases of for at least Linux, Mac OS and Microsoft W
 
 - A code style guideline shall be authored and committed to the Dasher-Web repository.
 - Automated processes shall be put in place to ensure code style guidelines are properly met and will be documented within the Dasher-Web repository.
-- Packages for all target desktop operating systems shall be released and made publicly available within the Dasher-Web repository.
+- Alpha release for all target desktop operating systems shall be released and made publicly available within the Dasher-Web repository.
 - Initial security audit and accessibility testing shall be formally requested.
 - Identify users, draft and script a video to demonstrate dasher for users and developers
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
@@ -63,7 +63,7 @@ This task is mainly concerned with improving user experience, based on the feedb
 - Bugs and missing features shall be remedied and released as a new version of Dasher-Web, which will be publicly released via the associated dasher repositories.
 - User experience feedback shall be formalized, and remedies shall be mocked out and published for reference in future tasks. These designs will be available within the Dasher-Web repository.
 - Remaining security and accessibility findings shall be remedied as updates in their respective repositories.
-  New release of all the apps
+- New release of all the apps
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
 - Organise user feedback sessions and minute these sessions. Provide feedback to UX teams to iterate design aspects.
 
