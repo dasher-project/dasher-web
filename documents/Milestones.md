@@ -2,12 +2,12 @@
 
 Below are the milestones that we have agreed with NL Net as well as the donation amounts.
 
-The charitable donations will then be split between Ace Centre and [Adam Spickard](https://github.com/aspickard). Adam will receive 80% of the donation for completing the technical tasks and Ace Centre will receive 20% to cover time spent project management and to cover producing promotional material.
+The charitable donations will then be split between Ace Centre and [Adam Spickard](https://github.com/aspickard). Adam will receive 80% of the donation for completing the technical tasks and Ace Centre will receive 20% to cover time spent project management.
 
-The total donation to be made by NL Net will be: €27850.
+The total donation to be made by NL Net will be: €26350.
 
-Overall Ace Centre will receive: €4370
-Overall Adam will receive: €23480
+Overall Ace Centre will receive: €5270
+Overall Adam will receive: €21080
 
 # Milestone 1
 
@@ -38,11 +38,7 @@ This task creates desktop alpha releases of for at least Linux, Mac OS and Micro
 
 # Milestone 3
 
-Donation for completing this milestone: €6000
-
-This donation will be split differently to the rest in order to cover promotional material costs.
-
-€4000 will go to Adam and €2000 will go to Ace Centre.
+Donation for completing this milestone: €4500
 
 Releases for various mobile operating systems: Android, iOS and generic Linux based mobile OS-es. The accessibility and security reviews are facilitated, and the recommendations are put back into Dasher.
 
@@ -50,9 +46,6 @@ Releases for various mobile operating systems: Android, iOS and generic Linux ba
 - User experience survey results shall be formalized into a document and made publicly available within the Dasher-Web repository.
 - Bugs and missing features for the desktop Dasher-Web application shall be identified and documented as issues.
 - Security and accessibility findings shall be remedied, with updates being published to the Dasher-Web repository.
-- Identify users, draft and script a video to demonstrate dasher for users and developers
-- Organise, Record, Edit and Publish video to demonstrate dasher for users and developers
-- Create Promotional material to reach users and gain feedback on iterative testing (Website, Leaflets, Digital media material).
 
 # Milestone 4
 
