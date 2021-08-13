@@ -46,7 +46,7 @@ This donation will be split differently to the rest in order to cover promotiona
 
 Releases for various mobile operating systems: Android, iOS and generic Linux based mobile OS-es. The accessibility and security reviews are facilitated, and the recommendations are put back into Dasher.
 
-- Packages for all mobile operating systems shall be released.
+- Alpha releases for all mobile operating systems shall be released.
 - User experience survey results shall be formalized into a document and made publicly available within the Dasher-Web repository.
 - Bugs and missing features for the desktop Dasher-Web application shall be identified and documented as issues.
 - Security and accessibility findings shall be remedied, with updates being published to the Dasher-Web repository.
