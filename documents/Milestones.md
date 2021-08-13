@@ -7,7 +7,6 @@ The charitable donations will then be split between Ace Centre and [Adam Spickar
 The total donation to be made by NL Net will be: €27850.
 
 Overall Ace Centre will receive: €4370
-
 Overall Adam will receive: €23480
 
 # Milestone 1
