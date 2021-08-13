@@ -28,12 +28,12 @@ This task will setup the technical infrastructure for the project, make sure tha
 
 Donation for completing this milestone: €5200
 
-This task creates desktop releases of for at least Linux, Mac OS and Microsoft Windows. In addition a code style is agreed upon, this will be enforced automatically. The outcomes are ready to be reviewed by Accessibility Foundation and Radically Open Security.
+This task creates desktop alpha releases of for at least Linux, Mac OS and Microsoft Windows. In addition a code style is agreed upon, this will be enforced automatically. The outcomes are ready to be reviewed by Accessibility Foundation and Radically Open Security.
 
 - A code style guideline shall be authored and committed to the Dasher-Web repository.
 - Automated processes shall be put in place to ensure code style guidelines are properly met and will be documented within the Dasher-Web repository.
 - Alpha release for all target desktop operating systems shall be released and made publicly available within the Dasher-Web repository.
-- Initial security audit and accessibility testing shall be formally requested.
+- Initial security audit and accessibility testing shall be formally requested from Radically Open Security.
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
 
 # Milestone 3
