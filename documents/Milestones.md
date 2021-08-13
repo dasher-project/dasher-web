@@ -85,4 +85,4 @@ This task wraps up the work done in the project, makes sure that any outstanding
 
 - Bugs and missing features shall be remedied
 - Remaining user driven features formalized previously shall be incorporated into Dasher-Web.
-- Release of desktop apps and mobile apps
+- Release version 1.0 release of desktop apps and mobile apps
