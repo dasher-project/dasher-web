@@ -61,6 +61,7 @@ This task is mainly concerned with improving user experience, based on the feedb
 - Organise user feedback sessions and minute these sessions. Provide feedback to UX teams to iterate design aspects.
 - Security and accessibility issued raised in the report from Radically Open Security shall be remedied
   - The fixes will be released in a new alpha version.
+
 # Milestone 5
 
 Donation for completing this milestone: €3900
@@ -68,10 +69,10 @@ Donation for completing this milestone: €3900
 This tasks adds a number of features identified as missing by the users. Developers validate with the security team and accessibility team whether all recommendations have been solved.
 
 - Validate that the accessibility issues and security issues have been fully addressed
-  - Use the same auditing techniques used by Radically Open Security 
+  - Use the same auditing techniques used by Radically Open Security
 - Remaining bugs and missing features raised in the issue tracker (Github) shall be added and fixed.
 - User driven features formalized previously shall be incorporated into Dasher-Web
-  - Release a beta version for all supported platforms
+- Release a beta version for all supported platforms
 - Start 3 month testing period of the beta in the field with clients and users
 
 # Milestone 6
@@ -82,5 +83,5 @@ This task wraps up the work done in the project, makes sure that any outstanding
 
 - Fix major issues raised during beta testing
 - Bugs and missing features that were outlined in the version 1 requirements document shall be added
-- Finalize user guide to go along with version 1 release.
+- Create user guide to go along with version 1 release.
 - Release version 1.0 release of desktop apps and mobile apps
