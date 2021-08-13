@@ -34,7 +34,6 @@ This task creates desktop releases of for at least Linux, Mac OS and Microsoft W
 - Automated processes shall be put in place to ensure code style guidelines are properly met and will be documented within the Dasher-Web repository.
 - Alpha release for all target desktop operating systems shall be released and made publicly available within the Dasher-Web repository.
 - Initial security audit and accessibility testing shall be formally requested.
-- Identify users, draft and script a video to demonstrate dasher for users and developers
 - Organise meetings between sub-groups, user groups, minute and task blockages to people. (3 days)
 
 # Milestone 3
@@ -51,6 +50,7 @@ Releases for various mobile operating systems: Android, iOS and generic Linux ba
 - User experience survey results shall be formalized into a document and made publicly available within the Dasher-Web repository.
 - Bugs and missing features for the desktop Dasher-Web application shall be identified and documented as issues.
 - Security and accessibility findings shall be remedied, with updates being published to the Dasher-Web repository.
+- Identify users, draft and script a video to demonstrate dasher for users and developers
 - Organise, Record, Edit and Publish video to demonstrate dasher for users and developers
 - Create Promotional material to reach users and gain feedback on iterative testing (Website, Leaflets, Digital media material).
 
