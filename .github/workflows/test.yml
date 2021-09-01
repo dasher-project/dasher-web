@@ -4,14 +4,7 @@ on: push
 
 jobs:
   release:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
@@ -22,6 +15,5 @@ jobs:
         with:
           node-version: 14
 
-      - run: cd tests
-      - run: npm install
+      - run: cd tests && npm install
       - run: npm run test
