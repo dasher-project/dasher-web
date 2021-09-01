@@ -16,4 +16,4 @@ jobs:
           node-version: 14
 
       - run: cd tests && npm install
-      - run: npm run test
+      - run: cd tests && npm run test
