@@ -13,7 +13,9 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 142
 
-      - run: cd tests && npm install
-      - run: cd tests && npm run test
+      - run: |
+      cd tests
+      npm install
+      npm run test
