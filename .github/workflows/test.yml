@@ -22,7 +22,6 @@ jobs:
         with:
           node-version: 14
 
-      - name: Test Dasher-Web (Core)
-        run: cd tests
-        run: npm install
-        run: npm run test
+      - run: cd tests
+      - run: npm install
+      - run: npm run test
