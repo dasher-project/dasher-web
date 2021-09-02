@@ -3,5 +3,4 @@
 # That macOS file it puts everywhere.
 .DS_Store
 
-tests/node_modules
 node_modules
