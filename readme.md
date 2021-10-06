@@ -38,6 +38,6 @@ on contributing.
 
 
 # License
-Copyright (c) 2020 The ACE Centre-North, UK registered charity 1089313. MIT
+Copyright (c) 2021 The ACE Centre-North, UK registered charity 1089313. MIT
 licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
