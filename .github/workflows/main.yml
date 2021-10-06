@@ -1,0 +1,14 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: cd tests && npm install
+    - name: Run ESLint
+      run: cd tests && npm run eslint
