@@ -27,6 +27,13 @@ The following guides have been written for developers.
 - [Loading Notes](Loading.md) describes how the Dasher Version Six web code
   gets loaded in a browser, standalone app, or custom keyboard.
 
+# Code Standards
+
+All code should abide by the ![Google Javascript Style
+Guide](https://google.github.io/styleguide/jsguide.html)
+
+You can run this guide locally from within the tests directory by running npm run eslint.
+
 # Notes for developers of the browser code
 
 To run the browser proof-of-concept under development, you might need to start
