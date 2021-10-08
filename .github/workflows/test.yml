@@ -15,10 +15,10 @@ jobs:
         with:
           node-version: 14
       - name: Install Modules
-      - run: cd tests && npm install
+        run: cd tests && npm install
 
       - name: Jest Tests (Unit)
-      - run: cd tests && npm run test
+        run: cd tests && npm run test
 
       - name: Cypress Tests (E2E)
-      - run: cd tests && npm run cy:test
+        run: cd tests && npm run cy:test
