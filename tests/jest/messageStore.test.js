@@ -1,6 +1,6 @@
 require("fake-indexeddb/auto");
 
-import MessageStore from '../browser/dasher/messageStore'
+import MessageStore from '../../browser/dasher/messageStore'
 
 describe('Message Store', () => {
 
