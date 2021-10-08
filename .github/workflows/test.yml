@@ -17,3 +17,4 @@ jobs:
 
       - run: cd tests && npm install
       - run: cd tests && npm run test
+      - run: cd tests && npm run cy:test
