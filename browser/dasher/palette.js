@@ -61,18 +61,29 @@ export default class Palette {
     constructor() {
         this.codePoints = [];
         this._mapPointToDisplayPoint = new Map();
-        this._rootTemplate = new Template(null, null, null, [], this);
         this._indexMap = new Map();
+        this._build();
     }
 
-    build() {
-        // Fill in basic attributes for groups: texts and codePoints.
+    // This should be a private method, declared like this.
+    //
+    //     #build() {
+    //         // Code here.
+    //     }
+    //
+    // The syntax doesn't seem to be supported by Safari so it isn't used.
+    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields#browser_compatibility
+
+    _build() {
         this._groups = this.groupDefinitions.map(definition => {
             const group = {
                 definition: definition,
                 name: definition.name === null ? null : definition.name.slice()
             };
 
+            // Each group definition either has a texts array or has a code
+            // point range specified by a first and last code point. Normalise
+            // so that all group definitions have texts and code points.
             if ("texts" in definition) {
                 group.texts = definition.texts.slice();
                 group.codePoints = group.texts.map(text => text.codePointAt(0));
@@ -89,6 +100,9 @@ export default class Palette {
                     group.codePoints.push(codePoint);
                 }
             }
+
+            // Append all the code points from this group to the palette's
+            // overall code point array.
             this.codePoints.push(...group.codePoints);
 
             return group;
@@ -100,44 +114,12 @@ export default class Palette {
                 leftText.codePointAt(0), rightCodePoint);
         });
 
-        // Create the Palette hierarchy. Supports only a one or two level group
-        // hierarchy in this version.
-        this._groups.forEach(group => {
-            const childTemplates = group.codePoints.map(codePoint => {
-                return new Template(
-                    codePoint, this.display_text(codePoint), null,
-                    this._rootTemplate.childTemplates, this);
-            });
-
-            if (group.name === null) {
-                // Group isn't in the hierarchy, so flatten it.
-                this._rootTemplate.childTemplates.push(...childTemplates);
-            }
-            else {
-                // Add a template for the hierarchy.
-                this._rootTemplate.childTemplates.push(new Template(
-                    null, null, group.name, childTemplates, this));
-            }
+        // Populate the indexMap. Given a code point, it returns the index in
+        // the codePoints array. That will also be the index in a child box
+        // array, if no off-palette insertions have been made.
+        this.codePoints.forEach((codePoint, index) => {
+            this._indexMap.set(codePoint, index);
         });
-        // console.log(this._rootTemplate);
-
-        // Generate the index map. It maps from a code point to the sequence of
-        // index accesses that will reach the position of that code in the
-        // palette hierarchy.
-        this._rootTemplate.childTemplates.forEach((template, index) => {
-            // console.log(index, template);
-            if (template.codePoint === null) {
-                template.childTemplates.forEach(
-                    (childTemplate, childIndex) => this._indexMap.set(
-                        childTemplate.codePoint, [index, childIndex]
-                    )
-                );
-            }
-            else {
-                this._indexMap.set(template.codePoint, [index]);
-            }
-        });
-        // console.log(this._indexMap);
 
         return this;
     }

@@ -159,6 +159,8 @@ export default class Limits {
 
     // Calculate height, given left position.
     solve_height(left) {
+        if (left === undefined) return undefined;
+
         const index = this._gradients.findIndex(
             gradient => left < gradient.left);
         
@@ -177,6 +179,8 @@ export default class Limits {
 
     // Calculate left position, given height.
     solve_left(height) {
+        if (height === undefined) return undefined;
+
         const index = this._gradients.findIndex(
             gradient => height > gradient.height);
         

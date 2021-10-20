@@ -4,26 +4,13 @@
 // Class to represent abstract zoom box.
 
 export default class ZoomBox {
-    constructor(template, parentCodePoints, ordinal, childIndex) {
-        this._template = template;
-        this._messageCodePoints = parentCodePoints.slice();
-        this._ordinal = ordinal;
-        this._childIndex = childIndex;
+    constructor(palette, messageCodePoints, colourSpecifier) {
+        this._palette = palette;
+        this._messageCodePoints = (
+            messageCodePoints === undefined ? [] : messageCodePoints);
+        this._colourSpecifier = colourSpecifier;
 
-        if (template.codePoint !== null) {
-            this._messageCodePoints.push(template.codePoint);
-        }
-        this._cssClass = (
-            template.cssClass === null ?
-            template.palette.sequence_CSS(ordinal, childIndex) :
-            template.cssClass);
-
-
-        this._message = (
-            this.messageCodePoints === undefined ? undefined :
-            String.fromCodePoint(...this.messageCodePoints));
-
-        this._childBoxes = undefined;
+        this._childBoxes = null;
         this._controllerData = undefined;
 
         this._left = undefined;
@@ -35,7 +22,45 @@ export default class ZoomBox {
         this._trimmedParent = null;
 
         this._viewer = null;
+
+        this._construct_texts();
     }
+
+    _construct_texts() {
+        this._message = String.fromCodePoint(...this.messageCodePoints);
+        const messageLength = this.messageCodePoints.length;
+        this._displayText = (
+            messageLength === 0 ? undefined
+            : this._palette.display_text(
+                this.messageCodePoints[messageLength - 1]
+            )
+        );
+    }
+
+    readyToChildSpawn(limits) {
+        if (limits === undefined) return undefined;
+
+        if (this.dimension_undefined) return undefined;
+        if (this.childBoxes !== null) return false;
+
+        // Next test includes a check on this.right for consistency. In the
+        // Dasher version six user interface this.right will always be adjusted
+        // to limits.right so that the box extends to the edge of the zooming
+        // area.
+        if (
+            this.bottom < limits.top || this.top > limits.bottom
+            || this.left > limits.right || this.right < limits.left
+        ) {
+            return false;
+        }
+
+        // ToDo: Check for a Child Spawning Threshold in the limits object, or
+        // not.
+
+        return true;
+    }
+
+
 
     instantiate_child_boxes(configure) {
         if (this._childBoxes === undefined) {
@@ -62,8 +87,8 @@ export default class ZoomBox {
     }
 
     get cssClass() {return this._cssClass;}
-    get text() {return this._template.displayText; } //this._text;}
-    get template() {return this._template;}
+    get text() {return this._displayText; }
+    // get template() {return this._template;}
 
     get trimmedIndex() {return this._trimmedIndex;}
     set trimmedIndex(trimmedIndex) {this._trimmedIndex = trimmedIndex;}
@@ -172,7 +197,7 @@ export default class ZoomBox {
     update() {
     }
 
-    dimension_undefined() {
+    get dimension_undefined() {
         return (
             this.left === undefined || this.width === undefined ||
             this.middle === undefined || this.height === undefined
