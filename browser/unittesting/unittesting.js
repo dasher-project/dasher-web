@@ -1,6 +1,30 @@
 // (c) 2021 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
+// Unit testing module
+//
+// The module has the following classes.
+//
+// -   TestRun runs a suite of tests and displays the status and test results.
+//     Actual display is handled by subclasses. Each test will be a function.
+// -   TestRunConsole is a TestRun subclass that displays status and results by
+//     logging to the console.
+// -   TestRunWebPage is a TestRunConsole subclass that also displays status and
+//     results in a web page (work in progress).
+// -   TestResult records the results of a single test. TestRun creates a new
+//     TestResult object for each test in the suite and passes it as a parameter
+//     to the test function. TestResult has methods by which the test function
+//     can assert conditions as it runs.
+// -   TestAssertion records the results of a single assertion within a test.
+//
+// By default, TestResult throws an error that includes a stack trace when an
+// assertion fails. Chrome developer tools, for example, facilitate navigating
+// to the code from which an uncaught error was thrown.
+//
+// TOTH the exemplary Python unittest module, see
+// https://docs.python.org/library/unittest.html
+
+
 export class TestAssertion {
     constructor(passed, messages, error) {
         this._passed = passed;
@@ -20,8 +44,7 @@ export class TestAssertion {
     }
 }
 
-export class TestCase {
-
+export class TestResult {
     constructor() {
         this._assertions = [];
 
@@ -78,7 +101,8 @@ export class TestCase {
 
     assertTruthy(value, ...messages) {
         if (!!value) {
-            this._assertions.push(new TestAssertion(true));
+            this._assertions.push(new TestAssertion(
+                true, messages.length === 0 ? undefined : messages));
             return value;
         }
     
@@ -96,23 +120,23 @@ export class TestCase {
         const leftType = typeof(left);
         const rightType = typeof(right);
         this.assertTruthy(leftType === rightType, ...messages,
-            `Different types in assertTypeEqual(${left},${right},...)` +
+            `assertTypeEqual(${left},${right},...)` +
             ` ${leftType} !== ${rightType}.`);
         return [left, right];
     }
     
     assertEqual(left, right, ...messages) {
         this.assertTruthy(left === right, ...messages,
-            `Different values in assertEqual(${left},${right},...).`);
+            `assertEqual(${left},${right},...).`);
         return [left, right];
     }
     
     assertNotEqual(left, right, ...messages) {
         this.assertTypeEqual(left, right, ...messages,
-            `Different types in assertNotEqual(${left},${right},...).`);
+            `Same types in assertNotEqual(${left},${right},...).`);
         if (this._popAssertion()) {
             this.assertTruthy(left !== right, ...messages,
-                `Equal values in assertNotEqual(${left},${right},...).`);
+                `assertNotEqual(${left},${right},...).`);
         }
         return [left, right];
     }
@@ -126,11 +150,13 @@ export class TestCase {
     }
     
     assertUndefined(value, ...messages) {
-        return this.assertEqual(value, undefined, ...messages)[0];
+        return this.assertEqual(value, undefined, ...messages,
+            `assertUndefined(${value})`)[0];
     }
     
     assertNotUndefined(value, ...messages) {
-        this.assertTruthy(value !== undefined, ...messages);
+        this.assertTruthy(value !== undefined, ...messages,
+            `assertNotUndefined(${value})`);
         return value;
     }
     
@@ -144,11 +170,11 @@ export class TestCase {
         catch (error) {
             caught = error;
         }
-        this.assertNotUndefined(caught, ...messages, "Didn't throw.");
+        this.assertNotUndefined(caught, ...messages, "Threw an error.");
         if (this._popAssertion()) {
             this.assertTrue(
                 (errorType === undefined) || (caught instanceof errorType), 
-                ...messages, `${caught} isn't instanceof ${errorType}`
+                ...messages, `${caught} instanceof ${errorType}`
             );
         }
     }
@@ -162,7 +188,7 @@ export class TestRun {
     constructor() {
         this._results = {};
         this.status = "TestRun tests";
-        this.runTestRunTests(new TestCase());
+        this.runTestRunTests(new TestResult());
 
         // Default values.
         this._stopOnFail = true;
@@ -183,7 +209,7 @@ export class TestRun {
 
     get results() {return this._results;}
     // showResult() can be overridden in a subclass.
-    showResult(name, testCase) {}
+    showResult(name, testResult) {}
 
     // Somebody might decide to rewrite the above as properties whose handling
     // can be overridden in a subclass. They might find useful the following SO
@@ -207,20 +233,20 @@ export class TestRun {
         this.status = `Running tests: ${testEntries.length}`
         let stopped = false;
         for (const [name, test] of testEntries) {
-            const testCase = new TestCase();
+            const testResult = new TestResult();
             let testError;
             try {
-                test(testCase);
+                test(testResult);
             }
             catch(error) {
                 testError = error;
             }
-            this.results[name] = testCase;
-            this.showResult(name, testCase);
-            if (testCase.failed) {
-                if (testCase.throwOnFail) {
+            this.results[name] = testResult;
+            this.showResult(name, testResult);
+            if (testResult.failed) {
+                if (testResult.throwOnFail) {
                     this.status = `Thrown out by: ${name}`;
-                    throw testCase.lastError;
+                    throw testResult.lastError;
                 }
                 if (this.stopOnFail) {
                     stopped = true;
@@ -243,25 +269,46 @@ export class TestRun {
 }
 
 export class TestRunConsole extends TestRun {
+    constructor() {
+        super();
+
+        // Default values.
+        this._verbose = false;
+    }
+
+    get verbose() {return this._verbose;}
+    set verbose(verbose) {this._verbose = verbose;}
+
     showStatus(status) {
         console.log(status);
     }
 
-    showResult(name, testCase) {
-        if (testCase.passed) {
-            console.log(
-                `Test "${name}" assertions:${testCase.assertions.length}`
-                + " passed.");
-        }
-        else {
-            console.log(`Test "${name}" failed.`);
-            testCase.assertions.forEach((assertion, index) => {
-                const message = assertion.joinedMessages("\n");
+    showResult(name, testResult) {
+        const texts = [
+            `Test "${name}" `,
+            (testResult.failed) ? "failed."
+            : `assertions:${testResult.assertions.length} passed.`
+        ];
+
+        if (testResult.failed || this.verbose) {
+            testResult.assertions.forEach((assertion, index) => {
+                const message = assertion.joinedMessages(" ");
                 if (message !== undefined) {
-                    console.log(`Assertion ${index + 1}: ${message}`);
+                    texts.push(
+                        `\nAssertion ${index + 1} `
+                        , assertion.passed ? "passed" : "failed"
+                        , `: ${message}`
+                    );
                 }
             });
-            console.log(testCase);
+        }
+
+        console.log(texts.join(""));
+
+        if (testResult.failed || this.verbose) {
+            // Use the console.log capability to generate an expandable log
+            // message.
+            console.log(testResult);
         }
     }
 }
@@ -270,7 +317,7 @@ export class TestRunWebPage extends TestRunConsole {
     constructor(statusElement, uiElement, smallPrintElement) {
         super();
 
-        const t = new TestCase();
+        const t = new TestResult();
         t.assertNotUndefined(statusElement);
         t.assertNotUndefined(uiElement);
         t.assertNotUndefined(smallPrintElement);
@@ -286,8 +333,8 @@ export class TestRunWebPage extends TestRunConsole {
         if (this._statusElement) this._statusElement.textContent = status;
     }
 
-    showResult(name, testCase) {
-        super.showResult(name, testCase);
+    showResult(name, testResult) {
+        super.showResult(name, testResult);
 
         // ToDo insert it into the web page.
     }

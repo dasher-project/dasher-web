@@ -57,10 +57,10 @@ export default {
         t.assertUndefined(zoomBox.readyToChildSpawn(limits));
         zoomBox.set_dimensions(limits.right + 10, 10, 0, 10);
         t.assertFalse(
-            zoomBox.readyToChildSpawn(limits), "Ready outside limits.");
+            zoomBox.readyToChildSpawn(limits), "Unready if outside limits.");
         zoomBox.set_dimensions(limits.right - 10, 10, 0, 10);
         t.assertTrue(zoomBox.readyToChildSpawn(limits),
-            "Unready within limits.");
+            "Ready if within limits.");
     },
     controllerTest: function (t) {
         const palette = t.assertNotUndefined(new Palette());
@@ -77,6 +77,6 @@ export default {
 
         const rootBox = t.assertNotUndefined(
             controller.spawnRootZoomBox(limits, 0));
-        t.assertEqual(rootBox.message.length, 0);
+        t.assertEqual(rootBox.message.length, 0, "Root box has empty message.");
     }
 }
