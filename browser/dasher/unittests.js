@@ -70,6 +70,21 @@ export default {
             palette.spawnChildBoxes(parentBox));
         t.assertEqual(childBoxes.length, palette.codePoints.length,
             "Spawned one child box per palette code point.");
+        t.assertCompareArrays(
+            (childBox, paletteCodePoint, index) => (
+                (
+                    parentBox.messageCodePoints.length + 1
+                    === childBox.messageCodePoints.length
+                )
+                && (
+                    childBox.message // + (index === 50 ? "f" : "")
+                    === String.fromCodePoint(
+                        ...parentBox.messageCodePoints, paletteCodePoint)
+                )
+            ), childBoxes, palette.codePoints,
+            "Child has one more code point than parent.",
+            "Child message texts."
+        );
         childBoxes.forEach((childBox, index) => {
             const assertionMessage = `childBoxes[${index}].`;
             t.assertEqual(
@@ -85,6 +100,21 @@ export default {
 
 
         parentBox.childSpawn();
+
+        t.assertCompareArrays(
+            (left, right, index) => (
+                (
+                    left.messageCodePoints.length
+                    === right.messageCodePoints.length
+                )
+                && (
+                    left.message // + (index === 50 ? "f" : "")
+                    === right.message
+                )
+            ),
+            parentBox.childBoxes, childBoxes,
+            "parent childSpawn() same as palette childSpawn()."
+        );
         // Assert that the zoomBox.childBoxes array contents are the same as the
         // childBoxes array. Could also assert that the palette method was
         // called exactly once, by mocking.

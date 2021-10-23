@@ -43,15 +43,29 @@ export class TestAssertion extends Error {
 
         // Default values.
         // Non-default values haven't been tested, oh the irony.
-        this._errorMessageJoiner = "\n";
+        this._errorMessageJoiner = defaultErrorMessageJoiner;
     }
 
     get passed() {return this._passed;}
     set passed(passed) {this._passed = passed;}
+
     get messages() {return this._messages;}
     set messages(messages) {
-        this._messages = messages.slice();
-        this.message = this._messages.join(this._errorMessageJoiner);
+        this._messages = (
+            messages === undefined ? undefined : messages.slice());
+        this._set_message();
+    }
+    _set_message() {
+        this.message = (
+            this.messages === undefined ? ""
+            : this.messages.join(this.errorMessageJoiner)
+        );
+    }
+
+    get errorMessageJoiner() {return this._errorMessageJoiner;}
+    set errorMessageJoiner(errorMessageJoiner) {
+        this._errorMessageJoiner = errorMessageJoiner;
+        this._set_message();
     }
 
     assertTypeEqual(left, right, ...messages) {
@@ -99,15 +113,31 @@ export class TestAssertion extends Error {
         return this;
     }
 
+    assertComparable(left, right, ...messages) {
+        this.assertTypeEqual(left, right, ...messages,
+            "assertComparable requires assertTypeEqual.");
+        if (!this.passed) return this;
+
+        this.passed = (left === right || left < right || left > right);
+        this.messages = [...messages,
+            `assertComparable(${left},${right},...)`
+            + " at least one must be true: equal, greater than, less than."];
+        return this;
+    }
+
     assertEqual(left, right, ...messages) {
+        this.assertComparable(left, right, ...messages,
+            "assertEqual requires assertComparable.");
+        if (!this.passed) return this;
+
         this.passed = (left === right);
         this.messages = [...messages, `assertEqual(${left},${right},...).`];
         return this;
     }
 
     assertNotEqual(left, right, ...messages) {
-        this.assertTypeEqual(left, right, ...messages,
-            `Same types in assertNotEqual(${left},${right},...).`);
+        this.assertComparable(left, right, ...messages,
+            "assertNotEqual requires assertComparable.");
         if (!this.passed) return this;
 
         this.passed = (left !== right);
@@ -157,6 +187,29 @@ export class TestAssertion extends Error {
         // Zero-length arrays will be handled OK. The assertion of same length
         // will pass; the for loop will be skipped leaving the passed result
         // intact.
+    }
+
+    assertCompareArrays(comparator, left, right, ...messages) {
+        this.assertEqual(left.length, right.length, ...messages,
+            "assertCompareArrays same length.");
+        if (!this.passed) {
+            return this;
+        }
+
+        for(let index=0; index < left.length; index++) {
+            this.assertTrue(
+                comparator(left[index], right[index], index),
+                ...messages, `assertCompareArrays [${index}].`);
+            if (!this.passed) return this;
+        }
+
+        this.messages = [
+            ...messages, `assertCompareArrays(${left},${right},...).`
+        ];
+        return this;
+
+        // Zero-length arrays will be handled OK same as they are by the
+        // assertEqualArrays() method, above.
     }
 }
 
@@ -230,6 +283,12 @@ export class TestResult {
             new TestAssertion().assertInstanceOf(left, right, ...messages));
         return [left, right];
     }
+
+    assertComparable(left, right, ...messages) {
+        this._resultAssertion(
+            new TestAssertion().assertComparable(left, right, ...messages));
+        return [left, right];
+    }
     
     assertEqual(left, right, ...messages) {
         this._resultAssertion(
@@ -284,6 +343,13 @@ export class TestResult {
     assertEqualArrays(left, right, ...messages) {
         this._resultAssertion(
             new TestAssertion().assertEqualArrays(left, right, ...messages));
+        return [left, right];
+    }
+
+    assertCompareArrays(comparator, left, right, ...messages) {
+        this._resultAssertion(
+            new TestAssertion().assertCompareArrays(
+                comparator, left, right, ...messages));
         return [left, right];
     }
 }
@@ -359,6 +425,13 @@ export class TestRun {
         t2.assertNotUndefined(t1.lastFail,
             "runSelfTests: Failed assertion after assertFalse dummy.");
 
+        t1.assertComparable(1, 4, "runSelfTests: assertComparable numbers.");
+        t2.assertThrows(
+            () => t1.assertComparable("1", 4,
+                "runSelfTests: Deliberate fail assertComparable."),
+            TestAssertion
+        );
+
         // Nested assertThrows. The inner should fail and throw a TestAssertion,
         // because its function doesn't throw. The outer should catch it and
         // pass.
@@ -377,39 +450,77 @@ export class TestRun {
         t1.assertThrows(
             () => { let undefined_; const length = undefined_.length; },
             undefined,
-            "runSelfTests assertThrows with undefined error type."
+            "runSelfTests: assertThrows with undefined error type."
         );
         t1.assertTypeError(
             () => { let undefined_; const length = undefined_.length; },
-            "runSelfTests undefined.length TypeError."
+            "runSelfTests: undefined.length TypeError."
         );
 
         t1.assertThrows(
             () => t1.assertNotEqual(
                 "2", 2,
-                "runSelfTests Deliberate fail different types inequality."
+                "runSelfTests: Deliberate fail different types inequality."
             ),
             TestAssertion
         );
 
-        t1.assertNotEqual(3, 2, "runSelfTests assertNotEqual.");
-        t1.assertEqual(3, 3, "runSelfTests assertEqual.");
+        t1.assertNotEqual(3, 2, "runSelfTests: assertNotEqual.");
+        t1.assertEqual(3, 3, "runSelfTests: assertEqual.");
 
         t1.assertThrows(
             () => t1.assertEqual(
                 "2", 2,
-                "runSelfTests Deliberate fail different types equality."
+                "runSelfTests: Deliberate fail different types equality."
             ),
             TestAssertion
         );
 
-        const left = [1, 2];
-        const right = [1, 0];
+        t1.assertEqualArrays([], [], "runSelfTests: assertEqualArrays empty.")
+        const leftNumbers = [1, 2];
+        const rightNumbers = [1, 0];
         t2.assertThrows(
-            () => t1.assertEqualArrays(left, right), TestAssertion
+            () => t1.assertEqualArrays(leftNumbers, rightNumbers),
+            TestAssertion,
+            "runSelfTests: Deliberate fail assertEqualArrays unequal numbers."
         );
-        right[1] = left[1];
-        t1.assertEqualArrays(left, right);
+        rightNumbers[1] = leftNumbers[1];
+        t1.assertEqualArrays(leftNumbers, rightNumbers,
+            "runSelfTests: assertEqualArrays numbers.");
+
+        t1.assertCompareArrays(undefined, [], [],
+            "runSelfTests: assertCompareArrays empty.")
+
+        class Instance {
+            constructor(a, b, c) { this.a = a; this.b = b; this.c = c;}
+        }
+        const leftInstances = [
+            new Instance(1, 2, 3), new Instance(4, 5, 6)];
+        const rightInstances = [
+            new Instance(1, 2, 4), new Instance(4, 5)];
+
+        t2.assertThrows(
+            () => t1.assertComparable(leftInstances[0], rightInstances[0],
+                "runSelfTests: assertComparable deliberate fail"
+                + " for instances."
+            ),
+            TestAssertion
+        );
+        t2.assertThrows(
+            () => t1.assertNotEqual(leftInstances[0], rightInstances[0],
+                "runSelfTests: assertNotEqual deliberate fail"
+                + " for instances."
+            ),
+            TestAssertion
+        );
+
+        t1.assertCompareArrays(
+            (left, right) => (left.a === right.a && left.b === right.b),
+            leftInstances, rightInstances,
+            "runSelfTests: assertCompareArrays."
+        )
+
+        return [t1, t2];
     }
 
     run(tests) {
@@ -461,6 +572,16 @@ export class TestRunConsole extends TestRun {
         this._verbose = false;
     }
 
+    runSelfTests() {
+        try {
+            super.runSelfTests();
+        }
+        catch (error) {
+            console.log(`runSelfTests failed ${error.toString()}`);
+            throw error;
+        }
+    }
+
     get verbose() {return this._verbose;}
     set verbose(verbose) {this._verbose = verbose;}
 
@@ -469,26 +590,23 @@ export class TestRunConsole extends TestRun {
     }
 
     showResult(name, testResult) {
-        const texts = [
+        console.log([
             `Test "${name}" `,
             (testResult.failed) ? "failed."
             : `assertions:${testResult.assertions.length} passed.`
-        ];
+        ].join(""));
 
         if (testResult.failed || this.verbose) {
             testResult.assertions.forEach((assertion, index) => {
-                const message = assertion.joinedMessages(" ");
-                if (message !== undefined) {
-                    texts.push(
-                        `\nAssertion ${index + 1} `
+                if (assertion.messages !== undefined) {
+                    console.log(
+                        `Assertion ${index + 1} `
                         , assertion.passed ? "passed" : "failed"
-                        , `: ${message}`
+                        , `: ${assertion.messages.join(" ")}`
                     );
                 }
             });
         }
-
-        console.log(texts.join(""));
 
         if (testResult.failed || this.verbose) {
             // Use the console.log capability to generate an expandable log
