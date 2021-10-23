@@ -24,6 +24,13 @@
 // TOTH the exemplary Python unittest module, see
 // https://docs.python.org/library/unittest.html
 
+export class TestFailedError extends Error {
+    // constructor(...messages) {
+    //     super();
+    // }
+
+    // get messages() {}
+}
 
 export class TestAssertion {
     constructor(passed, messages, error) {
@@ -74,7 +81,7 @@ export class TestResult {
     }
 
     get lastError() {
-        for (const index = this._assertions.length - 1; index >= 0; index--) {
+        for (let index = this._assertions.length - 1; index >= 0; index--) {
             const assertion = this._assertions[index];
             if (assertion.error !== undefined) {
                 return assertion.error;
@@ -107,7 +114,8 @@ export class TestResult {
         }
     
         // Create an Error instance to get a stack trace.
-        const error = new Error(messages.join(this.errorMessageJoiner));
+        const error = new TestFailedError(
+            messages.join(this.errorMessageJoiner));
         this._assertions.push(new TestAssertion(false, messages, error));
 
         if (this._throwOnFail) {
@@ -121,7 +129,14 @@ export class TestResult {
         const rightType = typeof(right);
         this.assertTruthy(leftType === rightType, ...messages,
             `assertTypeEqual(${left},${right},...)` +
-            ` ${leftType} !== ${rightType}.`);
+            ` ${leftType} === ${rightType}.`);
+        return [left, right];
+    }
+
+    assertInstanceOf(left, right, ...messages) {
+        this.assertTruthy(left instanceof right, ...messages,
+            `assertInstanceOf(${left},${right},...)` +
+            ` ${left} instanceof ${right.name}.`);
         return [left, right];
     }
     
@@ -171,16 +186,30 @@ export class TestResult {
             caught = error;
         }
         this.assertNotUndefined(caught, ...messages, "Threw an error.");
-        if (this._popAssertion()) {
-            this.assertTrue(
-                (errorType === undefined) || (caught instanceof errorType), 
-                ...messages, `${caught} instanceof ${errorType}`
-            );
+        if (errorType !== undefined) {
+            if (this._popAssertion()) {
+                this.assertInstanceOf(caught, errorType, ...messages,
+                    "Threw expected error type.");
+            }
         }
     }
     
     assertTypeError(function_, ...messages) {
         return this.assertThrows(function_, TypeError, ...messages);
+    }
+
+    assertArrays(assertFunction, left, right, ...messages) {
+        this.assertEqual(left.length, right.length, ...messages, 
+            "assertArrays same length");
+        if (this._popAssertion()) {
+            for(let index=0; index < left.length; index++) {
+                const message = `assertArrays [${index}].`;
+                assertFunction.bind(this)(
+                    left[index], right[index], ...messages, message);
+                if (!this._popAssertion()) break;
+            }
+        }
+        return [left, right];
     }
 }
 
@@ -188,7 +217,7 @@ export class TestRun {
     constructor() {
         this._results = {};
         this.status = "TestRun tests";
-        this.runTestRunTests(new TestResult());
+        this.runTestRunTests();
 
         // Default values.
         this._stopOnFail = true;
@@ -216,15 +245,21 @@ export class TestRun {
     // about getter and setter inheritance:
     // https://stackoverflow.com/a/34456245/7657675
 
-    runTestRunTests(t) {
-        let caught = false;
-        try {
-            t.assertTruthy(false, "runTestRunTests dummy assertion.");
-        }
-        catch {
-            caught = true;
-        }
-        t.assertTruthy(caught, "runTestRunTests didn't catch.")
+    runTestRunTests() {
+        const t = new TestResult();
+
+        t.assertThrows(
+            () => t.assertFalse(true, "runTestRunTests dummy assertion."),
+            TestFailedError
+        );
+
+        const left = [1, 2];
+        const right = [1, 0];
+        t.assertThrows(
+            () => t.assertArrays(t.assertEqual, left, right), TestFailedError
+        );
+
+        t.assertArrays(t.assertNotEqual, left, right);
     }
 
     run(tests) {

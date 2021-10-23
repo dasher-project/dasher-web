@@ -1,14 +1,14 @@
-// (c) 2020 The ACE Centre-North, UK registered charity 1089313.
+// (c) 2021 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 // Class to represent abstract zoom box.
 
 export default class ZoomBox {
-    constructor(palette, messageCodePoints, colourSpecifier) {
+    constructor(palette, messageCodePoints) { //}, colourSpecifier) {
         this._palette = palette;
         this._messageCodePoints = (
             messageCodePoints === undefined ? [] : messageCodePoints);
-        this._colourSpecifier = colourSpecifier;
+        // this._colourSpecifier = colourSpecifier;
 
         this._childBoxes = null;
         this._controllerData = undefined;
@@ -37,6 +37,11 @@ export default class ZoomBox {
         );
     }
 
+    get messageCodePoints() {return this._messageCodePoints;}
+    get message() {return this._message;}
+    get childBoxes() {return this._childBoxes;}
+    get text() {return this._displayText; }
+
     readyToChildSpawn(limits) {
         if (limits === undefined) return undefined;
 
@@ -59,6 +64,25 @@ export default class ZoomBox {
 
         return true;
     }
+
+    childSpawn() {
+        if (this.childBoxes !== null) {
+            // Maybe throw here? this method shouldn't be called twice. Or just
+            // rely on the caller having first called readyToChildSpawn().
+        }
+        this._childBoxes = this._palette.spawnChildBoxes(this);
+
+        // Should have a return value of some kind.
+    }
+
+
+    
+    // Code below this line hasn't been incorporated into the flat palette
+    // version.
+
+
+
+    clear_child_boxes() {this._childBoxes = undefined;}
 
 
 
@@ -87,7 +111,6 @@ export default class ZoomBox {
     }
 
     get cssClass() {return this._cssClass;}
-    get text() {return this._displayText; }
     // get template() {return this._template;}
 
     get trimmedIndex() {return this._trimmedIndex;}
@@ -95,12 +118,6 @@ export default class ZoomBox {
 
     get trimmedParent() {return this._trimmedParent;}
     set trimmedParent(trimmedParent) {this._trimmedParent = trimmedParent;}
-
-    get messageCodePoints() {return this._messageCodePoints;}
-    get message() {return this._message;}
-
-    get childBoxes() {return this._childBoxes;}
-    clear_child_boxes() {this._childBoxes = undefined;}
 
     get controllerData() {return this._controllerData;}
     set controllerData(controllerData) {this._controllerData = controllerData;}

@@ -59,11 +59,17 @@ class Template {
 export default class Palette {
 
     constructor() {
-        this.codePoints = [];
+        this._codePoints = [];
         this._mapPointToDisplayPoint = new Map();
         this._indexMap = new Map();
         this._build();
     }
+
+    // Ideally, this getter should return a frozen copy or something. Jim
+    // doesn't know how to do that in JavsScript though. By convention, the code
+    // here refers to the codePoints property for read-only access, and
+    // _codePoints for write access.
+    get codePoints() {return this._codePoints;}
 
     // This should be a private method, declared like this.
     //
@@ -103,7 +109,7 @@ export default class Palette {
 
             // Append all the code points from this group to the palette's
             // overall code point array.
-            this.codePoints.push(...group.codePoints);
+            this._codePoints.push(...group.codePoints);
 
             return group;
         });
@@ -123,6 +129,32 @@ export default class Palette {
 
         return this;
     }
+    
+    spawnChildBoxes(parentBox) {
+        // For now, only support a single-level palette in which every child box
+        // has the same palette as the parent.
+        const childBoxes = this.codePoints.map(codePoint => {
+            const childCodePoints = parentBox.messageCodePoints.slice();
+            childCodePoints.push(codePoint);
+
+            // For now, support a ZoomBox subclass whose child boxes are the
+            // same subclass but don't support changing ZoomBox subclasses in
+            // child boxes. Dasher Version Six only uses a single ZoomBox class
+            // anyway.
+            const childBox = new parentBox.constructor(this, childCodePoints);
+
+            return childBox;
+        });
+
+        return childBoxes;
+    }
+
+
+    
+    // Code below this line hasn't been incorporated into the flat palette
+    // version.
+
+
 
     // Getter that could be overridden in subclasses.
     get sequenceStubCSS() {return baseSequenceStubCSS;}

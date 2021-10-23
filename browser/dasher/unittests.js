@@ -62,6 +62,33 @@ export default {
         t.assertTrue(zoomBox.readyToChildSpawn(limits),
             "Ready if within limits.");
     },
+    spawnTest: function (t) {
+        const palette = t.assertNotUndefined(new Palette());
+        const parentBox = t.assertNotUndefined(new ZoomBox(palette));
+        
+        const childBoxes = t.assertNotUndefined(
+            palette.spawnChildBoxes(parentBox));
+        t.assertEqual(childBoxes.length, palette.codePoints.length,
+            "Spawned one child box per palette code point.");
+        childBoxes.forEach((childBox, index) => {
+            const assertionMessage = `childBoxes[${index}].`;
+            t.assertEqual(
+                parentBox.messageCodePoints.length + 1,
+                childBox.messageCodePoints.length,
+                "Child has one more code point than parent.", assertionMessage);
+            t.assertEqual(
+                childBox.message, // + (index === 30 ? "f" : ""),
+                String.fromCodePoint(
+                    ...parentBox.messageCodePoints, palette.codePoints[index]),
+                "Child message text.", assertionMessage);
+        });
+
+
+        parentBox.childSpawn();
+        // Assert that the zoomBox.childBoxes array contents are the same as the
+        // childBoxes array. Could also assert that the palette method was
+        // called exactly once, by mocking.
+    },
     controllerTest: function (t) {
         const palette = t.assertNotUndefined(new Palette());
         const limits = t.assertNotUndefined(new Limits());
