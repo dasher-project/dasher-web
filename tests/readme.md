@@ -1,8 +1,14 @@
+# CI Testing
+Tests are run on two seperate frameworks `jest` for unit/module tests,
+and `cypress` for end-2-end testing.
+
 # Install
 `npm install`
 
 # Run Tests
 `npm run test`
+`npm run cy:test`
+
 
 # To Do List
 -   Test the control panel as a user interface, saving and loading settings
