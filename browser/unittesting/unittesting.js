@@ -25,6 +25,11 @@
 // assertion fails. Chrome developer tools, for example, facilitate navigating
 // to the code from which an uncaught error was thrown.
 //
+// Approaches to testing arrays:
+// -   Inline approach adds one assertion per array element to the test result.
+// -   Breadth sub-test approach, adds a sub-test for each assertion that is
+//     made on each element.
+//
 // TOTH the exemplary Python unittest module, see
 // https://docs.python.org/library/unittest.html
 
@@ -266,6 +271,13 @@ export class TestResult {
 
     get nameJoiner() {return this._nameJoiner;}
     set nameJoiner(nameJoiner) { this._nameJoiner = nameJoiner; }
+
+    get lastAssertion() {
+        if (this._assertions.length > 0) {
+            return this._assertions[this._assertions.length - 1];
+        }
+        return undefined;
+    }
 
     get lastFail() {
         for (let index = this._assertions.length - 1; index >= 0; index--) {
@@ -674,6 +686,26 @@ export function selfTests(t) {
     t.assertEqual(stReturn, selfSubTestReturn,
         "assertSubTest return preserved after pass.");
 
+    [2, 4, 6, 200].forEach((evenNumber, index) => {
+        t.assertEqual(
+            evenNumber % 2, 0, "Inline assert even", index, evenNumber);
+        t.lastAssertion.showIfPassed = true;
+    });
+
+    const tGreater = t.child("tGreater");
+    const tEven = t.child("tEven");
+    [2, 4, 6, 200].forEach((evenNumber, index) => {
+        tGreater.assertTrue(evenNumber > 1, "Breadth assert > 1", evenNumber);
+        tGreater.lastAssertion.showIfPassed = true;
+        tEven.assertEqual(
+            evenNumber % 2, 0, "Breadth assert even", evenNumber);
+        tEven.lastAssertion.showIfPassed = true;
+    });
+    t.assertResult(tGreater, "Breadth assert > 1 all.");
+    t.lastAssertion.showIfPassed = true;
+    t.assertResult(tEven, "Breadth assert even all.");
+    t.lastAssertion.showIfPassed = true;
+
     t.assertEqualArrays([], [], "assertEqualArrays empty.")
     const leftNumbers = [1, 2];
     const rightNumbers = [1, 0];
@@ -765,9 +797,20 @@ export class TestRunConsole extends TestRun {
     }
 
     showAssertion(assertion, index, testResult) {
-        if (assertion.passed && !this.verbose) return;
+        // Self tests are run and shown in the constructor, before subclass
+        // properties can be set. This means that this.verbose could be
+        // undefined here.  
+        // ToDo: Add a default outside the class that is applied in case verbose
+        // is undefined.
+        if (
+            assertion.passed && (!this.verbose) && (!assertion.showIfPassed
+        )) return;
         console.log([
-            `${testResult.name} assertion ${index + 1}`, " ",
+            // Hmm. The assertion.name will have the testResult name and an
+            // index ordinal number so the first string is unnecesssary and
+            // commented out.  
+            //`${testResult.name} assertion ${index + 1}`, " ",
+            assertion.name, " ",
             assertion.passed === undefined ? "undefined"
             : assertion.passed ? "passed" : "failed",
             assertion.messages === undefined ? "."
