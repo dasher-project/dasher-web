@@ -1,7 +1,7 @@
 {
   "name": "tests",
   "version": "1.0.0",
-  "description": "Testing Framework for (re)Dasher",
+  "description": "Testing Framework for Dasher",
   "main": "index.js",
   "scripts": {
     "test": "jest",
