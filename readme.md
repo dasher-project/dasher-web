@@ -36,6 +36,8 @@ request to help out!
 -  We'd love your help! Check out our housekeeping [rulebook](documents/Development.md) for best practices
 on contributing.
 
+## Versioning
+- dasher-web follows [Symantic Versioning](https://semver.org/)
 
 
 # License
