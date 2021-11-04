@@ -37,7 +37,7 @@ request to help out!
 on contributing.
 
 ## Versioning
-- dasher-web follows [Symantic Versioning](https://semver.org/)
+- dasher-web follows [Semantic Versioning](https://semver.org/).
 
 
 # License
