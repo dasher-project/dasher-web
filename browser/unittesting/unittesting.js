@@ -33,6 +33,17 @@
 // TOTH the exemplary Python unittest module, see
 // https://docs.python.org/library/unittest.html
 
+const stringType = typeof("");
+const functionType = typeof(function () {});
+function stringArray(items) {
+    return (items === undefined) ? undefined
+    : items.map(item =>
+        (typeof(item) === functionType) ? item.name
+        : (typeof(item) === stringType) ? item.slice()
+        : "" + item
+    );
+}
+
 const defaultErrorMessageJoiner = "\n";
 
 export class TestAssertion extends Error {
@@ -55,7 +66,10 @@ export class TestAssertion extends Error {
         this._errorMessageJoiner = defaultErrorMessageJoiner;
     }
 
-    get passed() {return this._passed;}
+    get passed() {
+        return (
+            this.subTest === undefined ? this._passed : this.subTest.passed);
+    }
     set passed(passed) {this._passed = passed;}
 
     get subTest() {return this._subTest;}
@@ -63,8 +77,7 @@ export class TestAssertion extends Error {
 
     get messages() {return this._messages.slice();}
     set messages(messages) {
-        this._messages = (
-            messages === undefined ? undefined : messages.slice());
+        this._messages = stringArray(messages);
         this._set_message();
     }
     _set_message() {
@@ -224,23 +237,19 @@ export class TestAssertion extends Error {
     }
 
     assertResult(testResult, ...messages) {
+        // This seems a bit shaky. The passed property of the assertion doesn't
+        // get set here. The property getter will descend into the subTest
+        // whenever it is accessed.
         this.subTest = testResult;
-        return this.assertTrue(testResult.passed, ...messages, 
-            `assertResult(${testResult.name},...)`);
+        this.messages = [...messages, `assertResult(${testResult.name},...).`];
+        return this
     }
 
 }
 
-const stringType = typeof("");
-const functionType = typeof(function () {});
-
 export class TestResult {
     constructor(...names) {
-        this._names = names.map(testName => 
-            (typeof(testName) === functionType) ? testName.name
-            : (typeof(testName) === stringType) ? testName.slice()
-            : "" + testName
-        );
+        this._names = stringArray(names);
 
         this._assertions = [];
 
@@ -282,7 +291,9 @@ export class TestResult {
     get lastFail() {
         for (let index = this._assertions.length - 1; index >= 0; index--) {
             const assertion = this._assertions[index];
-            if (!assertion.passed) return assertion;
+            if (assertion.passed) continue;
+            if (assertion.subTest === undefined) return assertion;
+            return assertion.subTest.lastFail;
         }
         return undefined;
     }
@@ -352,7 +363,11 @@ export class TestResult {
         const assertionCount = this._assertions.push(assertion);
         assertion.name = [
             ...this.names, assertionCount.toString()].join(this.nameJoiner);
-        if (this.throwOnFail && !assertion.passed) {
+        if (
+            this.throwOnFail
+            && (!assertion.passed)
+            && assertion.subTest === undefined
+        ) {
             throw assertion;
         }
         return assertion;
@@ -451,12 +466,24 @@ export class TestResult {
 
     }
 
-    assertSubTest(function_, ...messages) {
-        const testResult = this.child(function_);
-        const return_ = function_(testResult);
+    assertSubTest(testFunction, ...messages) {
+        const childResult = this.child(testFunction);
+        let testReturn;
+        let thrown;
+        // If the test function throws, record the assertion and re-throw.
+        try {
+            testReturn = testFunction(childResult);
+            thrown = undefined;
+        }
+        catch(error) {
+            thrown = error;
+        }
         this._resultAssertion(
-            new TestAssertion().assertResult(testResult, ...messages));
-        return return_;
+            new TestAssertion().assertResult(childResult, ...messages));
+        if (thrown !== undefined) {
+            throw thrown;
+        }
+        return testReturn;
     }
 }
 
@@ -669,8 +696,12 @@ export function selfTests(t) {
     );
     // The last assertion in tFail should have a subTest with an undefined
     // passed property value.
+    t.assertNotUndefined(
+        tFail.lastAssertion.subTest,
+        "assertSubTest has subTest even if no assertions."
+    );
     t.assertUndefined(
-        tFail.lastFail.subTest.passed,
+        tFail.lastAssertion.subTest.passed,
         "assertSubTest passed undefined if no assertions."
     );
     t.assertEqual(selfSubTestNoAssertions_, selfSubTestNoAssertionsReturn,
@@ -679,8 +710,8 @@ export function selfTests(t) {
 
     // Check a sub-test that makes assertions OK.
     const stReturn = t.assertSubTest(selfSubTest, "assertSubTest");
+    const lastAssertion = t.lastAssertion;
     // Check that the last assertion has a subTest that passed.
-    const lastAssertion = t.assertions[t.assertions.length - 1];
     t.assertTrue(lastAssertion.passed, "assertSubTest lastAssertion passed.");
     t.assertNotUndefined(lastAssertion.subTest, "assertSubTest subTest set.");
     t.assertEqual(stReturn, selfSubTestReturn,
@@ -807,14 +838,14 @@ export class TestRunConsole extends TestRun {
         )) return;
         console.log([
             // Hmm. The assertion.name will have the testResult name and an
-            // index ordinal number so the first string is unnecesssary and
+            // index ordinal number so the first string is unnecessary and
             // commented out.  
             //`${testResult.name} assertion ${index + 1}`, " ",
             assertion.name, " ",
             assertion.passed === undefined ? "undefined"
             : assertion.passed ? "passed" : "failed",
             assertion.messages === undefined ? "."
-            : ["", ...assertion.messages].join(" ")
+            : [".", ...assertion.messages].join(" ")
         ].join(""));
     }
 }
