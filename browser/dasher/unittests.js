@@ -80,21 +80,36 @@ function spawnTest(t) {
         palette.spawnChildBoxes(parentBox));
     t.assertEqual(childBoxes.length, palette.codePoints.length,
         "Spawned one child box per palette code point.");
-    t.assertCompareArrays(
-        (childBox, paletteCodePoint, index) => (
-            (
-                parentBox.messageCodePoints.length + 1
-                === childBox.messageCodePoints.length
-            )
-            && (
-                childBox.message // + (index === 50 ? "f" : "")
-                === String.fromCodePoint(
-                    ...parentBox.messageCodePoints, paletteCodePoint)
-            )
-        ), childBoxes, palette.codePoints,
-        "Child has one more code point than parent.",
-        "Child message texts."
-    );
+    
+    const tChildCodePoints = t.child("ChildCodePoints");
+    const tChildMessageTexts = t.child("ChildMessageTexts");
+    t.assertResult(tChildCodePoints,
+        "All spawned child boxes have one more code point than the parent.");
+    // t.lastAssertion.showIfPassed = true;
+    t.assertResult(tChildMessageTexts,
+        "All spawned child boxes have correct message text.");
+    childBoxes.forEach((childBox, index) => {
+        tChildCodePoints.assertEqual(
+            parentBox.messageCodePoints.length + 1
+            , childBox.messageCodePoints.length
+            , "Child has one more code point than parent.", childBox.message
+        );
+        // if (index === 5) tChildCodePoints.lastAssertion.showIfPassed = true;
+
+        const paletteCodePoint = palette.codePoints[index];
+        let appendage = "";
+        if (index === 50) {
+            appendage = "f";
+        }
+        tChildMessageTexts.assertEqual(
+            childBox.message // + appendage
+            , String.fromCodePoint(
+                ...parentBox.messageCodePoints, paletteCodePoint)
+            , "Child message text correct."
+        );
+
+    });
+
     childBoxes.forEach((childBox, index) => {
         const assertionMessage = `childBoxes[${index}].`;
         t.assertEqual(
