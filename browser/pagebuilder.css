@@ -30,7 +30,7 @@ body {
 
     margin: 0;
 
-    font-size: large;
+    font-size: small;
     font-family: sans-serif;
 }
 
@@ -67,7 +67,7 @@ pre.cwv-transcript__log_line {
     margin-bottom: 0;
 
     /* Fixed fonts appear larger, so reduce the size. */
-    font-size: 75%;
+    font-size: 50%;
 
     /* Wrap at spaces to prevent long transcript lines overflowing the screen.
      */
@@ -83,7 +83,7 @@ pre.cwv-transcript__log_line {
 
 .cwv-button {
     background-color: var(--field-colour);
-    font-size: large;
+    font-size: small;
     padding: 0.5em 1em 0.5em 1em;
     border: none;
     border-radius: var(--border-radius);
@@ -105,7 +105,7 @@ pre.cwv-transcript__log_line {
     padding: 0.5em 0 0.5em 0;
 }
 .cwv-input__input {
-    font-size: x-large;
+    font-size: medium;
     border: 1px solid black;
     border-radius: var(--border-radius);
     padding-left: 0.5em;
@@ -117,7 +117,7 @@ pre.cwv-transcript__log_line {
     background-color: var(--background-colour);
 }
 .cwv-input__label {
-    font-size: medium;
+    font-size: small;
     display: block;
 }
 
@@ -138,7 +138,7 @@ pre.cwv-transcript__log_line {
      * look quite right.
      */
     float: right;
-    font-size: x-large;
+    font-size: medium;
     color: var(--line-colour);
     margin-top: -5px;
     margin-right: -0.5em;
@@ -148,7 +148,7 @@ pre.cwv-transcript__log_line {
 }
 .cwv-anchor_back::before {
     content: "<";
-    font-size: x-large;
+    font-size: medium;
     color: var(--line-colour);
     margin-top: -5px;
     margin-right: 0.5em;
