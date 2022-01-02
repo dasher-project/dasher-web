@@ -66,6 +66,8 @@ export class TestAssertion extends Error {
         this._errorMessageJoiner = defaultErrorMessageJoiner;
     }
 
+    // Instead of this getter, there should maybe be a TestAssertion subclass
+    // for a sub-test.
     get passed() {
         return (
             this.subTest === undefined ? this._passed : this.subTest.passed);
@@ -93,158 +95,6 @@ export class TestAssertion extends Error {
         this._set_message();
     }
 
-    assertTypeEqual(left, right, ...messages) {
-        const leftType = typeof(left);
-        const rightType = typeof(right);
-        this.passed = (leftType === rightType);
-        this.messages = [...messages
-            , `assertTypeEqual(${left},${right},...)`
-            + ` ${leftType} === ${rightType}.`
-        ];
-        return this;
-    }
-
-    assertInstanceOf(left, right, ...messages) {
-        this.passed = (left instanceof right);
-        const rightDescription = (
-            right.name === undefined ? right.toString() : right.name);
-        this.messages = [
-            ...messages, `assertInstanceOf(${left},${rightDescription},...).`];
-        return this;
-    }
-
-    assertTrue(value, ...messages) {
-        this.passed = (value === true);
-        this.messages = [...messages, `assertTrue(${value},...).`];
-        return this;
-    }
-
-    assertFalse(value, ...messages) {
-        this.passed = (value === false);
-        this.messages = [...messages, `assertFalse(${value},...).`];
-        return this;
-    }
-
-    assertUndefined(value, ...messages) {
-        this.passed = (value === undefined);
-        this.messages = [...messages, `assertUndefined(${value},...).`];
-        return this;
-    }
-
-    assertNotUndefined(value, ...messages) {
-        this.passed = (value !== undefined);
-        this.messages = [...messages, `assertNotUndefined(${value},...).`];
-        return this;
-    }
-
-    assertComparable(left, right, ...messages) {
-        this.assertTypeEqual(left, right, ...messages,
-            "assertComparable requires assertTypeEqual.");
-        if (!this.passed) return this;
-
-        this.passed = (left === right || left < right || left > right);
-        this.messages = [...messages,
-            `assertComparable(${left},${right},...)`
-            + " at least one must be true: equal, greater than, less than."];
-        return this;
-    }
-
-    assertEqual(left, right, ...messages) {
-        this.assertComparable(left, right, ...messages,
-            "assertEqual requires assertComparable.");
-        if (!this.passed) return this;
-
-        this.passed = (left === right);
-        this.messages = [...messages, `assertEqual(${left},${right},...).`];
-        return this;
-    }
-
-    assertNotEqual(left, right, ...messages) {
-        this.assertComparable(left, right, ...messages,
-            "assertNotEqual requires assertComparable.");
-        if (!this.passed) return this;
-
-        this.passed = (left !== right);
-        this.messages = [...messages, `assertNotEqual(${left},${right},...).`];
-        return this;
-    }
-
-    assertThrows(function_, errorType, ...messages) {
-        let return_;
-        let caught;
-        try {
-            return_ = function_();
-            caught = undefined;
-        }
-        catch (error) {
-            caught = error;
-        }
-        this.assertNotUndefined(caught, ...messages, "Threw an error.");
-        if ((!this.passed) || (errorType === undefined)) {
-            return [this, return_];
-        }
-
-        return [this.assertInstanceOf(
-            caught, errorType, ...messages, "Threw expected error type."
-        ), return_];
-    }
-
-    assertEqualArrays(left, right, ...messages) {
-        this.assertEqual(left.length, right.length, ...messages,
-            "assertEqualArrays same length.");
-        if (!this.passed) {
-            return this;
-        }
-
-        for(let index=0; index < left.length; index++) {
-            this.assertEqual(
-                left[index], right[index],
-                ...messages, `assertEqualArrays [${index}].`);
-            if (!this.passed) return this;
-        }
-
-        this.messages = [
-            ...messages, `assertEqualArrays(${left},${right},...).`
-        ];
-        return this;
-
-        // Zero-length arrays will be handled OK. The assertion of same length
-        // will pass; the for loop will be skipped leaving the passed result
-        // intact.
-    }
-
-    assertCompareArrays(comparator, left, right, ...messages) {
-        this.assertEqual(left.length, right.length, ...messages,
-            "assertCompareArrays same length.");
-        if (!this.passed) {
-            return this;
-        }
-
-        for(let index=0; index < left.length; index++) {
-            this.assertTrue(
-                comparator(left[index], right[index], index),
-                ...messages, `assertCompareArrays [${index}].`);
-            if (!this.passed) return this;
-        }
-
-        this.messages = [
-            ...messages, `assertCompareArrays(${left},${right},...).`
-        ];
-        return this;
-
-        // Zero-length arrays will be handled OK same as they are by the
-        // assertEqualArrays() method, above.
-    }
-
-    assertResult(testResult, ...messages) {
-        // This seems a bit shaky. The passed property of the assertion doesn't
-        // get set here. The property getter will descend into the subTest
-        // whenever it is accessed.
-        this.subTest = testResult;
-        this.messages = [...messages, `assertResult(${testResult.name},...).`];
-        return this
-    }
-
 }
 
 export class TestResult {
@@ -252,6 +102,7 @@ export class TestResult {
         this._names = stringArray(names);
 
         this._assertions = [];
+        this._assertionCount = this._assertions.length;
 
         this._summary = undefined;
 
@@ -353,16 +204,25 @@ export class TestResult {
     //
     // The push and throw requirement can be met by calling
     // this._resultAssertion() for example.
+    //
+    //
+    // In a compound assertion:
+    //
+    // -   The last assertion doesn't get a suffix.
+    // -   There will be at most one failed assertion.
 
-    _resultAssertion(assertion) {
+    _resultAssertion(assertion, ...suffix) {
         if (Object.is(assertion.subTest, this)) {
             // Remove circular result assertion.
             assertion.subTest = undefined;
         }
 
-        const assertionCount = this._assertions.push(assertion);
         assertion.name = [
-            ...this.names, assertionCount.toString()].join(this.nameJoiner);
+            ...this.names, this._assertionCount.toString(), ...suffix
+        ].join(this.nameJoiner);
+
+        this._assertions.push(assertion);
+
         if (
             this.throwOnFail
             && (!assertion.passed)
@@ -373,100 +233,245 @@ export class TestResult {
         return assertion;
     }
 
-    assertTypeEqual(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertTypeEqual(left, right, ...messages));
+    _assertTypeEqual(left, right, suffix, ...reasons) {
+        const leftType = typeof(left);
+        const rightType = typeof(right);
+
+        const assertion = new TestAssertion([...reasons,
+            `assertTypeEqual(${left},${right},...)`
+            + ` ${leftType} === ${rightType}.`
+        ]);
+
+        assertion.passed = (leftType === rightType);
+
+        this._resultAssertion(assertion, ...suffix);
+
+        return assertion.passed;
+    }
+    assertTypeEqual(left, right, ...reasons) {
+        this._assertionCount += 1;
+        this._assertTypeEqual(left, right, [], ...reasons);
         return [left, right];
     }
 
-    assertInstanceOf(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertInstanceOf(left, right, ...messages));
+    _assertInstanceOf(left, right, suffix, ...reasons) {
+        const rightDescription = (
+            right.name === undefined ? right.toString() : right.name);
+        const assertion = new TestAssertion([...reasons,
+            `assertInstanceOf(${left},${rightDescription},...).`
+        ]);
+        assertion.passed = (left instanceof right);
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
+    }
+    assertInstanceOf(left, right, ...reasons) {
+        this._assertionCount += 1;
+        this._assertInstanceOf(left, right, [], ...reasons);
         return [left, right];
     }
 
-    assertComparable(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertComparable(left, right, ...messages));
-        return [left, right];
+    _assertComparable(left, right, suffix, ...reasons) {
+        if (!this._assertTypeEqual(
+            left, right,
+            [...suffix, "typeEqual"],
+            ...reasons, "assertComparable requires assertTypeEqual."
+        )) {
+            return false;
+        }
+        const assertion = new TestAssertion([...reasons,
+            `assertComparable(${left},${right},...)`
+            + " at least one must be true: equal, greater than, less than."
+        ]);
+
+        assertion.passed = (left === right || left < right || left > right);
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
     }
-    
-    assertEqual(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertEqual(left, right, ...messages));
+    assertComparable(left, right, ...reasons) {
+        this._assertionCount += 1;
+        this._assertComparable(left, right, [], ...reasons);
         return [left, right];
     }
 
-    assertNotEqual(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertNotEqual(left, right, ...messages));
+    _assertEquality(sense, left, right, suffix, ...reasons) {
+        const name = ["assert", sense ? "" : "Not", "Equal"].join("");
+        if (!this._assertComparable(
+            left, right,
+            [...suffix, "assertComparable"],
+            ...reasons, `${name} requires assertComparable.`
+        )) {
+            return false;
+        }
+        const assertion = new TestAssertion([
+            ...reasons,
+            `${name}(${left},${right},...).`]);
+        assertion.passed = (sense ? (left === right) : (left !== right));
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
+    }
+    assertEqual(left, right, ...reasons) {
+        this._assertionCount += 1;
+        this._assertEquality(true, left, right, [], ...reasons);
+        return [left, right];
+    }
+    assertNotEqual(left, right, ...reasons) {
+        this._assertionCount += 1;
+        this._assertEquality(false, left, right, [], ...reasons);
         return [left, right];
     }
 
-    assertTrue(value, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertTrue(value, ...messages));
+    _assertStrictEquality(asserted, value, suffix, ...reasons) {
+        const prefix = [
+            "assert",
+            (asserted === undefined) ? "Undefined("
+            : (asserted === true) ? "True("
+            : (asserted === false) ? "False("
+            : `StrictEquality(${asserted},`
+        ].join("");
+
+        const assertion = new TestAssertion([...reasons,
+            `${prefix}${value},...)`
+        ]);
+        assertion.passed = (value === asserted);
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
+    }
+    assertStrictEquality(asserted, value, ...reasons) {
+        this._assertionCount += 1;
+        this._assertStrictEquality(asserted, value, [], ...reasons);
+        return value;
+    }
+    assertTrue(value, ...reasons) {
+        return this.assertStrictEquality(true, value, ...reasons);
+    }
+    assertFalse(value, ...reasons) {
+        return this.assertStrictEquality(false, value, ...reasons);
+    }
+    assertUndefined(value, ...reasons) {
+        return this.assertStrictEquality(undefined, value, ...reasons);
+    }
+
+    _assertNotUndefined(value, suffix, ...reasons) {
+        const assertion = new TestAssertion([
+            ...reasons, `assertNotUndefined(${value},...).`]);
+        assertion.passed = (value !== undefined);
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
+    }
+    assertNotUndefined(value, ...reasons) {
+        this._assertionCount += 1;
+        this._assertNotUndefined(value, [], ...reasons);
         return value;
     }
 
-    assertFalse(value, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertFalse(value, ...messages));
-        return value;
+    _assertThrows(function_, errorType, suffix, ...reasons) {
+        let returned;
+        let caught;
+        try {
+            returned = function_();
+            caught = undefined;
+        }
+        catch (error) {
+            caught = error;
+        }
+
+        const threw = this._assertNotUndefined(
+            caught,
+            // If errorType wasn't given, this is the last assertion and
+            // therefore doesn't get an additional suffix.
+            (errorType === undefined ? suffix : [...suffix, 'notUndefined']),
+            ...reasons, "Threw an error."
+        );
+
+        if ((!threw.passed) || (errorType === undefined)) {
+            return [threw.passed, returned];
+        }
+
+        // The next assertion will be the last if the code reaches this point.
+        return [this._assertInstanceOf(
+            caught, errorType, suffix, ...reasons, "Threw expected error type."
+        ), returned];
+    }
+    assertThrows(function_, errorType, ...reasons) {
+        this._assertionCount += 1;
+        const [passed, returned] = this._assertThrows(
+            function_, errorType, [], ...reasons);
+        return returned;
+    }
+    assertTypeError(function_, ...reasons) {
+        return this.assertThrows(function_, TypeError, ...reasons)
     }
 
-    assertUndefined(value, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertUndefined(value, ...messages));
-        return value;
+    assertEqualArrays(left, right, ...reasons) {
+        this._assertionCount += 1;
+
+        if (this._assertEquality(true, left.length, right.length,
+            ["length"], ...reasons, "assertEqualArrays same length."
+        )) {
+            for(let index=0; index < left.length; index++) {
+                const suffix = [ `[${index}]` ];
+                if (!this._assertEquality(
+                    true, left[index], right[index], suffix,
+                    ...reasons, `assertEqualArrays ${suffix[0]}.`
+                )) {
+                    break;
+                }
+            }
+        }
+
+        return [left, right];
+
+        // Zero-length arrays will be handled OK. The assertion of same length
+        // will pass; the for loop will be skipped leaving the passed result
+        // intact.
+        //
+        // This assert function doesn't follow the convention that the last
+        // assertion in a compound assertion doesn't get a suffix.
     }
 
-    assertNotUndefined(value, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertNotUndefined(value, ...messages));
-        return value;
-    }
+    assertCompareArrays(comparator, left, right, ...reasons) {
+        this._assertionCount += 1;
 
-    assertThrows(function_, errorType, ...messages) {
-        const [assertion, return_] = new TestAssertion().assertThrows(
-            function_, errorType, ...messages);
-        this._resultAssertion(assertion);
-        return return_;
-    }
+        if (this._assertEquality(true, left.length, right.length,
+            ["length"], ...reasons, "assertCompareArrays same length."
+        )) {
+            for(let index=0; index < left.length; index++) {
+                const suffix = [ `[${index}]` ];
+                if (!this._assertStrictEquality(true,
+                    comparator(left[index], right[index], index), suffix,
+                    ...reasons, `assertCompareArrays ${suffix[0]}.`
+                )) {
+                    break;
+                }
+            }
+        }
 
-    assertTypeError(function_, ...messages) {
-        const [assertion, return_] = new TestAssertion().assertThrows(
-            function_, TypeError, ...messages);
-        this._resultAssertion(assertion);
-        return return_;
-    }
-
-    assertEqualArrays(left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertEqualArrays(left, right, ...messages));
         return [left, right];
     }
 
-    assertCompareArrays(comparator, left, right, ...messages) {
-        this._resultAssertion(
-            new TestAssertion().assertCompareArrays(
-                comparator, left, right, ...messages));
-        return [left, right];
-    }
-
-    assertResult(testResult, ...messages) {
+    _assertResult(testResult, suffix, ...reasons) {
+        const assertion = new TestAssertion([
+            ...reasons, `assertResult(${testResult.name},...).`]);
         if (Object.is(testResult, this)) {
             // Asserting the result of this test in itself results in a circular
             // structure.
-            throw new Error(`Circular assertResult ${messages}`);
+            throw new Error(`Circular assertResult ${reasons}`);
         }
-        this._resultAssertion(
-            new TestAssertion().assertResult(testResult, ...messages));
-        return testResult;
+        // This seems a bit shaky. The passed property of the assertion doesn't
+        // get set here. The property getter will descend into the subTest
+        // whenever it is accessed.
+        assertion.subTest = testResult;
 
+        this._resultAssertion(assertion, ...suffix);
+        return assertion.passed;
+    }
+    assertResult(testResult, ...reasons) {
+        this._assertionCount += 1;
+        this._assertResult(testResult, [], ...reasons);
+        return testResult;
     }
 
-    assertSubTest(testFunction, ...messages) {
+    assertSubTest(testFunction, ...reasons) {
         const childResult = this.child(testFunction);
         let testReturn;
         let thrown;
@@ -478,8 +483,9 @@ export class TestResult {
         catch(error) {
             thrown = error;
         }
-        this._resultAssertion(
-            new TestAssertion().assertResult(childResult, ...messages));
+
+        this.assertResult(childResult, ...reasons);
+
         if (thrown !== undefined) {
             throw thrown;
         }
@@ -724,7 +730,11 @@ export function selfTests(t) {
     });
 
     const tGreater = t.child("tGreater");
+    t.assertResult(tGreater, "Breadth assert > 1 all.");
+    t.lastAssertion.showIfPassed = true;
     const tEven = t.child("tEven");
+    t.assertResult(tEven, "Breadth assert even all.");
+    t.lastAssertion.showIfPassed = true;
     [2, 4, 6, 200].forEach((evenNumber, index) => {
         tGreater.assertTrue(evenNumber > 1, "Breadth assert > 1", evenNumber);
         tGreater.lastAssertion.showIfPassed = true;
@@ -732,10 +742,6 @@ export function selfTests(t) {
             evenNumber % 2, 0, "Breadth assert even", evenNumber);
         tEven.lastAssertion.showIfPassed = true;
     });
-    t.assertResult(tGreater, "Breadth assert > 1 all.");
-    t.lastAssertion.showIfPassed = true;
-    t.assertResult(tEven, "Breadth assert even all.");
-    t.lastAssertion.showIfPassed = true;
 
     t.assertEqualArrays([], [], "assertEqualArrays empty.")
     const leftNumbers = [1, 2];
@@ -822,7 +828,7 @@ export class TestRunConsole extends TestRun {
             `Test "${testResult.name}"`,
             ` assertions:${testResult.assertions.length}`,
             " ",
-            testResult.passed === undefined ? "undefined"
+            testResult.passed === undefined ? "pass-fail undefined"
             : testResult.failed ? "failed" : "passed", "."
         ].join(""));
     }
@@ -842,7 +848,7 @@ export class TestRunConsole extends TestRun {
             // commented out.  
             //`${testResult.name} assertion ${index + 1}`, " ",
             assertion.name, " ",
-            assertion.passed === undefined ? "undefined"
+            assertion.passed === undefined ? "pass-fail undefined"
             : assertion.passed ? "passed" : "failed",
             assertion.messages === undefined ? "."
             : [".", ...assertion.messages].join(" ")
