@@ -1,4 +1,4 @@
-// (c) 2021 The ACE Centre-North, UK registered charity 1089313.
+// (c) 2022 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 /*
@@ -13,6 +13,9 @@ import ZoomBox from "./zoombox.js";
 import Limits from "./limits.js";
 import Controller from "./controller.js";
 
+import * as assert from "../unittesting/assert.js"
+import { Result } from "../unittesting/result.js";
+
 const limitsWidth = 100;
 const limitsHeight = 200;
 
@@ -25,140 +28,142 @@ function setLimitsRatios(limits) {
 }
 
 export default function dasherUnitTests(t) {
-    t.assertSubTest(paletteTest);
-    t.assertSubTest(limitsTest);
-    t.assertSubTest(zoomBoxTest);
-    t.assertSubTest(spawnTest);
-    t.assertSubTest(controllerTest);
+    t.sub(paletteTest);
+    t.sub(limitsTest);
+    t.sub(zoomBoxTest);
+    t.sub(spawnTest);
+    t.sub(controllerTest);
 }
 
 function paletteTest(t) {
-    const palette = t.assertNotUndefined(new Palette());
-    t.assertEqual(palette.codePoints.length, palette.indexMap.size);
-    t.assertEqual("a", palette.display_text("a".codePointAt(0)));
-    t.assertNotEqual(" ", palette.display_text(" ".codePointAt(0)));
+    const palette = t(assert.NotUndefined, new Palette());
+    t(assert.Equal, palette.codePoints.length, palette.indexMap.size);
+    t(assert.Equal, "a", palette.display_text("a".codePointAt(0)));
+    t(assert.NotEqual, " ", palette.display_text(" ".codePointAt(0)));
 }
 
 function limitsTest(t) {
-    const limits = t.assertNotUndefined(new Limits());
+    const limits = t(assert.NotUndefined, new Limits());
     limits.set(limitsWidth, limitsHeight);
-    t.assertEqual(limits.width, limitsWidth);
-    t.assertEqual(limits.height, limitsHeight);
-    t.assertTypeError(() => limits.solve_height(0));
+    t(assert.Equal, limits.width, limitsWidth);
+    t(assert.Equal, limits.height, limitsHeight);
+    const thrown = t(assert.Throw, () => limits.solve_height(0));
+    t(assert.Instance, thrown, TypeError);
     setLimitsRatios(limits);
 
-    t.assertUndefined(limits.solve_height(undefined));
-    t.assertUndefined(limits.solve_left(undefined));
-    t.assertNotUndefined(limits.solve_height(0));
+    t(assert.Undefined, limits.solve_height(undefined));
+    t(assert.Undefined, limits.solve_left(undefined));
+    t(assert.NotUndefined, limits.solve_height(0));
 }
 
 function zoomBoxTest(t) {
-    const palette = t.assertNotUndefined(new Palette());
-    const limits = t.assertNotUndefined(new Limits());
+    const palette = t(assert.NotUndefined, new Palette());
+    const limits = t(assert.NotUndefined, new Limits());
     limits.set(limitsWidth, limitsHeight);
     setLimitsRatios(limits);
 
-    t.assertNotUndefined(new ZoomBox());
-    t.assertNotUndefined(new ZoomBox(palette, []));
-    const zoomBox = t.assertNotUndefined(new ZoomBox(palette));
-    t.assertEqual(zoomBox.message.length, 0);
-    t.assertUndefined(zoomBox.readyToChildSpawn());
-    t.assertUndefined(zoomBox.readyToChildSpawn(limits));
+    t(assert.NotUndefined, new ZoomBox());
+    t(assert.NotUndefined, new ZoomBox(palette, []));
+    const zoomBox = t(assert.NotUndefined, new ZoomBox(palette));
+    t(assert.Equal, zoomBox.message.length, 0);
+    t(assert.Undefined, zoomBox.readyToChildSpawn());
+    t(assert.Undefined, zoomBox.readyToChildSpawn(limits));
     zoomBox.set_dimensions(limits.right + 10, 10, 0, 10);
-    t.assertFalse(
-        zoomBox.readyToChildSpawn(limits), "Unready if outside limits.");
+    t(assert.Equal, zoomBox.readyToChildSpawn(limits), false,
+     "unready-if-outside-limits");
     zoomBox.set_dimensions(limits.right - 10, 10, 0, 10);
-    t.assertTrue(zoomBox.readyToChildSpawn(limits),
-        "Ready if within limits.");
+    t(assert.Equal, zoomBox.readyToChildSpawn(limits), true,
+        "ready-if-within-limits");
 }
 
 function spawnTest(t) {
-    const palette = t.assertNotUndefined(new Palette());
-    const parentBox = t.assertNotUndefined(new ZoomBox(palette));
-    
-    const childBoxes = t.assertNotUndefined(
-        palette.spawnChildBoxes(parentBox));
-    t.assertEqual(childBoxes.length, palette.codePoints.length,
-        "Spawned one child box per palette code point.");
-    
-    const tChildCodePoints = t.child("ChildCodePoints");
-    const tChildMessageTexts = t.child("ChildMessageTexts");
-    t.assertResult(tChildCodePoints,
-        "All spawned child boxes have one more code point than the parent.");
-    // t.lastAssertion.showIfPassed = true;
-    t.assertResult(tChildMessageTexts,
-        "All spawned child boxes have correct message text.");
+    const palette = t(
+        assert.NotUndefined, new Palette(), "Palette-constructor");
+    const parentBox = t(
+        assert.NotUndefined, new ZoomBox(palette), "ZoomBox-constructor");
+
+    const childBoxes = t(assert.NotUndefined,
+        palette.spawnChildBoxes(parentBox), 'palette-spawnChildBoxes');
+    t(assert.Equal, childBoxes.length, palette.codePoints.length,
+        "Spawned one child box per palette code point");
+
+    // First approach, create two sub-results each with an assertion for each
+    // array element.
+    const tChildCodePoints = t(Result,
+        "Spawned child boxes have one more code point than the parent");
+    const tChildMessageTexts = t(Result,
+        "Spawned child boxes have correct message text");
     childBoxes.forEach((childBox, index) => {
-        tChildCodePoints.assertEqual(
+        tChildCodePoints(assert.Equal,
             parentBox.messageCodePoints.length + 1
             , childBox.messageCodePoints.length
-            , "Child has one more code point than parent.", childBox.message
+            , childBox.message
         );
-        // if (index === 5) tChildCodePoints.lastAssertion.showIfPassed = true;
 
         const paletteCodePoint = palette.codePoints[index];
-        let appendage = "";
-        if (index === 50) {
-            appendage = "f";
-        }
-        tChildMessageTexts.assertEqual(
-            childBox.message // + appendage
+        tChildMessageTexts(assert.Equal,
+            // Uncomment the + to induce a failure.
+            childBox.message // + (index === 50 ? "f" : "")
             , String.fromCodePoint(
                 ...parentBox.messageCodePoints, paletteCodePoint)
-            , "Child message text correct."
         );
 
     });
 
+    // Second approach, append two assertions for each array element.
     childBoxes.forEach((childBox, index) => {
         const assertionMessage = `childBoxes[${index}].`;
-        t.assertEqual(
+        t(assert.Equal,
             parentBox.messageCodePoints.length + 1,
             childBox.messageCodePoints.length,
-            "Child has one more code point than parent.", assertionMessage);
-        t.assertEqual(
-            childBox.message, // + (index === 30 ? "f" : ""),
-            String.fromCodePoint(
+            "Child has one more code point than parent", assertionMessage);
+        t(assert.Equal,
+            // Uncomment the + to induce a failure.
+            childBox.message // + (index === 50 ? "f" : "")
+            , String.fromCodePoint(
                 ...parentBox.messageCodePoints, palette.codePoints[index]),
-            "Child message text.", assertionMessage);
+            "Child message text", assertionMessage);
     });
 
 
     parentBox.childSpawn();
 
-    t.assertCompareArrays(
-        (left, right, index) => (
-            (
-                left.messageCodePoints.length
-                === right.messageCodePoints.length
-            )
-            && (
-                left.message // + (index === 50 ? "f" : "")
-                === right.message
-            )
-        ),
-        parentBox.childBoxes, childBoxes,
-        "parent childSpawn() same as palette childSpawn()."
-    );
     // Assert that the zoomBox.childBoxes array contents are the same as the
-    // childBoxes array. Could also assert that the palette method was
-    // called exactly once, by mocking.
+    // childBoxes array.
+    const tSpawns = t(Result,
+        "parent childSpawn() same as palette childSpawn()");
+    tSpawns(assert.Equal, parentBox.childBoxes.length, childBoxes.length,
+        "childBoxes arrays same length");
+    for(let index=0; index < childBoxes.length; index++) {
+        const left = parentBox.childBoxes[index];
+        const right = childBoxes[index];
+        tSpawns(assert.Equal,
+            left.messageCodePoints.length, right.messageCodePoints.length,
+            "messageCodePoints same length", index);
+        tSpawns(assert.Equal,
+            // Uncomment the + to induce a failure.
+            left.message, right.message //+ (index === 50 ? "f" : "")
+            , "message same", index);
+    }
+
+    // Could also assert that the palette method was called exactly once, by
+    // mocking.
 }
 
 function controllerTest(t) {
-    const palette = t.assertNotUndefined(new Palette());
-    const limits = t.assertNotUndefined(new Limits());
+    const palette = t(assert.NotUndefined, new Palette());
+    const limits = t(assert.NotUndefined, new Limits());
     limits.set(limitsWidth, limitsHeight);
     setLimitsRatios(limits);
 
-    const controller = t.assertNotUndefined(new Controller());
-    t.assertUndefined(controller.spawnRootZoomBox());
-    t.assertUndefined(controller.spawnRootZoomBox(limits));
-    const rootBoxPalette = t.assertNotUndefined(
+    const controller = t(assert.NotUndefined, new Controller());
+    t(assert.Undefined, controller.spawnRootZoomBox());
+    t(assert.Undefined, controller.spawnRootZoomBox(limits));
+    const rootBoxPalette = t(assert.NotUndefined,
         controller.spawnRootZoomBox(limits, 0, undefined, palette));
-    t.assertEqual(rootBoxPalette.message.length, 0);
+    t(assert.Equal, rootBoxPalette.message.length, 0);
 
-    const rootBox = t.assertNotUndefined(
+    const rootBox = t(assert.NotUndefined,
         controller.spawnRootZoomBox(limits, 0));
-    t.assertEqual(rootBox.message.length, 0, "Root box has empty message.");
+    t(assert.Equal, rootBox.message.length, 0, "Root box has empty message");
 }
