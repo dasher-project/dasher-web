@@ -1,4 +1,4 @@
-// (c) 2021 The ACE Centre-North, UK registered charity 1089313.
+// (c) 2022 The ACE Centre-North, UK registered charity 1089313.
 // MIT licensed, see https://opensource.org/licenses/MIT
 
 // Unit testing module
@@ -95,6 +95,18 @@ export class TestAssertion extends Error {
         this._set_message();
     }
 
+    static assertTypeEqual(left, right, reasons, name="assertTypeEqual") {
+        const leftType = typeof(left);
+        const rightType = typeof(right);
+
+        const assertion = new TestAssertion([...reasons,
+            `${name}(${left},${right},...) ${leftType} === ${rightType}.`
+        ]);
+
+        assertion.passed = (leftType === rightType);
+
+        return assertion;
+    }
 }
 
 export class TestResult {
@@ -233,6 +245,14 @@ export class TestResult {
         return assertion;
     }
 
+    assert(function_, parameters, reasons) {
+        this._assertionCount += 1;
+        this._resultAssertion(
+            function_.apply(null, [...parameters, reasons])
+        );
+        return parameters;
+    }
+
     _assertTypeEqual(left, right, suffix, ...reasons) {
         const leftType = typeof(left);
         const rightType = typeof(right);
@@ -249,9 +269,15 @@ export class TestResult {
         return assertion.passed;
     }
     assertTypeEqual(left, right, ...reasons) {
-        this._assertionCount += 1;
-        this._assertTypeEqual(left, right, [], ...reasons);
-        return [left, right];
+        // this._assertionCount += 1;
+        // this._assertTypeEqual(left, right, [], ...reasons);
+        // this._resultAssertion(
+        //     TestAssertion.assertTypeEqual(left, right, reasons)
+        // );
+        return this.assert(
+            TestAssertion.assertTypeEqual, [left, right], reasons
+        );
+        // return [left, right];
     }
 
     _assertInstanceOf(left, right, suffix, ...reasons) {
@@ -606,6 +632,7 @@ export function selfTests(t) {
     // Create a second TestResult object so that assertions can be made about
     // it. Any test failures here will throw.
     const tFail = new TestResult("tFail");
+    tFail.assertTypeEqual(true, 2, "Generate a throw");
 
     t.assertThrows(
         () => tFail.assertResult(tFail, "Deliberate circular assertResult."),
@@ -695,7 +722,6 @@ export function selfTests(t) {
     // Check that a sub-test that makes no assertions fails because its passed
     // property is undefined. Also check that the sub-test return value is
     // preserved, if it doesn't throw.
-    tFail.throwOnFail = false;
     const selfSubTestNoAssertions_ = tFail.assertSubTest(
         selfSubTestNoAssertions,
         "assertSubTest deliberate fail no assertions."
@@ -712,7 +738,6 @@ export function selfTests(t) {
     );
     t.assertEqual(selfSubTestNoAssertions_, selfSubTestNoAssertionsReturn,
         "assertSubTest return preserved after fail.");
-    tFail.throwOnFail = true;
 
     // Check a sub-test that makes assertions OK.
     const stReturn = t.assertSubTest(selfSubTest, "assertSubTest");
