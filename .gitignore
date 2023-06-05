@@ -5,3 +5,7 @@
 
 node_modules
 videos
+
+# Files created by the diagrams.net (aka draw.io) tool that don't get cleared up
+# sometimes.
+*.svg.bkp
