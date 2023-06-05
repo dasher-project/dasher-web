@@ -107,7 +107,10 @@ below.
 The following diagram illustrates the parameters and calculations made by a
 simple linear solver algorithm.
 
-![Diagram 4: Linear Solver](LinearSolver.svg)
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="LinearSolver_dark.svg" >
+    <img src="LinearSolver.svg">
+</picture>
 
 Notes on the diagram:
 
