@@ -68,7 +68,12 @@ A zooming user interface is one that can be described in the following terms.
 ## Zooming User Interface Diagram
 The following diagram illustrates the relationship between the zooming area and other user interface elements in the Dasher Version Six browser proof-of-concept.
 
-![Diagram 1: Zooming User Interface](UserInterfaceTerminology.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="UserInterfaceTerminology_exported-dark.svg" >
+    <img src="UserInterfaceTerminology.svg">
+</picture>
 
 Notes on the diagram:
 
