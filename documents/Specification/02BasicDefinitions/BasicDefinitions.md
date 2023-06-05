@@ -190,7 +190,12 @@ Notes on the diagram:
 ## Diagram for Dimension Terms, and Position and Size Terms
 The following diagram illustrates some of the terms defined above.
 
-![Diagram 3: Dimension Terms, and Position and Size Terms](DimensionTerminology.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="DimensionTerminology_exported-dark.svg" >
+    <img src="DimensionTerminology.svg">
+</picture>
 
 In this diagram, the lateral and sequential dimensions, and the forward and
 reverse directions, reflect the Dasher Version Six user interface designations.
