@@ -1,48 +1,159 @@
-<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="642px" height="360px" viewBox="-0.5 -0.5 642 360" content="&lt;mxfile pages=&quot;2&quot;&gt;&lt;diagram id=&quot;g4gpGZHWIscyPKEU3mQu&quot; name=&quot;Diagram&quot;&gt;7Ztdc9o4FIZ/DTO7FzC2ZQO+DNCks0tmMyXbZHvTUbDA2tgWFUqA/vpKRv6U+XKMISmZTGIdW0KWnvf46Fg0QN9f3lA4c2+Jg7yGoTnLBhg0DEMHbZv/E5aVtHS60jKl2JG2xDDCP5E0atL6gh00z1zICPEYnmWNYxIEaMwyNkgpWWQvmxAv+6kzOEWKYTSGnmp9wA5z19au0UnsnxGeutEn69Ed+zC6WN7J3IUOWaRM4FMD9CkhbH3kL/vIE6MXjcu63vWGs3HHKArYPhWGoPl807P96V+IdT8//v/zX9duylZeofcib7hHlrK/bBUNAiUvgYNEO1oD9OIbEYUx8fFYHnvwCXk9OH6ehhX6xCOUnwpIgEQ1RslzPIgmt0yw5+UumpCAXUMfe4KXr4g6MIDSLNkwRE3o4WnAC3Q98j1Ix9HpsIczOMbB9J7MuEVPWYZownImUScp9QhjxM9d8kXOb2ibERywECqrx3+1Fh+rPh8urWEN1keh1Sy0tgut3UKrxY91YeK/oLdwMUMj3h9xkwsuNm57RZRhjuqVHI0n2fmeikY0z7wGWqZMEpUbRHzE6IpfIs8CYK2rRMJtS4wXiQoMS9rclAIMUxqhVN40bjuBkx9IPotZveo/ui68Hdw/roKHKe6aqwen2VZYHUKGKOQV+SkQzs7VEs8VfFHgXAlXkMVMAqN3FTYFD7zONRb9C8nmpejyPUBP06elaPVC+npZNSHvKexZNJmbRTBnkLLcjYS2VEcTqO0CQJjo0mY6kJPxhRvZaGotu20AhYciHCIbRR5k+DXrVYsQkZ96J2SWfGSMX4SjnqNsTl7oGMlaaS+4o6F2Hlc+oFPEtjS0KrwFMpnMUaZGyHg8eOWx7yrYj9CPFz53WJCv7Um8y3zBiH4y+CNXfUz6NzrERBZWVQIwOnadAmjbWX9s5bndVwCmtr2dnfwfn3igEP8PpwcHdcQlRtm4JJTSIXGJGpbsjkoKgpITxiTrkcuN1IHPnP0jkvYGcFP607UCAYJjxSO2gum5+uGmZdUbhjhw7oZN629yt6dxrXGIcKhrtbo7GtrgW6vym1FMdCHygxFpdEsSmV/FKQ0dm0g1v6Cu2QbYR8EcE/X5noKVzFBw7/IY4CPHr2E53df8w9THjuOlullVQKu1dD2aq3oQB7k4tN2xSiKeD2i71l6IKwu6Zm0rOt3YrAotnP5EHGTCbczlJu1JZOa0P4ajP89aKFU689TNHKyVYy3+tBbQzFqTH6ZhZxA3tbJrv1xD+wYop9SKqWjlHlF/3hC5fMr/pp4eYplyR+aYxSUYOLGkznjtmMlpS/38hkvHjdLcf5GYexgYlqJT0y4QahU568L3K6qnzyTv3kfoM+b9RfTUsc8Rk3la9DqvpthHz1La0UvGPvGDYFND9SbzChWg+u8k1unzOaPbop0zFsVZrAdiTYiBXD2Kai1ggcjwX2iwouJgGY+AKK3SpTtEuS8KZZ57mFQlsjaoWWV2J7swKJsx5w21jHLr6HoCp0LdWYrurikJu5KESBfdvVV3G4WxBmLL/By86mgbVq0r9Pyb0vJJqFw2C3QOFU/kRGoTT0cRzzZNXBKp7yWRCmy7Zad+uuWIzif6dzRbXZK1EFZ1g8BwxBvaiuzJ3fglS1Q561ZFr7HyDb2DYEd9FXuRwEUC5UOWfENKxvX8JFDw8lcG/PtG+eeUEc3sprlkRKvcyBvtR09JslMgySq2zRSDWrDnnNP0ATj9jXd9VQCqpZ8O1Acy+3o1WHwbTtB37/bH35qh6QW5+2tCF5A63Ohgisbskrg/ZXxRf+LezCHaKb1TTNvRUL2J+0L81V24XxCf2jnaF/+TfteiWvTPMbyuH//Y1b4Vf2DsaOio+DdEYBx96259efLlRfDpFw==&lt;/diagram&gt;&lt;diagram id=&quot;RbQKHMFs8UtGEDLZiM8q&quot; name=&quot;Copyright and notes&quot;&gt;7VZLb9NAEP41luDQyI8mTY+JUxcE5UACHKutPbYX1t4wu3mUX8/Meu0kbZDaAxIH1Chef/PceXxpkKTN/hbFur7TBaggDot9kCyCOI6SyTU9GHn0yNXUIxXKwmMHYCl/gQdDj25kAeZE0WqtrFyfgrluW8jtCSYQ9e5UrdTqNOpaVPAMWOZCPUe/ycLWHTqNrw74O5BV3UeO+hs3olf2NzG1KPTuCEpugiRFrW13avYpKK5eX5fOLvuDdEgMobUvMZBJSFVdlHfx/a2Mttvr+/vxhfeyFWrjL7yqpeGGSVGhaNjedGEsPXTJ9a+BvhfC1IAsQv2dK0/1botef9MWToiwlUbqtuuQRc0ZkR0FmwXxJIgTanQyr63lfs44+zirpK03D6NcU/iscHEuhigZAkN0sAiUSNYIYzlWVuh801AxzJHjN/lbCsh/9Fi5xGfpDX2npIhw8UkjtSlOCfnyweVbSXYHfJO8FijtI52icHqdRMnoyPPd+xUJlMyhNazNLgwnFJ5eRq9JQW8wh5HGigBvQllmzsfg0Y+JfexnDzWXkdvH4mF++IVqI3N/VuIB1FzkPypnkGqlkUStboHNqOg/htmlqZuXUqknSiX1JhONVLymXwEL0QoP+5WM2FIoWbX0oqC0/Iq5l8YuwbXIZVut9LrPuAM+Ou1jxCfi3+baWmr1icZnv1IMrbXkplJJxnP6hKO4q3YYjBfdyaGXZ9HJWXR6Fh3TOWKIPn3hnhRqV0sLS8qRb70jziNsC2glMcbMV8dyAebP17PfNVKH/RHk1/UWdAMWedy89NIzR8+d4bUHdgcmmvRK9RELXXlMePKrBtcHfuDN6SjiFXQRn6ELHnklaGeEGjjAwM8N3Vs6qJC0lUwCpqt1p9KxSKlxJ7AYUOILQAPOCmnfHXWkTlCqjmWe0A9NqyeYpdwz8xgH08gAltwncgWGOiPYmRn921s2+b9lr9qy2jaK6/ZXFm4avXDf4vHrF45/yYbffic7+hcqufkN&lt;/diagram&gt;&lt;/mxfile&gt;">
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="663px" height="749px" viewBox="-0.5 -0.5 663 749" content="&lt;mxfile pages=&quot;2&quot;&gt;&lt;diagram id=&quot;g4gpGZHWIscyPKEU3mQu&quot; name=&quot;Diagram&quot;&gt;7Ztdc9o4FIZ/DTO7FzC2ZQO+DNCks0tmMyXbZHvTUbDA2tgWFUqA/vpKRv6U+XKMISmZTGIdW0KWnvf46Fg0QN9f3lA4c2+Jg7yGoTnLBhg0DEMHbZv/E5aVtHS60jKl2JG2xDDCP5E0atL6gh00z1zICPEYnmWNYxIEaMwyNkgpWWQvmxAv+6kzOEWKYTSGnmp9wA5z19au0UnsnxGeutEn69Ed+zC6WN7J3IUOWaRM4FMD9CkhbH3kL/vIE6MXjcu63vWGs3HHKArYPhWGoPl807P96V+IdT8//v/zX9duylZeofcib7hHlrK/bBUNAiUvgYNEO1oD9OIbEYUx8fFYHnvwCXk9OH6ehhX6xCOUnwpIgEQ1RslzPIgmt0yw5+UumpCAXUMfe4KXr4g6MIDSLNkwRE3o4WnAC3Q98j1Ix9HpsIczOMbB9J7MuEVPWYZownImUScp9QhjxM9d8kXOb2ibERywECqrx3+1Fh+rPh8urWEN1keh1Sy0tgut3UKrxY91YeK/oLdwMUMj3h9xkwsuNm57RZRhjuqVHI0n2fmeikY0z7wGWqZMEpUbRHzE6IpfIs8CYK2rRMJtS4wXiQoMS9rclAIMUxqhVN40bjuBkx9IPotZveo/ui68Hdw/roKHKe6aqwen2VZYHUKGKOQV+SkQzs7VEs8VfFHgXAlXkMVMAqN3FTYFD7zONRb9C8nmpejyPUBP06elaPVC+npZNSHvKexZNJmbRTBnkLLcjYS2VEcTqO0CQJjo0mY6kJPxhRvZaGotu20AhYciHCIbRR5k+DXrVYsQkZ96J2SWfGSMX4SjnqNsTl7oGMlaaS+4o6F2Hlc+oFPEtjS0KrwFMpnMUaZGyHg8eOWx7yrYj9CPFz53WJCv7Um8y3zBiH4y+CNXfUz6NzrERBZWVQIwOnadAmjbWX9s5bndVwCmtr2dnfwfn3igEP8PpwcHdcQlRtm4JJTSIXGJGpbsjkoKgpITxiTrkcuN1IHPnP0jkvYGcFP607UCAYJjxSO2gum5+uGmZdUbhjhw7oZN629yt6dxrXGIcKhrtbo7GtrgW6vym1FMdCHygxFpdEsSmV/FKQ0dm0g1v6Cu2QbYR8EcE/X5noKVzFBw7/IY4CPHr2E53df8w9THjuOlullVQKu1dD2aq3oQB7k4tN2xSiKeD2i71l6IKwu6Zm0rOt3YrAotnP5EHGTCbczlJu1JZOa0P4ajP89aKFU689TNHKyVYy3+tBbQzFqTH6ZhZxA3tbJrv1xD+wYop9SKqWjlHlF/3hC5fMr/pp4eYplyR+aYxSUYOLGkznjtmMlpS/38hkvHjdLcf5GYexgYlqJT0y4QahU568L3K6qnzyTv3kfoM+b9RfTUsc8Rk3la9DqvpthHz1La0UvGPvGDYFND9SbzChWg+u8k1unzOaPbop0zFsVZrAdiTYiBXD2Kai1ggcjwX2iwouJgGY+AKK3SpTtEuS8KZZ57mFQlsjaoWWV2J7swKJsx5w21jHLr6HoCp0LdWYrurikJu5KESBfdvVV3G4WxBmLL/By86mgbVq0r9Pyb0vJJqFw2C3QOFU/kRGoTT0cRzzZNXBKp7yWRCmy7Zad+uuWIzif6dzRbXZK1EFZ1g8BwxBvaiuzJ3fglS1Q561ZFr7HyDb2DYEd9FXuRwEUC5UOWfENKxvX8JFDw8lcG/PtG+eeUEc3sprlkRKvcyBvtR09JslMgySq2zRSDWrDnnNP0ATj9jXd9VQCqpZ8O1Acy+3o1WHwbTtB37/bH35qh6QW5+2tCF5A63Ohgisbskrg/ZXxRf+LezCHaKb1TTNvRUL2J+0L81V24XxCf2jnaF/+TfteiWvTPMbyuH//Y1b4Vf2DsaOio+DdEYBx96259efLlRfDpFw==&lt;/diagram&gt;&lt;diagram id=&quot;RbQKHMFs8UtGEDLZiM8q&quot; name=&quot;Copyright and notes&quot;&gt;7VZLb9NAEP41luDQyI8mTY+JUxcE5UACHKutPbYX1t4wu3mUX8/Meu0kbZDaAxIH1Chef/PceXxpkKTN/hbFur7TBaggDot9kCyCOI6SyTU9GHn0yNXUIxXKwmMHYCl/gQdDj25kAeZE0WqtrFyfgrluW8jtCSYQ9e5UrdTqNOpaVPAMWOZCPUe/ycLWHTqNrw74O5BV3UeO+hs3olf2NzG1KPTuCEpugiRFrW13avYpKK5eX5fOLvuDdEgMobUvMZBJSFVdlHfx/a2Mttvr+/vxhfeyFWrjL7yqpeGGSVGhaNjedGEsPXTJ9a+BvhfC1IAsQv2dK0/1botef9MWToiwlUbqtuuQRc0ZkR0FmwXxJIgTanQyr63lfs44+zirpK03D6NcU/iscHEuhigZAkN0sAiUSNYIYzlWVuh801AxzJHjN/lbCsh/9Fi5xGfpDX2npIhw8UkjtSlOCfnyweVbSXYHfJO8FijtI52icHqdRMnoyPPd+xUJlMyhNazNLgwnFJ5eRq9JQW8wh5HGigBvQllmzsfg0Y+JfexnDzWXkdvH4mF++IVqI3N/VuIB1FzkPypnkGqlkUStboHNqOg/htmlqZuXUqknSiX1JhONVLymXwEL0QoP+5WM2FIoWbX0oqC0/Iq5l8YuwbXIZVut9LrPuAM+Ou1jxCfi3+baWmr1icZnv1IMrbXkplJJxnP6hKO4q3YYjBfdyaGXZ9HJWXR6Fh3TOWKIPn3hnhRqV0sLS8qRb70jziNsC2glMcbMV8dyAebP17PfNVKH/RHk1/UWdAMWedy89NIzR8+d4bUHdgcmmvRK9RELXXlMePKrBtcHfuDN6SjiFXQRn6ELHnklaGeEGjjAwM8N3Vs6qJC0lUwCpqt1p9KxSKlxJ7AYUOILQAPOCmnfHXWkTlCqjmWe0A9NqyeYpdwz8xgH08gAltwncgWGOiPYmRn921s2+b9lr9qy2jaK6/ZXFm4avXDf4vHrF45/yYbffic7+hcqufkN&lt;/diagram&gt;&lt;/mxfile&gt;">
     <defs/>
     <g>
-        <rect x="1" y="281" width="640" height="70" fill="none" stroke="none" pointer-events="all"/>
+        <rect x="296" y="136" width="250" height="240" fill="none" stroke="rgb(0, 0, 0)" stroke-width="4" pointer-events="all"/>
         <g transform="translate(-0.5 -0.5)">
             <switch>
                 <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 638px; height: 1px; padding-top: 288px; margin-left: 3px;">
-                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
-                            <div style="display: inline-block; font-size: 12px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                This diagram is part of the Dasher project and is under revision control here:
-                                <br/>
-                                https://github.com/dasher-project/redash/tree/master/documents
-                                <br/>
-                                (c) 2020 The ACE Centre-North, UK registered charity 1089313.
-                                <br/>
-                                MIT licensed, see https://opensource.org/licenses/MIT
-                                <div>
-                                    <br/>
-                                </div>
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-end; justify-content: unsafe flex-end; width: 228px; height: 1px; padding-top: 363px; margin-left: 306px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: right;">
+                            <div style="display: inline-block; font-size: 24px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                Box
                             </div>
                         </div>
                     </div>
                 </foreignObject>
-                <text x="3" y="300" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="12px">
-                    This diagram is part of the Dasher project and is under revision control here:...
+                <text x="534" y="363" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="24px" text-anchor="end">
+                    Box
                 </text>
             </switch>
         </g>
-        <rect x="1" y="1" width="640" height="250" fill="none" stroke="none" pointer-events="all"/>
+        <path d="M 121 86 L 121 616" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
+            <text x="129.5" y="127.5">
+                Lateral
+            </text>
+            <text x="129.5" y="149.5">
+                Axis
+            </text>
+        </g>
+        <path d="M 656 516 L 1 516" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
         <g transform="translate(-0.5 -0.5)">
             <switch>
                 <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 638px; height: 1px; padding-top: 8px; margin-left: 3px;">
-                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
-                            <div style="display: inline-block; font-size: 16px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                The lateral and sequential dimensions, and the forward and reverse direction, reflect the Dasher Version Six user interface designations.
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-end; justify-content: unsafe flex-end; width: 1px; height: 1px; padding-top: 510px; margin-left: 627px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: right;">
+                            <div style="display: inline-block; font-size: 18px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
+                                Sequential Axis
                             </div>
                         </div>
                     </div>
                 </foreignObject>
-                <text x="3" y="24" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="16px">
-                    The lateral and sequential dimensions, and the forward and reverse direction, re...
+                <text x="627" y="510" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px" text-anchor="end">
+                    Sequen...
                 </text>
             </switch>
+        </g>
+        <rect x="21" y="516" width="100" height="30" fill="none" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
+            <text x="118.5" y="539.5">
+                Origin
+            </text>
+        </g>
+        <path d="M 656 136 L 546 136" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
+        <path d="M 656 256 L 296 256" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
+        <path d="M 301 651 L 301 565.47" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 305 575.24 L 301 563.24 L 297 575.24" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
+            <text x="295.5" y="596.5">
+                Lateral
+            </text>
+            <text x="295.5" y="618.5">
+                Dimension
+            </text>
+        </g>
+        <path d="M 390 371.53 L 390 140.47" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 386 361.76 L 390 373.76 L 394 361.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 394 150.24 L 390 138.24 L 386 150.24" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
+            <text x="394.5" y="187.5">
+                Lateral Size
+            </text>
+            <text x="394.5" y="209.5">
+                of the box (LS)
+            </text>
+        </g>
+        <rect x="1" y="1" width="490" height="40" fill="none" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="24px">
+            <text x="2.5" y="31.5">
+                Terms for Dimension, Position, and Size
+            </text>
+        </g>
+        <path d="M 271 691 L 356.53 691" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 346.76 695 L 358.76 691 L 346.76 687" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="middle" font-size="18px">
+            <text x="314.5" y="682.5">
+                Sequential Dimension
+            </text>
+        </g>
+        <path d="M 358 516 L 358.25 260.47" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 362.24 270.24 L 358.25 258.24 L 354.24 270.23" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
+            <text x="352.55" y="436.5">
+                Lateral Centre
+            </text>
+            <text x="352.55" y="458.5">
+                of the box
+            </text>
+        </g>
+        <path d="M 121 256 L 291.53 256" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 281.76 260 L 293.76 256 L 281.76 252" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
+            <text x="259.5" y="228.5">
+                Front Position
+            </text>
+            <text x="259.5" y="250.5">
+                of the box
+            </text>
+        </g>
+        <path d="M 656 376 L 546 376" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
+        <path d="M 616 140.47 L 616 251.53" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 620 150.24 L 616 138.24 L 612 150.24" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 612 241.76 L 616 253.76 L 620 241.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
+            <text x="620.5" y="204.5">
+                LS/2
+            </text>
+        </g>
+        <path d="M 616 260.47 L 616 371.53" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 620 270.24 L 616 258.24 L 612 270.24" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 612 361.76 L 616 373.76 L 620 361.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
+            <text x="620.5" y="324.5">
+                LS/2
+            </text>
+        </g>
+        <rect x="296" y="96" width="70" height="30" fill="none" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
+            <text x="297.5" y="107.5">
+                Front
+            </text>
+            <text x="297.5" y="129.5">
+                of the box
+            </text>
+        </g>
+        <rect x="476" y="96" width="70" height="30" fill="none" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
+            <text x="543.5" y="107.5">
+                Back
+            </text>
+            <text x="543.5" y="129.5">
+                of the box
+            </text>
+        </g>
+        <path d="M 376 736 L 461.53 736" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 451.76 740 L 463.76 736 L 451.76 732" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="middle" font-size="18px">
+            <text x="419.5" y="727.5">
+                Forward direction
+            </text>
+        </g>
+        <path d="M 195.47 736 L 281 736" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 205.24 732 L 193.24 736 L 205.24 740" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="middle" font-size="18px">
+            <text x="234.5" y="727.5">
+                Reverse direction
+            </text>
         </g>
     </g>
     <switch>
