@@ -1,4 +1,5 @@
-Summary of Deliverables  
+# Summary of Deliverables
+
 Milestone 1 and its associated deliverables are available for viewing at https://github.com/dasher-project/dasher-web/projects/1
 
 > A version control repository shall be created to house the Dasher-Web implementation.

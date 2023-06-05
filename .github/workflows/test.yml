@@ -1,0 +1,24 @@
+name: Test/release
+
+on: push
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install Modules
+        run: cd tests && npm install
+
+      - name: Jest Tests (Unit)
+        run: cd tests && npm run test
+
+      - name: Cypress Tests (E2E)
+        run: cd tests && npm run cy:test

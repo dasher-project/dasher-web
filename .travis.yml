@@ -1,9 +1,0 @@
-language: node_js
-node_js:
-- '13'
-script:
-- cd tests
-- npm install
-- npm run test
-notifications:
-  slack: acecentre:eL6ESfINIBwT8r8qWNtfLzBE

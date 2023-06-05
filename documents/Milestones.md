@@ -28,6 +28,8 @@ This task will setup the technical infrastructure for the project, make sure tha
 
 Donation for completing this milestone: €5200
 
+**COMPLETED** - You can see the [outputs of this milestone here](./Milestone-2.md)
+
 This task creates desktop alpha releases of for at least Linux, Mac OS and Microsoft Windows. In addition a code style is agreed upon, this will be enforced automatically. The outcomes are ready to be reviewed by Accessibility Foundation and Radically Open Security.
 
 - A code style guideline shall be authored and committed to the Dasher-Web repository.
