@@ -1,0 +1,27 @@
+// This is a workspace declaration to facilitate use of VSCode and VSCodium to
+// edit the contents of this directory.
+// See https://code.visualstudio.com/docs/editor/multi-root-workspaces
+{
+    "folders": [
+        { "path": ".", "name": "Dasher Web"}
+    ],
+    "settings": {
+        // Variable names are documented in the VSCod[e|ium] Settings.  
+        // Search for "window title".
+        "window.title": "${activeEditorShort}${separator}${folderName}"
+    },
+    "extensions": {
+        "recommendations": [
+            // Plugin to open diagrams.net aka draw.io diagrams in VSCod[e|ium].
+            "hediet.vscode-drawio",
+            
+            // Word wrapping for Markdown and comments.
+            "stkb.rewrap",
+            
+            // Plugin to open PDF files in VSCod[e|ium].
+            "tomoki1207.pdf"
+        ]
+    }
+}
+// (c) 2023 The ACE Centre-North, UK registered charity 1089313.  
+// MIT licensed, see https://opensource.org/licenses/MIT
