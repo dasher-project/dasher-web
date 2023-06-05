@@ -71,7 +71,12 @@ The rule set is as follows.
 ## Zooming Rule Diagrams
 The following diagram illustrates the Size Map Rule and the Size Increase Rule.
 
-![Diagram 4:Size Map Rule and Size Increase Rule](SizeMapAndIncreaseRules.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="SizeMapAndIncreaseRules-exported-dark.svg" >
+    <img src="SizeMapAndIncreaseRules.svg">
+</picture>
 
 Notes on the diagram:
 
