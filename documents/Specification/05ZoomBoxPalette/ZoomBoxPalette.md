@@ -77,7 +77,12 @@ nodes.
 -   Principal nodes, A to G.
 -   Group nodes, H and J.
 
-![Diagram 5: Palette Hierarchy](PaletteHierarchy.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="PaletteHierarchy_exported-dark.svg" >
+    <img src="PaletteHierarchy.svg">
+</picture>
 
 Node paths are numbered from one in the diagram. Index values are zero-based in
 the code.
@@ -118,7 +123,12 @@ in the specification.
 The following diagram shows a live hierarchy based on the palette in the other
 diagram.
 
-![Diagram 5: Hierarchy Correspondence](HierarchyCorrespondence.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="HierarchyCorrespondence_exported-dark.svg" >
+    <img src="HierarchyCorrespondence.svg">
+</picture>
 
 The palette hierarchy is repeated at:
 
@@ -164,7 +174,12 @@ user interface will be filled with a colour.
 The following diagram illustrates rectangle colours in a screen capture of the
 Dasher Version Six proof-of-concept browser user interface.
 
-![Diagram 6: Rectangle Colour](RectangleColour.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="RectangleColour_exported-dark.svg" >
+    <img src="RectangleColour.svg">
+</picture>
 
 (Zoom box outlines have been switched on, for clarity. Outlines aren't shown by
 default.)
@@ -212,7 +227,13 @@ the same principal node don't always have the same colour specifier.
 This is illustrated in the following screen capture from the Dasher Version Six
 proof of concept.
 
-![Diagram 7: Sequence Colours](SequenceColours.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="SequenceColours_exported-dark.svg" >
+    <img src="SequenceColours.svg">
+</picture>
+
 
 The three called out zoom boxes correspond to the same principal node in the
 palette, and have the same incremental text, "a". Their rectangles aren't all
@@ -252,7 +273,8 @@ The sequence colour of a zoom box in the hierarchy can be determined as follows.
     -   A child box's ordinal value can be determined as follows.
 
         1.  Determine the box's *ordinal parent* by ascending the zoom box
-            hierarchy from child to parent until a box is reached that doesn't correspond to a group node in the palette.
+            hierarchy from child to parent until a box is reached that doesn't
+            correspond to a group node in the palette.
 
             Note that the root box doesn't correspond to a group node, so there
             will always be an ordinal parent.
@@ -283,9 +305,15 @@ The zoom box palette in the Dasher Version Six proof-of-concept code can be used
 as an example to illustrate the above descriptions.
 
 ## Example Palette Diagram
-The following diagram is a representation of the zoom box palette in the Dasher Version Six proof-of-concept.
+The following diagram is a representation of the zoom box palette in the Dasher
+Version Six proof-of-concept.
 
-![Diagram 8: Palette Example](PaletteExample.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="PaletteExample_exported-dark.svg" >
+    <img src="PaletteExample.svg">
+</picture>
 
 Group nodes are shown as ellipses. Each is labelled with its template colour
 specifier, and filled with its default display colour.
