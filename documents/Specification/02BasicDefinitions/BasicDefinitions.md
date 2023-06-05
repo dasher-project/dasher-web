@@ -165,7 +165,12 @@ A zoom box rectangle has four sides:
 The following diagram illustrates some of the terms defined above. It is based
 on a screen capture image of the Dasher Version Six zooming area.
 
-![Diagram 2: Zoom Box Terms and Text Terms](ZoomBoxTerminology.svg)
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="ZoomBoxTerminology_exported-dark.svg" >
+    <img src="ZoomBoxTerminology.svg">
+</picture>
 
 Notes on the diagram:
 
