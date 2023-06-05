@@ -74,7 +74,7 @@ The following diagram illustrates the Size Map Rule and the Size Increase Rule.
 <picture>
     <source
         media="(prefers-color-scheme: dark)"
-        srcset="SizeMapAndIncreaseRules-exported-dark.svg" >
+        srcset="SizeMapAndIncreaseRules_exported-dark.svg" >
     <img src="SizeMapAndIncreaseRules.svg">
 </picture>
 

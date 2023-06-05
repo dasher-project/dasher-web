@@ -108,7 +108,9 @@ The following diagram illustrates the parameters and calculations made by a
 simple linear solver algorithm.
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="LinearSolver_dark.svg" >
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="LinearSolver_exported-dark.svg" >
     <img src="LinearSolver.svg">
 </picture>
 
