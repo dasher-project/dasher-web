@@ -9,10 +9,27 @@ The image files in the specification are created and edited with the
 [diagrams.net](https://diagrams.net) tool, aka the draw.io tool. The tool has a
 desktop app edition, and an unofficial plugin for VSCode and VSCodium.
 
-Images are saved as *editable SVG* files. The tool embeds the image source into
-the SVG. This is preferable to having two files like a .drawio file and then
-exporting to .svg format. However, it seems necessary to export in order to
-support dark mode in GitHub.
+-   Save images as *editable SVG* files. The tool embeds the image source into
+    the SVG. This is preferable to having two files like a .drawio file and then
+    exporting to .svg format. However, it seems necessary to export in order to
+    support dark mode in GitHub.
+
+    This screen capture shows the correct save-as option in the desktop tool
+    for macOS.
+
+    ![](Screen_DiagramsDotNetDesktop_SaveAsEditiable-SVG.png)
+
+-   Make diagrams that support dark mode by removing these declarations from the
+    style of individual graphic elements.
+
+    -   fontColor
+    -   strokeColor
+
+    Or you can set them to `default`. See also this SO question and answer.  
+    [https://stackoverflow.com/questions/75950638/automatic-fill-colour-but-opposite-to-theme-in-diagrams-net-aka-draw-io](https://stackoverflow.com/questions/75950638/automatic-fill-colour-but-opposite-to-theme-in-diagrams-net-aka-draw-io)
+
+-   Use the typeface `Verdana` for all fonts. That typeface is included in the
+    tool by default and shouldn't require downloading or embedding.
 
 # How to add images with dark mode support
 Check these notes for how to add images to the Markdown so that GitHub renders
