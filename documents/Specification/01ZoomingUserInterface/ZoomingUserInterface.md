@@ -23,7 +23,7 @@ A zooming user interface is one that can be described in the following terms.
     -   Other elements of the zooming UI are superimposed in front of the
         zooming area.
 
-    For example, in Dasher Version Six proof-of-concept:
+    For example, in the Dasher Version Six proof-of-concept:
     
     -   In the browser UI, the control panel and message bar are adjacent to and
         above the zooming area, and the copyright and license statement is
