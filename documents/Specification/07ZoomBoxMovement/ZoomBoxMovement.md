@@ -23,17 +23,19 @@ the screen. The user can control the pointer by these mechanisms.
 -   Touching the screen, on a smartphone, tablet or other device that has a
     touch screen.
 
-Controllers are discussed in detail elsewhere in the specification.
+Controllers are discussed in detail elsewhere in the specification. That discussion includes
+
+-   how vector values are generated.
+-   how a target zoom box is selected.
 
 Zooming moves are processed the same regardless of the type of controller that
 generated the move.
 
-# Zoom Box Movement Processing
-The user interface processes each move as follows.
+# Zoom Box Movement Processing Steps
+The user interface processing for each move is described below as a sequence of
+steps.
 
-To illustrate
-
-
+This example move vector and target are used to illustrate the processing.
 
 Object      | Attribute            | Original Value
 ------------|----------------------|---------------
@@ -43,6 +45,9 @@ Target      | Lateral size         | 150
 Move vector | Sequential component | -30
 Move vector | Lateral component    | 20
 
+The description of each step includes a list of updated attributes.
+
+Processing steps are as follows.
 
 1.  Add the vector's sequential and lateral components to the target's front
     position and lateral centre.
@@ -53,14 +58,16 @@ Move vector | Lateral component    | 20
     Target | Lateral centre | 200    | 220
 
 2.  Update the target's lateral size by invoking the solve lateral size
-    function on its front position.
+    function passing in its front position.
 
     Object | Attribute      |Original|Updated
     -------|----------------|--------|-------
     Target | Front position |        | 70
     Target | Lateral size   | 150    | 180
 
-    Solver isn't discussed here but moving left will increase the size.
+    For the purposes of illustration, the mapped size is assumed to be 180. The
+    zooming solver isn't discussed here but decreasing front position will
+    increase size.
 
 3.  Update the target's parent's lateral size based on the target's child weight
     and new lateral size. This step is the start of the *Parent Update*.
@@ -68,7 +75,7 @@ Move vector | Lateral component    | 20
     Object | Attribute    |Original|Updated
     -------|--------------|--------|-------
     Target | Child weight | 0.1    |
-    Target | Lateral size | 150    | 180
+    Target | Lateral size |        | 180
     Parent | Lateral size | 1500   | 1800
 
 4.  Update the target's siblings' lateral sizes based on their child weights and
@@ -86,7 +93,12 @@ Move vector | Lateral component    | 20
     Only two siblings have been shown. In a typical zoom box there would be up
     to 25 in a hierarchical palette, or around 70 in a flat palette.
 
-5.  Update the target's siblings' lateral centres so that they don't overlap
+5.  Update the siblings' front positions by invoking the solve front position
+    function passing in each of their updated lateral sizes.
+
+
+
+6.  Update the target's siblings' lateral centres so that they don't overlap
     with the updated lateral centre and size of the target.
 
     Object      | Attribute      |Original|Updated
@@ -103,9 +115,8 @@ Move vector | Lateral component    | 20
     target's parent, the target is the second, and Sibling 2 is the third.
     Further siblings aren't shown.
 
-6.  Update the target's parent's lateral centre based on its updated lateral
-    size and the updated lateral centre and size of its first child. This step
-    is the end of the parent update.
+7.  Update the target's parent's lateral centre based on its updated lateral
+    size and its first child's updated lateral centre and size.
 
     Object      | Attribute      |Original|Updated
     ------------|----------------|--------|-------
@@ -120,11 +131,21 @@ Move vector | Lateral component    | 20
                            = -230
         Parent lateral centre = Parent lateral top + ( Parent lateral size / 2 )
                               = -230 + 900
+                              = 670
 
-7.  Ascend the hierarchy from the parent of the target parent to the root box
-    and apply the parent update, steps 3 to 6, to each box.
 
-8.  For each box that moved or changed size during the parent update, process a
+8.  Update the parent's front position by invoking the solve front position
+    function passing in its updated lateral size. This step is the end of the
+    parent update.
+
+
+
+
+
+9.  Ascend the hierarchy from the parent of the target parent to the root box
+    and apply the parent update, steps 3 to 7, to each box.
+
+10. For each box that moved or changed size during the parent update, process a
     *Child Update* as follows.
 
     -   If the parent already has child boxes
@@ -135,8 +156,15 @@ Move vector | Lateral component    | 20
     -   If the parent didn't have child boxes, and increased in size and crossed
         the child spawning threshold, process child spawning.
 
+That completes processing of a zooming move.
 
+# Zoom Box Movement Processing Diagrams
+These diagrams illustrate the processing with reference to the processing steps,
+above.
 
+![](MoveProcessing01.svg)
+
+![](MoveProcessing02.svg)
 
 # Next Section
 The next section in the specification is TBD.
