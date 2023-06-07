@@ -1,133 +1,54 @@
-<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="548px" height="553px" viewBox="-0.5 -0.5 548 553" content="&lt;mxfile pages=&quot;2&quot;&gt;&lt;diagram id=&quot;g4gpGZHWIscyPKEU3mQu&quot; name=&quot;Diagram&quot;&gt;7Ztdb+I4FIZ/DdLsBVXsxEAuC0xntGolduhsmb1zEwNWQ8wGt4X99WsndkjsMHw0BaoiVZ34xD6xnee8PnamDbc3W35L8Hx6x0ISNaATLhtuvwEh9DzxWxpWmcF1ncwwSWiYmcDaMKT/EWXU1Z5pSBalipyxiNN52RiwOCYBL9lwkrDXcrUxi8pPneMJsQzDAEe29YGGfJpZO7C9tn8ndDLVTwYtP7szw7qyGsliikP2WjC5XxtuL2GMZ1ezZY9Ecu70vGTtbjbczTuWkJjv0uC6N5pO8V3/frSKHya0460ewiZQr+cFR89qxP8wNhOWLluK33fshczkA6AzSFhAFgsaT+RgOJmLf1TrBV/p+UrYcxwS+Uin4XbzMctCwGY0UNcRfiRRFwdPk7RBj0UsEbdiFhPZjCfsKZ9vMVPdMY0io9KYxfwGz2gkyfqbJCGOsTIrjKAnyjiik1gUIjLmspgE+m7awTkOxIju2Vz3ODPcprWLFtURVeoyzsU0lWr8UBhI05zRmKfooa74ca7ENPXETDkN1M+uUqtXaW1VWjuVViSugTSJHz1xxkTZoCh2XkjCybJgUuB8I2xGeLISVXQYa4hVFIO2Kr+uY8LzlW1aiAdP2bAKw0nuek2quFCwbiDdsRi9xZwkWFa6XtKFBSGJw2sZ+2VY1HsHnUrCRJsbKvuQvj9R0tV3wNWEyGCuHBMkekx7JmefCqHZjPKC44QbA0lthY6u6fRFSfu8Vh14VJhuZoCEJf3bSEBTAOj5wHrrqOKla1tCIszpS1lJq0hQTx3IoFk/Ejll6HK/2sWCPScBUa2KyrfFURsajsScTgj/jSNdkY3HC1Kqk8KbT9duPEOL5/sraEEstHMuL8VL4xRHP8TqhuOJvNvVr7UPRIGn2IFqkaxQUiMSkoJqbeDQwNmEbEbDMCIlFpGOmQFbUE6ZrKYelDe/Ne6bbnKJbUJkBllmqkHYkF4AFRqe17IQd1s24tr2Jl1zLQ6G5N9nMRi6j7RN+SzSAJxE5QLRY5K8s86Z0KXUG8TVIXI+bPvHFLk2QCUAc63aV+TMJdpydGSRa1lwnyvLTYSOu2aHeDFNXYO032JOR/kgROGXLFwhXewvizf7K11aUj7SPsR1oZUorRvJgm5zeIAcacVHBsMuOjAYtjnaEAwHgP4L3ZG//hyB2XLoD+Y/R21AYFNvDwv0D67Ax13iq9S2tvXd2oc14W9h3WPbYmDgImSv7g6oWt5r2LdUk9GxyPC1UldL42PEgqc9BRGUBBGexw5GD6Qoh0CXC13dmF+WdFMWBpiLzCNOLdABdaQAYqfebneOmQHAdl2iZzjKU4vTZACV+Lt2znvB/6zwdxCyt0BHxD/X6Lfiv+ua/074Q2SRPqSPkcBMvqwvQ/BHirxc+eWJqphzF2Qnh2rFFP2JQ1lHogGdIbiy4+TDJBAnPiOwUoaKINkYE/nBpia0Y2cRrYoAqSOHgJdt1LluowxJ3Ymo40iqayihZyYCOx+coi2O6ttGVeyYPC2hZ5gYaKH6YJnBIcyuE2PfO+r5v9eqCWPT0YmPxiq2gBdNv2j6lmAwjnc979Bg8Lc4qlHTfQt0gM53s/eJNP1IzHp1CbjpaEdm30vAoc11+3xzlU94iAE8eNSveNDfkmHsfIhhOjrtIYarj9wvCn5R8Ebh6OPNCn7as2nXVvBLCt64pOB7peCHB8OmA8X6U/CK7y1DcPkSvZtCe+sn7fax+m3HzPqzo6ai4j8itaFNt7a95ZjZtT9WgM75rvMfM6M9X2VDwKlGb+8DY3Bey7z99eSC9efF+vDvIKYjBI6ItSiu/0ooq77+Uyv36/8=&lt;/diagram&gt;&lt;diagram id=&quot;RbQKHMFs8UtGEDLZiM8q&quot; name=&quot;Copyright and notes&quot;&gt;7VZLj9owEP41kdoDKI+ShSMEsq3araoubY8rE5vEXScTOebVX98Zx4Gw0NXuoVIPFSixv3n6G8+AFyXl/lazurgDLpQX+nzvRXMvDONxgE8CDi0w9sctkGvJWyg4Affyl3Cg79CN5KI5UzQAysj6HMygqkRmzjCmNezO1dagzqPWLBcXwH3G1CX6Q3JTuFOENyf8vZB50UUO4kkrKVmn7E7SFIzDrgdFCy9KNIBpV+U+EYq463hp7dI/SI+JaVGZlxjIyEdW5+u78OFWBtvt5OFhNHBetkxt3IGXhWyoXpLlmpVk37RhDL5gTfwXAp9z1hRCk0jDT2Ie+a54p7+puBVqsZWNhKqtkNFAGaEdBpt6YeyFERY6mhXGUD2nlH2Y5tIUm9UwAwyfchtncIySakEQLowWmEhassZQrJRDtimRjKbn+E32FgPiJ8LX0iY+TRb4TFBRi8Fn0FimMEHk20ebby7JnaCTZAXT0hxwFfjjSRREw57nuw9LFCiZiaohbXLRUEL++WGgRgXY6EwMQecIOBPMMrU+jh7dNTGH7u5pIBqpfCQ+3h/aIDcyc2vFVkLNWPaYW4MEFGgUVVAJMkPSH493F2/dbC2VeqK0xtqkrJSKuvS70JxVzMGuJQOyZErmFW6UWBva6sxJQ5tgzTJZ5Uuou4xb4JPV7iMuEbebgTFY6jONr66lCKpBUlGRktEMv/4wbNn2vdG8XVn03VU0voqOr6IjXAcE4bcj7glRu0IacY850ql3OPEQ2wptJE6MqWPHEAGzy/bseg3Vxb4HuXa9FVAKo+m6Oek7NzkO3UicOGB3mkRxp1T0ptCNw5gbfvnR9Wk+UOe0I+IV4yK8GBcLLg1VNPQrMHSpY0VXY4UNGefG8tAiG/UUUbJDrs8cRjPFVtv3ksib3FB30GQedh5sNz3nltrxyxBZ9lew7/zStpZ7+zuFTNo51YAdbDZkO9/s3OG2xSvai4qTcSn5gETP54Bg/7z/cl/H//v6VX1dmFIRb3+lxcfBCzs8HL2+xem38/hvw8p6f9mixW8=&lt;/diagram&gt;&lt;/mxfile&gt;">
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="642px" height="360px" viewBox="-0.5 -0.5 642 360" content="&lt;mxfile pages=&quot;2&quot;&gt;&lt;diagram id=&quot;g4gpGZHWIscyPKEU3mQu&quot; name=&quot;Diagram&quot;&gt;7Zpdc+I2FIZ/DZcw/sTmMpDNbmeSKU0yTdo7YQujRraoLBLor69kS8aWTCAEWHbCTIb4HEuyPp7z+kjQcUfp8jsF89kdiSHuOFa87LjXHcfxA4t/CseqdATKkVAUly577XhA/0HpVMUWKIZ5oyAjBDM0bzojkmUwYg0foJS8NYtNCW4+dQ4SaDgeIoBN7xOK2az0hk6w9v+AKJmpJ9v9QXknBaqwHEk+AzF5q7ncbx13RAlh5VW6HEEs5k7NS1nvZsPdqmMUZmyXClej59kM3F0/Pq+ypwSF3uop7tpe2cwrwAs54r8JSblnSJb88468wlQ8wLHGlEQwz1GWiMEwOOf/ZO2crdR8UbLIYigeaXXcYTVmYUQkRZG8xmAC8RBEL0lRYUQwofxWRjIoqjFKXqr55jM1nCKMtUJTkrEbkCIsyPoT0hhkQLolRo7HbYBRknEDwykTJo3U3aKDcxDxET2Suepx6bgtStc9siPSGhLG+DQ1StxLDIRrTlDGCvT8If+zenyaRnymrI5/XV4VXq/V22/1hq1en1/bwsX/1MRpE2WCItl5hZTBZc0lwfkOSQoZXfEi8q54bFFl1YzOt3VIeAPpm9XCwZM+IKMwqVpeg8ovJKsbQLcMRG8BgxSIQldLlBsMwiy+EqHfZEUuux22Asbr3CDRh2L5uKWK70CrzpBCjpYTMWzGBMSTomti9hEXms0o5wxQpo2k8NV6uqZzwC3V5pXsQYriGL/LAIwb+reRAKvnDsK+sep+y6IrH4UYMPTaFNI2EuRDxyJm1k90Neb6Gks5WdAIykp13dvSThD4zYb4jCaQvdOQKkim0xw2yhTsVpO1G86OgfNjzzEY5so5F5d8yRgC+J6/20CWFGs5Udpjc4MV1NntEtmio1og0JpmbaBQE1AdMdWbGom+CpkxyRFDpB4Lqvqtdr8i9R2BLSOs6/iHETU3aILhuaaq2WEL4JXzU7LmGhw8wH8XfDjoI8o2YylWAPwUkYt4jyE9ssrp0BXUa8R9WuK6Vm/gBINTapzva9pk7Sly+gvaaOi0Iuf4Jtx2j3fJekATzNfMLrgW2ibSSf5ece0ybZKCwPuTxaKMAPSX1cY2TA8mjKUObpRGQwdbYmNzvqdxaasFrYVF9V6tx4Wrc7ePNDp9g55zVcKu75sYHFMJY5DPiqbtot98Zp/rxl+iWM9X5vWyGqGwVspaIvZcu67V4ta6kjBUnVYtbdXbUrMkD/ItV8pP3WeydxrJrfbjEm1HTwd3lVzP2tLQBsndR04DIyA8FZHtMTHBJHr5YCTYjUhw9k8JDhkGaiD1OLCVXevqxp1PI2CEMQaMJyxZ4XEse0MesR309/KIIAydU+YRnncoqL2zyiPcliTZ7imd+eoZwRa0vd12U8FxUobBrhmDvq/fJ2NwzXyz2qRdBPLTArm/JJ7oqMhpZ+/DR0XbcoPTqh9Y/BPN4W/JPfAepunYe/rjZdG9oH5B/RBver0hzz9D1s2N4O/87YgyA/dz+tqpCC79O4Av+L1Te+5ziFTDCRvo9ltyjaD1cOLzmUY7p+b+7Lx2Z1335Ee220S5pOGoiqz2Y7ZBxzGPdLVjAW/fI12jIecMBTo0kxH/kox8mWQkbCJq64junIyEv0DiPbiwfmH9AIl3eP66rk4Bd/wG5pLPfKF8xtuTe6MhV+vLUbnn5vqnlmXx9e9V3W//Aw==&lt;/diagram&gt;&lt;diagram id=&quot;RbQKHMFs8UtGEDLZiM8q&quot; name=&quot;Copyright and notes&quot;&gt;7VZLj5swEP41SO1hIzAbNjkmJGyrdnvopu1x5QUH3DUMMiaP/vrOgCGQpNLuoVIPVRCYb57+xjPE8cP8cK95mT1AIpTD3OTg+CuHsel8jncCji0wc2ctkGqZtJB3Ah7lL2FB16K1TEQ1UjQAyshyDMZQFCI2I4xrDfux2hbUOGrJU3EBPMZcXaI/ZGIyuwt2d8I/CJlmXWQvsBvOeadsd1JlPIH9APLXjh9qANOu8kMoFHHX8dLaRX+Q9olpUZjXGEjfRVZX2wf2dC+93W7+9DS9sV52XNV2w5tMVlQvyVPNc7Kv2jAGH7Al/jOB9xWvMqFJpOEnMY98F0mnXxdJI9RiJysJRVsho4EyQjsMtnBY4DAfC+0vM2OongvKnkWpNFn9PIkBw0dJE+emjxJpQRAujBaYSJTzylCsKIG4zpGMauD4XfweA+LPx8emSXwRrvEeoqIWN19AY5lYiMi3T02+qSR3gnYSZ1xLc8SV587mvudPBp4fPm5QoGQsioq0yUVFCbnjzUCJClDrWExApwhYE8wyanz0Hu0xMcfu7GkgGql8JO7PD70gNzK2a8WfhVry+CVtDEJQoFFUQCHIDEl/6c8unrrlVip1prTF2kQ8l4q69LvQCS+4hW1LemTJlUwLfFFia+hVx1bKmgRLHssi3UDZZdwCnxvtIWITsW9LMAZLPdL4aluKoBIkFRUpmS7xciesZdt1pqt21aC3V9HgKjq7ik5x7RGEV0fcGVH7TBrxiDnSrvc48RDbCW0kToyFZccQAcvL9ux6DdXFYQDZdr0XkAuj6bhZ6a2dHMduJM4tsD9NoqBTygZT6M5i3A6/tHd9mg/UOe2IeMO4YBfjYp1IQxVlbgGGDnWg6Gg8Y0MGqWl4aJFanSNKdsj1mcNppnhUnNB35nfUGzSXJ51900vnThEcRvqXOyr431Fv6qjM5Ip4+yvNNfNe2Vts+vbmoq9W/51vZIM/S/76Nw==&lt;/diagram&gt;&lt;/mxfile&gt;">
     <defs/>
     <g>
-        <rect x="1" y="1" width="490" height="40" fill="none" stroke="none" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="24px">
-            <text x="2.5" y="31.5">
-                Zoom Box Movement Processing step 4
-            </text>
-        </g>
-        <path d="M 281 81 L 281 551" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="289.5" y="104.01">
-                Lateral Axis
-            </text>
-        </g>
-        <rect x="295" y="277" width="36" height="36" fill="none" stroke="none" pointer-events="all"/>
-        <path d="M 295 277 L 331 277 M 331 313 L 295 313 L 295 277" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="335.5" y="302.5">
-                T.2
-            </text>
-        </g>
-        <path d="M 496 331 L 1 331" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <rect x="1" y="281" width="640" height="70" fill="none" stroke="none" pointer-events="all"/>
         <g transform="translate(-0.5 -0.5)">
             <switch>
                 <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 341px; margin-left: 478px;">
-                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div style="display: inline-block; font-size: 18px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
-                                Sequential Axis
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 638px; height: 1px; padding-top: 288px; margin-left: 3px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                This diagram is part of the Dasher project and is under revision control here:
+                                <br/>
+                                https://github.com/dasher-project/redash/tree/master/documents
+                                <br/>
+                                (c) 2023 The ACE Centre-North, UK registered charity 1089313.
+                                <br/>
+                                MIT licensed, see https://opensource.org/licenses/MIT
+                                <div>
+                                    <br/>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </foreignObject>
-                <text x="478" y="359" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px" text-anchor="middle">
-                    Sequen...
+                <text x="3" y="300" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="12px">
+                    This diagram is part of the Dasher project and is under revision control here:...
                 </text>
             </switch>
         </g>
-        <path d="M 331 366 L 31 366" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
-        <rect x="31" y="186" width="301" height="360" fill="none" stroke="none" pointer-events="all"/>
-        <path d="M 31 186 L 332 186 M 332 546 L 31 546 L 31 186" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="336.5" y="192.5">
-                P.1
-            </text>
-        </g>
-        <path d="M 51 372.24 L 51 539.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 51 368.24 L 53 372.24 L 49 372.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 51 543.76 L 49 539.76 L 53 539.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="52.5" y="488.6">
-                900
-            </text>
-        </g>
-        <path d="M 51 192.24 L 51 359.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 51 188.24 L 53 192.24 L 49 192.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 51 363.76 L 49 359.76 L 53 359.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="52.5" y="288.6">
-                900
-            </text>
-        </g>
-        <rect x="271" y="216" width="60" height="60" fill="none" stroke="none" pointer-events="all"/>
-        <path d="M 271 216 L 331 216 M 331 276 L 271 276 L 271 216" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="335.5" y="242.5">
-                Sibling1 (S1) starting
-            </text>
-            <text x="335.5" y="264.5">
-                position and size S1.0
-            </text>
-        </g>
-        <path d="M 151 246 L 331 246" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
-        <path d="M 241 252.24 L 241 324.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 241 248.24 L 243 252.24 L 239 252.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 241 328.76 L 239 324.76 L 243 324.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
-            <text x="238.5" y="308.6">
-                425
-            </text>
-        </g>
-        <path d="M 201 276 L 271 276" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
-        <path d="M 221 252.24 L 221 269.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 221 248.24 L 223 252.24 L 219 252.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 221 273.76 L 219 269.76 L 223 269.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
-            <text x="218.5" y="268.6">
-                150
-            </text>
-        </g>
-        <path d="M 71 337.24 L 71 359.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 71 333.24 L 73 337.24 L 69 337.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 71 363.76 L 69 359.76 L 73 359.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="72.5" y="358.5">
-                175
-            </text>
-        </g>
-        <path d="M 221 222.24 L 221 239.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 221 218.24 L 223 222.24 L 219 222.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 221 243.76 L 219 239.76 L 223 239.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" text-anchor="end" font-size="18px">
-            <text x="218.5" y="238.6">
-                150
-            </text>
-        </g>
-        <path d="M 201 216 L 271 216" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke"/>
-        <rect x="259" y="210" width="72" height="72" fill="none" stroke="none" pointer-events="all"/>
-        <path d="M 259 210 L 331 210 M 331 282 L 259 282 L 259 210" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="2 8" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="335.5" y="216.5">
-                S1.1
-            </text>
-        </g>
-        <path d="M 291 216.24 L 291 239.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 291 212.24 L 293 216.24 L 289 216.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 291 243.76 L 289 239.76 L 293 239.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="292.5" y="235.46">
-                180
-            </text>
-        </g>
-        <path d="M 291 252.24 L 291 275.76" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 2" pointer-events="stroke"/>
-        <path d="M 291 248.24 L 293 252.24 L 289 252.24 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <path d="M 291 279.76 L 289 275.76 L 293 275.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
-        <g fill="rgb(0, 0, 0)" font-family="Verdana" font-size="18px">
-            <text x="292.5" y="271.46">
-                180
-            </text>
+        <rect x="1" y="1" width="640" height="250" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 638px; height: 1px; padding-top: 8px; margin-left: 3px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
+                            <div style="display: inline-block; font-size: 16px; font-family: Verdana; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                Editing notes
+                                <br/>
+                                <ul>
+                                    <li>
+                                        This diagram is at 1 × scale.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="3" y="24" fill="rgb(0, 0, 0)" font-family="Verdana" font-size="16px">
+                    Editing notes...
+                </text>
+            </switch>
         </g>
     </g>
     <switch>
