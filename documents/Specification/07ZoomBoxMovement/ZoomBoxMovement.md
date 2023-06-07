@@ -43,7 +43,7 @@ Target      | Front position       | 100
 Target      | Lateral centre       | 200
 Target      | Lateral size         | 150
 Move vector | Sequential component | -30
-Move vector | Lateral component    | 20
+Move vector | Lateral component    | -20
 
 The description of each step includes a list of updated attributes.
 
@@ -55,7 +55,7 @@ Processing steps are as follows.
     Object | Attribute      |Original|Updated
     -------|----------------|--------|-------
     Target | Front position | 100    | 70
-    Target | Lateral centre | 200    | 220
+    Target | Lateral centre | 200    | 180
 
 2.  Update the target's lateral size by invoking the solve lateral size
     function passing in its front position.
@@ -79,7 +79,7 @@ Processing steps are as follows.
     Parent | Lateral size | 1500   | 1800
 
 4.  Update the target's siblings' lateral sizes based on their child weights and
-    the new parent lateral size.
+    the parent's updated lateral size.
 
     Object      | Attribute    |Original|Updated
     ------------|--------------|--------|-------
@@ -93,29 +93,51 @@ Processing steps are as follows.
     Only two siblings have been shown. In a typical zoom box there would be up
     to 25 in a hierarchical palette, or around 70 in a flat palette.
 
-5.  Update the siblings' front positions by invoking the solve front position
-    function passing in each of their updated lateral sizes.
+5.  Update the target's siblings' lateral centres so that they fill the parent's
+    updated lateral size with no gaps and no overlapping, as they would have
+    been before move processing started. The calculations can be like this.
 
+    1.  Calculate the sum of the adjusted lateral sizes of all the target's
+        siblings that are before it in the parent to generate a result R1. Note
+        that R1 could be zero, if the target is the first child.
+    2.  Calculate R1 plus half the updated lateral size of the target to
+        generate a result R2.
+    3.  Calculate R2 plus the updated lateral centre of the target to generate a
+        new lateral parent edge (LPE).
+    4.  Calculate LPE minus half the updated lateral size of the parent's first
+        child to generate a result R3.
+    5.  Update the first child's lateral centre to R3.
+    6.  Decrement LPE by the updated lateral size of the first child.
+    7.  Repeat the calculation from step 4 but with the second child, then the
+        third child, and so on until all the target's siblings have had their
+        lateral centres updated.
 
-
-6.  Update the target's siblings' lateral centres so that they don't overlap
-    with the updated lateral centre and size of the target.
+    Note that the target's lateral centre won't change in the above
+    calculations.
 
     Object      | Attribute      |Original|Updated
     ------------|----------------|--------|-------
     Sibling 1   | Lateral size   |        | 360
-    Sibling 1   | Lateral centre | -25    | -50
+    Sibling 1   | Lateral centre | 425    | 450
     Target      | Lateral size   |        | 180
-    Target      | Lateral centre |        | 220
+    Target      | Lateral centre |        | 180
     Sibling 2   | Lateral size   |        | 144
-    Sibling 2   | Lateral centre | 335    | 382
+    Sibling 2   | Lateral centre | 65     | 18
     Sibling ... |                |        |
 
     For the purposes of illustration, Sibling 1 is the first child of the
     target's parent, the target is the second, and Sibling 2 is the third.
     Further siblings aren't shown.
 
-7.  Update the target's parent's lateral centre based on its updated lateral
+
+
+
+6.  Update the siblings' front positions by invoking the solve front position
+    function passing in each of their updated lateral sizes.
+
+
+
+8.  Update the target's parent's lateral centre based on its updated lateral
     size and its first child's updated lateral centre and size.
 
     Object      | Attribute      |Original|Updated
@@ -134,7 +156,7 @@ Processing steps are as follows.
                               = 670
 
 
-8.  Update the parent's front position by invoking the solve front position
+9.  Update the parent's front position by invoking the solve front position
     function passing in its updated lateral size. This step is the end of the
     parent update.
 
@@ -162,7 +184,12 @@ That completes processing of a zooming move.
 These diagrams illustrate the processing with reference to the processing steps,
 above.
 
-![](MoveProcessing01.svg)
+<picture>
+    <!-- <source
+        media="(prefers-color-scheme: dark)"
+        srcset="MoveProcessing01_exported-dark.svg" > -->
+    <img src="MoveProcessing01.svg">
+</picture>
 
 ![](MoveProcessing02.svg)
 
