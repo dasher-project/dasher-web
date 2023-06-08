@@ -45,7 +45,8 @@ Target      | Lateral size         | 150
 Move vector | Sequential component | -30
 Move vector | Lateral component    | -20
 
-The description of each step includes a list of updated attributes.
+The description of each step includes a list of updated attributes. Further
+objects are added to the example as required for illustration.
 
 Processing steps are as follows.
 
@@ -78,6 +79,11 @@ Processing steps are as follows.
     Target | Lateral size |        | 180
     Parent | Lateral size | 1500   | 1800
 
+    The parent lateral size is an example for the purposes of illustration. For
+    ease of reading, child weight has been normalised here. In detail, the
+    target child weight could be one, for example, which means the sum of all
+    its siblings' child weights would be ten.
+
 4.  Update the target's siblings' lateral sizes based on their child weights and
     the parent's updated lateral size.
 
@@ -90,8 +96,9 @@ Processing steps are as follows.
     Sibling 2   | Lateral size | 120    | 144
     Sibling ... |              |        |
 
-    Only two siblings have been shown. In a typical zoom box there would be up
-    to 25 in a hierarchical palette, or around 70 in a flat palette.
+    The sibling values are examples for the purposes of illustration. Only two
+    siblings have been shown. In a typical zoom box there would be up to 25 in a
+    hierarchical palette, or around 70 in a flat palette.
 
 5.  Update the target's siblings' lateral centres so that they fill the parent's
     updated lateral size with no gaps and no overlapping, as they would have
@@ -125,17 +132,24 @@ Processing steps are as follows.
     Sibling 2   | Lateral centre | 65     | 18
     Sibling ... |                |        |
 
-    For the purposes of illustration, Sibling 1 is the first child of the
-    target's parent, the target is the second, and Sibling 2 is the third.
-    Further siblings aren't shown.
-
-
-
+    In this example, Sibling 1 is the first child of the target's parent, the
+    target is the second, and Sibling 2 is the third. Further siblings aren't
+    shown.
 
 6.  Update the siblings' front positions by invoking the solve front position
     function passing in each of their updated lateral sizes.
 
+    Object      | Attribute      |Original|Updated
+    ------------|----------------|--------|-------
+    Sibling 1   | Lateral size   |        | 360
+    Sibling 1   | Front position | -50    | -110
+    Sibling 2   | Lateral size   |        | 144
+    Sibling 2   | Front position | 130    | 106
+    Sibling ... |                |        |
 
+    As before, the mapped sizes have been assumed for the purposes of
+    illustration. These values are consistent with a square solver type of
+    algorithm.
 
 8.  Update the target's parent's lateral centre based on its updated lateral
     size and its first child's updated lateral centre and size.
@@ -159,7 +173,6 @@ Processing steps are as follows.
 9.  Update the parent's front position by invoking the solve front position
     function passing in its updated lateral size. This step is the end of the
     parent update.
-
 
 
 
