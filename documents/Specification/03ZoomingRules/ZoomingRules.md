@@ -101,6 +101,14 @@ This means that a shrinking box, i.e. a box moving to the right, will reach a
 minimum render height, when its rectangle disappears but its text is still
 rendered.
 
+>   Maybe the rule in that case could be that the front position of the child is
+>   an increment to the front position of the parent. The increment could be
+>   fixed, or could be based on the width of the parent's box text. That would
+>   mean boxes forward of the minimum size position couldn't receive zooming
+>   moves, which could be OK. Move processing could automatically ascend the
+>   hierarchy until it reaches a box that isn't forward of the minimum size
+>   position, or that could be the responsibility of a controller.
+
 # Next Section
 The next section in the specification is the
 [Zooming Solver](../04ZoomingSolver/ZoomingSolver.md).
