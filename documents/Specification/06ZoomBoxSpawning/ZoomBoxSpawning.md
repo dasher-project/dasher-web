@@ -148,9 +148,9 @@ spawning conditions later, depending on the actions of the user.
 Child spawning will take place in a zoom box when it meets all the following
 conditions.
 
--   The box has zero child boxes, which will be the case after:
-    -   Instantiation.
-    -   Child deletion, see below.
+-   The box has zero child boxes, which will be the case
+    -   at the point of instantiation.
+    -   after child deletion.
 -   All or part of the box is inside the zooming area limits.
 -   The box's lateral size can be calculated and is above a limit, referred to
     as the **Child Spawning Threshold**.
