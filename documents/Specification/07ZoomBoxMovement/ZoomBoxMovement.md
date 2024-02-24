@@ -123,11 +123,42 @@ An upward cascade is processed in relation to a reference box, referred to in
 this description as the target. The target's size and position will have been
 updated prior to cascade processing.
 
-If the reference box is the root of the zoom box hierarchy then there is no
-upward cascade; the root has no siblings and no parent. Otherwise, processing
-steps are as follows.
+1.  If the target is a direct child of the root of the zoom box hierarchy then
+    check if the root descent conditions are met. If they are then process root
+    descent now and skip the remaining steps.
 
-1.  Update the target's parent's lateral size based on the target's child weight
+    Root descent is described elsewhere in the specification TBD but it could be
+    [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
+    convenience, the conditions are that the zooming area limits are entirely
+    within the target. These are some outcomes of root descent.
+    
+    -   The target box becomes the root of the hierarchy.
+    -   The previous root is stored outside the hierarchy.
+
+2.  If the target is the root of the zoom box hierarchy then check if the root
+    ascent conditions are met. If they are then process root ascent now, then
+    continue the cascade processing.
+
+    Root ascent is described elsewhere in the specification TBD but it could be
+    [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
+    convenience, the conditions are that the zooming area limits aren't entirely
+    within the root box, and that there is a stored root box from a previous
+    descent.
+
+    These are some outcomes of root ascent.
+
+    -   The previously stored root becomes the root again.
+    -   The target box becomes a child of the new root.
+    -   Siblings of the target box have been weight spawned.
+
+3.  If the target is the root of the zoom box hierarchy, skip the remaining
+    steps.
+
+    Note that if the target was the root at the start of cascade processing then
+    it could only be the root now if the root ascent conditions weren't met in
+    the previous step.
+
+4.  Update the target's parent's lateral size based on the target's child weight
     and updated lateral size.
     
     Object | Attribute    |Original|Updated
@@ -141,7 +172,25 @@ steps are as follows.
     target child weight could be one, for example, which means the sum of all
     its siblings' child weights would be ten.
 
-2.  Update the target's siblings' lateral sizes based on their child weights and
+    >   Near here, enforce the minimum root size and enforce that the root box
+    >   doesn't disappear from the zooming area, i.e. enforce a maximum value
+    >   for the bottom of the root, and a minimum value for the top of the box.
+    >
+    >   If the move would violate the above then it has to be adjusted. That
+    >   suggests the lateral size calculation should cascade upwards all the way
+    >   to the root, even processing possible root ascent, before the rest of
+    >   the cascade is processed. Otherwise some processing would have to be
+    >   undone.
+    >
+    >   The first upward cascade could be parents only, no siblings. Their
+    >   lateral sizes and positions would have to be updated. If a limit would
+    >   be broken at the root then calculate an adjusted move to apply to the
+    >   child that caused the break and descend to the original target yikes.
+    >   That could be optimised by pre-calculating for each box not only its own
+    >   weight buy also total weights of siblings before it and siblings after
+    >   it. Weights don't change after spawning.
+
+5.  Update the target's siblings' lateral sizes based on their child weights and
     the parent's updated lateral size.
 
     Object      | Attribute    |Original|Updated
@@ -157,7 +206,7 @@ steps are as follows.
     siblings have been shown. In a typical zoom box there would be up to 25 in a
     hierarchical palette, or around 70 in a flat palette.
 
-3.  Update the target's siblings' lateral centres so that they fill the parent's
+6.  Update the target's siblings' lateral centres so that they fill the parent's
     updated lateral size with no gaps and no overlapping, as they would have
     been before move processing started. The calculations can be like this.
 
@@ -193,7 +242,7 @@ steps are as follows.
     target is the second, and Sibling 2 is the third. Further siblings aren't
     shown.
 
-4.  Update the siblings' front positions by invoking the solve front position
+7.  Update the siblings' front positions by invoking the solve front position
     function passing in each of their updated lateral sizes.
 
     Object      | Attribute      |Original|Updated
@@ -208,7 +257,7 @@ steps are as follows.
     illustration. These values are consistent with a square solver type of
     algorithm.
 
-5.  Update the target's parent's lateral centre based on its updated lateral
+8.  Update the target's parent's lateral centre based on its updated lateral
     size and its first child's updated lateral centre and size. The calculations
     can be like this.
 
@@ -231,7 +280,7 @@ steps are as follows.
         Parent lateral centre = PLE - ( Parent lateral size / 2 )
                               = 630 - 900
 
-6.  Update the parent's front position by invoking the solve front position
+9.  Update the parent's front position by invoking the solve front position
     function passing in its updated lateral size. This step is the end of the
     upward cascade.
 
@@ -248,10 +297,10 @@ steps are as follows.
     algorithm; the change in front position is the same as the change in the
     lateral size.
 
-9.  Taking the parent box as the reference instead of the target repeat the
-    upward cascade, steps 1 to 8 above. Continue repeating until the root box
-    has been updated. In other words, ascend the hierarchy and apply the upward
-    cascade to update at each level.
+10. Taking the parent box as the reference instead of the target repeat the
+    upward cascade steps above. Continue repeating until one of the conditions
+    in the initial processing steps isn't met. In other words, ascend the
+    hierarchy and apply the upward cascade to update at each level.
 
 That concludes processing of the upward cascade.
 
@@ -354,26 +403,32 @@ An initial set of cascade parents is generated as part of zoom box movement
 processing, see above. For example, the target box of a zooming move will be a
 cascade parent.
 
-The processing for one downward cascade can result in further downward cascades
-to its child boxes. In those cascades the child boxes will be the cascade
-parents. This is described in the processing steps below.
+The processing for one downward cascade can result in further downward cascades,
+to the child boxes of the cascade parent. In those cascades the child boxes will
+be the cascade parents. This is described in the processing steps below.
 
 
->   TBD Notes only; stop reading now.
+1.  Check if the cascade parent now meets the child deletion conditions. If the
+    conditions are met then process child deletion now and skip the remaining
+    steps for this downward cascade.
 
-1.  Check the child spawning conditions. If the conditions are met, process
-    child spawning.
+    Child deletion is described elsewhere in the specification TBD but it could
+    be [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
+    convenience, the conditions are that the cascade parent is entirely outside
+    the zooming area limits.
+
+2.  Check the child spawning conditions. If the conditions are met, process
+    child spawning now and skip the remaining steps for this downward cascade.
     
     Child spawning is described elsewhere in the specification. For
-    convenience the conditions are that
+    convenience, the conditions are that
 
     -   the box has no child boxes.
     -   all or part of the box is inside the zooming area limits.
     -   the box's lateral size can be calculated and is above a configured
         child spawning threshold.
 
-2.  If the changed box is now outside the zooming area limits, process child
-    deletion.
+3.  
 
 3.  If the changed box already has child boxes update child box sizes and
     positions based on the updated parent size and position.
