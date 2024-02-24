@@ -3,7 +3,8 @@
 // See https://code.visualstudio.com/docs/editor/multi-root-workspaces
 {
     "folders": [
-        { "path": ".", "name": "Dasher Web"}
+        {"path": ".", "name": "Dasher Web"},
+        {"path": "documents/Specification", "name": "Specification"}
     ],
     "settings": {
         // Variable names are documented in the VSCod[e|ium] Settings.  
@@ -19,9 +20,12 @@
             "stkb.rewrap",
             
             // Plugin to open PDF files in VSCod[e|ium].
-            "tomoki1207.pdf"
+            "tomoki1207.pdf",
+
+            // Plugin to make the Insert key toggle overtyping.
+            "DrMerfy.overtype"
         ]
     }
 }
-// (c) 2023 The ACE Centre-North, UK registered charity 1089313.  
+// (c) 2024 The ACE Centre-North, UK registered charity 1089313.  
 // MIT licensed, see https://opensource.org/licenses/MIT
