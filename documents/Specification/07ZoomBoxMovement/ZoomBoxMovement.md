@@ -71,13 +71,25 @@ Processing steps are as follows.
     zooming solver isn't discussed here but moving in the reverse sequential
     direction will increase lateral size.
 
-3.  Taking the target as a reference, cascade updates to its siblings and
-    parent. Processing is described under **Zoom Box Movement Upward Cascade**,
-    below.
+3.  Taking the target as a reference, cascade updates to its parents. Processing
+    is described under **Zoom Box Movement Upward Cascade**, below.
 
     Note that there are no updates to the target during the upward cascade.
 
-4.  Check for necessary adjustments to any child boxes that weren't updated in
+    The upward cascade finishes after the size and position of every parent up
+    to the root box has been updated.
+
+4.  Enforce the root disappearance restrictions. The restrictions prevent the
+    root box from disappearing out of the zooming area user interface, in either
+    dimension. Processing is described under
+    **Zoom Box Movement Root Disappearance Prevention**, below.
+
+    The outcome of this step is that the updated root box size and position
+    values may have been overridden.
+
+
+
+5.  Check for necessary adjustments to any child boxes that weren't updated in
     the upward cascade. Processing is described under
     **Zoom Box Movement Downward Cascade**, below.
 
@@ -123,36 +135,45 @@ An upward cascade is processed in relation to a reference box, referred to in
 this description as the target. The target's size and position will have been
 updated prior to cascade processing.
 
-1.  If the target is a direct child of the root of the zoom box hierarchy then
-    check if the root descent conditions are met. If they are then process root
-    descent now and skip the remaining steps.
+1.  Check if the target meets the root descent conditions.
 
     Root descent is described elsewhere in the specification TBD but it could be
     [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
     convenience, the conditions are that the zooming area limits are entirely
     within the target. These are some outcomes of root descent.
     
+    -   The current root box, and any intermediate parent boxes between it and
+        the target, are stored outside the hierarchy. The child boxes of any
+        stored root boxes, other than the new root box, may be deleted or
+        cached.
     -   The target box becomes the root of the hierarchy.
-    -   The previous root is stored outside the hierarchy.
+
+    If the root descent conditions were met then the upward cascade is finished
+    and remaining steps are skipped.
 
 2.  If the target is the root of the zoom box hierarchy then check if the root
-    ascent conditions are met. If they are then process root ascent now, then
-    continue the cascade processing.
+    ascent conditions are met.
 
     Root ascent is described elsewhere in the specification TBD but it could be
     [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
-    convenience, the conditions are that the zooming area limits aren't entirely
-    within the root box, and that there is a stored root box from a previous
-    descent.
+    convenience, the conditions are these.
+    
+    -   The zooming area limits aren't entirely within the root box.
+    -   There is at least one stored box from a previous root descent.
+
+    (There won't be a stored box if the target is the original root with empty
+    box text.)
 
     These are some outcomes of root ascent.
 
-    -   The previously stored root becomes the root again.
-    -   The target box becomes a child of the new root.
-    -   Siblings of the target box have been weight spawned.
+    -   The previously stored parent of the target will be the root.
+    -   The target box will be a child of the new root.
+    -   Siblings of the target box will have been weight spawned.
+
+    After root ascent is processed, the upward cascade continues.
 
 3.  If the target is the root of the zoom box hierarchy, skip the remaining
-    steps.
+    steps. The upward cascade is finished.
 
     Note that if the target was the root at the start of cascade processing then
     it could only be the root now if the root ascent conditions weren't met in
@@ -190,6 +211,80 @@ updated prior to cascade processing.
     >   weight buy also total weights of siblings before it and siblings after
     >   it. Weights don't change after spawning.
 
+
+5.  Update the target's parent's lateral centre
+
+    1.  Sum the weights of the target's siblings that are before it in the
+        parent to generate a result W1. Note that W1 would be zero if the target
+        is the first child.
+    2.  Sum the weights of the target and all its siblings to generate a result
+        W2.
+    3.  Calculate an updated parent lateral offset (PLO) by multiplying the
+        parent's updated lateral size (ULS) by W1, then dividing the result by
+        W2.
+        
+        As a formula `PLO = (ULS × W1) ÷ W2`.
+
+    4.  Calculate an updated parent lateral edge (PLE) the sum of these factors.
+    
+        -   The target's lateral centre (TLC).
+        -   The target's lateral size (TLS) divided by two.
+        -   PLO.
+
+        As a formula `PLE = TLC + (TLS ÷ 2) + PLO`
+    
+    5. Deduct half the parent's updated lateral size from PLE.
+
+    The result is the parent's updated lateral centre.
+    
+    Object or objects                   | Attribute            |Original|Updated
+    ------------------------------------|----------------------|--------|-------
+    Target                              | Lateral centre       |        | 180
+    Target                              | Lateral size         |        | 180
+    Parent                              | Lateral size         |        | 1800
+    Siblings that are before the target | Sum of child weights |    0.2 |
+    Parent                              | Lateral centre       |   -175 | -270
+
+    The sum of child weights is an example for the purposes of illustration. For
+    ease of reading, child weight has been normalised here. In the terms used in
+    the calculation, above, W2 is one.
+
+    The parent lateral centre calculation in full is as follows.  
+    `180 + (180 ÷ 2) + (1800 × 0.2) - (1800 ÷ 2) = -270`
+
+    (Note that child weights don't change after spawning. That means the sum of
+    the weights of the siblings before each child need only be calculated once,
+    at weight spawning time. That and use of normalised weights are possible
+    optimisations for implementation.)
+
+6.  Update the parent's front position by invoking the solve front position
+    function passing in its updated lateral size.
+
+    Note that this processing step is similar to step 2. The lateral size of a
+    zoom box that has moved is updated to a value returned by a solver function.
+
+    Object      | Attribute      |Original|Updated
+    ------------|----------------|--------|-------
+    Parent      | Lateral size   |        | 1800
+    Parent      | Front position | -1250  | -1550
+
+    As before, the mapped size has been assumed for the purposes of
+    illustration. The value is consistent with a square solver type of
+    algorithm; the change in front position is the same as the change in the
+    lateral size.
+
+7.  Taking the parent box as the reference instead of the target repeat the
+    upward cascade steps above.
+
+    In effect, upward cascade processing ascends the hierarchy until the root
+    box's size and position has been updated.
+
+That concludes processing of the upward cascade.
+
+
+
+
+
 5.  Update the target's siblings' lateral sizes based on their child weights and
     the parent's updated lateral size.
 
@@ -205,6 +300,9 @@ updated prior to cascade processing.
     The sibling values are examples for the purposes of illustration. Only two
     siblings have been shown. In a typical zoom box there would be up to 25 in a
     hierarchical palette, or around 70 in a flat palette.
+
+
+
 
 6.  Update the target's siblings' lateral centres so that they fill the parent's
     updated lateral size with no gaps and no overlapping, as they would have
@@ -280,29 +378,8 @@ updated prior to cascade processing.
         Parent lateral centre = PLE - ( Parent lateral size / 2 )
                               = 630 - 900
 
-9.  Update the parent's front position by invoking the solve front position
-    function passing in its updated lateral size. This step is the end of the
-    upward cascade.
 
-    Note that this processing step is similar to step 2. The lateral size of a
-    zoom box that has moved is updated to a value returned by a solver function.
 
-    Object      | Attribute      |Original|Updated
-    ------------|----------------|--------|-------
-    Parent      | Lateral size   |        | 1800
-    Parent      | Front position | -1250  | -1550
-
-    As before, the mapped size has been assumed for the purposes of
-    illustration. The value is consistent with a square solver type of
-    algorithm; the change in front position is the same as the change in the
-    lateral size.
-
-10. Taking the parent box as the reference instead of the target repeat the
-    upward cascade steps above. Continue repeating until one of the conditions
-    in the initial processing steps isn't met. In other words, ascend the
-    hierarchy and apply the upward cascade to update at each level.
-
-That concludes processing of the upward cascade.
 
 # Zoom Box Movement Processing Diagrams
 These diagrams illustrate the examples in the processing steps, above.
@@ -392,6 +469,110 @@ The first diagram illustrates the starting positions and some sizes.
         srcset="MoveProcessing08_exported-dark.svg" >
     <img src="MoveProcessing08.svg">
 </picture>
+
+
+
+# Zoom Box Movement Root Disappearance Prevention
+Prevention of disappearance of the root box is a step in zoom box movement
+processing, see above.
+
+Disappearance of the root box is prevented by restricting its size and position.
+These restrictions are applied.
+    
+-   The root box has a minimum lateral size (MLS).
+-   One or more of these conditions must be true, based on the root box's formal
+    representation.
+    -   The root box is entirely within the zooming area, laterally.
+    -   The zooming area is entirely within the root box, laterally
+    -   A minimum margin amount (MMA) of the root box is laterally within the
+        zooming area.
+
+Minimum values could be expressed as absolute values, or as formulas based on
+the size of the zooming area, or both. MMA could be the same as MLS.
+
+Root disappearance prevention takes place after the root box's size and position
+have been updated.
+
+These terms are used with these meanings here.
+
+-   There are two zooming area limits in the lateral dimension, the 
+    *positive lateral limit* and the *negative lateral limit*. The positive
+    lateral limit has a higher value in the lateral dimension than the negative
+    lateral limit.
+    
+    In the Dasher Version Six proof-of-concept, for example, the positive
+    lateral limit is the top of the zooming area and the negative lateral limit
+    is the bottom.
+
+-   There are two zooming area margins in the lateral dimension. Each margin has
+    a value in the lateral dimension only.
+
+    The value of one margin, the *positive lateral margin*, is calculated by
+    deducting MMA from the positive lateral limit.
+
+    The value of the other margin, the *negative lateral margin*, is calculated
+    by adding MMA to the negative lateral limit.
+
+-   Each zoom box has two sides in the lateral dimension. Each side has a
+    value in the lateral dimension only.
+    
+    The value of one side, the *positive lateral side*, is calculated by adding
+    half the box's lateral size to its lateral centre.
+
+    The value of the other side, the *negative lateral side*, is calculated by
+    deducting the box's lateral size from the positive lateral side.
+
+All those defined values are signed numbers.
+
+The distances of the limits and sides from the zooming area origin isn't
+relevant to the processing here.
+
+Processing is as follows.
+
+1.  Check if the root box's updated lateral size is below MLS. If it is then
+    override the size to MLS instead.
+    
+2.  If the root box's lateral size was overridden in the previous step then
+    override its front position too. Generate the override value by invoking the
+    solve front position function passing in the new lateral size.
+
+    The zooming solver is described elsewhere in the specification, see
+    [Zooming Solver](../04ZoomingSolver/ZoomingSolver.md).
+
+3.  If the positive lateral side has a lower value than the positive lateral
+    limit, and the negative lateral side has a higher value than the negative
+    lateral limit, then root disappearance prevention processing is complete and
+    the remaining steps are skipped.
+
+4.  If the positive lateral side has a higher value than the positive lateral
+    limit, and the negative lateral side has a lower value than the negative
+    lateral limit, then root disappearance prevention processing is complete and
+    the remaining steps are skipped.
+
+5.  Calculate the root box's positive marginal visibility (PMV) by deducting its
+    positive lateral side value from the negative lateral margin value. If PMV
+    is more than zero then the MMA restriction has been broken.
+
+    Adjust the root box's position by adding PMV to its lateral centre. That
+    adjustment will enforce the MMA restriction and the remaining steps are
+    skipped.
+
+    Otherwise, if PMV is less than or equal to zero, continue to the next step.
+
+6.  Calculate the root box's negative marginal visibility (NMV) by deducting its
+    negative lateral side value from the positive lateral margin value. If NMV
+    is less than zero then the MMA restriction has been broken.
+
+    Adjust the root box's position by adding NMV to its lateral centre. That
+    adjustment will enforce the MMA restriction and the remaining steps are
+    skipped.
+
+    Otherwise, if NMV is greater than or equal to zero, the MMA restriction
+    hasn't been broken.
+
+
+
+
 
 # Zoom Box Movement Downward Cascade
 Downward cascades are a step in zoom box movement processing, see above.
