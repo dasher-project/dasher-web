@@ -143,13 +143,19 @@ updated prior to cascade processing.
     within the target. These are some outcomes of root descent.
     
     -   The current root box, and any intermediate parent boxes between it and
-        the target, are stored outside the hierarchy. The child boxes of any
-        stored root boxes, other than the new root box, may be deleted or
-        cached.
+        the target, are removed from the hierarchy.
+        
+        The removed boxes needn't be deleted as such. They may be added back to
+        the hierarchy later, if root ascent takes place. This description
+        assumes that the removed boxes are stored but outside the hierarchy.
+        
+        The child boxes of any removed root and parent boxes, other than the new
+        root box, may be deleted or stored.
+
     -   The target box becomes the root of the hierarchy.
 
     If the root descent conditions were met then the upward cascade is finished
-    and remaining steps are skipped.
+    and remaining steps are skipped. Otherwise continue to the next step.
 
 2.  If the target is the root of the zoom box hierarchy then check if the root
     ascent conditions are met.
@@ -158,7 +164,8 @@ updated prior to cascade processing.
     [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
     convenience, the conditions are these.
     
-    -   The zooming area limits aren't entirely within the root box.
+    -   The zooming area limits aren't entirely within the root box's formal
+        representation.
     -   There is at least one stored box from a previous root descent.
 
     (There won't be a stored box if the target is the original root with empty
@@ -166,11 +173,15 @@ updated prior to cascade processing.
 
     These are some outcomes of root ascent.
 
-    -   The previously stored parent of the target will be the root.
+    -   The previously stored parent of the target will be added back to the
+        zooming hierarchy as the root.
     -   The target box will be a child of the new root.
-    -   Siblings of the target box will have been weight spawned.
+    -   Siblings of the target box will have been weight spawned. Weight
+        spawning is described elsewhere in the specification TBD but it could be
+        [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md).
 
-    After root ascent is processed, the upward cascade continues.
+    Whether the root ascent conditions were met or not, the upward cascade
+    continues to the next step.
 
 3.  If the target is the root of the zoom box hierarchy, skip the remaining
     steps. The upward cascade is finished.
@@ -178,6 +189,8 @@ updated prior to cascade processing.
     Note that if the target was the root at the start of cascade processing then
     it could only be the root now if the root ascent conditions weren't met in
     the previous step.
+
+    If the target isn't the root then continue to the next step.
 
 4.  Update the target's parent's lateral size based on the target's child weight
     and updated lateral size.
@@ -490,9 +503,6 @@ These restrictions are applied.
 Minimum values could be expressed as absolute values, or as formulas based on
 the size of the zooming area, or both. MMA could be the same as MLS.
 
-Root disappearance prevention takes place after the root box's size and position
-have been updated.
-
 These terms are used with these meanings here.
 
 -   There are two zooming area limits in the lateral dimension, the 
@@ -500,9 +510,11 @@ These terms are used with these meanings here.
     lateral limit has a higher value in the lateral dimension than the negative
     lateral limit.
     
-    In the Dasher Version Six proof-of-concept, for example, the positive
+    In the Dasher Version Six proof-of-concept (PoC), for example, the positive
     lateral limit is the top of the zooming area and the negative lateral limit
-    is the bottom.
+    is the bottom. In the PoC the origin's vertical position is always the
+    centre of the zooming area. So if the positive lateral limit is Y then the
+    negative lateral limit is minus Y.
 
 -   There are two zooming area margins in the lateral dimension. Each margin has
     a value in the lateral dimension only.
@@ -527,7 +539,8 @@ All those defined values are signed numbers.
 The distances of the limits and sides from the zooming area origin isn't
 relevant to the processing here.
 
-Processing is as follows.
+Root disappearance prevention takes place after the root box's size and position
+have been updated. Processing is as follows.
 
 1.  Check if the root box's updated lateral size is below MLS. If it is then
     override the size to MLS instead.
