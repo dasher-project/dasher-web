@@ -84,14 +84,28 @@ Processing steps are as follows.
     dimension. Processing is described under
     **Zoom Box Movement Root Disappearance Prevention**, below.
 
-    The outcome of this step is that the updated root box size and position
-    values may have been overridden.
+    These are the possible outcomes of disappearance prevention.
 
+    -   The root box size and position update resulting from the upward cascade
+        applies *unchanged*.
+    -   The root box size and position update resulting from the upward cascade
+        applies with modification, referred to here as an *override*.
+    -   The root box size and position update is *blocked*. That could happen if,
+        for example, the root box was on the edge of the zooming area.
 
+    Note that the override, if there is one, is a replacement size and position.
+    It isn't a replacement vector.
+
+    In the blocked case, no further processing takes place. Otherwise processing
+    continues to the next step.
 
 5.  Check for necessary adjustments to any child boxes that weren't updated in
     the upward cascade. Processing is described under
     **Zoom Box Movement Downward Cascade**, below.
+
+
+
+
 
     The conditions for downward cascades are as follows.
 
@@ -602,19 +616,20 @@ to the child boxes of the cascade parent. In those cascades the child boxes will
 be the cascade parents. This is described in the processing steps below.
 
 
-1.  Check if the cascade parent now meets the child deletion conditions. If the
-    conditions are met then process child deletion now and skip the remaining
-    steps for this downward cascade.
+1.  Check whether the cascade parent now meets the child deletion conditions.
 
     Child deletion is described elsewhere in the specification TBD but it could
     be [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
     convenience, the conditions are that the cascade parent is entirely outside
     the zooming area limits.
 
-2.  Check the child spawning conditions. If the conditions are met, process
-    child spawning now and skip the remaining steps for this downward cascade.
-    
-    Child spawning is described elsewhere in the specification. For
+    If the conditions are met then process child deletion now and skip the
+    remaining steps for this downward cascade.
+
+2.  Check whether the cascade parent meets the child spawning conditions.
+
+    Child spawning is described elsewhere in the specification TBD but it could
+    be [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md). For
     convenience, the conditions are that
 
     -   the box has no child boxes.
@@ -622,12 +637,46 @@ be the cascade parents. This is described in the processing steps below.
     -   the box's lateral size can be calculated and is above a configured
         child spawning threshold.
 
-3.  
+    If the conditions are met, process child spawning now and skip the remaining
+    steps for this downward cascade.
 
-3.  If the changed box already has child boxes update child box sizes and
-    positions based on the updated parent size and position.
+3.  Update the lateral size and front position of each child box. If the cascade
+    parent has no child boxes then skip this step.
 
->   Root replacement goes here too.
+    The size of each child box will be determined by weighting and by the size
+    of the cascade parent.
+    
+    >   Optimise by calculating total weight at child spawning time and
+    >   normalising.
+    
+    
+    >   The front position of each child box will be determined by the solver.
+
+
+
+    >   Set the lateral size of the child box to its child weight multiplied by
+    >   the parent lateral size. Solve the front position of the child box by
+    >   passing the updated lateral size to the function.
+
+    >   Set the lateral centre of the first child to the lateral centre of the
+    >   parent plus half the parent lateral size. Or set it to the lateral
+    >   centre of the preceding child minus half the lateral size of the
+    >   preceding child.
+
+
+    >   Oh dear. Might have to have the root descent check here in addition to
+    >   in the upward cascade. Upward cascade could instead be characterised as
+    >   transferring the move to the root. The root ascent check would still be
+    >   made there.
+    
+    >   Some of these checks would apply to resizing the zooming area.
+    >   Specifically, root ascent and descent, child box deletion, child
+    >   spawning.
+
+
+
+4.  Repeat a downward cascade for each child box. In these cascades the child
+    box will be the cascade parent.
 
 That completes processing of a downward cascade.
 
