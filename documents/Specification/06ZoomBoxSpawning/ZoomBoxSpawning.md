@@ -134,6 +134,11 @@ The processing is as follows.
     -   If the lateral size was given, then the solve front position function is
         invoked.
 
+    >   Might have to move this or add root disappearance prevention here.
+    >   Prevention is in
+    >   [../07ZoomBoxMovement/ZoomBoxMovement.md](../07ZoomBoxMovement/ZoomBoxMovement.md)
+    >   at time of writing.
+
     For details of the solve functions, see the
     [Zooming Solver](../04ZoomingSolver/ZoomingSolver.md) section.
 
