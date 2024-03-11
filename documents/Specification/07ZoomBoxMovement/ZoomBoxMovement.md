@@ -122,6 +122,28 @@ Processing steps for a single zooming move are as follows.
 
 That concludes the processing for one zoom box move.
 
+# Zooming Move Processing Diagram
+This diagram illustrates where in the hierarchy the different stages of zooming
+move processing take place.
+
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="MoveProcessing_exported-dark.svg" >
+    <img src="MoveProcessing.svg">
+</picture>
+
+Key
+
+-   Generation of a destination move from a vector move takes place in the
+    target, T, if necessary.
+-   Finalisation of the target destination position and size takes place in the
+    target, T.
+-   Generation of an initial root box destination position and size takes place
+    in the target, T, and in the parents, P, and in the root, R.
+-   Preventing disappearance of the root takes place in the root, R.
+-   The update cascade takes place in all boxes, R, P, T, and C.
+
 # Generate Destination Move from Vector Move
 Generating a zooming destination move from a zooming vector move is a possible
 Zooming Move Processing step, see above.
@@ -315,7 +337,7 @@ These restrictions are applied.
 -   One or more of these conditions must be true, based on the root box's formal
     representation.
     -   The root box is entirely within the zooming area, laterally.
-    -   The zooming area is entirely within the root box, laterally
+    -   The zooming area is entirely within the root box, laterally.
     -   A minimum margin amount, *MMA*, of the root box is laterally within the
         zooming area.
 
@@ -353,14 +375,14 @@ These terms are used with these meanings here.
     The value of the other side, the *negative lateral side*, is calculated by
     deducting the box's lateral size from the positive lateral side.
 
-All those defined values are signed numbers.
-
->   Jim, add a diagram here.
+All those defined values are signed numbers. For illustrative diagrams, see
+below the processing steps.
 
 The distances of the limits and sides from the zooming area origin isn't
 relevant to the processing here.
 
-Root disappearance prevention takes place after the root destination has been calculated. The root destination will have these values.
+Root disappearance prevention takes place after the root destination has been
+calculated. The root destination will have these values.
 
 -   Front position and lateral size.
 -   Lateral centre.
@@ -409,6 +431,34 @@ Processing is as follows.
     hasn't been broken.
 
 That concludes prevention of disappearance of the root box.
+
+## Root Disappearance Prevention Diagrams
+These diagrams illustrate the root disappearance prevention limits and
+processing, see above.
+
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="RootDisappearanceSize_exported-dark.svg" >
+    <img src="RootDisappearanceSize.svg">
+</picture>
+
+This diagram illustrates root disappearance minimum lateral size processing.
+
+-   One box is in violation of the disappearance conditions.
+-   The necessary corrections are shown.
+
+<picture>
+    <source
+        media="(prefers-color-scheme: dark)"
+        srcset="RootDisappearanceMargins_exported-dark.svg" >
+    <img src="RootDisappearanceMargins.svg">
+</picture>
+
+That diagram illustrates root disappearance prevention margins.
+
+-   One box is in violation of the disappearance conditions.
+-   The necessary correction is shown.
 
 # Update Cascade
 The update cascade is a Zooming Move Processing step, see above.
@@ -569,25 +619,6 @@ the cascade parent have been updated. Steps are as follows.
     Otherwise the outcome is that the cascade has finished.
 
 That concludes update cascade processing.
-
-# Zoom Box Movement Cascade Diagram
-This diagram illustrates which boxes in the hierarchy are updated at what stage
-of Zooming Move Processing.
-
->   Jim, do a new diagram and key.
-
-<picture>
-    <source
-        media="(prefers-color-scheme: dark)"
-        srcset="MovementCascade_exported-dark.svg" >
-    <img src="MovementCascade.svg">
-</picture>
-
-Key
-
--   T is the target of the move and is updated before the upward cascade.
--   U indicates boxes updated during the upward cascade.
--   D indicates boxes updated during the downward cascade.
 
 # Zoom Box Movement Upward Cascade OBSOLETE
 
