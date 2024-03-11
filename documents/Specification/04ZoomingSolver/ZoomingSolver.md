@@ -66,7 +66,7 @@ Based on the parameters, the following intermediate values can be calculated.
 -   **Reference position offset (RPO)**, is the difference between the reference
     position and the solver limit in the reverse direction.
 
--   **Reference size offse (RSO)**, is the reference size minus the minimum
+-   **Reference size offset (RSO)**, is the reference size minus the minimum
     mapped size.
 
 The solve lateral size function would execute as follows for a given front
