@@ -122,7 +122,7 @@ Processing steps for a single zooming move are as follows.
 
 That concludes the processing for one zoom box move.
 
-# Zooming Move Processing Diagram
+## Zooming Move Processing Diagram
 This diagram illustrates where in the hierarchy the different stages of zooming
 move processing take place.
 
