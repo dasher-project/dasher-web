@@ -148,15 +148,15 @@ Key
 Generating a zooming destination move from a zooming vector move is a possible
 Zooming Move Processing step, see above.
 
-This example move vector and target are used to illustrate the processing.
+This example vector move and target are used to illustrate the processing.
 
 Object      | Attribute            | Original Value
 ------------|----------------------|---------------
 Target      | Front position       | 100
 Target      | Lateral centre       | 200
 Target      | Lateral size         | 150
-Move vector | Sequential component | -30
-Move vector | Lateral component    | -20
+Vector move | Sequential component | -30
+Vector move | Lateral component    | -20
 
 Add the vector's sequential and lateral components to the target's front
 position and lateral centre to generate destination values.
@@ -222,8 +222,7 @@ follows.
         spawning is described elsewhere in the specification TBD but it could be
         [Zoom Box Spawning](../06ZoomBoxSpawning/ZoomBoxSpawning.md).
 
-    Whether the root ascent conditions were met or not, processing continues to
-    the next step.
+    Whether the root ascended or not, processing continues to the next step.
 
 2.  If the target is the root of the zoom box hierarchy, skip the remaining
     steps. The root destination is the target destination.
@@ -328,7 +327,9 @@ of iterations.
 
 # Root Disappearance Prevention
 Prevention of disappearance of the root box is a Zooming Move Processing step,
-see above.
+see above. The prevention mechanism doesn't require a move to be in progress
+however, so the mechanism could be used at other times, for example if the
+zooming area has been resized.
 
 Disappearance of the root box is prevented by restricting its size and position.
 These restrictions are applied.
@@ -436,6 +437,8 @@ That concludes prevention of disappearance of the root box.
 These diagrams illustrate the root disappearance prevention limits and
 processing, see above.
 
+Zoom boxes are shown as three-sided rectangles.
+
 <picture>
     <source
         media="(prefers-color-scheme: dark)"
@@ -502,7 +505,8 @@ the cascade parent have been updated. Steps are as follows.
     convenience, the conditions are that the cascade parent is entirely outside
     the zooming area limits.
 
-    If the conditions are met then process child deletion now and skip the remaining steps. This cascade is finished.
+    If the conditions are met then process child deletion now and skip the
+    remaining steps. This cascade is finished.
 
     If the child deletion conditions aren't met then continue to the next step.
 
@@ -552,13 +556,13 @@ the cascade parent have been updated. Steps are as follows.
     1.  Add half the parent lateral size to the parent lateral centre to
         generate a working lateral edge *WLE*.
 
-    2. Repeat the remaining steps for each child N starting at the first child
-       and continuing to the last child ...
+    2.  Repeat the remaining steps for each child N starting at the first child
+        and continuing to the last child ...
     
-    3.  Add half the lateral size of child N to WLE to generate the new
+    3.  Deduct half the lateral size of child N to WLE to generate the new
         lateral centre of child N.
     
-    4.  Increment WLE by the lateral size of the child N.
+    4.  Decrement WLE by the lateral size of the child N.
 
     The child boxes will now laterally fill the cascade parent with no gaps and
     no overlapping.
@@ -620,118 +624,95 @@ the cascade parent have been updated. Steps are as follows.
 
 That concludes update cascade processing.
 
-# Zoom Box Movement Upward Cascade OBSOLETE
+## Update Cascade Worked Example
+This is a worked example of the processing for individual update cascade, see
+above. Update cascade is a step in zooming move processing. This example
+continues from the example values used to illustrate the previous descriptions.
 
->   Move these tables into the diagrams section and maybe rename it like worked
->   example.
+The cascade parent has already been updated, and its lateral centre position has
+been solved from its lateral size.
 
+Object | Attribute      |Original| Updated
+-------|----------------|--------|--------
+Parent | Lateral size   |        | 1800
+Parent | Front position |        | -1550
+Parent | Lateral centre |        | -270
 
-An upward cascade is a step in zoom box movement processing, see above.
-Processing here is illustrated with a continuation of the example values from
-the previous description.
+1.  For the purposes of this example it will be assumed that the parent box
+    doesn't meet the child deletion conditions.
 
-An upward cascade is processed in relation to a reference box, referred to in
-this description as the target. The target's size and position will have been
-updated prior to cascade processing.
+2.  For the purposes of this example it will be assumed that the parent box
+    doesn't meet the child spawning conditions.
 
+3.  Update the lateral size of each child box.
 
+    Object    | Attribute    | Original     | Updated
+    ----------|--------------|--------------|--------
+    Parent    | Lateral size |              | 1800
+    Parent    | Total weight | 1 normalised | 1800
+    Child 1   | Child weight | 0.2          |
+    Child 1   | Lateral size |              | 360
+    Child 2   | Child weight | 0.08         |
+    Child 2   | Lateral size |              | 144
+    Child 3   | Child weight | 0.1          |
+    Child 3   | Lateral size |              | 180
+    Child ... |              |              |
 
+    The child weight values have been assumed for the purposes of illustration.
+    Only three child boxes have been shown. In a typical zoom box there would be
+    up to 25 in a hierarchical palette, or around 70 in a flat palette.
 
+    Child weight values have been normalised, which is indicated by the total
+    weight of the parent being one. The child weights of the other child boxes
+    would add up to 0.62 normalised.
 
+    The original lateral sizes of the child boxes aren't part of the
+    calculation and have been omitted.
 
+4.  Update the lateral centre of each child box.
 
-5.  Update the target's siblings' lateral sizes based on their child weights and
-    the parent's updated lateral size.
+    Object    | Attribute      | Calculation       | Updated
+    ----------|----------------|-------------------|--------
+    Parent    | Lateral size   |                   | 1800
+    Parent    | Lateral centre |                   | -270
+    Working   | Lateral edge   | -270 + (1800 ÷ 2) | 630
+    Child 1   | Lateral size   |                   | 360
+    Child 1   | Lateral centre | 630 - (360 ÷ 2)   | 450
+    Working   | Lateral edge   | 630 - 360         | 270
+    Child 2   | Lateral size   |                   | 144
+    Child 2   | Lateral centre | 270 - (144 ÷ 2)   | 198
+    Working   | Lateral edge   | 270 - 144         | 126
+    Child 3   | Lateral size   |                   | 180
+    Child 3   | Lateral centre | 126 - (180 ÷ 2)   | 36
+    Working   | Lateral edge   | 126 - 180         | −54
+    Child ... |                |                   |
 
-    Object      | Attribute    |Original|Updated
-    ------------|--------------|--------|-------
-    Parent      | Lateral size |        | 1800
-    Sibling 1   | Child weight | 0.2    |
-    Sibling 1   | Lateral size | 300    | 360
-    Sibling 2   | Child weight | 0.08   |
-    Sibling 2   | Lateral size | 120    | 144
-    Sibling ... |              |        |
+    The original lateral centres of the child boxes aren't part of the
+    calculation and have been omitted. Only three child boxes have been shown.
+    In a typical zoom box there would be up to 25 in a hierarchical palette, or
+    around 70 in a flat palette.
 
-    The sibling values are examples for the purposes of illustration. Only two
-    siblings have been shown. In a typical zoom box there would be up to 25 in a
-    hierarchical palette, or around 70 in a flat palette.
+5.  Update the front position of each child box.
 
-
-
-
-6.  Update the target's siblings' lateral centres so that they fill the parent's
-    updated lateral size with no gaps and no overlapping, as they would have
-    been before move processing started. The calculations can be like this.
-
-    1.  Calculate the sum of the adjusted lateral sizes of all the target's
-        siblings that are before it in the parent to generate a result R1. Note
-        that R1 could be zero, if the target is the first child.
-    2.  Calculate R1 plus half the updated lateral size of the target to
-        generate a result R2.
-    3.  Calculate R2 plus the updated lateral centre of the target to generate a
-        new parent lateral edge (PLE).
-    4.  Calculate PLE minus half the updated lateral size of the parent's first
-        child to generate a result R3.
-    5.  Update the first child's lateral centre to R3.
-    6.  Decrement PLE by the updated lateral size of the first child.
-    7.  Repeat the calculation from step 4 but with the second child, then the
-        third child, and so on until all the target's siblings have had their
-        lateral centres updated.
-
-    Note that the target's lateral centre won't change in the above
-    calculations.
-
-    Object      | Attribute      |Original|Updated
-    ------------|----------------|--------|-------
-    Sibling 1   | Lateral size   |        | 360
-    Sibling 1   | Lateral centre | 425    | 450
-    Target      | Lateral size   |        | 180
-    Target      | Lateral centre |        | 180
-    Sibling 2   | Lateral size   |        | 144
-    Sibling 2   | Lateral centre | 65     | 18
-    Sibling ... |                |        |
-
-    In this example, Sibling 1 is the first child of the target's parent, the
-    target is the second, and Sibling 2 is the third. Further siblings aren't
-    shown.
-
-7.  Update the siblings' front positions by invoking the solve front position
-    function passing in each of their updated lateral sizes.
-
-    Object      | Attribute      |Original|Updated
-    ------------|----------------|--------|-------
-    Sibling 1   | Lateral size   |        | 360
-    Sibling 1   | Front position | -50    | -110
-    Sibling 2   | Lateral size   |        | 144
-    Sibling 2   | Front position | 130    | 106
-    Sibling ... |                |        |
+    Object    | Attribute      | Updated
+    ----------|----------------|--------
+    Child 1   | Lateral size   | 360
+    Child 1   | Front position | 110
+    Child 2   | Lateral size   | 144
+    Child 2   | Front position | −106
+    Child 3   | Lateral size   | 180
+    Child 3   | Front position | -70
+    Child ... |                |
 
     As before, the mapped sizes have been assumed for the purposes of
     illustration. These values are consistent with a square solver type of
     algorithm.
 
-8.  Update the target's parent's lateral centre based on its updated lateral
-    size and its first child's updated lateral centre and size. The calculations
-    can be like this.
+    The original front positions of the child boxes aren't part of the
+    calculation and have been omitted. Only three child boxes have been shown.
+    In a typical zoom box there would be up to 25 in a hierarchical palette, or
+    around 70 in a flat palette.
 
-    1.  Calculate the first child's updated lateral centre plus half the first
-        child's updated lateral size to generate the Parent Lateral Edge (PLE).
-    2.  Calculate PLE minus half the parent's updated lateral size to generate
-        the parent's updated lateral centre.
-
-    Object      | Attribute      |Original|Updated
-    ------------|----------------|--------|-------
-    Sibling 1   | Lateral size   |        | 360
-    Sibling 1   | Lateral centre |        | 450
-    Parent      | Lateral size   |        | 1800
-    Parent      | Lateral centre | -175   | -270
-
-    The calculation is like this.
-
-        PLE = Sibling 1 lateral centre + ( Sibling 1 lateral size / 2 )
-            = 630
-        Parent lateral centre = PLE - ( Parent lateral size / 2 )
-                              = 630 - 900
 
 
 
