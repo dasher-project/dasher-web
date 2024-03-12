@@ -63,6 +63,11 @@ them correctly in dark mode.
     
     That is valid Markdown because the Markdown specification allows all HTML.
 
+    Note that the `source` and `img` tags don't have to be self-closing; there's
+    no oblique before the tag close like this ` />`. That's because they are
+    HTML void elements. For discussion of that type of element, see for example
+    [developer.mozilla.org/.../Void_element](https://developer.mozilla.org/en-US/docs/Glossary/Void_element).
+
     See
     https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to
     for official instructions.
@@ -88,5 +93,5 @@ The Dasher Version Six specification is part of the Dasher project and is under
 revision control here:  
 [https://github.com/dasher-project/dasher-web](https://github.com/dasher-project/dasher-web)
 
-(c) 2023 The ACE Centre-North, UK registered charity 1089313.  
+(c) 2024 The ACE Centre-North, UK registered charity 1089313.  
 MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
