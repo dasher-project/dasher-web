@@ -14,10 +14,12 @@ desktop app edition, and an unofficial plugin for VSCode and VSCodium.
     exporting to .svg format. However, it seems necessary to export in order to
     support dark mode in GitHub.
 
-    This screen capture shows the correct save-as option in the desktop tool
-    for macOS.
+    These screen captures show the correct save-as option in the desktop tools
+    for macOS and Linux.
 
-    ![](Screen_DiagramsDotNetDesktop_SaveAsEditiable-SVG.png)
+    ![](Screen_DiagramsDotNetDesktop-macOS_SaveAsEditiable-SVG.png)
+
+    ![](Screen_DiagramsDotNetDesktop-Linux_SaveAsEditiable-SVG.png)
 
 -   Make diagrams that support dark mode by removing these declarations from the
     style of individual graphic elements.
@@ -28,8 +30,12 @@ desktop app edition, and an unofficial plugin for VSCode and VSCodium.
     Or you can set them to `default`. See also this SO question and answer.  
     [https://stackoverflow.com/questions/75950638/automatic-fill-colour-but-opposite-to-theme-in-diagrams-net-aka-draw-io](https://stackoverflow.com/questions/75950638/automatic-fill-colour-but-opposite-to-theme-in-diagrams-net-aka-draw-io)
 
--   Use the typeface `Verdana` for all fonts. That typeface is included in the
-    tool by default and shouldn't require downloading or embedding.
+-   Use the typeface `Helvetica` for all text in diagrams. That typeface is
+    included in both the desktop tool and the plugin by default and shouldn't
+    require downloading or embedding.
+    
+    The standalone tool, at least for Linux, doesn't support
+    [Google Fonts](https://fonts.google.com/), although the plugin does.
 
 # How to add images with dark mode support
 Check these notes for how to add images to the Markdown so that GitHub renders
@@ -39,7 +45,12 @@ them correctly in dark mode.
 
     Dark mode export is only available if the tool is running in dark mode.
 
-    ![](Screen_DiagramsDotNetDesktop_ExportAs-SVG-DarkMode.png)
+    These screen captures show the required export parameters as they might
+    appear in the desktop tools for macOS and Linux.
+
+    ![](Screen_DiagramsDotNetDesktop-macOS_ExportAs-SVG-DarkMode.png)
+
+    ![](Screen_DiagramsDotNetDesktop-Linux_ExportAs-SVG-DarkMode.png)
 
     See also this article on their website.  
     [https://www.drawio.com/blog/dark-mode-diagram-editor](https://www.drawio.com/blog/dark-mode-diagram-editor)
@@ -65,11 +76,11 @@ them correctly in dark mode.
 
     Note that the `source` and `img` tags don't have to be self-closing; there's
     no oblique before the tag close like this ` />`. That's because they are
-    HTML void elements. For discussion of that type of element, see for example
+    HTML void elements. For a discussion of that type of element, see for
+    example
     [developer.mozilla.org/.../Void_element](https://developer.mozilla.org/en-US/docs/Glossary/Void_element).
 
-    See
-    https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to
+    See [docs.github.com/...writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to)
     for official instructions.
 
 -   You can make GitHub load in light or dark mode in Chrome for macOS by
