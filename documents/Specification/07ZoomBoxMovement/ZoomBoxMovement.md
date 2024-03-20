@@ -65,8 +65,8 @@ Processing steps for a single zooming move are as follows.
     defined by being consistent with the target having TPS. See under
     **Generate Root Destination from Target Destination**, below.
 
-    Put another way, generate IPS such that the cascade TBD would result in the
-    target zoom box being at TPS.
+    Put another way, generate IPS such that the update cascade, see below, would
+    result in the target zoom box being at TPS.
 
     Note that generation of a root destination can include replacement of the
     root zoom box. If it does then the destination applies to the new root.
@@ -80,11 +80,6 @@ Processing steps for a single zooming move are as follows.
     -   The root destination is *unchanged* so FPS is the same as IPS.
     -   The root box destination applies with modification, referred to here as
         an *override*, so FPS is different to IPS.
-    -   The root box destination is *blocked*. That could happen if, for
-        example, the root box was on the edge of the zooming area.
-
-    In the blocked case, no further processing takes place. Otherwise processing
-    continues to the next step.
 
 5.  Update the root box to FPS and cascade the update down the zooming
     hierarchy. See under **Update Cascade**, below.
@@ -586,12 +581,16 @@ the cascade parent have been updated. Steps are as follows.
     Processing could be to check each child box starting with the first one.
     Child boxes don't overlap so it isn't possible for more than one child box
     to meet the root descent conditions. That means if a child box is found that
-    does meet the conditions then other boxes needn't be checked.
+    does meet the conditions then other boxes needn't be checked. An
+    optimisation could be to check child boxes that are most likely to have a
+    root descent outcome first.
 
-    If a child box meets the root descent conditions then
+    If a child box meets the root descent conditions then do the following.
 
-    -   start a new update cascade with that child box as the cascade parent.
-    -   return the outcome of that cascade as the outcome of this cascade.
+    -   Start a new update cascade with that child box as the cascade parent.
+        The outcome of the child cascade will always be that there is a root
+        descent box, either the child itself or a child box under its hierarchy.
+    -   Return the outcome of the child cascade as the outcome of this cascade.
 
     If none of the child boxes meets the root descent conditions then proceed to
     the next processing step.
@@ -601,7 +600,10 @@ the cascade parent have been updated. Steps are as follows.
     1.  Select a child box and process an update cascade in which that box is
         the cascade parent.
     2.  If the outcome of that cascade is that a root descent box was
-        identified, then skip the other child boxes.
+        identified, then skip the other child boxes.  
+        (At time of writing that seems to be impossible. If no child box was
+        found to satisfy the root descent conditions in the previous step then
+        their update cascades shouldn't have a root descent outcome.)
     3.  Otherwise continue with the next child box that hasn't had an update
         cascade.
     4.  Continue until either all child boxes have finished or a root descent
