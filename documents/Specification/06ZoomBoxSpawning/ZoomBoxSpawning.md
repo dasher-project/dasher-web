@@ -33,23 +33,23 @@ The following terms are used with the following meanings in the specification.
 ## Triggers
 There are two triggers for zoom box spawning.
 
-One trigger is **Root Spawning** which happens only when the zooming user
+The first trigger is **Root Spawning**, which happens only when the zooming user
 interface is reset or opens from a cold start. Only one box is created by root
 spawning. The parameters and process of root spawning are described later in
 this section. The root box is never as such deleted, but see Root Replacement,
 below.
 
-The other trigger is based on a set of conditions. After root spawning, the user
-interface will become live. Zoom boxes will be moving and changing size in two
-dimensions. The conditions are defined in terms of zoom box sizes and positions,
-and will be being met continuously when the user interface is live. The trigger
-based on these conditions is referred to as **Child Spawning**, because zoom
-boxes spawned by this trigger will always be child boxes. The child spawning conditions are described later in this section.
+After root spawning, the user interface will become live. Zoom boxes will be
+moving and changing size and position in two dimensions. When a box's size and
+position meets a set of conditions then **Child Spawning** is triggered. Child
+spawning is the second trigger. Zoom boxes spawned by this trigger will always
+be child boxes. The child spawning conditions are described later in this
+section.
 
 There is one trigger for zoom box deletion, referred to as **Child Deletion**.
-Child deletion is also based on a set of conditions, and will take place
-continuously when the user interface is live. The child deletion conditions are
-described later in this section.
+Like child spawning, child deletion is based on a set of conditions that are
+evaluated continuously when the user interface is live. The child deletion
+conditions are described later in this section.
 
 ## Properties and Two-Stage Spawning
 There are two stages to zoom box spawning. Different properties of the spawned
@@ -170,31 +170,73 @@ conditions.
 
 The child spawning threshold value will come from the user interface.
 
->   Hmm. In practice, the child spawning threshold will determine the distance
->   of prediction look ahead. Maybe a different rule could be used, like a
->   threshold on prediction strength. For example, the threshold could be
->   expressed as the child weight of the box being normalised to 20% or more.
+Note that the lateral size here refers to the formal representation, not the
+visual representation. A box with a small lateral sizes mightn't be represented
+visually in the user interface but could still be above the child spawning
+threshold. Visual representation is discussed elsewhere in the specification
+TBD.
 
-The child spawning conditions are checked:
+The child spawning conditions are checked as part of zooming move processing, in
+the update cascade. Zooming move processing is described in the
+[Zoom Box Movement](../07ZoomBoxMovement/ZoomBoxMovement.md) section. Note that
+zooming move processing isn't only used in response to moves initiated by the
+user. It may be invoked at other times, such as to finalise root spawning, see
+above, or when the zooming user interface gets resized.
 
--   When a zoom box completes dimension spawning, see below, it is checked.
+If a hierarchical palette is in use then there can be boxes that correspond to
+group nodes. Those boxes will never meet the child spawning conditions, because
+they never have zero child boxes. Palettes are discussed in the
+[Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
 
--   Every zoom box that changes position due to user interaction must be checked
-    at the time of change. This is discussed later in the specification.
+# Child Spawning Processing
+When the child spawning conditions, see above, have been checked and satisfied
+then child spawning is processed. The zoom box that met the conditions is
+referred to here as the *spawning parent*.
 
-    >   TBD but in the section on end user controls.
+These are the processing steps for child spawning.
 
-    Note that a box cannot change size without changing position. See the
-    [Zooming Rules](../03ZoomingRules/ZoomingRules.md) section.
+1.  Instantiate a hierarchy of child boxes under the spawning parent. See under
+    **Hierarchy Instantiation**, below.
 
->   Near here, say that a box that corresponds to a palette group node never
->   meets the condition that it has zero child boxes.
+    The hierarchy will be based on the zoom box palette. If the palette is flat
+    then the instantiated hierarchy will have only one level.
+    
+    The newly instantiated boxes will have a default child weight at this stage.
 
-# Child Spawning
-When a zoom box meets the child spawning conditions, see above, the following
-processing takes place.
+2.  Update the child weights based on predictions made by the language model.
+    See under **Language Model Predictor Invocation**, below.
 
-Note that spawning processing is based on the zoom box palette. For a full
+    The main outcome of this step is that some or all of the newly instantiated
+    boxes will have their child weights updated. Boxes that represent more
+    likely next characters will have higher child weight values than those less
+    likely.
+
+    Another possible outcome of this step is that more new child boxes are
+    inserted into the hierarchy. That happens if characters that aren't in the
+    palette are predicted by the language model.
+
+3.  Assign colour specifiers to the newly instantiated boxes.
+
+    Each box will have a colour specifier assigned according to the palette.
+    Colour specifiers are described in the
+    [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section, under the
+    heading Colour Scheme Configuration.
+
+    Note that colour assignment cannot be processed before predictor invocation
+    because most colour specifiers depend on the index number of the child box.
+    The predictor might insert additional child boxes and hence change the
+    numbering.
+
+4.  Finalise the weight values in the hierarchy. See under
+    **Weight Finalisation**, below.
+
+That concludes child spawning and control returns to the zooming move processing
+update cascade, from where the child spawning condition check was invoked.
+
+## Hierarchy Instantiation
+Hierarchy instantiation is a Child Spawning Processing step, see above.
+
+Hierarchy instantiation is based on the zoom box palette. For a full
 description, see the [Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md)
 section. The following points are most relevant here.
 
@@ -206,30 +248,29 @@ section. The following points are most relevant here.
 -   Principal nodes don't have child nodes.
 -   Group nodes have child nodes but don't have template texts.
 
->   Maybe insert a numbered list here, before the subsections.
+Hierarchy instantiation takes place under a reference box, referred to here and
+in the Child Spawning Processing description as the *spawning parent*.
 
-## Hierarchy Instantiation
-First, a hierarchy based on the zoom box palette is instantiated under the box
-that has met the child spawning conditions, the *new parent box*, as follows.
+Processing is as follows.
 
-1.  For each child node in the palette root, a new zoom box is instantiated and
-    added as a child box of the new parent box. Each new box is assigned a
+1.  For each child node in the palette root, instantiate a new zoom box and add
+    it as a child box of the spawning parent box. Assign the new box a
     correspondence to the palette node for which it was instantiated.
 
-2.  Under each new child box that corresponds to a palette group node, hierarchy
-    instantiation is repeated recursively. Recursion starts at the group node,
-    not the palette root, and corresponding new zoom boxes are added as
-    "grandchild" boxes, under the new child box.
+2.  Under each new child box that corresponds to a palette group node, repeat
+    hierarchy instantiation recursively. Recursion starts at the group node, not
+    the palette root, and corresponding new zoom boxes are added as "grandchild"
+    boxes, under the new child box.
 
-3.  Each newly instantiated box that corresponds to a principal node is assigned
-    an initial child weight of one. This applies to new child boxes that were
+3.  Assign each newly instantiated box that corresponds to a principal node a
+    default child weight of one. This applies to new child boxes that were
     instantiated directly or recursively. Child weights can change later in the
     spawning process.
 
     Boxes that correspond to group nodes are assigned a weight later in the
     spawning process, see below.
 
-4.  The incremental text of each newly instantiated box is set, as follows.
+4.  Set the incremental text of each newly instantiated box, as follows.
 
     -   If the box corresponds to a principal node, the box incremental text
         will be the same as the node template text.
@@ -237,17 +278,21 @@ that has met the child spawning conditions, the *new parent box*, as follows.
     -   If the box corresponds to a group node, the box will have no incremental
         text.
 
-5.  The box text of each newly instantiated zoom box is set, as follows.
+5.  Set the box text of each newly instantiated zoom box, as follows.
 
-    -   If the zoom box has incremental text, the box text will be the
-        incremental text appended to the box text of the box's parent.
+    -   If the zoom box has incremental text, append that to the box text of its
+        parent to generate the box text.
 
-    -   If the zoom box doesn't have incremental text, the box text will be the
-        same as the box text of the box's parent.
+    -   If the zoom box doesn't have incremental text, its box text will be the
+        same as the box text of its parent.
+
+That concludes hierarchy instantiation.
 
 ## Language Model Predictor Invocation
-After hierarchy instantiation, above, the next step is to invoke the predictor
-in the language model.
+Invocation of the language model predictor is a Child Spawning Processing step,
+see above. Prediction takes place with reference to a particular zoom box,
+referred to here and in the Child Spawning Processing description as the
+*spawning parent*.
 
 There could be multiple language models in a zooming text entry system. The user
 could select between them, for example in a control panel user interface. The
@@ -260,7 +305,7 @@ language model, but doesn't describe any language model itself.
 The predictor will be invoked with the following parameters.
 
 -   *Message* text that has been entered so far, which will be the box text of
-    the zoom box under which the hierarchy was just instantiated.
+    the spawning parent.
 
 -   *Palette* root, in case the predictor needs access to, for example, the
     number of principal nodes in the palette.
@@ -296,7 +341,8 @@ The predictor will do the following.
         normalised later in the spawning process, see below.
 
     -   *Modelling data*, if any, to store in the zoom box hierarchy. The format
-        of the modelling data is opaque to the spawning code.
+        of the modelling data is opaque to the spawning code. The predictor can
+        store anything in the modelling data.
 
 3.  Return control to the spawning code.
 
@@ -314,7 +360,7 @@ following.
 
     -   Set the parent of the weight target to be one of the following.
 
-        -   The zoom box under which a new hierarchy was just instantiated.
+        -   The spawning parent.
         -   One of the newly instantiated boxes in the hierarchy that
             corresponds to a group node in the palette.
         
@@ -340,56 +386,38 @@ following.
 
 4.  Store the modelling data in the weight target box.
 
-    >   The requirement for user data storage in zoom boxes should be introduced
-    >   earlier in the specification.
-
-When the predictor returns control to the spawning code, after all invocations
-of the set-weight callback, the next step of spawning is processed.
-
-## Colour assignment
-Each newly instantiated child box under a new parent box will have its rectangle
-colour assigned according to the palette.
-
-Rectangle colour assignment is described in the
-[Zoom Box Palette](../05ZoomBoxPalette/ZoomBoxPalette.md) section.
-
-Note that colour assignment cannot be processed before predictor invocation.
-That is because the predictor might insert additional child boxes and hence
-change the index numbering.
+Language model invocation is complete when the predictor returns control to the
+spawning code after all invocations of the set-weight callback.
 
 ## Weight Finalisation
-After language model predictor invocation, above, a following step is to
-finalise the weight values. This is processed as follows.
+Weight finalisation is a Child Spawning Processing step, see above. Finalisation
+takes place with reference to a particular zoom box, referred to here and in the
+Child Spawning Processing description as the *spawning parent*.
+
+Processing is as follows.
 
 -   New child boxes that correspond to palette principal nodes will have a child
     weight, either the default value, one, or a value assigned by the language
-    model predictor, above. The child weight is the final weight in this case.
+    model predictor, above. The child weight is the final weight in that case.
 
 -   New child boxes that correspond to palette group nodes won't have a child
     weight. The final weight of each of these nodes will be calculated by
     summing the final weight values of its own child boxes. If the palette had
     more than two levels of hierarchy, this would be a recursive calculation.
 
-The above calculations complete the weight spawning stage of all the newly
-instantiated child boxes.
+The spawning parent's total weight will be the sum of all the final weight
+values of its child boxes. The parent total weight is used in the update
+cascade, as described in the
+[Zoom Box Movement](../07ZoomBoxMovement/ZoomBoxMovement.md) section. Child
+weights don't change after spawning. That means the parent total weight could be
+calculated and stored now, as an optimisation over being calculated every time
+it is needed.
 
-The new parent box's total weight will be the sum of all the final weight values
-of its child boxes. The total weight value will be used to check for cascade
-spawning, see below.
-
-The new parent box will be the child of another box, unless the new parent box
-is the root box, and therefore have a child weight. The total weight of the
-parent box is a separate and unrelated value to its child weight.
+Unless it is the root box, the spawning parent will be the child of another box
+and therefore will also have a child weight. The total weight of the spawning
+parent is a separate and unrelated value to its child weight.
 
 >   Maybe have a diagram of total weights, final weights, and child weights.
-
-## Cascade Check
-After weight finalisation, above, a following step is to check for cascade
-spawning. This is processed as follows.
-
-1.  For each newly instantiated child zoom box, calculate its lateral size ...
-
-2.  
 
 >   Example of predictor invocation goes here.
 
