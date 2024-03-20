@@ -4,7 +4,8 @@
 {
     "folders": [
         {"path": ".", "name": "Dasher Web"},
-        {"path": "documents/Specification", "name": "Specification"}
+        {"path": "documents/Specification", "name": "Specification"},
+        {"path": "../dasher-project_github", "name": "Dasher org"}
     ],
     "settings": {
         // Variable names are documented in the VSCod[e|ium] Settings.  
