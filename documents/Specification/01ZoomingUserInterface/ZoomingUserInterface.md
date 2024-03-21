@@ -54,11 +54,12 @@ A zooming user interface is one that can be described in the following terms.
     -   The **Visual** representation could be how it appears in the user
         interface.
     
-    The formal representation of a zoom box can have parameters that are used by
-    external components. Those parameters would be unused by the zooming system.
-    That type of parameter is sometimes referred to as opaque, or user data. The
-    language model is an exampel of an external component that utilises an
-    opaque zoom box parameter.
+    The formal representation of a zoom box can have parameters that are only
+    used by external components. The language model is an example of an external
+    component that requires that type of zoom box parameter. The zooming system
+    maintains the attachment of those parameters to their zoom boxes but doesn't
+    otherwise utilise them. Those parameters' values are opaque to the zooming
+    system. That type of parameter is sometimes referred to as user data.
     
 -   The zooming area has a designated **Origin** point. The origin can be
     represented by the Cartesian co-ordinates (0, 0) for example.
