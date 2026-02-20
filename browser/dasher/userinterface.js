@@ -22,6 +22,7 @@ import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 import {ppmModelPredict} from './predictor_ppm.js';
+import predictor_ppm_new from './predictor_ppm_new.js';
 
 import Speech from './speech.js';
 import KeyHandler from './keyhandler.js';
@@ -42,7 +43,9 @@ const defaultPredictorList = [{
 }, {
     "label": "Random", "item": predictor_test
 }, {
-    "label": "PPM", "item": ppmModelPredict
+    "label": "PPM (Original)", "item": ppmModelPredict
+}, {
+    "label": "PPM (Enhanced)", "item": predictor_ppm_new
 }];
 
 export default class UserInterface {

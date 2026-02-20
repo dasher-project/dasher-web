@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@willwade/ppmpredictor": "^0.0.12"
+  }
+}
