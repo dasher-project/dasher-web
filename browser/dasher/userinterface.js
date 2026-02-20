@@ -12,6 +12,7 @@ Whichever HTML file loads this script must also load the userinterface.css file.
 import Limits from './limits.js';
 import Piece from './piece.js';
 import Palette from './palette.js';
+import LanguagePalette from './languagePalette.js';
 import Pointer from './pointer.js';
 import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
@@ -22,7 +23,7 @@ import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 import {ppmModelPredict} from './predictor_ppm.js';
-import predictor_ppm_new from './predictor_ppm_new.js';
+import predictor_ppm_new, { ppmNewGetPredictor, ppmNewAddCorpus } from './predictor_ppm_new.js';
 
 import Speech from './speech.js';
 import KeyHandler from './keyhandler.js';
@@ -32,6 +33,7 @@ import ControlPanel from "./controlpanel.js";
 
 import MessageDisplay from "./messageDisplay.js";
 import MessageStore from "./messageStore.js";
+import * as LanguageManager from "./languageManager.js";
 
 const messageLabelText = "Message:";
 const speechAnnouncement = "Speech is now active.";
@@ -99,7 +101,7 @@ export default class UserInterface {
         this._controlPanel = new ControlPanel(panels);
         this._panels = this._controlPanel.load();
 
-        this._palette = new Palette().build();
+        this._palette = new LanguagePalette('en').build();
 
         // Predictors setter invocation, only OK after controlPanel is loaded.
         this.predictors = defaultPredictorList;
@@ -234,6 +236,15 @@ export default class UserInterface {
                 this._panels.main.prediction.piece);
         }
 
+        // Set up language selector
+        const supportedLanguages = LanguageManager.getSupportedLanguages();
+        this._panels.main.language.optionList = supportedLanguages.map(lang => lang.name);
+        this._panels.main.language.listener = async index => {
+            const lang = supportedLanguages[index];
+            await LanguageManager.setCurrentLanguage(lang.code);
+            await this._onLanguageChanged(lang);
+        };
+
         this._panels.main.prediction.listener = index => {
             this._controllerPointer.predictor = this.predictors[index].item;
         };
@@ -261,6 +272,91 @@ export default class UserInterface {
             speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
         }
         this._limits.ratios = UserInterface._ratios[index];
+    }
+
+    async _onLanguageChanged(language) {
+        console.log(`Changing language to: ${language.name} (${language.code})`);
+
+        // Update predictor with language-specific corpus
+        // Only works with PPM (Enhanced) predictor
+        try {
+            const predictor = ppmNewGetPredictor();
+            if (predictor) {
+                // Get lexicon for the language
+                const lexicon = await LanguageManager.getLexicon(language.code, 5000);
+
+                // Create a simple training text for the language
+                // (using common words from frequency list)
+                const trainingText = lexicon.slice(0, 1000).join(' ');
+
+                // Add or update the language corpus
+                const corpusKey = `lang_${language.code}`;
+
+                // Check if corpus already exists
+                const corpora = predictor.getCorpora();
+                if (corpora.includes(corpusKey)) {
+                    // Switch to existing corpus
+                    predictor.useCorpora([corpusKey, 'default']);
+                } else {
+                    // Add new corpus for this language
+                    ppmNewAddCorpus(corpusKey, trainingText, {
+                        description: `${language.name} vocabulary`,
+                        lexicon: lexicon
+                    });
+                    predictor.useCorpora([corpusKey]);
+                }
+
+                console.log(`Updated predictor with ${language.name} lexicon: ${lexicon.length} words`);
+            }
+        } catch (error) {
+            console.error('Failed to update predictor for language change:', error);
+        }
+
+        // Update speech voice to match language
+        if (this._speech && this._speech.available) {
+            await this._updateVoiceForLanguage(language);
+        }
+
+        // Rebuild palette with language-specific alphabet
+        this._palette.setLanguage(language.code);
+        console.log(`Updated palette for language: ${language.name} (${this._palette.codePoints.length} code points)`);
+
+        // Update the root template reference and reset zoom box
+        this._rootTemplate = this._palette.rootTemplate;
+
+        // Reset the zoom box with new palette if currently running
+        if (this._intervalRender !== undefined && this.zoomBox) {
+            // Create a new zoom box with the updated palette
+            this._new_ZoomBox(false);
+        }
+
+        // Update the random controller's palette too if it's being used
+        if (this._controllerRandom && this._controllerRandom.palette) {
+            // The random controller has its own small palette
+            // We could update it here, but for now we keep it simple
+            // as it's mainly for demonstration
+        }
+    }
+
+    async _updateVoiceForLanguage(language) {
+        if (!this._speech || !this._speech.voices) {
+            return;
+        }
+
+        // Find matching voice for the language
+        const match = LanguageManager.findMatchingVoice(this._speech.voices);
+        if (match) {
+            // Find the voice index
+            this._voiceIndex = this._speech.voices.findIndex(voice => voice === match);
+            console.log(`Changed voice to: ${match.name} (${match.lang})`);
+
+            // Update the voice selector if it exists
+            if (this._panels.speech && this._panels.speech.voice) {
+                const voiceOptions = this._speech.voices.map(v => v.name);
+                this._panels.speech.voice.optionList = voiceOptions;
+                this._panels.speech.voice.node.value = match.name;
+            }
+        }
     }
 
     _load_speech_controls() {
@@ -329,6 +425,10 @@ export default class UserInterface {
                 ;
                 // There's no way that voiceGroups.length should anything other
                 // than zero or a positive number but just in case.
+
+                // Auto-select voice matching current language
+                const currentLang = LanguageManager.getCurrentLanguage();
+                this._updateVoiceForLanguage(currentLang);
             }
             else {
                 this._panels.speech.voice.optionList = ['Speech unavailable'];

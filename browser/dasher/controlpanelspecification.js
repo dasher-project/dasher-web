@@ -6,8 +6,9 @@ export default {
 
     "main": {
         $: {"order": 0, "label":null},
-        "prediction": {$:{"order": 0, "control":"select"}},
-         "behaviour": {$:{"order": 1, "control":"select"}}
+        "language": {$:{"order": 0, "control":"select", "label":"Language"}},
+        "prediction": {$:{"order": 1, "control":"select"}},
+         "behaviour": {$:{"order": 2, "control":"select"}}
     },
 
     "navigator": {
