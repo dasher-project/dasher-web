@@ -45,7 +45,12 @@ body {
     overflow: hidden;
 }
 
+#user-interface.ui-game-nav-visible {
+    grid-template-rows: 62px 44px minmax(0, 1fr) 54px;
+}
+
 .ui-top-bar,
+.ui-game-nav,
 .ui-bottom-bar {
     background: var(--ui-bar-bg);
     border-top: 1px solid #efefef;
@@ -64,6 +69,29 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.ui-game-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ui-game-nav__inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: max-content;
+}
+
+.ui-game-stats-inline {
+    max-width: 48vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ui-top-bar__left,
@@ -609,6 +637,9 @@ input[type="number"] + label {
     #user-interface {
         grid-template-rows: 62px minmax(0, 1fr) 56px;
     }
+    #user-interface.ui-game-nav-visible {
+        grid-template-rows: 62px 42px minmax(0, 1fr) 56px;
+    }
 
     .ui-label,
     .ui-label_muted {
@@ -641,6 +672,9 @@ input[type="number"] + label {
     #user-interface {
         grid-template-rows: 56px minmax(0, 1fr) 56px;
     }
+    #user-interface.ui-game-nav-visible {
+        grid-template-rows: 56px 40px minmax(0, 1fr) 56px;
+    }
 
     .ui-top-bar {
         padding: 0 8px;
@@ -649,6 +683,7 @@ input[type="number"] + label {
 
     .ui-top-bar__left,
     .ui-top-bar__right,
+    .ui-game-nav__inner,
     .ui-bottom-bar__primary {
         gap: 6px;
     }
@@ -660,6 +695,10 @@ input[type="number"] + label {
     .ui-chip,
     .ui-nav-label {
         font-size: 12px;
+    }
+
+    .ui-game-stats-inline {
+        max-width: 65vw;
     }
 
     .ui-button,

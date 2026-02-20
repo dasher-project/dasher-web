@@ -113,6 +113,7 @@ export default class UserInterface {
 
         this._svgRect = undefined;
         this._header = undefined;
+        this._gameNavBar = undefined;
         this._mainArea = undefined;
         this._messageResizeHandle = undefined;
         this._messagePane = undefined;
@@ -171,6 +172,8 @@ export default class UserInterface {
         this._statsModal = undefined;
         this._statsDialog = undefined;
         this._statsBody = undefined;
+        this._statsInlineVisible = false;
+        this._statsInline = undefined;
         this._sessionStartMs = null;
         this._lastMessageForStats = "";
         this._totalTypedCharacters = 0;
@@ -236,9 +239,11 @@ export default class UserInterface {
         this._header = new Piece('div', this._parent);
         this.header.classList.add('header', 'ui-top-bar');
         this._build_top_bar();
+        this._gameNavBar = new Piece('div', this._parent);
+        this._gameNavBar.node.classList.add('ui-game-nav', '_hidden');
+        this._build_game_nav_bar();
 
         this._create_prefs_modal();
-        this._create_stats_modal();
 
         // In keyboard mode, the control panel and all its HTML still exist but
         // never gets added to the body so it doesn't get rendered.
@@ -313,7 +318,16 @@ export default class UserInterface {
             this._panels.message.export.listener();
         });
         this._quickControls.playButton = this._create_button(
-            primary, "Play", "ui-button ui-button_accent", () => {
+            primary, "Play", "ui-button", () => {
+                const visible = this._parent.classList.contains('ui-game-nav-visible');
+                if (visible) {
+                    this._set_game_nav_visible(false);
+                    if (this._intervalRender !== null && this._intervalRender !== undefined) {
+                        this._stop_render();
+                    }
+                    return;
+                }
+                this._set_game_nav_visible(true);
                 if (this._intervalRender !== null && this._intervalRender !== undefined) {
                     this._stop_render();
                     this._quickControls.playButton.textContent = "Play";
@@ -324,13 +338,23 @@ export default class UserInterface {
                 this._quickControls.playButton.textContent = "Pause";
             }
         );
-        this._create_button(primary, "Prefs", "ui-button", this._toggle_prefs.bind(this));
         this._quickControls.statsButton = this._create_button(
-            primary, "View stats", "ui-button", this._toggle_stats.bind(this)
+            primary, "View stats", "ui-button", () => {
+                if (!this._parent.classList.contains('ui-game-nav-visible')) {
+                    this._set_game_nav_visible(true);
+                }
+                this._toggle_stats_inline();
+            }
         );
 
-        const secondary = new Piece('div', this._header);
-        secondary.node.classList.add('ui-top-bar__right');
+        const right = new Piece('div', this._header);
+        right.node.classList.add('ui-top-bar__right');
+        this._create_button(right, "Prefs", "ui-button", this._toggle_prefs.bind(this));
+    }
+
+    _build_game_nav_bar() {
+        const secondary = new Piece('div', this._gameNavBar);
+        secondary.node.classList.add('ui-game-nav__inner');
         this._quickControls.newGame = this._create_button(
             secondary, "New game", "ui-link-button", this._start_new_game.bind(this)
         );
@@ -340,6 +364,65 @@ export default class UserInterface {
         this._quickControls.levelChip = secondary.create('span', {'class': 'ui-chip'}, "Beginner");
         this._quickControls.wpmChip = secondary.create('span', {'class': 'ui-chip'}, "WPM: 0");
         this._quickControls.accuracyChip = secondary.create('span', {'class': 'ui-chip'}, "Accuracy: 100%");
+        this._statsInline = secondary.create('span', {
+            'class': 'ui-chip ui-game-stats-inline _hidden'
+        }, "");
+    }
+
+    _set_game_nav_visible(visible) {
+        if (this._gameNavBar === undefined) {
+            return;
+        }
+        this._gameNavBar.node.classList.toggle('_hidden', !visible);
+        if (this._parent !== undefined) {
+            this._parent.classList.toggle('ui-game-nav-visible', visible);
+        }
+        if (this._quickControls.playButton !== undefined) {
+            this._quickControls.playButton.classList.toggle('ui-button_accent', visible);
+        }
+        if (!visible && this._statsInlineVisible) {
+            this._statsInlineVisible = false;
+            if (this._statsInline !== undefined) {
+                this._statsInline.classList.add('_hidden');
+            }
+            if (this._quickControls.statsButton !== undefined) {
+                this._quickControls.statsButton.textContent = "View stats";
+                this._quickControls.statsButton.classList.remove('ui-button_accent');
+            }
+        }
+    }
+
+    _toggle_stats_inline() {
+        this._statsInlineVisible = !this._statsInlineVisible;
+        if (this._statsInline !== undefined) {
+            this._statsInline.classList.toggle('_hidden', !this._statsInlineVisible);
+        }
+        if (this._quickControls.statsButton !== undefined) {
+            this._quickControls.statsButton.textContent = (
+                this._statsInlineVisible ? "Hide stats" : "View stats"
+            );
+            this._quickControls.statsButton.classList.toggle(
+                'ui-button_accent', this._statsInlineVisible
+            );
+        }
+        this._refresh_stats_inline();
+    }
+
+    _refresh_stats_inline() {
+        if (!this._statsInlineVisible || this._statsInline === undefined) {
+            return;
+        }
+        const wpm = this._current_wpm();
+        this._peakWpm = Math.max(this._peakWpm, wpm);
+        const accuracy = this._current_accuracy();
+        const minutes = this._session_minutes();
+        this._statsInline.textContent = [
+            `Elapsed ${minutes.toFixed(1)}m`,
+            `Peak ${this._peakWpm.toFixed(1)} WPM`,
+            `Typed ${this._totalTypedCharacters}`,
+            `Fixes ${this._totalCorrections}`,
+            `Accuracy ${accuracy.toFixed(1)}%`
+        ].join(" | ");
     }
 
     _build_bottom_bar() {
@@ -985,6 +1068,7 @@ export default class UserInterface {
                 `Accuracy: ${this._current_accuracy().toFixed(0)}%`
             );
         }
+        this._refresh_stats_inline();
     }
 
     _bind_quick_controls() {
