@@ -217,14 +217,15 @@ body.ui-resizing-message {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+    opacity: 0.92;
 }
 
 .ui-bottom-bar__primary,
 .ui-bottom-bar__secondary {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0 14px;
+    gap: 8px;
+    padding: 0 10px;
     white-space: nowrap;
     min-width: max-content;
 }
@@ -232,7 +233,7 @@ body.ui-resizing-message {
 .ui-control-group {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .ui-button_compact {
@@ -255,6 +256,49 @@ body.ui-resizing-message {
     font-weight: 500;
     height: 34px;
     padding: 0 14px;
+}
+
+.ui-bottom-bar .ui-button,
+.ui-bottom-bar .ui-link-button,
+.ui-bottom-bar .ui-select,
+.ui-bottom-bar .ui-value,
+.ui-bottom-bar .ui-chip,
+.ui-bottom-bar .ui-nav-label,
+.ui-bottom-bar .ui-step-button {
+    font-size: 11px;
+}
+
+.ui-bottom-bar .ui-button,
+.ui-bottom-bar .ui-link-button,
+.ui-bottom-bar .ui-select {
+    height: 28px;
+    padding: 0 8px;
+}
+
+.ui-bottom-bar .ui-step-button {
+    width: 24px;
+    height: 24px;
+}
+
+.ui-bottom-bar .ui-value,
+.ui-bottom-bar .ui-chip {
+    height: 24px;
+    min-width: 32px;
+    padding: 0 6px;
+}
+
+.ui-bottom-bar .ui-switch {
+    width: 26px;
+    height: 16px;
+}
+
+.ui-bottom-bar .ui-colour-dot {
+    width: 14px;
+    height: 14px;
+}
+
+.ui-bottom-bar .ui-select_language {
+    min-width: 140px;
 }
 
 .ui-link-button {
