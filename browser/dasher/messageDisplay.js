@@ -3,8 +3,6 @@
 
 import Piece from './piece.js';
 
-const messageLabelText = "Message:";
-
 export default class MessageDisplay {
     constructor(limits) {
       this._messageDisplay = null;
@@ -35,11 +33,13 @@ export default class MessageDisplay {
               message === null ? "null" :
               null
           );
-          const labels = [messageLabelText];
-          if (description !== null) {
-              labels.push(" (", description, ")");
+          if (this._messageLabel !== undefined && this._messageLabel !== null) {
+              const labels = [];
+              if (description !== null) {
+                  labels.push("(", description, ")");
+              }
+              this._messageLabel.firstChild.nodeValue = labels.join("");
           }
-          this._messageLabel.firstChild.nodeValue = labels.join("");
       }
       this._messageDisplay.node.textContent = (
           message === undefined ? null : message);
@@ -65,7 +65,9 @@ export default class MessageDisplay {
     }
 
     setLabelText(messageLabelText){
-      this._messageLabel.firstChild.nodeValue = messageLabelText;
+      if (this._messageLabel !== undefined && this._messageLabel !== null) {
+        this._messageLabel.firstChild.nodeValue = messageLabelText;
+      }
     }
 
     _load_message(header,keyboardMode) {
@@ -73,11 +75,10 @@ export default class MessageDisplay {
         this._messageDiv = new Piece(
             'div', header, {'id':"message-holder"});
         const identifierMessage = "message";
-        this._messageLabel = this._messageDiv.create(
-            'label', {'for':identifierMessage}, messageLabelText);
+        this._messageLabel = null;
         this._messageDisplay = new Piece('textarea', this._messageDiv, {
             'id':identifierMessage, 'name':identifierMessage, 'readonly':true,
-            'rows': keyboardMode ? 1 : 2, 'cols':80,
+            'rows': keyboardMode ? 1 : 8, 'cols':80,
             'placeholder':"Message will appear here ..."
         });
     }

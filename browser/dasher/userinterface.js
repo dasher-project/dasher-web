@@ -40,7 +40,7 @@ import MessageDisplay from "./messageDisplay.js";
 import MessageStore from "./messageStore.js";
 import * as LanguageManager from "./languageManager.js";
 
-const messageLabelText = "Message:";
+const messageLabelText = "";
 const speechAnnouncement = "Speech is now active.";
 
 const defaultPredictorList = [{
@@ -113,7 +113,9 @@ export default class UserInterface {
 
         this._svgRect = undefined;
         this._header = undefined;
-        this._messageBar = undefined;
+        this._mainArea = undefined;
+        this._messageResizeHandle = undefined;
+        this._messagePane = undefined;
         this._bottomBar = undefined;
         this._prefsModal = undefined;
         this._prefsDialog = undefined;
@@ -147,6 +149,10 @@ export default class UserInterface {
         this._activeColourPreset = 0;
         this._fontSize = 15;
         this._fontFamily = "Arial";
+        this._messagePosition = "right";
+        this._messagePaneWidth = 420;
+        this._resizingMessagePane = false;
+        this._uiPreferencesKey = "dasher-ui-preferences";
 
         this._statsModal = undefined;
         this._statsDialog = undefined;
@@ -211,6 +217,8 @@ export default class UserInterface {
     }
 
     load(loadingID, footerID) {
+        this._load_ui_preferences();
+
         this._header = new Piece('div', this._parent);
         this.header.classList.add('header', 'ui-top-bar');
         this._build_top_bar();
@@ -223,10 +231,16 @@ export default class UserInterface {
         this._controlPanelParent = (
             this._keyboardMode ? null : new Piece('form', this._prefsContent));
 
-        this._messageBar = new Piece('div', this._parent);
-        this._messageBar.node.classList.add('ui-message-bar');
-        this._messageDisplay.load(this._messageBar, this._keyboardMode);
+        this._mainArea = new Piece('div', this._parent);
+        this._mainArea.node.classList.add('ui-main-area');
         this._load_view();
+        this._messageResizeHandle = new Piece('div', this._mainArea);
+        this._messageResizeHandle.node.classList.add('ui-message-resizer');
+        this._messagePane = new Piece('div', this._mainArea);
+        this._messagePane.node.classList.add('ui-message-pane');
+        this._messageDisplay.load(this._messagePane, this._keyboardMode);
+        this._attach_message_resizer();
+        this._apply_message_position(this._messagePosition);
         this._bottomBar = new Piece('div', this._parent);
         this._bottomBar.node.classList.add('ui-bottom-bar');
         this._build_bottom_bar();
@@ -400,6 +414,17 @@ export default class UserInterface {
         this._quickControls.behaviour.appendChild(new Option("Right side"));
         this._quickControls.behaviour.appendChild(new Option("Balanced"));
 
+        const groupMessagePosition = createGroup(true);
+        const messagePosLabel = groupMessagePosition.appendChild(document.createElement('span'));
+        messagePosLabel.className = "ui-nav-label";
+        messagePosLabel.textContent = "Message";
+        this._quickControls.messagePosition = groupMessagePosition.appendChild(
+            document.createElement('select')
+        );
+        this._quickControls.messagePosition.className = "ui-select";
+        this._quickControls.messagePosition.appendChild(new Option("Right", "right"));
+        this._quickControls.messagePosition.appendChild(new Option("Top", "top"));
+
         const groupSpeech = createGroup(false);
         const speechLabel = groupSpeech.appendChild(document.createElement('span'));
         speechLabel.className = "ui-nav-label";
@@ -511,6 +536,114 @@ export default class UserInterface {
     _toggle_stats() {
         this._refresh_stats_modal();
         this._statsModal.node.classList.toggle('_hidden');
+    }
+
+    _load_ui_preferences() {
+        try {
+            const raw = window.localStorage.getItem(this._uiPreferencesKey);
+            if (raw === null) {
+                return;
+            }
+            const parsed = JSON.parse(raw);
+            if (parsed !== null && typeof parsed === "object") {
+                if (parsed.messagePosition === "top" || parsed.messagePosition === "right") {
+                    this._messagePosition = parsed.messagePosition;
+                }
+                if (
+                    typeof parsed.messagePaneWidth === "number" &&
+                    Number.isFinite(parsed.messagePaneWidth)
+                ) {
+                    this._messagePaneWidth = Math.max(
+                        220, Math.min(900, Math.round(parsed.messagePaneWidth))
+                    );
+                }
+            }
+        }
+        catch (error) {
+            console.warn("Could not load UI preferences.", error);
+        }
+    }
+
+    _save_ui_preferences() {
+        try {
+            const payload = {
+                messagePosition: this._messagePosition,
+                messagePaneWidth: this._messagePaneWidth
+            };
+            window.localStorage.setItem(
+                this._uiPreferencesKey, JSON.stringify(payload)
+            );
+        }
+        catch (error) {
+            console.warn("Could not save UI preferences.", error);
+        }
+    }
+
+    _apply_message_position(position) {
+        this._messagePosition = (position === "top" ? "top" : "right");
+        if (this._mainArea !== undefined) {
+            this._mainArea.node.classList.toggle(
+                'ui-message-position-top', this._messagePosition === "top"
+            );
+            this._mainArea.node.classList.toggle(
+                'ui-message-position-right', this._messagePosition !== "top"
+            );
+            this._mainArea.node.style.setProperty(
+                '--message-pane-width', `${this._messagePaneWidth}px`
+            );
+        }
+        this._save_ui_preferences();
+        this._sync_quick_controls();
+        setTimeout(() => this._on_resize(), 0);
+    }
+
+    _attach_message_resizer() {
+        if (this._messageResizeHandle === undefined || this._mainArea === undefined) {
+            return;
+        }
+        let startX = 0;
+        let startWidth = this._messagePaneWidth;
+
+        const onMove = event => {
+            if (!this._resizingMessagePane || this._messagePosition !== "right") {
+                return;
+            }
+            const delta = startX - event.clientX;
+            const mainRect = this._mainArea.node.getBoundingClientRect();
+            const minWidth = 220;
+            const maxWidth = Math.max(minWidth, Math.floor(mainRect.width * 0.6));
+            this._messagePaneWidth = Math.max(
+                minWidth,
+                Math.min(maxWidth, startWidth + delta)
+            );
+            this._mainArea.node.style.setProperty(
+                '--message-pane-width', `${this._messagePaneWidth}px`
+            );
+            this._on_resize();
+        };
+
+        const onUp = () => {
+            if (!this._resizingMessagePane) {
+                return;
+            }
+            this._resizingMessagePane = false;
+            document.body.classList.remove('ui-resizing-message');
+            this._save_ui_preferences();
+        };
+
+        this._messageResizeHandle.node.addEventListener('pointerdown', event => {
+            if (this._messagePosition !== "right") {
+                return;
+            }
+            this._resizingMessagePane = true;
+            startX = event.clientX;
+            startWidth = this._messagePaneWidth;
+            document.body.classList.add('ui-resizing-message');
+            this._messageResizeHandle.node.setPointerCapture(event.pointerId);
+            event.preventDefault();
+        });
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
     }
 
     _apply_colour_preset(index) {
@@ -638,6 +771,9 @@ export default class UserInterface {
         if (this._quickControls.learning !== undefined) {
             this._quickControls.learning.checked = this._learningEnabled;
         }
+        if (this._quickControls.messagePosition !== undefined) {
+            this._quickControls.messagePosition.value = this._messagePosition;
+        }
         const wpm = this._current_wpm();
         this._peakWpm = Math.max(this._peakWpm, wpm);
         if (this._quickControls.wpmChip !== undefined) {
@@ -692,6 +828,9 @@ export default class UserInterface {
                 value: event.target.value
             });
         });
+        this._quickControls.messagePosition.addEventListener('change', event => {
+            this._apply_message_position(event.target.value);
+        });
 
         this._quickControls.learning.checked = this._learningEnabled;
         this._quickControls.learning.addEventListener('change', event => {
@@ -719,7 +858,7 @@ export default class UserInterface {
 
     _load_view() {
         // This element is the root of the whole zooming area.
-        this._svg = new Piece('svg', this._parent);
+        this._svg = new Piece('svg', this._mainArea);
         // Touching and dragging in a mobile web view will scroll or pan the
         // screen, by default. Next line suppresses that. Reference:
         // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
