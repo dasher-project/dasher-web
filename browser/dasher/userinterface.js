@@ -37,6 +37,8 @@ const messageLabelText = "Message:";
 const speechAnnouncement = "Speech is now active.";
 
 const defaultPredictorList = [{
+    "label": "PPM (Enhanced)", "item": predictor_ppm_new
+}, {
     "label": "Basic", "item": predictor_basic
 }, {
     "label": "None", "item": predictor_dummy
@@ -44,8 +46,6 @@ const defaultPredictorList = [{
     "label": "Random", "item": predictor_test
 }, {
     "label": "PPM (Original)", "item": ppmModelPredict
-}, {
-    "label": "PPM (Enhanced)", "item": predictor_ppm_new
 }];
 
 export default class UserInterface {
@@ -86,7 +86,8 @@ export default class UserInterface {
 
         // This value also appears in the userinterface.css file, in the
         // --transition variable, and it's good if they're the same.
-        this._transitionMillis = 400;
+        // Reduced from 400ms to 33ms for smoother 30 FPS animation
+        this._transitionMillis = 33;
 
         this._message = undefined;
         this._messageDisplay = new MessageDisplay(this._limits);

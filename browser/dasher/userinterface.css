@@ -62,8 +62,9 @@ svg {
 :root {
     /* This value also appears in the index.js file, in the _transitionMillis
      * property, and it's good if they're the same.
+     * Reduced from 0.4s to 0.033s for smoother 30 FPS animation
      */
-    --transition: 0.4s;
+    --transition: 0.033s;
 }
 
 svg rect {

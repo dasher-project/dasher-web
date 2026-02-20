@@ -136,18 +136,24 @@ export default async function predictor_ppm_new(
  */
 export function ppmNewReset(palette, otherText) {
   isInitialized = false;
+  initializationPromise = null;
 
   if (predictor) {
     predictor = createPredictor(config);
 
-    // Train on static texts
-    predictor.train(bufferAlice);
-    predictor.train(bufferSherlockHolmes);
+    // Quick initial training
+    predictor.train(quickTrainingText);
+    isInitialized = true;
 
-    // Train on additional text if provided
-    if (otherText && otherText.length > 0) {
-      predictor.train(otherText);
-    }
+    // Train on full corpus in background
+    setTimeout(() => {
+      predictor.train(bufferAlice);
+      predictor.train(bufferSherlockHolmes);
+      // Train on additional text if provided
+      if (otherText && otherText.length > 0) {
+        predictor.train(otherText);
+      }
+    }, 100);
   }
 }
 
