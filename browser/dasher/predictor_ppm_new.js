@@ -36,6 +36,8 @@ const config = {
 let predictor = null;
 let isInitialized = false;
 let initializationPromise = null;
+let learningEnabled = false;
+let learnedText = "";
 
 // Simple training text for fast initial startup
 const quickTrainingText = "The quick brown fox jumps over the lazy dog. " +
@@ -97,10 +99,29 @@ export default async function predictor_ppm_new(
   // Initialize on first use (fast, non-blocking)
   await initialize();
 
+  const currentText = (typeof text === "string" ? text : "");
+
+  // Learn only the newly appended text while learning mode is enabled.
+  if (learningEnabled) {
+    if (currentText.startsWith(learnedText)) {
+      const appended = currentText.slice(learnedText.length);
+      if (appended.length > 0) {
+        predictor.train(appended);
+      }
+      learnedText = currentText;
+    }
+    else {
+      learnedText = currentText;
+    }
+  }
+  else {
+    learnedText = currentText;
+  }
+
   // Reset context and set current message as context
   predictor.resetContext();
-  if (text && text.length > 0) {
-    predictor.addToContext(text);
+  if (currentText.length > 0) {
+    predictor.addToContext(currentText, false);
   }
 
   // Get character predictions from PPM model
@@ -155,6 +176,8 @@ export function ppmNewReset(palette, otherText) {
       }
     }, 100);
   }
+
+  learnedText = "";
 }
 
 /**
@@ -239,4 +262,15 @@ export function ppmNewAddCorpus(corpusKey, text, options = {}) {
   if (predictor) {
     predictor.addTrainingCorpus(corpusKey, text, options);
   }
+}
+
+export function ppmNewSetLearningEnabled(enabled) {
+  learningEnabled = !!enabled;
+  if (!learningEnabled) {
+    learnedText = "";
+  }
+}
+
+export function ppmNewGetLearningEnabled() {
+  return learningEnabled;
 }

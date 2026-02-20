@@ -11,5 +11,5 @@ import UserInterface from './dasher/userinterface.js'
 document.body.onload = () => {
     const ui = new UserInterface(
         document.getElementById('user-interface')
-    ).load('loading', 'small-print');
+    ).load('loading', null);
 }

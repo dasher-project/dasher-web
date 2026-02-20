@@ -23,7 +23,12 @@ import predictor_dummy from './predictor_dummy.js'
 import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 import {ppmModelPredict} from './predictor_ppm.js';
-import predictor_ppm_new, { ppmNewGetPredictor, ppmNewAddCorpus } from './predictor_ppm_new.js';
+import predictor_ppm_new, {
+    ppmNewGetPredictor,
+    ppmNewAddCorpus,
+    ppmNewSetLearningEnabled,
+    ppmNewGetLearningEnabled
+} from './predictor_ppm_new.js';
 
 import Speech from './speech.js';
 import KeyHandler from './keyhandler.js';
@@ -108,6 +113,48 @@ export default class UserInterface {
 
         this._svgRect = undefined;
         this._header = undefined;
+        this._bottomBar = undefined;
+        this._prefsModal = undefined;
+        this._prefsDialog = undefined;
+        this._prefsContent = undefined;
+        this._quickControls = {};
+        this._currentSpeed = 0.1;
+        this._learningEnabled = ppmNewGetLearningEnabled();
+        this._colourPresets = [
+            {
+                capital: "#f5db4d",
+                numeral: "#f3a87f",
+                space: "#d9d7d2",
+                punctuation: "#84c96c",
+                contraction: "#e5b8f7"
+            },
+            {
+                capital: "#ffd166",
+                numeral: "#ef476f",
+                space: "#d7d7d7",
+                punctuation: "#06d6a0",
+                contraction: "#118ab2"
+            },
+            {
+                capital: "#f3e85a",
+                numeral: "#ff9e80",
+                space: "#d0d4dc",
+                punctuation: "#57cc99",
+                contraction: "#cfa8ff"
+            }
+        ];
+        this._activeColourPreset = 0;
+        this._fontSize = 15;
+        this._fontFamily = "Arial";
+
+        this._statsModal = undefined;
+        this._statsDialog = undefined;
+        this._statsBody = undefined;
+        this._sessionStartMs = null;
+        this._lastMessageForStats = "";
+        this._totalTypedCharacters = 0;
+        this._totalCorrections = 0;
+        this._peakWpm = 0;
 
         this._stopCallback = null;
     }
@@ -148,6 +195,7 @@ export default class UserInterface {
     set message(message) {
         this._message = message;
         this._messageDisplay.update(message);
+        this._update_stats_from_message(message);
     }
     _save_message(){
       this._messageStore.addMessage(this.message);
@@ -163,20 +211,28 @@ export default class UserInterface {
 
     load(loadingID, footerID) {
         this._header = new Piece('div', this._parent);
-        this.header.classList.add('header');
+        this.header.classList.add('header', 'ui-top-bar');
+        this._build_top_bar();
+
+        this._create_prefs_modal();
+        this._create_stats_modal();
 
         // In keyboard mode, the control panel and all its HTML still exist but
         // never gets added to the body so it doesn't get rendered.
         this._controlPanelParent = (
-            this._keyboardMode ? null : new Piece('form', this._header));
+            this._keyboardMode ? null : new Piece('form', this._prefsContent));
 
-        this._messageDisplay.load(this._header,this._keyboardMode);
+        this._messageDisplay.load(this._prefsContent, this._keyboardMode);
         this._load_view();
+        this._bottomBar = new Piece('div', this._parent);
+        this._bottomBar.node.classList.add('ui-bottom-bar');
+        this._build_bottom_bar();
 
         this._header.add_child(this._keyHandler.piece);
 
         this._load_control_panel(loadingID);
         this._load_controls();
+        this._bind_quick_controls();
 
         this._load_pointer();
         this._load_speed_controls();
@@ -198,6 +254,401 @@ export default class UserInterface {
         // To-do: should be an async function that returns a promise that
         // resolves to this.
         return this;
+    }
+
+    _create_button(parent, label, className, listener) {
+        const button = parent.create('button', {'type': 'button'}, label);
+        className.split(/\s+/).filter(name => name.length > 0).forEach(name => {
+            button.classList.add(name);
+        });
+        if (listener !== undefined) {
+            button.addEventListener('click', listener);
+        }
+        return button;
+    }
+
+    _build_top_bar() {
+        const left = new Piece('div', this._header);
+        left.node.classList.add('ui-top-bar__left');
+
+        this._quickControls.backButton = this._create_button(
+            left, "‹", "ui-icon-button", () => this.reset()
+        );
+
+        this._quickControls.language = left.create('select', {'class': 'ui-select'});
+        this._quickControls.language.classList.add('ui-select_language');
+
+        const speedLabel = left.create('span', {'class': 'ui-label'}, "Speed");
+        speedLabel.classList.add('ui-label_muted');
+        const speedGroup = left.create('div', {'class': 'ui-stepper'});
+        this._quickControls.speedMinus = this._create_button(
+            new Piece(speedGroup), "-", "ui-step-button"
+        );
+        this._quickControls.speedValue = speedGroup.appendChild(
+            document.createElement('span')
+        );
+        this._quickControls.speedValue.className = "ui-value";
+        this._quickControls.speedPlus = this._create_button(
+            new Piece(speedGroup), "+", "ui-step-button"
+        );
+
+        this._quickControls.learning = left.create('input', {'type': 'checkbox'});
+        this._quickControls.learning.classList.add('ui-switch');
+        left.create('label', {'class': 'ui-label'}, "Learning");
+
+        this._quickControls.colours = left.create('div', {'class': 'ui-colours'});
+        this._colourPresets.forEach((preset, index) => {
+            const swatch = document.createElement('button');
+            swatch.type = "button";
+            swatch.className = "ui-colour-dot";
+            swatch.style.background = preset.capital;
+            swatch.addEventListener('click', () => this._apply_colour_preset(index));
+            this._quickControls.colours.appendChild(swatch);
+        });
+
+        this._quickControls.font = left.create('select', {'class': 'ui-select'});
+        ["Arial", "Verdana", "Segoe UI"].forEach(name => {
+            this._quickControls.font.appendChild(new Option(name));
+        });
+
+        const fontSizeGroup = left.create('div', {'class': 'ui-stepper'});
+        this._quickControls.fontSizeMinus = this._create_button(
+            new Piece(fontSizeGroup), "-", "ui-step-button"
+        );
+        this._quickControls.fontSizeValue = fontSizeGroup.appendChild(
+            document.createElement('span')
+        );
+        this._quickControls.fontSizeValue.className = "ui-value";
+        this._quickControls.fontSizePlus = this._create_button(
+            new Piece(fontSizeGroup), "+", "ui-step-button"
+        );
+
+        this._quickControls.speech = left.create('input', {'type': 'checkbox'});
+        this._quickControls.speech.classList.add('ui-switch');
+        left.create('label', {'class': 'ui-label'}, "Speech");
+
+        this._quickControls.voice = left.create('select', {'class': 'ui-select'});
+
+        const right = new Piece('div', this._header);
+        right.node.classList.add('ui-top-bar__right');
+        this._quickControls.prefsButton = this._create_button(
+            right, "Prefs", "ui-button", this._toggle_prefs.bind(this)
+        );
+    }
+
+    _build_bottom_bar() {
+        const primary = this._bottomBar.create(
+            'div', {'class': 'ui-bottom-bar__primary'}
+        );
+        this._create_button(new Piece(primary), "New", "ui-button", () => this.reset());
+        this._create_button(new Piece(primary), "Open", "ui-button", () => {
+            this._panels.message.import.listener();
+        });
+        this._create_button(new Piece(primary), "Save", "ui-button", () => {
+            this._save_message();
+            this._panels.message.export.listener();
+        });
+        this._quickControls.playButton = this._create_button(
+            new Piece(primary), "Play", "ui-button ui-button_accent", () => {
+                if (this._intervalRender !== null && this._intervalRender !== undefined) {
+                    this._stop_render();
+                    this._quickControls.playButton.textContent = "Play";
+                    return;
+                }
+                this.clicked_pointer();
+                this.activate_render();
+                this._quickControls.playButton.textContent = "Pause";
+            }
+        );
+
+        this._quickControls.behaviour = primary.appendChild(
+            document.createElement('select')
+        );
+        this._quickControls.behaviour.className = "ui-select";
+        this._quickControls.behaviour.appendChild(new Option("Right side"));
+        this._quickControls.behaviour.appendChild(new Option("Balanced"));
+
+        this._create_button(
+            new Piece(primary), "Prefs", "ui-button", this._toggle_prefs.bind(this)
+        );
+        this._quickControls.statsButton = this._create_button(
+            new Piece(primary), "View stats", "ui-button", this._toggle_stats.bind(this)
+        );
+
+        const secondary = this._bottomBar.create(
+            'div', {'class': 'ui-bottom-bar__secondary'}
+        );
+        this._create_button(new Piece(secondary), "New game", "ui-link-button", () => {
+            this._reset_stats();
+            this.reset();
+        });
+        this._create_button(new Piece(secondary), "Start over", "ui-link-button", () => {
+            this.reset();
+        });
+        this._quickControls.levelChip = secondary.appendChild(document.createElement('span'));
+        this._quickControls.levelChip.className = "ui-chip";
+        this._quickControls.levelChip.textContent = "Beginner";
+        this._quickControls.wpmChip = secondary.appendChild(document.createElement('span'));
+        this._quickControls.wpmChip.className = "ui-chip";
+        this._quickControls.wpmChip.textContent = "WPM: 0";
+        this._quickControls.accuracyChip = secondary.appendChild(document.createElement('span'));
+        this._quickControls.accuracyChip.className = "ui-chip";
+        this._quickControls.accuracyChip.textContent = "Accuracy: 100%";
+    }
+
+    _create_prefs_modal() {
+        this._prefsModal = new Piece('div', this._parent);
+        this._prefsModal.node.classList.add('ui-modal', '_hidden');
+
+        this._prefsDialog = new Piece('div', this._prefsModal);
+        this._prefsDialog.node.classList.add('ui-modal__dialog');
+        this._prefsDialog.create('h1', {'class': 'ui-modal__title'}, "Preferences");
+        const close = this._create_button(
+            this._prefsDialog, "Close", "ui-button", this._toggle_prefs.bind(this)
+        );
+        close.classList.add('ui-modal__close');
+        this._prefsContent = new Piece('div', this._prefsDialog);
+        this._prefsContent.node.classList.add('ui-modal__content');
+
+        this._prefsModal.node.addEventListener('click', event => {
+            if (event.target === this._prefsModal.node) {
+                this._toggle_prefs();
+            }
+        });
+    }
+
+    _create_stats_modal() {
+        this._statsModal = new Piece('div', this._parent);
+        this._statsModal.node.classList.add('ui-modal', '_hidden');
+
+        this._statsDialog = new Piece('div', this._statsModal);
+        this._statsDialog.node.classList.add('ui-modal__dialog', 'ui-modal__dialog_stats');
+        this._statsDialog.create('h1', {'class': 'ui-modal__title'}, "Session stats");
+        const close = this._create_button(
+            this._statsDialog, "Close", "ui-button", this._toggle_stats.bind(this)
+        );
+        close.classList.add('ui-modal__close');
+        this._statsBody = new Piece('div', this._statsDialog);
+        this._statsBody.node.classList.add('ui-modal__content');
+
+        this._statsModal.node.addEventListener('click', event => {
+            if (event.target === this._statsModal.node) {
+                this._toggle_stats();
+            }
+        });
+    }
+
+    _toggle_prefs() {
+        this._prefsModal.node.classList.toggle('_hidden');
+    }
+
+    _toggle_stats() {
+        this._refresh_stats_modal();
+        this._statsModal.node.classList.toggle('_hidden');
+    }
+
+    _apply_colour_preset(index) {
+        const preset = this._colourPresets[index];
+        this._activeColourPreset = index;
+
+        this._panels.colour.fill.capital.set_value(preset.capital);
+        this._panels.colour.fill.numeral.set_value(preset.numeral);
+        this._panels.colour.fill.space.set_value(preset.space);
+        this._panels.colour.fill.punctuation.set_value(preset.punctuation);
+        this._panels.colour.fill.contraction.set_value(preset.contraction);
+
+        Array.from(this._quickControls.colours.children).forEach((node, dotIndex) => {
+            node.classList.toggle('ui-colour-dot_active', dotIndex === index);
+        });
+    }
+
+    _set_font_size(value) {
+        this._fontSize = Math.max(11, Math.min(24, value));
+        this._limits.minimumFontSizePixels = this._fontSize + 5;
+        this._limits.maximumFontSizePixels = this._fontSize + 15;
+        this._quickControls.fontSizeValue.textContent = `${this._fontSize}`;
+    }
+
+    _set_font_family(value) {
+        this._fontFamily = value;
+        document.documentElement.style.setProperty('--ui-font-family', value);
+    }
+
+    _speed_label() {
+        return this._currentSpeed.toFixed(1);
+    }
+
+    _longest_common_prefix(a, b) {
+        const max = Math.min(a.length, b.length);
+        let i = 0;
+        while (i < max && a[i] === b[i]) {
+            i += 1;
+        }
+        return i;
+    }
+
+    _reset_stats() {
+        this._sessionStartMs = null;
+        this._lastMessageForStats = "";
+        this._totalTypedCharacters = 0;
+        this._totalCorrections = 0;
+        this._peakWpm = 0;
+        this._sync_quick_controls();
+    }
+
+    _update_stats_from_message(message) {
+        const current = (typeof message === "string" ? message : "");
+        if (this._sessionStartMs === null && current.length > 0) {
+            this._sessionStartMs = Date.now();
+        }
+
+        if (this._lastMessageForStats.length > 0 || current.length > 0) {
+            const lcp = this._longest_common_prefix(this._lastMessageForStats, current);
+            const removed = this._lastMessageForStats.length - lcp;
+            const added = current.length - lcp;
+            if (added > 0) {
+                this._totalTypedCharacters += added;
+            }
+            if (removed > 0) {
+                this._totalCorrections += removed;
+            }
+        }
+        this._lastMessageForStats = current;
+        this._sync_quick_controls();
+    }
+
+    _session_minutes() {
+        if (this._sessionStartMs === null) {
+            return 0;
+        }
+        return (Date.now() - this._sessionStartMs) / 60000;
+    }
+
+    _current_wpm() {
+        const minutes = this._session_minutes();
+        if (minutes <= 0) {
+            return 0;
+        }
+        const words = this._lastMessageForStats.length / 5;
+        return words / minutes;
+    }
+
+    _current_accuracy() {
+        const attempts = this._totalTypedCharacters + this._totalCorrections;
+        if (attempts <= 0) {
+            return 100;
+        }
+        const accurate = Math.max(0, this._totalTypedCharacters - this._totalCorrections);
+        return (accurate / attempts) * 100;
+    }
+
+    _refresh_stats_modal() {
+        const wpm = this._current_wpm();
+        this._peakWpm = Math.max(this._peakWpm, wpm);
+        const accuracy = this._current_accuracy();
+        const minutes = this._session_minutes();
+        const lines = [
+            `Elapsed: ${minutes.toFixed(2)} min`,
+            `Current WPM: ${wpm.toFixed(1)}`,
+            `Peak WPM: ${this._peakWpm.toFixed(1)}`,
+            `Accuracy: ${accuracy.toFixed(1)}%`,
+            `Typed chars: ${this._totalTypedCharacters}`,
+            `Corrections: ${this._totalCorrections}`,
+            `Current length: ${this._lastMessageForStats.length}`
+        ];
+        this._statsBody.node.textContent = lines.join("\n");
+    }
+
+    _sync_quick_controls() {
+        if (this._quickControls.speedValue !== undefined) {
+            this._quickControls.speedValue.textContent = this._speed_label();
+        }
+        if (this._quickControls.fontSizeValue !== undefined) {
+            this._quickControls.fontSizeValue.textContent = `${this._fontSize}`;
+        }
+        if (this._quickControls.font !== undefined) {
+            this._quickControls.font.value = this._fontFamily;
+        }
+        if (this._quickControls.learning !== undefined) {
+            this._quickControls.learning.checked = this._learningEnabled;
+        }
+        const wpm = this._current_wpm();
+        this._peakWpm = Math.max(this._peakWpm, wpm);
+        if (this._quickControls.wpmChip !== undefined) {
+            this._quickControls.wpmChip.textContent = `WPM: ${wpm.toFixed(0)}`;
+        }
+        if (this._quickControls.accuracyChip !== undefined) {
+            this._quickControls.accuracyChip.textContent = (
+                `Accuracy: ${this._current_accuracy().toFixed(0)}%`
+            );
+        }
+    }
+
+    _bind_quick_controls() {
+        const languages = LanguageManager.getSupportedLanguages();
+        this._quickControls.language.replaceChildren();
+        languages.forEach(language => {
+            this._quickControls.language.appendChild(new Option(language.name));
+        });
+        this._quickControls.language.selectedIndex =
+            this._panels.main.language.node.selectedIndex;
+        this._quickControls.language.addEventListener('change', event => {
+            this._panels.main.language.set_value({
+                index: event.target.selectedIndex,
+                value: event.target.value
+            });
+        });
+
+        this._quickControls.speedMinus.addEventListener('click', () => {
+            const next = Math.max(0.1, this._currentSpeed - 0.1);
+            this._panels.speed.horizontal.set_value(next);
+        });
+        this._quickControls.speedPlus.addEventListener('click', () => {
+            const next = Math.min(3.0, this._currentSpeed + 0.1);
+            this._panels.speed.horizontal.set_value(next);
+        });
+
+        this._quickControls.fontSizeMinus.addEventListener('click', () => {
+            this._set_font_size(this._fontSize - 1);
+        });
+        this._quickControls.fontSizePlus.addEventListener('click', () => {
+            this._set_font_size(this._fontSize + 1);
+        });
+        this._quickControls.font.addEventListener('change', event => {
+            this._set_font_family(event.target.value);
+        });
+
+        this._quickControls.behaviour.selectedIndex =
+            this._panels.main.behaviour.node.selectedIndex;
+        this._quickControls.behaviour.addEventListener('change', event => {
+            this._panels.main.behaviour.set_value({
+                index: event.target.selectedIndex,
+                value: event.target.value
+            });
+        });
+
+        this._quickControls.learning.checked = this._learningEnabled;
+        this._quickControls.learning.addEventListener('change', event => {
+            this._learningEnabled = event.target.checked;
+            ppmNewSetLearningEnabled(this._learningEnabled);
+            this._sync_quick_controls();
+        });
+
+        this._quickControls.speech.addEventListener('change', event => {
+            this._panels.speech.stop.set_value(event.target.checked);
+        });
+
+        this._quickControls.voice.addEventListener('change', event => {
+            this._panels.speech.voice.set_value({
+                index: event.target.selectedIndex,
+                value: event.target.value
+            });
+        });
+
+        this._set_font_family(this._fontFamily);
+        this._set_font_size(this._fontSize);
+        this._apply_colour_preset(this._activeColourPreset);
+        this._sync_quick_controls();
     }
 
     _load_view() {
@@ -265,13 +716,15 @@ export default class UserInterface {
 
     _select_behaviour(index) {
         this._limits.targetRight = (index === 0);
-        this._pointer.multiplierLeftRight = (index === 0 ? 0.1 : 0.2);
+        this._currentSpeed = (index === 0 ? 0.1 : 0.2);
+        this._pointer.multiplierLeftRight = this._currentSpeed;
         // if (this._speedLeftRightInput !== undefined) {
         const speedLeftRightInput = this._panels.speed.horizontal.node;
         if (speedLeftRightInput !== undefined) {
-            speedLeftRightInput.value = (index === 0 ? "0.1" : "0.2");
+            speedLeftRightInput.value = this._currentSpeed.toFixed(1);
         }
         this._limits.ratios = UserInterface._ratios[index];
+        this._sync_quick_controls();
     }
 
     async _onLanguageChanged(language) {
@@ -336,6 +789,10 @@ export default class UserInterface {
             // We could update it here, but for now we keep it simple
             // as it's mainly for demonstration
         }
+
+        if (this._quickControls.language !== undefined) {
+            this._quickControls.language.value = language.name;
+        }
     }
 
     async _updateVoiceForLanguage(language) {
@@ -386,12 +843,18 @@ export default class UserInterface {
             }
             // Set the underlying property.
             this._speakOnStop = checked;
+            if (this._quickControls.speech !== undefined) {
+                this._quickControls.speech.checked = checked;
+            }
         };
         //
         // Voice selection listener.
         this._panels.speech.voice.listener = (indexUNUSED, value) => {
             if (findVoice(value) && this._speakOnStop) {
                 this._speech.speak(speechAnnouncement, this._voiceIndex);
+            }
+            if (this._quickControls.voice !== undefined) {
+                this._quickControls.voice.value = value;
             }
         };
 
@@ -423,6 +886,11 @@ export default class UserInterface {
                     : voiceGroups.length === 0 ? ['No voices available.']
                     : [`Voices available: ${voiceGroups.length}.`]
                 ;
+                const flatVoices = speech.voices.map(voice => voice.name);
+                this._quickControls.voice.replaceChildren();
+                flatVoices.forEach(name => {
+                    this._quickControls.voice.appendChild(new Option(name));
+                });
                 // There's no way that voiceGroups.length should anything other
                 // than zero or a positive number but just in case.
 
@@ -432,6 +900,10 @@ export default class UserInterface {
             }
             else {
                 this._panels.speech.voice.optionList = ['Speech unavailable'];
+                this._quickControls.voice.replaceChildren();
+                this._quickControls.voice.appendChild(
+                    new Option("Speech unavailable")
+                );
             }
         });
     }
@@ -565,7 +1037,9 @@ export default class UserInterface {
         }
 
         this._panels.speed.horizontal.listener = value => {
-            this._pointer.multiplierLeftRight = value
+            this._currentSpeed = value;
+            this._pointer.multiplierLeftRight = value;
+            this._sync_quick_controls();
         };
         this._select_behaviour(0);
         this._panels.speed.vertical.listener = value => {
@@ -605,6 +1079,7 @@ export default class UserInterface {
         // Activate intervals and controls.
         this._intervalRender = null;
         this._controlPanel.enable_controls();
+        this._sync_quick_controls();
     }
 
     _start_render(continuous) {
@@ -698,6 +1173,9 @@ export default class UserInterface {
             clearInterval(this._intervalRender);
             this._intervalRender = null;
             this._stopGoTextNode.nodeValue = "Stopped";
+            if (this._quickControls.playButton !== undefined) {
+                this._quickControls.playButton.textContent = "Play";
+            }
             if (this.stopCallback !== null) {
                 this.stopCallback();
             }
@@ -740,6 +1218,11 @@ export default class UserInterface {
         // This button will either stop or go.
         this._panels.developer.random.node.textContent = (
             this._controllerRandom.going ? "Stop" : "Go Random");
+        if (this._quickControls.playButton !== undefined) {
+            this._quickControls.playButton.textContent = (
+                this._controllerRandom.going ? "Pause" : "Play");
+        }
+        this._sync_quick_controls();
     }
 
     // Pointer button was clicked.
@@ -762,6 +1245,10 @@ export default class UserInterface {
 
         // The other button will switch to random mode.
         this._panels.developer.random.node.textContent = "Go Random";
+        if (this._quickControls.playButton !== undefined) {
+            this._quickControls.playButton.textContent = "Play";
+        }
+        this._sync_quick_controls();
     }
 
     _new_ZoomBox(startRender) {
