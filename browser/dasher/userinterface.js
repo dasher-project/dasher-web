@@ -113,6 +113,7 @@ export default class UserInterface {
 
         this._svgRect = undefined;
         this._header = undefined;
+        this._messageBar = undefined;
         this._bottomBar = undefined;
         this._prefsModal = undefined;
         this._prefsDialog = undefined;
@@ -222,7 +223,9 @@ export default class UserInterface {
         this._controlPanelParent = (
             this._keyboardMode ? null : new Piece('form', this._prefsContent));
 
-        this._messageDisplay.load(this._prefsContent, this._keyboardMode);
+        this._messageBar = new Piece('div', this._parent);
+        this._messageBar.node.classList.add('ui-message-bar');
+        this._messageDisplay.load(this._messageBar, this._keyboardMode);
         this._load_view();
         this._bottomBar = new Piece('div', this._parent);
         this._bottomBar.node.classList.add('ui-bottom-bar');
@@ -244,7 +247,9 @@ export default class UserInterface {
         // small print has to be in the static HTML too.
         if (footerID !== null) {
             const footer = document.getElementById(footerID);
-            this._parent.appendChild(footer);
+            if (footer !== null) {
+                this._parent.appendChild(footer);
+            }
         }
 
         // Next part of loading is after a time out so that the browser gets an
@@ -268,35 +273,97 @@ export default class UserInterface {
     }
 
     _build_top_bar() {
-        const left = new Piece('div', this._header);
-        left.node.classList.add('ui-top-bar__left');
-
-        this._quickControls.backButton = this._create_button(
-            left, "‹", "ui-icon-button", () => this.reset()
+        const primary = new Piece('div', this._header);
+        primary.node.classList.add('ui-top-bar__left');
+        this._create_button(primary, "New", "ui-button", () => this.reset());
+        this._create_button(primary, "Open", "ui-button", () => {
+            this._panels.message.import.listener();
+        });
+        this._create_button(primary, "Save", "ui-button", () => {
+            this._save_message();
+            this._panels.message.export.listener();
+        });
+        this._quickControls.playButton = this._create_button(
+            primary, "Play", "ui-button ui-button_accent", () => {
+                if (this._intervalRender !== null && this._intervalRender !== undefined) {
+                    this._stop_render();
+                    this._quickControls.playButton.textContent = "Play";
+                    return;
+                }
+                this.clicked_pointer();
+                this.activate_render();
+                this._quickControls.playButton.textContent = "Pause";
+            }
+        );
+        this._create_button(primary, "Prefs", "ui-button", this._toggle_prefs.bind(this));
+        this._quickControls.statsButton = this._create_button(
+            primary, "View stats", "ui-button", this._toggle_stats.bind(this)
         );
 
-        this._quickControls.language = left.create('select', {'class': 'ui-select'});
-        this._quickControls.language.classList.add('ui-select_language');
+        const secondary = new Piece('div', this._header);
+        secondary.node.classList.add('ui-top-bar__right');
+        this._create_button(secondary, "New game", "ui-link-button", () => {
+            this._reset_stats();
+            this.reset();
+        });
+        this._create_button(secondary, "Start over", "ui-link-button", () => {
+            this.reset();
+        });
+        this._quickControls.levelChip = secondary.create('span', {'class': 'ui-chip'}, "Beginner");
+        this._quickControls.wpmChip = secondary.create('span', {'class': 'ui-chip'}, "WPM: 0");
+        this._quickControls.accuracyChip = secondary.create('span', {'class': 'ui-chip'}, "Accuracy: 100%");
+    }
 
-        const speedLabel = left.create('span', {'class': 'ui-label'}, "Speed");
-        speedLabel.classList.add('ui-label_muted');
-        const speedGroup = left.create('div', {'class': 'ui-stepper'});
+    _build_bottom_bar() {
+        const row = this._bottomBar.create('div', {'class': 'ui-bottom-bar__primary'});
+        const createGroup = (optional = false) => {
+            const group = row.appendChild(document.createElement('div'));
+            group.className = (
+                optional ? "ui-control-group ui-control-group_optional" :
+                "ui-control-group"
+            );
+            return group;
+        };
+
+        const groupPrimary = createGroup(false);
+        this._quickControls.backButton = this._create_button(
+            new Piece(groupPrimary), "‹", "ui-icon-button", () => this.reset()
+        );
+        this._quickControls.language = groupPrimary.appendChild(
+            document.createElement('select')
+        );
+        this._quickControls.language.className = "ui-select ui-select_language";
+
+        const groupSpeed = createGroup(false);
+        const speedLabel = groupSpeed.appendChild(document.createElement('span'));
+        speedLabel.className = "ui-nav-label";
+        speedLabel.textContent = "Speed";
+        const speedGroup = groupSpeed.appendChild(document.createElement('div'));
+        speedGroup.className = "ui-stepper";
         this._quickControls.speedMinus = this._create_button(
             new Piece(speedGroup), "-", "ui-step-button"
         );
-        this._quickControls.speedValue = speedGroup.appendChild(
-            document.createElement('span')
-        );
+        this._quickControls.speedValue = speedGroup.appendChild(document.createElement('span'));
         this._quickControls.speedValue.className = "ui-value";
         this._quickControls.speedPlus = this._create_button(
             new Piece(speedGroup), "+", "ui-step-button"
         );
 
-        this._quickControls.learning = left.create('input', {'type': 'checkbox'});
-        this._quickControls.learning.classList.add('ui-switch');
-        left.create('label', {'class': 'ui-label'}, "Learning");
+        const groupLearning = createGroup(false);
+        const learningLabel = groupLearning.appendChild(document.createElement('span'));
+        learningLabel.className = "ui-nav-label";
+        learningLabel.textContent = "Learning";
+        this._quickControls.learning = groupLearning.appendChild(
+            document.createElement('input')
+        );
+        this._quickControls.learning.type = "checkbox";
+        this._quickControls.learning.className = "ui-switch";
 
-        this._quickControls.colours = left.create('div', {'class': 'ui-colours'});
+        const groupColours = createGroup(true);
+        this._quickControls.colours = groupColours.appendChild(
+            document.createElement('div')
+        );
+        this._quickControls.colours.className = "ui-colours";
         this._colourPresets.forEach((preset, index) => {
             const swatch = document.createElement('button');
             swatch.type = "button";
@@ -306,12 +373,14 @@ export default class UserInterface {
             this._quickControls.colours.appendChild(swatch);
         });
 
-        this._quickControls.font = left.create('select', {'class': 'ui-select'});
+        const groupFont = createGroup(true);
+        this._quickControls.font = groupFont.appendChild(document.createElement('select'));
+        this._quickControls.font.className = "ui-select";
         ["Arial", "Verdana", "Segoe UI"].forEach(name => {
             this._quickControls.font.appendChild(new Option(name));
         });
-
-        const fontSizeGroup = left.create('div', {'class': 'ui-stepper'});
+        const fontSizeGroup = groupFont.appendChild(document.createElement('div'));
+        fontSizeGroup.className = "ui-stepper";
         this._quickControls.fontSizeMinus = this._create_button(
             new Piece(fontSizeGroup), "-", "ui-step-button"
         );
@@ -323,77 +392,38 @@ export default class UserInterface {
             new Piece(fontSizeGroup), "+", "ui-step-button"
         );
 
-        this._quickControls.speech = left.create('input', {'type': 'checkbox'});
-        this._quickControls.speech.classList.add('ui-switch');
-        left.create('label', {'class': 'ui-label'}, "Speech");
-
-        this._quickControls.voice = left.create('select', {'class': 'ui-select'});
-
-        const right = new Piece('div', this._header);
-        right.node.classList.add('ui-top-bar__right');
-        this._quickControls.prefsButton = this._create_button(
-            right, "Prefs", "ui-button", this._toggle_prefs.bind(this)
-        );
-    }
-
-    _build_bottom_bar() {
-        const primary = this._bottomBar.create(
-            'div', {'class': 'ui-bottom-bar__primary'}
-        );
-        this._create_button(new Piece(primary), "New", "ui-button", () => this.reset());
-        this._create_button(new Piece(primary), "Open", "ui-button", () => {
-            this._panels.message.import.listener();
-        });
-        this._create_button(new Piece(primary), "Save", "ui-button", () => {
-            this._save_message();
-            this._panels.message.export.listener();
-        });
-        this._quickControls.playButton = this._create_button(
-            new Piece(primary), "Play", "ui-button ui-button_accent", () => {
-                if (this._intervalRender !== null && this._intervalRender !== undefined) {
-                    this._stop_render();
-                    this._quickControls.playButton.textContent = "Play";
-                    return;
-                }
-                this.clicked_pointer();
-                this.activate_render();
-                this._quickControls.playButton.textContent = "Pause";
-            }
-        );
-
-        this._quickControls.behaviour = primary.appendChild(
+        const groupBehaviour = createGroup(true);
+        this._quickControls.behaviour = groupBehaviour.appendChild(
             document.createElement('select')
         );
         this._quickControls.behaviour.className = "ui-select";
         this._quickControls.behaviour.appendChild(new Option("Right side"));
         this._quickControls.behaviour.appendChild(new Option("Balanced"));
 
-        this._create_button(
-            new Piece(primary), "Prefs", "ui-button", this._toggle_prefs.bind(this)
+        const groupSpeech = createGroup(false);
+        const speechLabel = groupSpeech.appendChild(document.createElement('span'));
+        speechLabel.className = "ui-nav-label";
+        speechLabel.textContent = "Speech";
+        this._quickControls.speech = groupSpeech.appendChild(
+            document.createElement('input')
         );
-        this._quickControls.statsButton = this._create_button(
-            new Piece(primary), "View stats", "ui-button", this._toggle_stats.bind(this)
-        );
+        this._quickControls.speech.type = "checkbox";
+        this._quickControls.speech.className = "ui-switch";
 
-        const secondary = this._bottomBar.create(
-            'div', {'class': 'ui-bottom-bar__secondary'}
+        const groupVoice = createGroup(true);
+        this._quickControls.voice = groupVoice.appendChild(document.createElement('select'));
+        this._quickControls.voice.className = "ui-select";
+
+        this._quickControls.mobileMore = this._create_button(
+            new Piece(row), "More", "ui-button ui-button_compact", () => {
+                const expanded = this._bottomBar.node.classList.toggle(
+                    "ui-bottom-bar_expanded"
+                );
+                this._quickControls.mobileMore.textContent = (
+                    expanded ? "Less" : "More"
+                );
+            }
         );
-        this._create_button(new Piece(secondary), "New game", "ui-link-button", () => {
-            this._reset_stats();
-            this.reset();
-        });
-        this._create_button(new Piece(secondary), "Start over", "ui-link-button", () => {
-            this.reset();
-        });
-        this._quickControls.levelChip = secondary.appendChild(document.createElement('span'));
-        this._quickControls.levelChip.className = "ui-chip";
-        this._quickControls.levelChip.textContent = "Beginner";
-        this._quickControls.wpmChip = secondary.appendChild(document.createElement('span'));
-        this._quickControls.wpmChip.className = "ui-chip";
-        this._quickControls.wpmChip.textContent = "WPM: 0";
-        this._quickControls.accuracyChip = secondary.appendChild(document.createElement('span'));
-        this._quickControls.accuracyChip.className = "ui-chip";
-        this._quickControls.accuracyChip.textContent = "Accuracy: 100%";
     }
 
     _create_prefs_modal() {
@@ -401,18 +431,54 @@ export default class UserInterface {
         this._prefsModal.node.classList.add('ui-modal', '_hidden');
 
         this._prefsDialog = new Piece('div', this._prefsModal);
-        this._prefsDialog.node.classList.add('ui-modal__dialog');
+        this._prefsDialog.node.classList.add('ui-modal__dialog', 'ui-modal__dialog_prefs');
         this._prefsDialog.create('h1', {'class': 'ui-modal__title'}, "Preferences");
         const close = this._create_button(
             this._prefsDialog, "Close", "ui-button", this._toggle_prefs.bind(this)
         );
         close.classList.add('ui-modal__close');
+
+        const navigator = new Piece('div', this._prefsDialog);
+        navigator.node.classList.add('ui-prefs-nav');
+        navigator.create('label', {'for': 'prefs-navigator'}, "Navigator");
+        this._quickControls.prefsNavigator = navigator.create('select', {
+            'id': 'prefs-navigator',
+            'class': 'ui-select'
+        });
+        this._quickControls.prefsNavigator.addEventListener('change', event => {
+            const selected = event.target.value;
+            this._controlPanel.select_panel(selected === "" ? undefined : selected);
+        });
+
         this._prefsContent = new Piece('div', this._prefsDialog);
         this._prefsContent.node.classList.add('ui-modal__content');
 
         this._prefsModal.node.addEventListener('click', event => {
             if (event.target === this._prefsModal.node) {
                 this._toggle_prefs();
+            }
+        });
+    }
+
+    _populate_prefs_navigator() {
+        if (this._quickControls.prefsNavigator === undefined) {
+            return;
+        }
+        const navigator = this._quickControls.prefsNavigator;
+        navigator.replaceChildren();
+        navigator.appendChild(new Option("Main", ""));
+        [
+            ["navigator", "Navigator"],
+            ["colour", "Colour"],
+            ["speed", "Speed"],
+            ["speech", "Speech"],
+            ["manage", "Manage"],
+            ["display", "Display"],
+            ["message", "Message"],
+            ["developer", "Developer"]
+        ].forEach(([value, label]) => {
+            if (this._panels[value] !== undefined) {
+                navigator.appendChild(new Option(label, value));
             }
         });
     }
@@ -674,6 +740,7 @@ export default class UserInterface {
         if (this._controlPanelParent !== null) {
             this._controlPanel.select_panel();
         }
+        this._populate_prefs_navigator();
     }
 
     _load_controls() {
@@ -934,10 +1001,10 @@ export default class UserInterface {
             if (this._controllerPointer === undefined) {
                 return;
             }
+            const catcher = document.getElementById("catcher");
             this._controllerPointer.frozen = (
                 checked ? report => console.log("Frozen", report) : null);
-            if (checked) {
-                const catcher = document.getElementById("catcher");
+            if (checked && catcher !== null) {
                 this._frozenClickListener = () => {
                     console.log('catchclick');
                     this._controllerPointer.report_frozen(
@@ -945,7 +1012,7 @@ export default class UserInterface {
                 };
                 catcher.addEventListener("click", this._frozenClickListener);
             }
-            else {
+            else if (catcher !== null && this._frozenClickListener !== null) {
                 catcher.removeEventListener("click", this._frozenClickListener);
             }
         };

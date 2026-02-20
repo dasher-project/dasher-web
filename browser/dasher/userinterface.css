@@ -32,12 +32,16 @@ body {
     margin: 0;
     color: var(--ui-text);
     background: white;
+    overflow: hidden;
 }
 
 #user-interface {
+    width: 100%;
     height: 100%;
+    min-width: 0;
     display: grid;
-    grid-template-rows: 56px minmax(0, 1fr) 92px;
+    grid-template-rows: 62px 52px minmax(0, 1fr) 54px;
+    overflow: hidden;
 }
 
 .ui-top-bar,
@@ -46,6 +50,8 @@ body {
     border-top: 1px solid #efefef;
     border-bottom: 1px solid var(--ui-bar-line);
     color: var(--ui-text);
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .ui-top-bar {
@@ -55,6 +61,8 @@ body {
     padding: 0 14px;
     gap: 10px;
     overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .ui-top-bar__left,
@@ -63,6 +71,7 @@ body {
     align-items: center;
     gap: 9px;
     white-space: nowrap;
+    min-width: 0;
 }
 
 .ui-top-bar__left > * + * {
@@ -81,13 +90,29 @@ body {
 
 #user-interface > svg {
     width: 100%;
+    height: 100%;
+    display: block;
+    min-width: 0;
     min-height: 0;
     border: 1px solid #000;
+    box-sizing: border-box;
+}
+
+.ui-message-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: #f6f6f7;
+    border-bottom: 1px solid #dddddf;
+    min-width: 0;
 }
 
 .ui-bottom-bar {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .ui-bottom-bar__primary,
@@ -96,8 +121,18 @@ body {
     align-items: center;
     gap: 10px;
     padding: 0 14px;
-    overflow-x: auto;
     white-space: nowrap;
+    min-width: max-content;
+}
+
+.ui-control-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ui-button_compact {
+    display: none;
 }
 
 .ui-bottom-bar__secondary {
@@ -112,7 +147,7 @@ body {
     border-radius: 4px;
     background: var(--ui-button-bg);
     color: var(--ui-text);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     height: 34px;
     padding: 0 14px;
@@ -121,7 +156,7 @@ body {
 .ui-link-button {
     background: #ece3e3;
     color: #8f6767;
-    height: 30px;
+    height: 28px;
 }
 
 .ui-icon-button {
@@ -159,7 +194,7 @@ body {
     border-radius: 4px;
     background: #f5f5f6;
     color: var(--ui-text);
-    font-size: 16px;
+    font-size: 13px;
     padding: 0 10px;
 }
 
@@ -185,7 +220,7 @@ body {
     padding: 0 8px;
     background: white;
     color: var(--ui-text);
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .ui-chip {
@@ -193,20 +228,25 @@ body {
     min-width: auto;
     background: var(--ui-chip-bg);
     color: var(--ui-chip-text);
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1;
     height: 28px;
     padding: 0 10px;
 }
 
 .ui-label {
-    font-size: 15px;
+    font-size: 13px;
     color: var(--ui-text);
     line-height: 1;
 }
 
 .ui-label_muted {
-    font-size: 15px;
+    font-size: 13px;
+}
+
+.ui-nav-label {
+    font-size: 13px;
+    color: var(--ui-text);
 }
 
 .ui-switch {
@@ -258,6 +298,11 @@ body {
     width: min(420px, 92vw);
 }
 
+.ui-modal__dialog_prefs {
+    width: min(1200px, 96vw);
+    background: #edf2f2;
+}
+
 .ui-modal__title {
     margin: 0 0 10px 0;
     font-size: 1.1rem;
@@ -271,13 +316,84 @@ body {
 .ui-modal__content {
     clear: both;
     white-space: pre-line;
+    overflow: auto;
+}
+
+.ui-modal__dialog_prefs .control-panel__parent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+}
+
+.ui-modal__dialog_prefs fieldset.control-panel__panel {
+    border: 1px solid #d2d6d7;
+    border-radius: 6px;
+    background: #edecef;
+    padding: 10px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.ui-modal__dialog_prefs fieldset.control-panel__panel > legend {
+    font-weight: 700;
+    color: #447d86;
+    background: #c6e9eb;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+
+.ui-modal__dialog_prefs input,
+.ui-modal__dialog_prefs select,
+.ui-modal__dialog_prefs button,
+.ui-modal__dialog_prefs label {
+    font-size: 14px;
+}
+
+.ui-modal__dialog_prefs select,
+.ui-modal__dialog_prefs input[type="text"],
+.ui-modal__dialog_prefs input[type="number"] {
+    height: 34px;
+    border: 1px solid var(--ui-divider);
+    border-radius: 4px;
+    background: #f7f8f8;
+    color: var(--ui-text);
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.ui-modal__dialog_prefs button,
+.ui-modal__dialog_prefs legend.cwv-button {
+    border: 1px solid #d0d3d4;
+    background: #e7e8ea;
+    border-radius: 4px;
+    color: #5f6568;
+}
+
+.ui-prefs-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px 0;
+}
+
+.ui-prefs-nav label {
+    font-weight: 600;
+    color: #447d86;
+}
+
+.ui-prefs-nav select {
+    min-width: 180px;
 }
 
 #message-holder {
     width: 100%;
     display: flex;
     gap: 6px;
-    margin-bottom: 8px;
+    margin: 0;
 }
 
 #message-holder > * {flex: none;}
@@ -360,20 +476,83 @@ input[type="number"] + label {
 
 @media (max-width: 1100px) {
     #user-interface {
-        grid-template-rows: 56px minmax(0, 1fr) 100px;
+        grid-template-rows: 62px 50px minmax(0, 1fr) 56px;
     }
 
     .ui-label,
     .ui-label_muted {
-        font-size: 16px;
+        font-size: 13px;
     }
 
     .ui-chip {
-        font-size: 14px;
+        font-size: 12px;
         height: 26px;
     }
 
     .ui-select_language {
         min-width: 150px;
+    }
+
+    .ui-modal__dialog_prefs .control-panel__parent {
+        grid-template-columns: 1fr;
+    }
+
+    .ui-prefs-nav {
+        flex-wrap: wrap;
+    }
+
+    .ui-modal__dialog {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 900px) {
+    #user-interface {
+        grid-template-rows: 56px 46px minmax(0, 1fr) 56px;
+    }
+
+    .ui-top-bar {
+        padding: 0 8px;
+        gap: 6px;
+    }
+
+    .ui-top-bar__left,
+    .ui-top-bar__right,
+    .ui-bottom-bar__primary {
+        gap: 6px;
+    }
+
+    .ui-button,
+    .ui-link-button,
+    .ui-select,
+    .ui-value,
+    .ui-chip,
+    .ui-nav-label {
+        font-size: 12px;
+    }
+
+    .ui-button,
+    .ui-select {
+        height: 30px;
+        padding: 0 10px;
+    }
+
+    .ui-select_language {
+        min-width: 130px;
+    }
+
+    .ui-control-group_optional {
+        display: none;
+    }
+
+    .ui-bottom-bar_expanded .ui-control-group_optional {
+        display: inline-flex;
+    }
+
+    .ui-button_compact {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 56px;
     }
 }
