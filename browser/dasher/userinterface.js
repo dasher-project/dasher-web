@@ -153,6 +153,20 @@ export default class UserInterface {
         this._messagePaneWidth = 420;
         this._resizingMessagePane = false;
         this._uiPreferencesKey = "dasher-ui-preferences";
+        this._gameMode = false;
+        this._gameTarget = "";
+        this._gameLastTyped = "";
+        this._gameExpectedIndex = 0;
+        this._gameSentences = [
+            "This is easy! I can see how Dasher works.",
+            "Dasher can help me write quickly and clearly.",
+            "Practice makes progress one letter at a time.",
+            "I can stay calm and keep moving to the right letter."
+        ];
+        this._gameStatus = undefined;
+        this._gameTargetDisplay = undefined;
+        this._guideLine = undefined;
+        this._guideLabel = undefined;
 
         this._statsModal = undefined;
         this._statsDialog = undefined;
@@ -239,6 +253,7 @@ export default class UserInterface {
         this._messagePane = new Piece('div', this._mainArea);
         this._messagePane.node.classList.add('ui-message-pane');
         this._messageDisplay.load(this._messagePane, this._keyboardMode);
+        this._load_game_ui();
         this._attach_message_resizer();
         this._apply_message_position(this._messagePosition);
         this._bottomBar = new Piece('div', this._parent);
@@ -316,13 +331,12 @@ export default class UserInterface {
 
         const secondary = new Piece('div', this._header);
         secondary.node.classList.add('ui-top-bar__right');
-        this._create_button(secondary, "New game", "ui-link-button", () => {
-            this._reset_stats();
-            this.reset();
-        });
-        this._create_button(secondary, "Start over", "ui-link-button", () => {
-            this.reset();
-        });
+        this._quickControls.newGame = this._create_button(
+            secondary, "New game", "ui-link-button", this._start_new_game.bind(this)
+        );
+        this._quickControls.startOver = this._create_button(
+            secondary, "Start over", "ui-link-button", this._restart_game.bind(this)
+        );
         this._quickControls.levelChip = secondary.create('span', {'class': 'ui-chip'}, "Beginner");
         this._quickControls.wpmChip = secondary.create('span', {'class': 'ui-chip'}, "WPM: 0");
         this._quickControls.accuracyChip = secondary.create('span', {'class': 'ui-chip'}, "Accuracy: 100%");
@@ -538,6 +552,192 @@ export default class UserInterface {
         this._statsModal.node.classList.toggle('_hidden');
     }
 
+    _load_game_ui() {
+        const game = new Piece('div', this._messagePane);
+        game.node.classList.add('ui-game');
+        this._gameStatus = game.create('div', {'class': 'ui-game__status'}, "");
+        this._gameTargetDisplay = game.create('div', {'class': 'ui-game__target'}, "");
+        this._render_game_target();
+    }
+
+    _start_new_game() {
+        this._gameMode = true;
+        this._reset_stats();
+        const index = Math.floor(Math.random() * this._gameSentences.length);
+        this._gameTarget = this._gameSentences[index];
+        this._gameLastTyped = "";
+        this._gameExpectedIndex = 0;
+        this._render_game_target();
+        this._set_game_status("Game mode active. Follow the sentence.");
+        this.reset();
+    }
+
+    _restart_game() {
+        if (!this._gameMode) {
+            this._start_new_game();
+            return;
+        }
+        this._gameLastTyped = "";
+        this._gameExpectedIndex = 0;
+        this._render_game_target();
+        this._set_game_status("Start over. Match the highlighted character.");
+        this.reset();
+    }
+
+    _set_game_status(text, warning=false) {
+        if (this._gameStatus === undefined) {
+            return;
+        }
+        this._gameStatus.textContent = text;
+        this._gameStatus.classList.toggle('ui-game__status_warning', warning);
+    }
+
+    _render_game_target() {
+        if (this._gameTargetDisplay === undefined) {
+            return;
+        }
+        if (!this._gameMode || this._gameTarget.length === 0) {
+            this._gameTargetDisplay.textContent = "";
+            return;
+        }
+        const typed = this._gameLastTyped || "";
+        const lcp = this._longest_common_prefix(typed, this._gameTarget);
+
+        const fragment = document.createDocumentFragment();
+        const correct = document.createElement('span');
+        correct.className = "ui-game__correct";
+        correct.textContent = this._gameTarget.slice(0, lcp);
+        fragment.appendChild(correct);
+
+        const current = document.createElement('span');
+        current.className = "ui-game__current";
+        current.textContent = this._gameTarget.slice(lcp, lcp + 1);
+        fragment.appendChild(current);
+
+        const remaining = document.createElement('span');
+        remaining.className = "ui-game__remaining";
+        remaining.textContent = this._gameTarget.slice(lcp + 1);
+        fragment.appendChild(remaining);
+
+        this._gameTargetDisplay.replaceChildren(fragment);
+    }
+
+    _ensure_guide_elements() {
+        if (this._svg === undefined || this._guideLine !== undefined) {
+            return;
+        }
+        this._guideLine = this._svg.create('line', {
+            x1: "0", y1: "0", x2: "0", y2: "0",
+            stroke: "#d35f5f", "stroke-width": "2px",
+            "stroke-dasharray": "6 4", "id": "game-guide-line",
+            "pointer-events": "none"
+        });
+        this._guideLabel = this._svg.create('text', {
+            x: "0", y: "0", fill: "#b04f4f",
+            "font-size": "16px", "id": "game-guide-label",
+            "pointer-events": "none"
+        }, "");
+        this._hide_game_guidance();
+    }
+
+    _hide_game_guidance() {
+        if (this._guideLine !== undefined) {
+            this._guideLine.setAttribute("visibility", "hidden");
+        }
+        if (this._guideLabel !== undefined) {
+            this._guideLabel.setAttribute("visibility", "hidden");
+        }
+    }
+
+    _find_visible_box_for_character(rootBox, character) {
+        if (rootBox === null || character === undefined) {
+            return null;
+        }
+        const queue = [rootBox];
+        let best = null;
+        while (queue.length > 0) {
+            const box = queue.shift();
+            if (box.dimension_undefined()) {
+                continue;
+            }
+            if (box.text === character) {
+                if (best === null || box.height > best.height) {
+                    best = box;
+                }
+            }
+            if (box.childBoxes !== undefined) {
+                box.childBoxes.forEach(child => queue.push(child));
+            }
+        }
+        return best;
+    }
+
+    _update_game_guidance() {
+        this._ensure_guide_elements();
+        if (!this._gameMode || this.zoomBox === null || this._gameTarget.length === 0) {
+            this._hide_game_guidance();
+            return;
+        }
+        const typed = this._gameLastTyped || "";
+        const lcp = this._longest_common_prefix(typed, this._gameTarget);
+        const mismatch = (typed.length > lcp);
+        if (!mismatch) {
+            this._hide_game_guidance();
+            return;
+        }
+        const expected = this._gameTarget[lcp];
+        const targetBox = this._find_visible_box_for_character(this.zoomBox, expected);
+        if (targetBox === null || this._guideLine === undefined || this._guideLabel === undefined) {
+            this._set_game_status(
+                `Wrong letter. Backtrack, then aim for "${expected}".`, true
+            );
+            this._hide_game_guidance();
+            return;
+        }
+        const x2 = targetBox.left + (targetBox.width * 0.5);
+        const y2 = targetBox.middle;
+        this._guideLine.setAttribute("x1", "0");
+        this._guideLine.setAttribute("y1", "0");
+        this._guideLine.setAttribute("x2", `${x2}`);
+        this._guideLine.setAttribute("y2", `${y2}`);
+        this._guideLine.setAttribute("visibility", "visible");
+
+        this._guideLabel.textContent = `Target: ${expected}`;
+        this._guideLabel.setAttribute("x", `${x2 + 8}`);
+        this._guideLabel.setAttribute("y", `${y2 - 8}`);
+        this._guideLabel.setAttribute("visibility", "visible");
+        this._set_game_status(
+            `Wrong letter. Backtrack, then move toward "${expected}".`, true
+        );
+    }
+
+    _update_game_progress(currentMessage) {
+        if (!this._gameMode || this._gameTarget.length === 0) {
+            this._hide_game_guidance();
+            return;
+        }
+        const typed = (typeof currentMessage === "string" ? currentMessage : "");
+        this._gameLastTyped = typed;
+        const lcp = this._longest_common_prefix(typed, this._gameTarget);
+        this._gameExpectedIndex = lcp;
+
+        if (typed === this._gameTarget) {
+            this._set_game_status("Great job. Sentence complete.");
+            this._hide_game_guidance();
+        }
+        else if (typed.length <= lcp) {
+            const expected = this._gameTarget[lcp] || "";
+            this._set_game_status(
+                expected.length === 0 ?
+                "Completed." :
+                `Next target: "${expected}"`, false
+            );
+            this._hide_game_guidance();
+        }
+        this._render_game_target();
+        this._update_game_guidance();
+    }
+
     _load_ui_preferences() {
         try {
             const raw = window.localStorage.getItem(this._uiPreferencesKey);
@@ -697,6 +897,7 @@ export default class UserInterface {
 
     _update_stats_from_message(message) {
         const current = (typeof message === "string" ? message : "");
+        this._update_game_progress(current);
         if (this._sessionStartMs === null && current.length > 0) {
             this._sessionStartMs = Date.now();
         }
@@ -1286,6 +1487,7 @@ export default class UserInterface {
         this._intervalRender = null;
         this._controlPanel.enable_controls();
         this._sync_quick_controls();
+        this._ensure_guide_elements();
     }
 
     _start_render(continuous) {

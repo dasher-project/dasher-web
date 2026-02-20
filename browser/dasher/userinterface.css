@@ -168,6 +168,9 @@ body {
     background: #f8f8f9;
     padding: 10px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .ui-message-resizer {
@@ -464,7 +467,8 @@ body.ui-resizing-message {
 
 #message-holder {
     width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     gap: 6px;
     margin: 0;
@@ -474,14 +478,56 @@ body.ui-resizing-message {
 #message-holder > textarea {flex: auto;}
 #message-holder > textarea {
     min-height: 0;
+    height: 100%;
     resize: none;
-    font-size: 26px;
+    font-size: 18px;
     line-height: 1.4;
     border: 1px solid #dcdee0;
     background: #f4f5f7;
     color: #4c4f55;
     padding: 10px;
     box-sizing: border-box;
+}
+
+.ui-game {
+    flex: none;
+    border: 1px solid #d7dbdf;
+    background: #f2f4f5;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.ui-game__status {
+    font-size: 12px;
+    color: #5f6973;
+    margin-bottom: 6px;
+}
+
+.ui-game__status_warning {
+    color: #b04f4f;
+    font-weight: 600;
+}
+
+.ui-game__target {
+    font-size: 20px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    word-break: break-word;
+}
+
+.ui-game__correct {
+    color: #2f8f5a;
+    background: #e6f4eb;
+}
+
+.ui-game__current {
+    color: #2c425f;
+    background: #dbe8fb;
+    border-bottom: 2px solid #4c75bf;
+}
+
+.ui-game__remaining {
+    color: #616975;
 }
 
 #user-interface.keyboard #message-holder > label {
