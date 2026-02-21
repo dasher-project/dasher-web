@@ -27,6 +27,9 @@ const config = {
   errorTolerant: false, // Strict mode by default
   caseSensitive: false, // Case-insensitive matching
 };
+const characterWeightRange = 90;
+const wordCompletionBoost = 1.8;
+const nextWordBoost = 1.2;
 
 // Create the predictor instance
 let predictor = null;
@@ -68,6 +71,35 @@ function sanitiseTrainingText(text) {
 
 const aliceTrainingText = sanitiseTrainingText(bufferAlice);
 const sherlockTrainingText = sanitiseTrainingText(bufferSherlockHolmes);
+
+function splitWordContext(text) {
+  const source = typeof text === 'string' ? text : '';
+  const trailingWhitespace = /\s$/u.test(source);
+  const trimmedRight = source.trimEnd();
+  const lastWordMatch = trimmedRight.match(/([\p{L}\p{N}'-]+)\s*$/u);
+  const lastWord = lastWordMatch ? lastWordMatch[1] : '';
+  const partialWordMatch = source.match(/([\p{L}\p{N}'-]+)$/u);
+  const partialWord = partialWordMatch ? partialWordMatch[1] : '';
+
+  if (trailingWhitespace || partialWord.length === 0) {
+    return {
+      atWordBoundary: true,
+      partialWord: '',
+      precedingContext: source,
+      lastWord: lastWord,
+    };
+  }
+
+  const partialWordIndex = (partialWordMatch.index === undefined ?
+    source.length - partialWord.length : partialWordMatch.index);
+  const precedingContext = source.slice(0, partialWordIndex);
+  return {
+    atWordBoundary: false,
+    partialWord,
+    precedingContext,
+    lastWord: lastWord,
+  };
+}
 
 /**
  * Initialize the predictor with training data.
@@ -170,22 +202,73 @@ export default async function predictor_ppm_new(
   // Get character predictions from PPM model
   const predictions = predictor.predictNextCharacter();
 
-  // Get set of all valid codepoints from palette
-  const validCodePoints = new Set(palette.codePoints);
-
-  // Set weights for predicted characters
-  // Use gentler scaling for smoother zooming
-  for (const prediction of predictions) {
-    const char = prediction.text;
-    const codePoint = char.codePointAt(0);
-
-    // Only set weights for characters in the palette
-    if (validCodePoints.has(codePoint)) {
-      // Convert probability (0-1) to weight
-      // Use gentler scaling (10 instead of 100) for smoother transitions
-      const weight = Math.max(1, Math.round(1 + prediction.probability * 10));
-      set_weight(codePoint, weight, null);
+  const combinedScores = new Map();
+  const addScore = (char, probability, boost = 1) => {
+    if (typeof char !== 'string' || char.length === 0) {
+      return;
     }
+    const score = Math.max(0, probability) * boost;
+    if (score <= 0) {
+      return;
+    }
+    const previous = combinedScores.get(char) || 0;
+    combinedScores.set(char, previous + score);
+  };
+
+  // Base character probabilities.
+  for (const prediction of predictions) {
+    addScore(prediction.text, prediction.probability, 1);
+  }
+
+  // Add word-level hints so the rightward multi-letter chains are clearer.
+  const wordContext = splitWordContext(currentText);
+  if (!wordContext.atWordBoundary && wordContext.partialWord.length > 0) {
+    const completions = predictor.predictWordCompletion(
+        wordContext.partialWord,
+        wordContext.precedingContext,
+    );
+    for (const completion of completions) {
+      if (
+        typeof completion.text === 'string' &&
+        completion.text.startsWith(wordContext.partialWord) &&
+        completion.text.length > wordContext.partialWord.length
+      ) {
+        const nextChar = completion.text[wordContext.partialWord.length];
+        addScore(nextChar, completion.probability, wordCompletionBoost);
+      }
+    }
+  } else if (wordContext.lastWord.length > 0) {
+    const nextWords = predictor.predictNextWord(wordContext.lastWord, 10);
+    for (const prediction of nextWords) {
+      if (typeof prediction.text === 'string' && prediction.text.length > 0) {
+        addScore(prediction.text[0], prediction.probability, nextWordBoost);
+      }
+    }
+  }
+
+  // Get set of all valid codepoints from palette.
+  const validCodePoints = new Set(palette.codePoints);
+  let maxScore = 0;
+  for (const [char, score] of combinedScores.entries()) {
+    const codePoint = char.codePointAt(0);
+    if (validCodePoints.has(codePoint) && score > maxScore) {
+      maxScore = score;
+    }
+  }
+
+  if (maxScore <= 0) {
+    return;
+  }
+
+  // Apply a non-linear mapping to widen contrast between high/low candidates.
+  for (const [char, score] of combinedScores.entries()) {
+    const codePoint = char.codePointAt(0);
+    if (!validCodePoints.has(codePoint)) {
+      continue;
+    }
+    const normalised = Math.min(1, score / maxScore);
+    const weight = 1 + Math.round(Math.pow(normalised, 0.7) * characterWeightRange);
+    set_weight(codePoint, weight, null);
   }
 
   // Note: Unpredicted characters get implicit weight of 1 from Dasher
