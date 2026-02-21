@@ -14,22 +14,20 @@ This predictor uses the @willwade/ppmpredictor package which provides:
 The package is based on Google Research's JavaScript PPM implementation.
 */
 
-import { createPredictor } from '@willwade/ppmpredictor';
+import {createPredictor} from '@willwade/ppmpredictor';
 
 // Training texts from Gutenberg (same as original predictor_ppm.js)
-import {bufferAlice} from './third_party/gutenberg/alice.js'
-import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js'
-
-const staticTrainingText = bufferAlice + bufferSherlockHolmes;
+import {bufferAlice} from './third_party/gutenberg/alice.js';
+import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js';
 
 // Configuration options
 const config = {
-  maxOrder: 5,              // Maximum context length for PPM
-  maxPredictions: 50,       // Maximum predictions to return (for full alphabet)
-  adaptive: false,          // Don't update model as user types (for performance)
-  lexicon: [],              // No lexicon by default (can be added via updateConfig)
-  errorTolerant: false,     // Strict mode by default
-  caseSensitive: false      // Case-insensitive matching
+  maxOrder: 5, // Maximum context length for PPM
+  maxPredictions: 50, // Maximum predictions to return (for full alphabet)
+  adaptive: false, // Don't update model as user types (for performance)
+  lexicon: [], // No lexicon by default (can be added via updateConfig)
+  errorTolerant: false, // Strict mode by default
+  caseSensitive: false, // Case-insensitive matching
 };
 
 // Create the predictor instance
@@ -37,14 +35,14 @@ let predictor = null;
 let isInitialized = false;
 let initializationPromise = null;
 let learningEnabled = false;
-let learnedText = "";
+let learnedText = '';
 
 // Simple training text for fast initial startup
-const quickTrainingText = "The quick brown fox jumps over the lazy dog. " +
-  "Hello world. How are you today? I am fine thank you. " +
-  "This is a test. The cat sat on the mat. " +
-  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z. " +
-  "the and for are but not you all any can had has him his how man new now old see two way who boy did its let put say she too use dad mom car dog eat fun get go good hi hot job key law lay lie low mad off out own pay red run set sit top try win yes ";
+const quickTrainingText = 'The quick brown fox jumps over the lazy dog. ' +
+  'Hello world. How are you today? I am fine thank you. ' +
+  'This is a test. The cat sat on the mat. ' +
+  'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z. ' +
+  'the and for are but not you all any can had has him his how man new now old see two way who boy did its let put say she too use dad mom car dog eat fun get go good hi hot job key law lay lie low mad off out own pay red run set sit top try win yes ';
 
 /**
  * Initialize the predictor with training data.
@@ -59,7 +57,7 @@ async function initialize() {
   }
 
   initializationPromise = (async () => {
-    console.log("Initializing @willwade/ppmpredictor (fast mode)...");
+    console.log('Initializing @willwade/ppmpredictor (fast mode)...');
 
     predictor = createPredictor(config);
 
@@ -67,15 +65,15 @@ async function initialize() {
     predictor.train(quickTrainingText);
 
     isInitialized = true;
-    console.log("@willwade/ppmpredictor ready (background training in progress...");
+    console.log('@willwade/ppmpredictor ready (background training in progress...');
 
     // Train on full corpus in background without blocking UI
     setTimeout(() => {
-      console.log("Background training on Alice in Wonderland...");
+      console.log('Background training on Alice in Wonderland...');
       predictor.train(bufferAlice);
-      console.log("Background training on Sherlock Holmes...");
+      console.log('Background training on Sherlock Holmes...');
       predictor.train(bufferSherlockHolmes);
-      console.log("Background training complete.");
+      console.log('Background training complete.');
     }, 100);
 
     return predictor;
@@ -94,12 +92,12 @@ async function initialize() {
  * @param {Function} set_weight - Callback to set weight for a character
  */
 export default async function predictor_ppm_new(
-  codePoints, text, predictorData, palette, set_weight
+    codePoints, text, predictorData, palette, set_weight,
 ) {
   // Initialize on first use (fast, non-blocking)
   await initialize();
 
-  const currentText = (typeof text === "string" ? text : "");
+  const currentText = (typeof text === 'string' ? text : '');
 
   // Learn only the newly appended text while learning mode is enabled.
   if (learningEnabled) {
@@ -109,12 +107,10 @@ export default async function predictor_ppm_new(
         predictor.train(appended);
       }
       learnedText = currentText;
-    }
-    else {
+    } else {
       learnedText = currentText;
     }
-  }
-  else {
+  } else {
     learnedText = currentText;
   }
 
@@ -177,7 +173,7 @@ export function ppmNewReset(palette, otherText) {
     }, 100);
   }
 
-  learnedText = "";
+  learnedText = '';
 }
 
 /**
@@ -267,7 +263,7 @@ export function ppmNewAddCorpus(corpusKey, text, options = {}) {
 export function ppmNewSetLearningEnabled(enabled) {
   learningEnabled = !!enabled;
   if (!learningEnabled) {
-    learnedText = "";
+    learnedText = '';
   }
 }
 

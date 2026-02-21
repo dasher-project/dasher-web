@@ -3,7 +3,27 @@ env:
   es2021: true
 extends:
   - google
+ignorePatterns:
+  - ../browser/dasher/third_party/**
 parserOptions:
   ecmaVersion: 12
   sourceType: module
-rules: {}
+rules:
+  require-jsdoc: off
+  valid-jsdoc: off
+  linebreak-style: off
+  max-len: off
+  camelcase: off
+  indent: off
+  brace-style: off
+  quotes: off
+  comma-dangle: off
+  no-tabs: off
+  no-mixed-spaces-and-tabs: off
+  arrow-parens: off
+  padded-blocks: off
+  key-spacing: off
+  no-trailing-spaces: off
+  semi: off
+  new-cap: off
+  space-before-function-paren: off

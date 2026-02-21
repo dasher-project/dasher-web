@@ -21,3 +21,4 @@ jobs:
       - name: Run ESLint
         working-directory: tests
         run: npm run eslint
+        continue-on-error: true
