@@ -8,8 +8,8 @@
     "eslint": "eslint -c .eslintrc.yml ../browser",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "server": "cd ../browser && python3 -m http.server -b 127.0.0.1",
-    "cy:test": "start-server-and-test server http://127.0.0.1:8000 cy:run"
+    "server": "cd .. && python3 -m http.server -b 127.0.0.1",
+    "cy:test": "start-server-and-test server http://127.0.0.1:8000/browser/index.html cy:run"
   },
   "author": "",
   "license": "ISC",

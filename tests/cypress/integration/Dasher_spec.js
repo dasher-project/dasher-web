@@ -1,11 +1,13 @@
 
 describe('Dasher', () => {
   before(() => {
-    cy.visit('http://127.0.0.1:8000')
+    cy.visit('/browser/index.html')
   })
 
-  it('should display "dasher" text on page', () => {
-    cy.contains('dasher')
+  it('should render the core UI controls', () => {
+    cy.contains('button', 'New', {timeout: 10000}).should('be.visible')
+    cy.contains('button', 'Prefs').should('be.visible')
+    cy.get('#user-interface').should('exist')
   })
 
   it('A screenshot will be saved.', () => {
