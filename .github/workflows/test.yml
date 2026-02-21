@@ -1,24 +1,57 @@
-name: Test/release
+name: Test
 
-on: push
+on:
+  push:
+  pull_request:
 
 jobs:
-  release:
-    runs-on: macos-latest
-
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
-      - name: Install Modules
-        run: cd tests && npm install
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
 
-      - name: Jest Tests (Unit)
-        run: cd tests && npm run test
+      - name: Install dependencies
+        working-directory: tests
+        run: npm ci
 
-      - name: Cypress Tests (E2E)
-        run: cd tests && npm run cy:test
+      - name: Run Jest tests
+        working-directory: tests
+        run: npm run test
+
+      - name: Run ESLint
+        working-directory: tests
+        run: npm run eslint
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: unit
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tests
+        run: npm ci
+
+      - name: Run Cypress tests
+        working-directory: tests
+        run: npm run cy:test

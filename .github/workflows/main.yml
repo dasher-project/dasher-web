@@ -1,15 +1,23 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
-    - uses: actions/checkout@v2
-    - name: Install modules
-      run: cd tests && npm install
-    - name: Run ESLint
-      run: cd tests && npm run eslint || exit 0
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tests
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: tests
+        run: npm run eslint
