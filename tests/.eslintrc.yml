@@ -12,11 +12,11 @@ rules:
   require-jsdoc: off
   valid-jsdoc: off
   linebreak-style: off
-  max-len: off
-  camelcase: off
+  max-len: warn
+  camelcase: warn
   indent: off
   brace-style: off
-  quotes: off
+  quotes: warn
   comma-dangle: off
   no-tabs: off
   no-mixed-spaces-and-tabs: off
@@ -24,6 +24,6 @@ rules:
   padded-blocks: off
   key-spacing: off
   no-trailing-spaces: off
-  semi: off
+  semi: warn
   new-cap: off
   space-before-function-paren: off
