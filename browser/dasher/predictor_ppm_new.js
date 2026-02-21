@@ -14,8 +14,6 @@ This predictor uses the @willwade/ppmpredictor package which provides:
 The package is based on Google Research's JavaScript PPM implementation.
 */
 
-import {createPredictor} from '@willwade/ppmpredictor';
-
 // Training texts from Gutenberg (same as original predictor_ppm.js)
 import {bufferAlice} from './third_party/gutenberg/alice.js';
 import {bufferSherlockHolmes} from './third_party/gutenberg/sherlock.js';
@@ -36,6 +34,8 @@ let isInitialized = false;
 let initializationPromise = null;
 let learningEnabled = false;
 let learnedText = '';
+let createPredictorFunction = null;
+let predictorModuleLoadAttempted = false;
 
 // Simple training text for fast initial startup
 const quickTrainingText = 'The quick brown fox jumps over the lazy dog. ' +
@@ -59,7 +59,25 @@ async function initialize() {
   initializationPromise = (async () => {
     console.log('Initializing @willwade/ppmpredictor (fast mode)...');
 
-    predictor = createPredictor(config);
+    if (!predictorModuleLoadAttempted) {
+      predictorModuleLoadAttempted = true;
+      try {
+        const ppmPredictor = await import('@willwade/ppmpredictor');
+        createPredictorFunction = ppmPredictor.createPredictor;
+      } catch (error) {
+        console.warn(
+            '@willwade/ppmpredictor unavailable, using fallback predictor.',
+            error,
+        );
+      }
+    }
+
+    if (!createPredictorFunction) {
+      isInitialized = true;
+      return null;
+    }
+
+    predictor = createPredictorFunction(config);
 
     // Fast initial training with common text
     predictor.train(quickTrainingText);
@@ -96,6 +114,10 @@ export default async function predictor_ppm_new(
 ) {
   // Initialize on first use (fast, non-blocking)
   await initialize();
+
+  if (!predictor) {
+    return;
+  }
 
   const currentText = (typeof text === 'string' ? text : '');
 
@@ -156,7 +178,7 @@ export function ppmNewReset(palette, otherText) {
   initializationPromise = null;
 
   if (predictor) {
-    predictor = createPredictor(config);
+    predictor = createPredictorFunction(config);
 
     // Quick initial training
     predictor.train(quickTrainingText);
