@@ -17,6 +17,7 @@ import ControllerRandom from './controllerrandom.js';
 import ControllerPointer from './controllerpointer.js';
 import Viewer from './viewer.js';
 import ZoomBox from './zoombox.js';
+import AutoSpeedControl from './autoSpeedControl.js';
 
 import predictor_dummy from './predictor_dummy.js';
 import predictor_basic from './predictor.js';
@@ -84,6 +85,10 @@ export default class UserInterface {
     // document.head.append(this._cssNode);
 
     this._speedLeftRightInput = undefined;
+    this._baseSpeedHorizontal = 0.1;
+    this._baseSpeedVertical = 0.2;
+    this._autoSpeedEnabled = true;
+    this._autoSpeedControl = new AutoSpeedControl();
 
     // Spawn and render parameters in mystery SVG units.
     this._limits = new Limits();
@@ -539,6 +544,14 @@ export default class UserInterface {
     this._quickControls.speedPlus = this._create_button(
         new Piece(speedGroup), '+', 'ui-step-button',
     );
+    const autoSpeedLabel = speedGroup.appendChild(document.createElement('span'));
+    autoSpeedLabel.className = 'ui-nav-label';
+    autoSpeedLabel.textContent = 'Auto';
+    this._quickControls.autoSpeed = speedGroup.appendChild(
+        document.createElement('input'),
+    );
+    this._quickControls.autoSpeed.type = 'checkbox';
+    this._quickControls.autoSpeed.className = 'ui-switch';
 
     const groupLearning = createGroup();
     const learningLabel = groupLearning.appendChild(document.createElement('span'));
@@ -949,6 +962,42 @@ export default class UserInterface {
     return speed * (this._transitionMillis / legacyRenderIntervalMillis);
   }
 
+  _effective_speed_factor() {
+    return this._autoSpeedEnabled ? this._autoSpeedControl.factor : 1;
+  }
+
+  _apply_pointer_speeds() {
+    if (this._pointer === undefined) {
+      return;
+    }
+    const factor = this._effective_speed_factor();
+    this._pointer.multiplierLeftRight = this._normalise_speed(
+        this._baseSpeedHorizontal * factor,
+    );
+    this._pointer.multiplierUpDown = this._normalise_speed(
+        this._baseSpeedVertical * factor,
+    );
+  }
+
+  _update_auto_speed(elapsedMillis) {
+    if (!this._autoSpeedEnabled || this._pointer === undefined) {
+      return;
+    }
+    if (!Object.is(this._controller, this._controllerPointer) || !this._pointer.going) {
+      this._autoSpeedControl.reset();
+      this._apply_pointer_speeds();
+      return;
+    }
+
+    this._autoSpeedControl.update(
+        this._pointer.rawX,
+        this._pointer.rawY,
+        this._baseSpeedHorizontal,
+        elapsedMillis,
+    );
+    this._apply_pointer_speeds();
+  }
+
   _longest_common_prefix(a, b) {
     const max = Math.min(a.length, b.length);
     let i = 0;
@@ -1027,6 +1076,9 @@ export default class UserInterface {
     if (this._quickControls.learning !== undefined) {
       this._quickControls.learning.checked = this._learningEnabled;
     }
+    if (this._quickControls.autoSpeed !== undefined) {
+      this._quickControls.autoSpeed.checked = this._autoSpeedEnabled;
+    }
     if (this._quickControls.messagePosition !== undefined) {
       this._quickControls.messagePosition.value = this._messagePosition;
     }
@@ -1070,6 +1122,11 @@ export default class UserInterface {
       this._quickControls.speedPlus.addEventListener('click', () => {
         const next = Math.min(3.0, this._currentSpeed + 0.1);
         this._panels.speed.horizontal.set_value(next);
+      });
+    }
+    if (this._quickControls.autoSpeed !== undefined) {
+      this._quickControls.autoSpeed.addEventListener('change', (event) => {
+        this._panels.speed.auto.set_value(event.target.checked);
       });
     }
 
@@ -1204,7 +1261,8 @@ export default class UserInterface {
   _select_behaviour(index) {
     this._limits.targetRight = (index === 0);
     this._currentSpeed = (index === 0 ? 0.1 : 0.2);
-    this._pointer.multiplierLeftRight = this._normalise_speed(this._currentSpeed);
+    this._baseSpeedHorizontal = this._currentSpeed;
+    this._apply_pointer_speeds();
     // if (this._speedLeftRightInput !== undefined) {
     const speedLeftRightInput = this._panels.speed.horizontal.node;
     if (speedLeftRightInput !== undefined) {
@@ -1522,15 +1580,29 @@ export default class UserInterface {
     if (this._keyboardMode) {
       // Can't show settings in input controls in keyboard mode. The input
       // would itself require a keyboard. Set some slower default values.
-      this._pointer.multiplierLeftRight = this._normalise_speed(0.2);
-      this._pointer.multiplierUpDown = this._normalise_speed(0.2);
+      this._baseSpeedHorizontal = 0.2;
+      this._baseSpeedVertical = 0.2;
+      this._autoSpeedEnabled = false;
+      this._autoSpeedControl.reset();
+      this._apply_pointer_speeds();
       this._select_behaviour(1);
       return;
     }
 
+    if (this._panels.speed.auto !== undefined) {
+      this._autoSpeedEnabled = !!this._panels.speed.auto.node.checked;
+      this._panels.speed.auto.listener = (checked) => {
+        this._autoSpeedEnabled = !!checked;
+        this._autoSpeedControl.reset();
+        this._apply_pointer_speeds();
+      };
+    }
+
     this._panels.speed.horizontal.listener = (value) => {
       this._currentSpeed = value;
-      this._pointer.multiplierLeftRight = this._normalise_speed(value);
+      this._baseSpeedHorizontal = value;
+      this._autoSpeedControl.reset();
+      this._apply_pointer_speeds();
       this._sync_quick_controls();
     };
     this._select_behaviour(0);
@@ -1538,10 +1610,13 @@ export default class UserInterface {
         this._panels.speed.vertical.node.value,
     );
     if (!Number.isNaN(initialVerticalSpeed)) {
-      this._pointer.multiplierUpDown = this._normalise_speed(initialVerticalSpeed);
+      this._baseSpeedVertical = initialVerticalSpeed;
+      this._apply_pointer_speeds();
     }
     this._panels.speed.vertical.listener = (value) => {
-      this._pointer.multiplierUpDown = this._normalise_speed(value);
+      this._baseSpeedVertical = value;
+      this._autoSpeedControl.reset();
+      this._apply_pointer_speeds();
     };
   }
 
@@ -1664,6 +1739,7 @@ export default class UserInterface {
           }
           const elapsed = timestamp - this._lastRenderTimestamp;
           this._lastRenderTimestamp = timestamp;
+          this._update_auto_speed(elapsed);
 
           this._renderAccumulator = Math.min(
               this._renderAccumulator + elapsed,
@@ -1684,8 +1760,12 @@ export default class UserInterface {
         this._intervalRender = window.requestAnimationFrame(tick);
       } else {
         this._renderLoopKind = 'interval';
+        this._update_auto_speed(this._transitionMillis);
         this._intervalRender = setInterval(
-            render_one, this._transitionMillis);
+            () => {
+              this._update_auto_speed(this._transitionMillis);
+              render_one();
+            }, this._transitionMillis);
       }
     } else {
       this._stop_render();
