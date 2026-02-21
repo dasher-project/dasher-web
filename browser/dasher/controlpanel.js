@@ -495,11 +495,20 @@ export default class ControlPanel {
 
         parentPiece.node.classList.add('control-panel__parent');
 
-        // Add to the parentPiece anything that has html. No need to descend
-        // further because the structure under anything with html will already
-        // have been built.
-        this.descend(structure => {
-            if (structure.$.html !== undefined) {
+        // Add only top-level panel roots to the parent.
+        // Appending every html node here flattens the panel structure and
+        // breaks compact inline layouts that rely on each panel keeping its
+        // own descendants.
+        this.descend((structure, path) => {
+            // Mount only first-level panels under the root control panel.
+            // Nested structures inherit panel metadata, but must stay inside
+            // their owning panel.
+            if (
+                path.length === 1 &&
+                structure.$.html !== undefined &&
+                path[0] !== "main" &&
+                path[0] !== "navigator"
+            ) {
                 parentPiece.add_child(structure.$.piece);
                 return false;
             }

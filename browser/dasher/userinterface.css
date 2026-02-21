@@ -45,12 +45,13 @@ body {
     overflow: hidden;
 }
 
-#user-interface.ui-game-nav-visible {
+#user-interface.ui-secondary-nav-visible {
     grid-template-rows: 62px 44px minmax(0, 1fr) 54px;
 }
 
 .ui-top-bar,
 .ui-game-nav,
+.ui-prefs-bar,
 .ui-bottom-bar {
     background: var(--ui-bar-bg);
     border-top: 1px solid #efefef;
@@ -78,6 +79,99 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.ui-prefs-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    min-height: 44px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ui-prefs-back {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+    line-height: 26px;
+}
+
+.ui-prefs-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: max-content;
+}
+
+.ui-prefs-content {
+    display: inline-flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.ui-prefs-content > form {
+    margin: 0;
+}
+
+.ui-prefs-content .control-panel__parent {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    min-width: max-content;
+    gap: 8px;
+}
+
+.ui-prefs-content .control-panel__panel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    border: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    min-inline-size: 0;
+}
+
+.ui-prefs-content .control-panel__panel > legend,
+.ui-prefs-content legend.cwv-button {
+    display: none;
+}
+
+.ui-prefs-content .control-panel__panel > div,
+.ui-prefs-content .control-panel__panel > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.ui-prefs-content input,
+.ui-prefs-content select,
+.ui-prefs-content button,
+.ui-prefs-content label {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.ui-prefs-content .control-panel__structure-manage-settings-saveSettings,
+.ui-prefs-content .control-panel__structure-manage-settings-result-detail,
+.ui-prefs-content .control-panel__structure-manage-settings-result-outcome,
+.ui-prefs-content .control-panel__structure-manage-settings-divider,
+.ui-prefs-content .control-panel__structure-message-divider,
+.ui-prefs-content .control-panel__structure-developer-divider {
+    display: none;
 }
 
 .ui-game-nav__inner {
@@ -421,122 +515,6 @@ body.ui-resizing-message {
     box-shadow: 0 0 0 2px #8d8d8d;
 }
 
-.ui-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 30;
-}
-
-.ui-modal__dialog {
-    width: min(1080px, 94vw);
-    max-height: 90vh;
-    overflow: auto;
-    border: 1px solid var(--ui-divider);
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 26px 62px rgba(0, 0, 0, 0.2);
-    padding: 16px;
-}
-
-.ui-modal__dialog_stats {
-    width: min(420px, 92vw);
-}
-
-.ui-modal__dialog_prefs {
-    width: min(1200px, 96vw);
-    background: #edf2f2;
-}
-
-.ui-modal__title {
-    margin: 0 0 10px 0;
-    font-size: 1.1rem;
-    color: #4d4e53;
-}
-
-.ui-modal__close {
-    float: right;
-}
-
-.ui-modal__content {
-    clear: both;
-    white-space: pre-line;
-    overflow: auto;
-}
-
-.ui-modal__dialog_prefs .control-panel__parent {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    width: 100%;
-    min-width: 0;
-    overflow: visible;
-}
-
-.ui-modal__dialog_prefs fieldset.control-panel__panel {
-    border: 1px solid #d2d6d7;
-    border-radius: 6px;
-    background: #edecef;
-    padding: 10px;
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.ui-modal__dialog_prefs fieldset.control-panel__panel > legend {
-    font-weight: 700;
-    color: #447d86;
-    background: #c6e9eb;
-    border-radius: 4px;
-    padding: 6px 10px;
-}
-
-.ui-modal__dialog_prefs input,
-.ui-modal__dialog_prefs select,
-.ui-modal__dialog_prefs button,
-.ui-modal__dialog_prefs label {
-    font-size: 14px;
-}
-
-.ui-modal__dialog_prefs select,
-.ui-modal__dialog_prefs input[type="text"],
-.ui-modal__dialog_prefs input[type="number"] {
-    height: 34px;
-    border: 1px solid var(--ui-divider);
-    border-radius: 4px;
-    background: #f7f8f8;
-    color: var(--ui-text);
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
-.ui-modal__dialog_prefs button,
-.ui-modal__dialog_prefs legend.cwv-button {
-    border: 1px solid #d0d3d4;
-    background: #e7e8ea;
-    border-radius: 4px;
-    color: #5f6568;
-}
-
-.ui-prefs-nav {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 10px 0;
-}
-
-.ui-prefs-nav label {
-    font-weight: 600;
-    color: #447d86;
-}
-
-.ui-prefs-nav select {
-    min-width: 180px;
-}
-
 #message-holder {
     width: 100%;
     flex: 1 1 auto;
@@ -681,7 +659,7 @@ input[type="number"] + label {
     #user-interface {
         grid-template-rows: 62px minmax(0, 1fr) 56px;
     }
-    #user-interface.ui-game-nav-visible {
+    #user-interface.ui-secondary-nav-visible {
         grid-template-rows: 62px 42px minmax(0, 1fr) 56px;
     }
 
@@ -699,16 +677,8 @@ input[type="number"] + label {
         min-width: 150px;
     }
 
-    .ui-modal__dialog_prefs .control-panel__parent {
-        grid-template-columns: 1fr;
-    }
-
-    .ui-prefs-nav {
-        flex-wrap: wrap;
-    }
-
-    .ui-modal__dialog {
-        padding: 12px;
+    .ui-prefs-bar {
+        padding: 0 8px;
     }
 }
 
@@ -716,7 +686,7 @@ input[type="number"] + label {
     #user-interface {
         grid-template-rows: 56px minmax(0, 1fr) 56px;
     }
-    #user-interface.ui-game-nav-visible {
+    #user-interface.ui-secondary-nav-visible {
         grid-template-rows: 56px 40px minmax(0, 1fr) 56px;
     }
 
@@ -782,20 +752,5 @@ input[type="number"] + label {
 
     #message-holder > textarea {
         font-size: 18px;
-    }
-
-    .ui-control-group_optional {
-        display: none;
-    }
-
-    .ui-bottom-bar_expanded .ui-control-group_optional {
-        display: inline-flex;
-    }
-
-    .ui-button_compact {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 56px;
     }
 }

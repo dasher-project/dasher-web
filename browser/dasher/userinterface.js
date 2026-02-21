@@ -118,9 +118,11 @@ export default class UserInterface {
         this._messageResizeHandle = undefined;
         this._messagePane = undefined;
         this._bottomBar = undefined;
-        this._prefsModal = undefined;
-        this._prefsDialog = undefined;
+        this._prefsBar = undefined;
+        this._prefsMenu = undefined;
+        this._prefsBackButton = undefined;
         this._prefsContent = undefined;
+        this._prefsStorage = undefined;
         this._quickControls = {};
         this._currentSpeed = 0.1;
         this._learningEnabled = ppmNewGetLearningEnabled();
@@ -169,9 +171,6 @@ export default class UserInterface {
         this._guideLine = undefined;
         this._guideLabel = undefined;
 
-        this._statsModal = undefined;
-        this._statsDialog = undefined;
-        this._statsBody = undefined;
         this._statsInlineVisible = false;
         this._statsInline = undefined;
         this._sessionStartMs = null;
@@ -247,8 +246,10 @@ export default class UserInterface {
 
         // In keyboard mode, the control panel and all its HTML still exist but
         // never gets added to the body so it doesn't get rendered.
+        this._prefsStorage = new Piece('div', this._parent);
+        this._prefsStorage.node.classList.add('_hidden');
         this._controlPanelParent = (
-            this._keyboardMode ? null : new Piece('form', this._prefsContent));
+            this._keyboardMode ? null : new Piece('form', this._prefsStorage));
 
         this._mainArea = new Piece('div', this._parent);
         this._mainArea.node.classList.add('ui-main-area');
@@ -319,7 +320,10 @@ export default class UserInterface {
         });
         this._quickControls.playButton = this._create_button(
             primary, "Play", "ui-button", () => {
-                const visible = this._parent.classList.contains('ui-game-nav-visible');
+                const visible = (
+                    this._gameNavBar !== undefined &&
+                    !this._gameNavBar.node.classList.contains('_hidden')
+                );
                 if (visible) {
                     this._set_game_nav_visible(false);
                     if (this._intervalRender !== null && this._intervalRender !== undefined) {
@@ -327,6 +331,7 @@ export default class UserInterface {
                     }
                     return;
                 }
+                this._set_prefs_visible(false);
                 this._set_game_nav_visible(true);
                 if (this._intervalRender !== null && this._intervalRender !== undefined) {
                     this._stop_render();
@@ -340,7 +345,11 @@ export default class UserInterface {
         );
         this._quickControls.statsButton = this._create_button(
             primary, "View stats", "ui-button", () => {
-                if (!this._parent.classList.contains('ui-game-nav-visible')) {
+                if (
+                    this._gameNavBar === undefined ||
+                    this._gameNavBar.node.classList.contains('_hidden')
+                ) {
+                    this._set_prefs_visible(false);
                     this._set_game_nav_visible(true);
                 }
                 this._toggle_stats_inline();
@@ -349,7 +358,9 @@ export default class UserInterface {
 
         const right = new Piece('div', this._header);
         right.node.classList.add('ui-top-bar__right');
-        this._create_button(right, "Prefs", "ui-button", this._toggle_prefs.bind(this));
+        this._quickControls.prefsButton = this._create_button(
+            right, "Prefs", "ui-button", this._toggle_prefs.bind(this)
+        );
     }
 
     _build_game_nav_bar() {
@@ -374,9 +385,7 @@ export default class UserInterface {
             return;
         }
         this._gameNavBar.node.classList.toggle('_hidden', !visible);
-        if (this._parent !== undefined) {
-            this._parent.classList.toggle('ui-game-nav-visible', visible);
-        }
+        this._update_secondary_nav_visibility();
         if (this._quickControls.playButton !== undefined) {
             this._quickControls.playButton.classList.toggle('ui-button_accent', visible);
         }
@@ -390,6 +399,77 @@ export default class UserInterface {
                 this._quickControls.statsButton.classList.remove('ui-button_accent');
             }
         }
+    }
+
+    _set_prefs_visible(visible) {
+        if (this._prefsBar === undefined) {
+            return;
+        }
+        this._prefsBar.node.classList.toggle('_hidden', !visible);
+        if (this._quickControls.prefsButton !== undefined) {
+            this._quickControls.prefsButton.classList.toggle('ui-button_accent', visible);
+        }
+        if (visible) {
+            this._set_prefs_level(1);
+        }
+        this._update_secondary_nav_visibility();
+    }
+
+    _set_prefs_level(level, panelName) {
+        if (
+            this._prefsMenu === undefined ||
+            this._prefsContent === undefined
+        ) {
+            return;
+        }
+        const onDetails = (level === 2);
+        this._prefsMenu.node.classList.toggle('_hidden', onDetails);
+        this._prefsContent.node.classList.toggle('_hidden', !onDetails);
+        if (this._prefsBackButton !== undefined) {
+            this._prefsBackButton.classList.toggle('_hidden', !onDetails);
+        }
+        if (onDetails) {
+            this._show_only_prefs_panel(panelName);
+        }
+        else {
+            this._show_only_prefs_panel(null);
+        }
+    }
+
+    _show_only_prefs_panel(panelName) {
+        if (
+            this._panels === undefined ||
+            this._prefsContent === undefined
+        ) {
+            return;
+        }
+        this._prefsContent.node.replaceChildren();
+        if (panelName === null) {
+            return;
+        }
+        const targetPanel = this._panels[panelName];
+        if (
+            targetPanel !== undefined &&
+            targetPanel.$ !== undefined &&
+            targetPanel.$.piece !== undefined
+        ) {
+            this._prefsContent.node.appendChild(targetPanel.$.piece.node);
+        }
+    }
+
+    _update_secondary_nav_visibility() {
+        if (this._parent === undefined) {
+            return;
+        }
+        const gameVisible = (
+            this._gameNavBar !== undefined &&
+            !this._gameNavBar.node.classList.contains('_hidden')
+        );
+        const prefsVisible = (
+            this._prefsBar !== undefined &&
+            !this._prefsBar.node.classList.contains('_hidden')
+        );
+        this._parent.classList.toggle('ui-secondary-nav-visible', gameVisible || prefsVisible);
     }
 
     _toggle_stats_inline() {
@@ -481,90 +561,57 @@ export default class UserInterface {
     }
 
     _create_prefs_modal() {
-        this._prefsModal = new Piece('div', this._parent);
-        this._prefsModal.node.classList.add('ui-modal', '_hidden');
+        this._prefsBar = new Piece('div', this._parent);
+        this._prefsBar.node.classList.add('ui-prefs-bar', '_hidden');
 
-        this._prefsDialog = new Piece('div', this._prefsModal);
-        this._prefsDialog.node.classList.add('ui-modal__dialog', 'ui-modal__dialog_prefs');
-        this._prefsDialog.create('h1', {'class': 'ui-modal__title'}, "Preferences");
-        const close = this._create_button(
-            this._prefsDialog, "Close", "ui-button", this._toggle_prefs.bind(this)
-        );
-        close.classList.add('ui-modal__close');
-
-        const navigator = new Piece('div', this._prefsDialog);
-        navigator.node.classList.add('ui-prefs-nav');
-        navigator.create('label', {'for': 'prefs-navigator'}, "Navigator");
-        this._quickControls.prefsNavigator = navigator.create('select', {
-            'id': 'prefs-navigator',
-            'class': 'ui-select'
-        });
-        this._quickControls.prefsNavigator.addEventListener('change', event => {
-            const selected = event.target.value;
-            this._controlPanel.select_panel(selected === "" ? undefined : selected);
-        });
-
-        this._prefsContent = new Piece('div', this._prefsDialog);
-        this._prefsContent.node.classList.add('ui-modal__content');
-
-        this._prefsModal.node.addEventListener('click', event => {
-            if (event.target === this._prefsModal.node) {
-                this._toggle_prefs();
+        this._prefsBackButton = this._create_button(
+            this._prefsBar, "‹", "ui-icon-button ui-prefs-back _hidden", () => {
+                this._set_prefs_level(1);
             }
-        });
+        );
+
+        this._prefsMenu = new Piece('div', this._prefsBar);
+        this._prefsMenu.node.classList.add('ui-prefs-menu');
+
+        this._prefsContent = new Piece('div', this._prefsBar);
+        this._prefsContent.node.classList.add('ui-prefs-content', '_hidden');
     }
 
     _populate_prefs_navigator() {
-        if (this._quickControls.prefsNavigator === undefined) {
+        if (this._prefsMenu === undefined) {
             return;
         }
-        const navigator = this._quickControls.prefsNavigator;
-        navigator.replaceChildren();
-        navigator.appendChild(new Option("Main", ""));
+        this._prefsMenu.remove_all();
         [
-            ["navigator", "Navigator"],
             ["colour", "Colour"],
             ["speed", "Speed"],
             ["speech", "Speech"],
-            ["manage", "Manage"],
             ["display", "Display"],
-            ["message", "Message"],
+            ["message", "Messages"],
+            ["manage", "Manage"],
             ["developer", "Developer"]
         ].forEach(([value, label]) => {
             if (this._panels[value] !== undefined) {
-                navigator.appendChild(new Option(label, value));
-            }
-        });
-    }
-
-    _create_stats_modal() {
-        this._statsModal = new Piece('div', this._parent);
-        this._statsModal.node.classList.add('ui-modal', '_hidden');
-
-        this._statsDialog = new Piece('div', this._statsModal);
-        this._statsDialog.node.classList.add('ui-modal__dialog', 'ui-modal__dialog_stats');
-        this._statsDialog.create('h1', {'class': 'ui-modal__title'}, "Session stats");
-        const close = this._create_button(
-            this._statsDialog, "Close", "ui-button", this._toggle_stats.bind(this)
-        );
-        close.classList.add('ui-modal__close');
-        this._statsBody = new Piece('div', this._statsDialog);
-        this._statsBody.node.classList.add('ui-modal__content');
-
-        this._statsModal.node.addEventListener('click', event => {
-            if (event.target === this._statsModal.node) {
-                this._toggle_stats();
+                this._create_button(
+                    this._prefsMenu, label, "ui-button",
+                    () => this._set_prefs_level(2, value)
+                );
             }
         });
     }
 
     _toggle_prefs() {
-        this._prefsModal.node.classList.toggle('_hidden');
-    }
-
-    _toggle_stats() {
-        this._refresh_stats_modal();
-        this._statsModal.node.classList.toggle('_hidden');
+        const currentlyVisible = (
+            this._prefsBar !== undefined &&
+            !this._prefsBar.node.classList.contains('_hidden')
+        );
+        if (!currentlyVisible) {
+            this._set_game_nav_visible(false);
+            this._set_prefs_visible(true);
+            this._set_prefs_level(1);
+            return;
+        }
+        this._set_prefs_visible(false);
     }
 
     _load_game_ui() {
@@ -959,23 +1006,6 @@ export default class UserInterface {
         }
         const accurate = Math.max(0, this._totalTypedCharacters - this._totalCorrections);
         return (accurate / attempts) * 100;
-    }
-
-    _refresh_stats_modal() {
-        const wpm = this._current_wpm();
-        this._peakWpm = Math.max(this._peakWpm, wpm);
-        const accuracy = this._current_accuracy();
-        const minutes = this._session_minutes();
-        const lines = [
-            `Elapsed: ${minutes.toFixed(2)} min`,
-            `Current WPM: ${wpm.toFixed(1)}`,
-            `Peak WPM: ${this._peakWpm.toFixed(1)}`,
-            `Accuracy: ${accuracy.toFixed(1)}%`,
-            `Typed chars: ${this._totalTypedCharacters}`,
-            `Corrections: ${this._totalCorrections}`,
-            `Current length: ${this._lastMessageForStats.length}`
-        ];
-        this._statsBody.node.textContent = lines.join("\n");
     }
 
     _sync_quick_controls() {
@@ -1515,13 +1545,9 @@ export default class UserInterface {
         // Those go last so that they are on top of everything else.
         this._pointer.svgPiece = this._svg;
 
-        // Remove the loading... element and add the proper heading to show that
-        // loading has finished.
+        // Remove the loading element once initialisation completes.
         if (this._loading !== null) {
             this._loading.remove();
-            const h1 = new Piece(
-                'h1', undefined, undefined, "Dasher Six beta");
-            this._panels.main.$.piece.add_child(h1, false);
         }
 
         // Previous lines could have changed the size of the svg so, after a
