@@ -36,6 +36,8 @@ let learningEnabled = false;
 let learnedText = '';
 let createPredictorFunction = null;
 let predictorModuleLoadAttempted = false;
+const gutenbergStartMarker = /\*\*\*\s*START OF THIS PROJECT GUTENBERG EBOOK[\s\S]*?\*\*\*/i;
+const gutenbergEndMarker = /\*\*\*\s*END OF THIS PROJECT GUTENBERG EBOOK[\s\S]*?\*\*\*/i;
 
 // Simple training text for fast initial startup
 const quickTrainingText = 'The quick brown fox jumps over the lazy dog. ' +
@@ -43,6 +45,29 @@ const quickTrainingText = 'The quick brown fox jumps over the lazy dog. ' +
   'This is a test. The cat sat on the mat. ' +
   'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z. ' +
   'the and for are but not you all any can had has him his how man new now old see two way who boy did its let put say she too use dad mom car dog eat fun get go good hi hot job key law lay lie low mad off out own pay red run set sit top try win yes ';
+
+function sanitiseTrainingText(text) {
+  const source = typeof text === 'string' ? text : '';
+  const startMatch = source.match(gutenbergStartMarker);
+
+  let body = source;
+  if (startMatch !== null) {
+    body = body.slice(startMatch.index + startMatch[0].length);
+  }
+  const endMatch = body.match(gutenbergEndMarker);
+  if (endMatch !== null) {
+    body = body.slice(0, endMatch.index);
+  }
+
+  return body
+      .replace(/\r\n/g, '\n')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+}
+
+const aliceTrainingText = sanitiseTrainingText(bufferAlice);
+const sherlockTrainingText = sanitiseTrainingText(bufferSherlockHolmes);
 
 /**
  * Initialize the predictor with training data.
@@ -83,14 +108,14 @@ async function initialize() {
     predictor.train(quickTrainingText);
 
     isInitialized = true;
-    console.log('@willwade/ppmpredictor ready (background training in progress...');
+    console.log('@willwade/ppmpredictor ready (background training in progress)...');
 
     // Train on full corpus in background without blocking UI
     setTimeout(() => {
       console.log('Background training on Alice in Wonderland...');
-      predictor.train(bufferAlice);
+      predictor.train(aliceTrainingText);
       console.log('Background training on Sherlock Holmes...');
-      predictor.train(bufferSherlockHolmes);
+      predictor.train(sherlockTrainingText);
       console.log('Background training complete.');
     }, 100);
 
@@ -186,8 +211,8 @@ export function ppmNewReset(palette, otherText) {
 
     // Train on full corpus in background
     setTimeout(() => {
-      predictor.train(bufferAlice);
-      predictor.train(bufferSherlockHolmes);
+      predictor.train(aliceTrainingText);
+      predictor.train(sherlockTrainingText);
       // Train on additional text if provided
       if (otherText && otherText.length > 0) {
         predictor.train(otherText);
@@ -221,6 +246,11 @@ export function ppmNewGetPredictor() {
   if (!isInitialized) {
     initialize();
   }
+  return predictor;
+}
+
+export async function ppmNewGetPredictorAsync() {
+  await initialize();
   return predictor;
 }
 

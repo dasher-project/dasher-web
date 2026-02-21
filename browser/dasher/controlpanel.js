@@ -545,12 +545,20 @@ export default class ControlPanel {
           // presumably because the browser has by then rendered
           // everything.
           setTimeout(() => {
+            const parentNode = panelNode.parentNode;
+            if (
+              !(panelNode instanceof Element) ||
+              !(parentNode instanceof Element)
+            ) {
+              return;
+            }
+
             const panelX = panelNode.getBoundingClientRect().x;
             const parentX = (
-              panelNode.parentNode.getBoundingClientRect().x);
-            panelNode.parentNode.scrollTo({
+              parentNode.getBoundingClientRect().x);
+            parentNode.scrollTo({
               left: (
-                panelNode.parentNode.scrollLeft +
+                parentNode.scrollLeft +
                                 (panelX - parentX)
               ),
               behavior: 'smooth',

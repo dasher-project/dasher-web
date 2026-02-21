@@ -23,7 +23,7 @@ import predictor_basic from './predictor.js';
 import predictor_test from './predictor_test.js';
 import {ppmModelPredict} from './predictor_ppm.js';
 import predictor_ppm_new, {
-  ppmNewGetPredictor,
+  ppmNewGetPredictorAsync,
   ppmNewAddCorpus,
   ppmNewSetLearningEnabled,
   ppmNewGetLearningEnabled,
@@ -41,6 +41,7 @@ import * as LanguageManager from './languageManager.js';
 
 const messageLabelText = '';
 const speechAnnouncement = 'Speech is now active.';
+const legacyRenderIntervalMillis = 400;
 
 const defaultPredictorList = [{
   'label': 'PPM (Enhanced)', 'item': predictor_ppm_new,
@@ -58,6 +59,9 @@ export default class UserInterface {
   constructor(parent) {
     this._parent = parent;
     this._intervalRender = undefined;
+    this._renderLoopKind = null;
+    this._lastRenderTimestamp = null;
+    this._renderAccumulator = 0;
 
     this._keyboardMode = parent.classList.contains('keyboard');
 
@@ -941,6 +945,10 @@ export default class UserInterface {
     return this._currentSpeed.toFixed(1);
   }
 
+  _normalise_speed(speed) {
+    return speed * (this._transitionMillis / legacyRenderIntervalMillis);
+  }
+
   _longest_common_prefix(a, b) {
     const max = Math.min(a.length, b.length);
     let i = 0;
@@ -1196,7 +1204,7 @@ export default class UserInterface {
   _select_behaviour(index) {
     this._limits.targetRight = (index === 0);
     this._currentSpeed = (index === 0 ? 0.1 : 0.2);
-    this._pointer.multiplierLeftRight = this._currentSpeed;
+    this._pointer.multiplierLeftRight = this._normalise_speed(this._currentSpeed);
     // if (this._speedLeftRightInput !== undefined) {
     const speedLeftRightInput = this._panels.speed.horizontal.node;
     if (speedLeftRightInput !== undefined) {
@@ -1212,7 +1220,7 @@ export default class UserInterface {
     // Update predictor with language-specific corpus
     // Only works with PPM (Enhanced) predictor
     try {
-      const predictor = ppmNewGetPredictor();
+      const predictor = await ppmNewGetPredictorAsync();
       if (predictor) {
         // Get lexicon for the language
         const lexicon = await LanguageManager.getLexicon(language.code, 5000);
@@ -1514,20 +1522,26 @@ export default class UserInterface {
     if (this._keyboardMode) {
       // Can't show settings in input controls in keyboard mode. The input
       // would itself require a keyboard. Set some slower default values.
-      this._pointer.multiplierLeftRight = 0.2;
-      this._pointer.multiplierUpDown = 0.2;
+      this._pointer.multiplierLeftRight = this._normalise_speed(0.2);
+      this._pointer.multiplierUpDown = this._normalise_speed(0.2);
       this._select_behaviour(1);
       return;
     }
 
     this._panels.speed.horizontal.listener = (value) => {
       this._currentSpeed = value;
-      this._pointer.multiplierLeftRight = value;
+      this._pointer.multiplierLeftRight = this._normalise_speed(value);
       this._sync_quick_controls();
     };
     this._select_behaviour(0);
+    const initialVerticalSpeed = Number.parseFloat(
+        this._panels.speed.vertical.node.value,
+    );
+    if (!Number.isNaN(initialVerticalSpeed)) {
+      this._pointer.multiplierUpDown = this._normalise_speed(initialVerticalSpeed);
+    }
     this._panels.speed.vertical.listener = (value) => {
-      this._pointer.multiplierUpDown = value;
+      this._pointer.multiplierUpDown = this._normalise_speed(value);
     };
   }
 
@@ -1635,8 +1649,44 @@ export default class UserInterface {
 
     if (render_one() && continuous) {
       this._stopGoTextNode.nodeValue = 'Started';
-      this._intervalRender = setInterval(
-          render_one, this._transitionMillis);
+      if (typeof window.requestAnimationFrame === 'function') {
+        this._renderLoopKind = 'raf';
+        this._lastRenderTimestamp = null;
+        this._renderAccumulator = 0;
+
+        const tick = (timestamp) => {
+          if (this._intervalRender === null) {
+            return;
+          }
+
+          if (this._lastRenderTimestamp === null) {
+            this._lastRenderTimestamp = timestamp;
+          }
+          const elapsed = timestamp - this._lastRenderTimestamp;
+          this._lastRenderTimestamp = timestamp;
+
+          this._renderAccumulator = Math.min(
+              this._renderAccumulator + elapsed,
+              this._transitionMillis * 4,
+          );
+
+          while (this._renderAccumulator >= this._transitionMillis) {
+            this._renderAccumulator -= this._transitionMillis;
+            if (!render_one()) {
+              this._stop_render();
+              return;
+            }
+          }
+
+          this._intervalRender = window.requestAnimationFrame(tick);
+        };
+
+        this._intervalRender = window.requestAnimationFrame(tick);
+      } else {
+        this._renderLoopKind = 'interval';
+        this._intervalRender = setInterval(
+            render_one, this._transitionMillis);
+      }
     } else {
       this._stop_render();
     }
@@ -1649,8 +1699,15 @@ export default class UserInterface {
     }
 
     if (this._intervalRender !== null) {
-      clearInterval(this._intervalRender);
+      if (this._renderLoopKind === 'raf') {
+        window.cancelAnimationFrame(this._intervalRender);
+      } else {
+        clearInterval(this._intervalRender);
+      }
       this._intervalRender = null;
+      this._renderLoopKind = null;
+      this._lastRenderTimestamp = null;
+      this._renderAccumulator = 0;
       this._stopGoTextNode.nodeValue = 'Stopped';
       if (this._quickControls.playButton !== undefined) {
         this._quickControls.playButton.textContent = 'Play';
