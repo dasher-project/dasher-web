@@ -87,7 +87,7 @@ export default class UserInterface {
     this._speedLeftRightInput = undefined;
     this._baseSpeedHorizontal = 0.1;
     this._baseSpeedVertical = 0.2;
-    this._autoSpeedEnabled = true;
+    this._autoSpeedEnabled = false;
     this._autoSpeedControl = new AutoSpeedControl();
 
     // Spawn and render parameters in mystery SVG units.
@@ -378,6 +378,7 @@ export default class UserInterface {
   _build_game_nav_bar() {
     const secondary = new Piece('div', this._gameNavBar);
     secondary.node.classList.add('ui-game-nav__inner');
+    this._quickControls.gameNavPrimary = secondary.node;
     this._quickControls.newGame = this._create_button(
         secondary, 'New game', 'ui-link-button', this._start_new_game.bind(this),
     );
@@ -387,8 +388,11 @@ export default class UserInterface {
     this._quickControls.levelChip = secondary.create('span', {'class': 'ui-chip'}, 'Beginner');
     this._quickControls.wpmChip = secondary.create('span', {'class': 'ui-chip'}, 'WPM: 0');
     this._quickControls.accuracyChip = secondary.create('span', {'class': 'ui-chip'}, 'Accuracy: 100%');
-    this._statsInline = secondary.create('span', {
-      'class': 'ui-chip ui-game-stats-inline _hidden',
+    const statsOnly = new Piece('div', this._gameNavBar);
+    statsOnly.node.classList.add('ui-game-nav__stats', '_hidden');
+    this._quickControls.gameNavStats = statsOnly.node;
+    this._statsInline = statsOnly.create('span', {
+      'class': 'ui-chip ui-game-stats-inline',
     }, '');
   }
 
@@ -403,13 +407,14 @@ export default class UserInterface {
     }
     if (!visible && this._statsInlineVisible) {
       this._statsInlineVisible = false;
-      if (this._statsInline !== undefined) {
-        this._statsInline.classList.add('_hidden');
-      }
+      this._set_game_nav_stats_mode(false);
       if (this._quickControls.statsButton !== undefined) {
         this._quickControls.statsButton.textContent = 'View stats';
         this._quickControls.statsButton.classList.remove('ui-button_accent');
       }
+    }
+    if (!visible) {
+      this._set_game_nav_stats_mode(false);
     }
   }
 
@@ -485,9 +490,7 @@ export default class UserInterface {
 
   _toggle_stats_inline() {
     this._statsInlineVisible = !this._statsInlineVisible;
-    if (this._statsInline !== undefined) {
-      this._statsInline.classList.toggle('_hidden', !this._statsInlineVisible);
-    }
+    this._set_game_nav_stats_mode(this._statsInlineVisible);
     if (this._quickControls.statsButton !== undefined) {
       this._quickControls.statsButton.textContent = (
                 this._statsInlineVisible ? 'Hide stats' : 'View stats'
@@ -497,6 +500,15 @@ export default class UserInterface {
       );
     }
     this._refresh_stats_inline();
+  }
+
+  _set_game_nav_stats_mode(showStatsOnly) {
+    if (this._quickControls.gameNavPrimary !== undefined) {
+      this._quickControls.gameNavPrimary.classList.toggle('_hidden', showStatsOnly);
+    }
+    if (this._quickControls.gameNavStats !== undefined) {
+      this._quickControls.gameNavStats.classList.toggle('_hidden', !showStatsOnly);
+    }
   }
 
   _refresh_stats_inline() {

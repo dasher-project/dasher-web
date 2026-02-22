@@ -181,11 +181,21 @@ body {
     min-width: max-content;
 }
 
+.ui-game-nav__stats {
+    display: inline-flex;
+    align-items: center;
+    min-width: max-content;
+}
+
 .ui-game-stats-inline {
     max-width: 48vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.ui-game-nav__stats .ui-game-stats-inline {
+    max-width: 90vw;
 }
 
 .ui-top-bar__left,

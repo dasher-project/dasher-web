@@ -52,7 +52,7 @@ export default {
     '$': {'order': 3, '$': {'html': 'div'}},
 
     'auto': {$: {'order': 0, 'control': 'checkbox',
-      'value': true, 'label': 'Auto speed'}},
+      'value': false, 'label': 'Auto speed'}},
     'horizontal': {$: {'order': 1, 'control': 'number',
       'value': '0.2', 'label': 'Left-Right'}},
     'vertical': {$: {'order': 2, 'control': 'number',

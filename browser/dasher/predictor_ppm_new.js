@@ -30,6 +30,18 @@ const config = {
 const characterWeightRange = 90;
 const wordCompletionBoost = 1.8;
 const nextWordBoost = 1.2;
+const lookaheadDepth = 3;
+const lookaheadBeamWidth = 4;
+const lookaheadBranching = 3;
+const lookaheadDecay = 0.85;
+const lookaheadBoost = 1.2;
+const continuationHintBoost = 0.8;
+const maxContinuationHints = 4;
+const temporalSmoothingAlpha = 0.55;
+const temporalPrefixSmoothingAlpha = 0.25;
+
+let previousContextForSmoothing = '';
+let previousScoresForSmoothing = new Map();
 
 // Create the predictor instance
 let predictor = null;
@@ -201,8 +213,10 @@ export default async function predictor_ppm_new(
 
   // Get character predictions from PPM model
   const predictions = predictor.predictNextCharacter();
+  const validCodePoints = new Set(palette.codePoints);
 
   const combinedScores = new Map();
+  const continuationHintsByChar = new Map();
   const addScore = (char, probability, boost = 1) => {
     if (typeof char !== 'string' || char.length === 0) {
       return;
@@ -218,6 +232,125 @@ export default async function predictor_ppm_new(
   // Base character probabilities.
   for (const prediction of predictions) {
     addScore(prediction.text, prediction.probability, 1);
+  }
+
+  // If the parent branch supplied continuation hints, reinforce them so
+  // repeated rightward chains (e.g. h->e->l->l->o) are more visible.
+  if (
+    predictorData !== null &&
+    typeof predictorData === 'object' &&
+    Array.isArray(predictorData.continuations)
+  ) {
+    for (const hint of predictorData.continuations) {
+      if (
+        hint !== null &&
+        typeof hint === 'object' &&
+        typeof hint.char === 'string' &&
+        typeof hint.score === 'number'
+      ) {
+        addScore(hint.char, hint.score, continuationHintBoost);
+      }
+    }
+  }
+
+  // Multi-step lookahead: reward first characters that lead to strong
+  // continuation chains several characters to the right.
+  const initialBranches = [];
+  for (const prediction of predictions) {
+    if (initialBranches.length >= lookaheadBeamWidth) {
+      break;
+    }
+    if (typeof prediction.text !== 'string' || prediction.text.length === 0) {
+      continue;
+    }
+    const firstCodePoint = prediction.text.codePointAt(0);
+    if (!validCodePoints.has(firstCodePoint)) {
+      continue;
+    }
+    if (prediction.probability <= 0) {
+      continue;
+    }
+    initialBranches.push({
+      firstChar: prediction.text,
+      suffix: prediction.text,
+      continuationProb: 1,
+    });
+
+    // Cache direct continuation hints for each first character.
+    const directContinuations = predictor.predictNextCharacter(
+        currentText + prediction.text,
+    );
+    const hintList = [];
+    for (const continuation of directContinuations) {
+      if (hintList.length >= maxContinuationHints) {
+        break;
+      }
+      if (
+        typeof continuation.text !== 'string' ||
+        continuation.text.length === 0 ||
+        continuation.probability <= 0
+      ) {
+        continue;
+      }
+      const continuationCodePoint = continuation.text.codePointAt(0);
+      if (!validCodePoints.has(continuationCodePoint)) {
+        continue;
+      }
+      hintList.push({
+        char: continuation.text,
+        score: continuation.probability,
+      });
+    }
+    continuationHintsByChar.set(prediction.text, hintList);
+  }
+
+  let beams = initialBranches;
+  for (let depth = 1; depth < lookaheadDepth; depth += 1) {
+    if (beams.length === 0) {
+      break;
+    }
+    const nextBeams = [];
+    for (const beam of beams) {
+      const context = currentText + beam.suffix;
+      const lookaheadPredictions = predictor.predictNextCharacter(context);
+
+      let branchesAdded = 0;
+      for (const prediction of lookaheadPredictions) {
+        if (branchesAdded >= lookaheadBranching) {
+          break;
+        }
+        if (typeof prediction.text !== 'string' || prediction.text.length === 0) {
+          continue;
+        }
+        const nextCodePoint = prediction.text.codePointAt(0);
+        if (!validCodePoints.has(nextCodePoint)) {
+          continue;
+        }
+        if (prediction.probability <= 0) {
+          continue;
+        }
+
+        const continuationProb = beam.continuationProb * prediction.probability;
+        if (continuationProb <= 0) {
+          continue;
+        }
+
+        addScore(
+            beam.firstChar,
+            continuationProb,
+            lookaheadBoost * Math.pow(lookaheadDecay, depth - 1),
+        );
+        nextBeams.push({
+          firstChar: beam.firstChar,
+          suffix: beam.suffix + prediction.text,
+          continuationProb,
+        });
+        branchesAdded += 1;
+      }
+    }
+
+    nextBeams.sort((a, b) => b.continuationProb - a.continuationProb);
+    beams = nextBeams.slice(0, lookaheadBeamWidth);
   }
 
   // Add word-level hints so the rightward multi-letter chains are clearer.
@@ -247,7 +380,39 @@ export default async function predictor_ppm_new(
   }
 
   // Get set of all valid codepoints from palette.
-  const validCodePoints = new Set(palette.codePoints);
+  const contextIsRelated = (
+    currentText === previousContextForSmoothing ||
+    currentText.startsWith(previousContextForSmoothing) ||
+    previousContextForSmoothing.startsWith(currentText)
+  );
+  if (contextIsRelated && previousScoresForSmoothing.size > 0) {
+    const alpha = (
+      currentText === previousContextForSmoothing ?
+      temporalSmoothingAlpha : temporalPrefixSmoothingAlpha
+    );
+    const smoothedScores = new Map();
+    const allChars = new Set([
+      ...combinedScores.keys(),
+      ...previousScoresForSmoothing.keys(),
+    ]);
+    for (const char of allChars) {
+      const currentScore = combinedScores.get(char) || 0;
+      const previousScore = previousScoresForSmoothing.get(char) || 0;
+      const blended = ((1 - alpha) * currentScore) + (alpha * previousScore);
+      if (blended > 0) {
+        smoothedScores.set(char, blended);
+      }
+    }
+    combinedScores.clear();
+    for (const [char, score] of smoothedScores.entries()) {
+      combinedScores.set(char, score);
+    }
+  }
+
+  previousContextForSmoothing = currentText;
+  previousScoresForSmoothing = new Map(combinedScores);
+
+  // Get set of all valid codepoints from palette.
   let maxScore = 0;
   for (const [char, score] of combinedScores.entries()) {
     const codePoint = char.codePointAt(0);
@@ -268,7 +433,9 @@ export default async function predictor_ppm_new(
     }
     const normalised = Math.min(1, score / maxScore);
     const weight = 1 + Math.round(Math.pow(normalised, 0.7) * characterWeightRange);
-    set_weight(codePoint, weight, null);
+    set_weight(codePoint, weight, {
+      continuations: continuationHintsByChar.get(char) || [],
+    });
   }
 
   // Note: Unpredicted characters get implicit weight of 1 from Dasher
