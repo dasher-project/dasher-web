@@ -2,6 +2,10 @@ This directory contains vendored browser assets that must be served in static de
 
 Current files:
 - `ppmpredictor.esm.js` copied from `node_modules/@willwade/ppmpredictor/dist/ppmpredictor.esm.js`
+- `ppmpredictor.esm.js.map` copied from `node_modules/@willwade/ppmpredictor/dist/ppmpredictor.esm.js.map`
+
+Current pinned package:
+- `@willwade/ppmpredictor@0.0.13`
 
 Update flow:
 1. Run `npm ci` in repo root.

@@ -68,8 +68,24 @@ export default {
       'order': 1, 'control': 'select', 'label': null}},
   },
 
-  'manage': {
+  'prediction': {
     '$': {'order': 5},
+
+    'ppmAlpha': {$: {
+      'order': 0, 'control': 'number', 'value': '0.49', 'label': 'PPM Alpha'}},
+    'ppmBeta': {$: {
+      'order': 1, 'control': 'number', 'value': '0.77', 'label': 'PPM Beta'}},
+    'ppmMaxNodes': {$: {
+      'order': 2, 'control': 'number', 'value': '0', 'label': 'PPM Max Nodes'}},
+    'ppmUseExclusion': {$: {
+      'order': 3, 'control': 'checkbox', 'value': true, 'label': 'Use Exclusion'}},
+    'ppmUpdateExclusion': {$: {
+      'order': 4, 'control': 'checkbox', 'value': true,
+      'label': 'Single-count Updates'}},
+  },
+
+  'manage': {
+    '$': {'order': 6},
 
     'settings': {
       '$': {'after': 'manager'},
@@ -99,13 +115,13 @@ export default {
     },
   },
   'display': {
-    '$': {'order': 6},
+    '$': {'order': 7},
 
     'popup': {$: {
       'order': 0, 'control': 'button'}},
   },
   'message': {
-    '$': {'order': 7},
+    '$': {'order': 8},
 
     'add': {$: {
       'order': 0, 'control': 'button'}},
@@ -119,7 +135,7 @@ export default {
       'order': 4, 'control': 'button'}},
   },
   'developer': {
-    '$': {'order': 8},
+    '$': {'order': 9},
 
     'pointer': {$: {
       'order': 0, 'control': 'button'}},

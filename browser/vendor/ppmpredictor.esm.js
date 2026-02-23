@@ -123,8 +123,8 @@ class Vocabulary {
  * These hardcoded values are copied from Dasher. Please see the documentation
  * for PPMLanguageModel.getProbs() below for more information.
  */
-const knAlpha = 0.49;
-const knBeta = 0.77;
+const defaultKnAlpha = 0.49;
+const defaultKnBeta = 0.77;
 
 /* Epsilon for sanity checks. */
 const epsilon = 1E-10;
@@ -240,8 +240,14 @@ class PPMLanguageModel {
   /**
    * @param {?Vocabulary} vocab Symbol vocabulary object.
    * @param {number} maxOrder Maximum length of the context.
+   * @param {Object=} options Optional PPM parameters.
+   * @param {number=} options.alpha Smoothing alpha (default: 0.49).
+   * @param {number=} options.beta Smoothing beta (default: 0.77).
+   * @param {boolean=} options.useExclusion Enable exclusion at inference time.
+   * @param {boolean=} options.updateExclusion Enable "single counting" updates.
+   * @param {number=} options.maxNodes Maximum number of trie nodes (0 = unlimited).
    */
-  constructor(vocab, maxOrder) {
+  constructor(vocab, maxOrder, options = {}) {
     this.vocab_ = vocab;
     assert(this.vocab_.size() > 1,
       'Expecting at least two symbols in the vocabulary');
@@ -253,9 +259,108 @@ class PPMLanguageModel {
     this.rootContext_.order_ = 0;
     this.numNodes_ = 1;
 
-    // Exclusion mechanism: Off by default, but can be enabled during the
-    // run-time once the constructed suffix tree contains reliable counts.
-    this.useExclusion_ = false;
+    this.alpha_ = defaultKnAlpha;
+    this.beta_ = defaultKnBeta;
+    // Exclusion mechanism: On by default.
+    // Mirrors the newer Dasher rewrite behavior.
+    // Can be disabled if needed for backwards compatibility.
+    this.useExclusion_ = true;
+    // Update exclusion (single counting): On by default, mirroring Dasher.
+    this.updateExclusion_ = true;
+    // Maximum number of nodes in the trie. 0 means unlimited.
+    this.maxNodes_ = 0;
+    // Track the number of symbols skipped due to the node cap.
+    this.skippedNodeAdds_ = 0;
+
+    this.setParameters(options);
+  }
+
+  /**
+   * Returns runtime statistics useful for monitoring memory pressure.
+   * @return {Object} Stats object.
+   * @final
+   */
+  getStats() {
+    return {
+      numNodes: this.numNodes_,
+      maxNodes: this.maxNodes_,
+      skippedNodeAdds: this.skippedNodeAdds_
+    };
+  }
+
+  /**
+   * Returns true if adding another node is currently allowed.
+   * @return {boolean}
+   * @final @private
+   */
+  canAddNode_() {
+    return this.maxNodes_ <= 0 || this.numNodes_ < this.maxNodes_;
+  }
+
+  /**
+   * Adds symbol to an existing shorter context when node budget is reached.
+   * @param {?Node} node Current node.
+   * @param {number} symbol Symbol to add.
+   * @return {?Node} Added/found node in shorter context.
+   * @final @private
+   */
+  addSymbolWithBudgetFallback_(node, symbol) {
+    let backoff = node.backoff_;
+    while (backoff != null) {
+      const existing = backoff.findChildWithSymbol(symbol);
+      if (existing != null) {
+        existing.count_++;
+        if (!this.updateExclusion_) {
+          let vine = existing.backoff_;
+          while (vine != null) {
+            vine.count_++;
+            vine = vine.backoff_;
+          }
+        }
+        this.skippedNodeAdds_++;
+        return existing;
+      }
+      if (this.canAddNode_()) {
+        this.skippedNodeAdds_++;
+        return this.addSymbolToNode_(backoff, symbol);
+      }
+      backoff = backoff.backoff_;
+    }
+    this.skippedNodeAdds_++;
+    return null;
+  }
+
+  /**
+   * Updates PPM parameters.
+   * @param {Object} options PPM parameters to update.
+   * @final
+   */
+  setParameters(options = {}) {
+    if (options.alpha !== undefined) {
+      assert(typeof options.alpha === 'number' && options.alpha >= 0,
+        'alpha must be a non-negative number');
+      this.alpha_ = options.alpha;
+    }
+    if (options.beta !== undefined) {
+      assert(typeof options.beta === 'number' && options.beta >= 0 && options.beta < 1,
+        'beta must be a number in [0, 1)');
+      this.beta_ = options.beta;
+    }
+    if (options.useExclusion !== undefined) {
+      assert(typeof options.useExclusion === 'boolean',
+        'useExclusion must be boolean');
+      this.useExclusion_ = options.useExclusion;
+    }
+    if (options.updateExclusion !== undefined) {
+      assert(typeof options.updateExclusion === 'boolean',
+        'updateExclusion must be boolean');
+      this.updateExclusion_ = options.updateExclusion;
+    }
+    if (options.maxNodes !== undefined) {
+      assert(Number.isInteger(options.maxNodes) && options.maxNodes >= 0,
+        'maxNodes must be a non-negative integer');
+      this.maxNodes_ = options.maxNodes;
+    }
   }
 
   /**
@@ -272,7 +377,18 @@ class PPMLanguageModel {
       // the highest order already existing node for the symbol ('single
       // counting' or 'update exclusion').
       symbolNode.count_++;
+      if (!this.updateExclusion_) {
+        // Dasher optional mode: propagate updates up shorter contexts.
+        let vine = symbolNode.backoff_;
+        while (vine != null) {
+          vine.count_++;
+          vine = vine.backoff_;
+        }
+      }
     } else {
+      if (!this.canAddNode_()) {
+        return this.addSymbolWithBudgetFallback_(node, symbol);
+      }
       // Symbol does not exist under the given node. Create a new child node
       // and update the backoff structure for lower contexts.
       symbolNode = new Node();
@@ -353,7 +469,13 @@ class PPMLanguageModel {
     }
     assert(symbol < this.vocab_.size(), 'Invalid symbol: ' + symbol);
     const symbolNode = this.addSymbolToNode_(context.head_, symbol);
-    assert(symbolNode == context.head_.findChildWithSymbol(symbol));
+    if (symbolNode == null) {
+      // Node budget prevented adding this symbol at all.
+      this.addSymbolToContext(context, symbol);
+      return;
+    }
+    assert(symbolNode == context.head_.findChildWithSymbol(symbol) ||
+      context.head_.findChildWithSymbol(symbol) == null);
     context.head_ = symbolNode;
     context.order_++;
     while (context.order_ > this.maxOrder_) {
@@ -446,7 +568,8 @@ class PPMLanguageModel {
         while (childNode != null) {
           const symbol = childNode.symbol_;
           if (!exclusionMask || !exclusionMask[symbol]) {
-            const p = gamma * (childNode.count_ - knBeta) / (count + knAlpha);
+            const p = gamma * (childNode.count_ - this.beta_) /
+              (count + this.alpha_);
             probs[symbol] += p;
             totalMass -= p;
             if (exclusionMask) {
@@ -483,7 +606,7 @@ class PPMLanguageModel {
       // and, in the update below, the following is equivalent:
       //   \gamma = \gamma * \gamma(x_h) = totalMass .
       //
-      // Since gamma *= (numChildren * knBeta + knAlpha) / (count + knAlpha) is
+      // Since gamma *= (numChildren * beta + alpha) / (count + alpha) is
       // expensive, we assign the equivalent totalMass value to gamma.
       node = node.backoff_;
       gamma = totalMass;
@@ -1180,6 +1303,11 @@ class PrefixTrie {
  * @property {number} maxPredictions - Maximum number of predictions to return (default: 10)
  * @property {boolean} adaptive - Update model as text is entered (default: false)
  * @property {Array<string>} lexicon - Optional word list for word prediction
+ * @property {number} ppmAlpha - PPM smoothing alpha (default: 0.49)
+ * @property {number} ppmBeta - PPM smoothing beta (default: 0.77)
+ * @property {boolean} ppmUseExclusion - Enable PPM exclusion at inference (default: true)
+ * @property {boolean} ppmUpdateExclusion - Enable PPM single-count updates (default: true)
+ * @property {number} ppmMaxNodes - Maximum trie nodes per corpus model (0 = unlimited)
  */
 
 /**
@@ -1211,7 +1339,13 @@ class Predictor {
       caseSensitive: config.caseSensitive !== undefined ? config.caseSensitive : false,
       maxPredictions: config.maxPredictions || 10,
       adaptive: config.adaptive !== undefined ? config.adaptive : false,
-      lexicon: config.lexicon || []
+      lexicon: config.lexicon || [],
+      ppmAlpha: config.ppmAlpha !== undefined ? config.ppmAlpha : 0.49,
+      ppmBeta: config.ppmBeta !== undefined ? config.ppmBeta : 0.77,
+      ppmUseExclusion: config.ppmUseExclusion !== undefined ? config.ppmUseExclusion : true,
+      ppmUpdateExclusion: config.ppmUpdateExclusion !== undefined ?
+        config.ppmUpdateExclusion : true,
+      ppmMaxNodes: config.ppmMaxNodes !== undefined ? config.ppmMaxNodes : 0
     };
 
     // Create vocabulary (shared across all corpora)
@@ -1231,7 +1365,11 @@ class Predictor {
     this._corpora = {
       // Default corpus (backward compatibility)
       'default': {
-        model: new PPMLanguageModel(this.vocab, this.config.maxOrder),
+        model: new PPMLanguageModel(
+          this.vocab,
+          this.config.maxOrder,
+          this._getPPMOptions()
+        ),
         enabled: true,
         description: 'Default training corpus',
         lexicon: this.config.lexicon || [],
@@ -1262,6 +1400,9 @@ class Predictor {
 
     // Build lexicon structures for default corpus
     this._buildCorpusLexicon('default');
+
+    // Apply PPM settings to all corpora.
+    this._applyPPMConfigToModels();
   }
 
   /**
@@ -1330,7 +1471,11 @@ class Predictor {
     }
 
     // Create new PPM model for this corpus
-    const corpusModel = new PPMLanguageModel(this.vocab, this.config.maxOrder);
+    const corpusModel = new PPMLanguageModel(
+      this.vocab,
+      this.config.maxOrder,
+      this._getPPMOptions()
+    );
 
     // Train the model on the provided text
     const chars = toCharArray(text);
@@ -2134,6 +2279,22 @@ class Predictor {
   }
 
   /**
+   * Get PPM model statistics for each corpus.
+   * Useful for observing memory usage when max node limits are set.
+   *
+   * @return {Object<string, Object>} Map of corpus key to stats.
+   */
+  getPPMStats() {
+    const stats = {};
+    for (const [key, corpus] of Object.entries(this._corpora)) {
+      if (corpus && corpus.model && typeof corpus.model.getStats === 'function') {
+        stats[key] = corpus.model.getStats();
+      }
+    }
+    return stats;
+  }
+
+  /**
    * Get configuration.
    * @return {PredictorConfig} Current configuration.
    */
@@ -2147,6 +2308,14 @@ class Predictor {
    */
   updateConfig(newConfig) {
     this.config = { ...this.config, ...newConfig };
+
+    if (newConfig.ppmAlpha !== undefined ||
+      newConfig.ppmBeta !== undefined ||
+      newConfig.ppmUseExclusion !== undefined ||
+      newConfig.ppmUpdateExclusion !== undefined ||
+      newConfig.ppmMaxNodes !== undefined) {
+      this._applyPPMConfigToModels();
+    }
 
     // Rebuild lexicon structures if relevant settings changed
     if (newConfig.lexicon ||
@@ -2219,6 +2388,34 @@ class Predictor {
 
     // Also update keyboard adjacency (shared across all corpora)
     this.keyboardAdjacency = this._resolveAdjacencyMap();
+  }
+
+  /**
+   * Returns PPM parameter options from predictor config.
+   * @return {Object} PPM options object.
+   * @private
+   */
+  _getPPMOptions() {
+    return {
+      alpha: this.config.ppmAlpha,
+      beta: this.config.ppmBeta,
+      useExclusion: this.config.ppmUseExclusion,
+      updateExclusion: this.config.ppmUpdateExclusion,
+      maxNodes: this.config.ppmMaxNodes
+    };
+  }
+
+  /**
+   * Applies current PPM settings to all loaded corpus models.
+   * @private
+   */
+  _applyPPMConfigToModels() {
+    const options = this._getPPMOptions();
+    for (const corpus of Object.values(this._corpora)) {
+      if (corpus && corpus.model && typeof corpus.model.setParameters === 'function') {
+        corpus.model.setParameters(options);
+      }
+    }
   }
 
   /**
@@ -2297,6 +2494,11 @@ class Predictor {
  * @param {number} [config.maxPredictions=10] - Maximum number of predictions
  * @param {boolean} [config.adaptive=false] - Update model as text is entered
  * @param {Array<string>} [config.lexicon=[]] - Optional word list for word prediction
+ * @param {number} [config.ppmAlpha=0.49] - PPM smoothing alpha
+ * @param {number} [config.ppmBeta=0.77] - PPM smoothing beta
+ * @param {boolean} [config.ppmUseExclusion=true] - Enable inference-time exclusion
+ * @param {boolean} [config.ppmUpdateExclusion=true] - Enable single-count updates
+ * @param {number} [config.ppmMaxNodes=0] - Maximum trie nodes per model (0 = unlimited)
  * @return {Predictor} Predictor instance
  *
  * @example

@@ -26,6 +26,12 @@ const config = {
   lexicon: [], // No lexicon by default (can be added via updateConfig)
   errorTolerant: false, // Strict mode by default
   caseSensitive: false, // Case-insensitive matching
+  // PPM tuning options available in @willwade/ppmpredictor >= 0.0.13.
+  ppmAlpha: 0.49,
+  ppmBeta: 0.77,
+  ppmMaxNodes: 0, // 0 = unlimited
+  ppmUseExclusion: true,
+  ppmUpdateExclusion: true, // Single-count updates
 };
 const characterWeightRange = 90;
 const wordCompletionBoost = 1.8;
@@ -524,6 +530,8 @@ export async function ppmNewGetPredictorAsync() {
  * });
  */
 export function ppmNewUpdateConfig(newConfig) {
+  Object.assign(config, newConfig);
+
   if (!isInitialized) {
     initialize();
   }
@@ -531,6 +539,17 @@ export function ppmNewUpdateConfig(newConfig) {
   if (predictor) {
     predictor.updateConfig(newConfig);
   }
+}
+
+export function ppmNewUpdatePPMConfig(ppmConfig = {}) {
+  ppmNewUpdateConfig(ppmConfig);
+}
+
+export function ppmNewGetPPMStats() {
+  if (!predictor || typeof predictor.getPPMStats !== 'function') {
+    return null;
+  }
+  return predictor.getPPMStats();
 }
 
 /**
