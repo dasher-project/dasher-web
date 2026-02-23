@@ -1831,10 +1831,12 @@ export default class UserInterface {
 
           this._renderAccumulator = Math.min(
               this._renderAccumulator + elapsed,
-              this._transitionMillis * 4,
+              this._transitionMillis * 2,
           );
 
-          while (this._renderAccumulator >= this._transitionMillis) {
+          // Avoid burst catch-up (multiple simulation steps in one paint),
+          // which feels like "snap forward then slow" under uneven frame time.
+          if (this._renderAccumulator >= this._transitionMillis) {
             this._renderAccumulator -= this._transitionMillis;
             if (!render_one()) {
               this._stop_render();

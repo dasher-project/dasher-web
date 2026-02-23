@@ -34,17 +34,17 @@ const config = {
   ppmUpdateExclusion: true, // Single-count updates
 };
 const characterWeightRange = 90;
-const wordCompletionBoost = 1.8;
-const nextWordBoost = 1.2;
-const lookaheadDepth = 3;
-const lookaheadBeamWidth = 4;
-const lookaheadBranching = 3;
-const lookaheadDecay = 0.85;
-const lookaheadBoost = 1.2;
-const continuationHintBoost = 0.8;
+const wordCompletionBoost = 1.5;
+const nextWordBoost = 1.1;
+const lookaheadDepth = 2;
+const lookaheadBeamWidth = 3;
+const lookaheadBranching = 2;
+const lookaheadDecay = 0.78;
+const lookaheadBoost = 0.9;
+const continuationHintBoost = 0.55;
 const maxContinuationHints = 4;
-const temporalSmoothingAlpha = 0.55;
-const temporalPrefixSmoothingAlpha = 0.25;
+const temporalSmoothingAlpha = 0.72;
+const temporalPrefixSmoothingAlpha = 0.45;
 
 let previousContextForSmoothing = '';
 let previousScoresForSmoothing = new Map();
