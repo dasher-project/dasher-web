@@ -28,6 +28,8 @@ import predictor_ppm_new, {
   ppmNewAddCorpus,
   ppmNewSetLearningEnabled,
   ppmNewGetLearningEnabled,
+  ppmNewUpdatePPMConfig,
+  ppmNewGetPPMStats,
 } from './predictor_ppm_new.js';
 
 import Speech from './speech.js';
@@ -87,7 +89,7 @@ export default class UserInterface {
     this._speedLeftRightInput = undefined;
     this._baseSpeedHorizontal = 0.1;
     this._baseSpeedVertical = 0.2;
-    this._autoSpeedEnabled = true;
+    this._autoSpeedEnabled = false;
     this._autoSpeedControl = new AutoSpeedControl();
 
     // Spawn and render parameters in mystery SVG units.
@@ -111,6 +113,8 @@ export default class UserInterface {
     this._keyHandler = new KeyHandler();
 
     this._diagnosticSpans = null;
+    this._ppmStatsTextNode = null;
+    this._lastPPMStatsRefresh = 0;
     this._controlPanel = new ControlPanel(panels);
     this._panels = this._controlPanel.load();
 
@@ -378,6 +382,7 @@ export default class UserInterface {
   _build_game_nav_bar() {
     const secondary = new Piece('div', this._gameNavBar);
     secondary.node.classList.add('ui-game-nav__inner');
+    this._quickControls.gameNavPrimary = secondary.node;
     this._quickControls.newGame = this._create_button(
         secondary, 'New game', 'ui-link-button', this._start_new_game.bind(this),
     );
@@ -387,8 +392,11 @@ export default class UserInterface {
     this._quickControls.levelChip = secondary.create('span', {'class': 'ui-chip'}, 'Beginner');
     this._quickControls.wpmChip = secondary.create('span', {'class': 'ui-chip'}, 'WPM: 0');
     this._quickControls.accuracyChip = secondary.create('span', {'class': 'ui-chip'}, 'Accuracy: 100%');
-    this._statsInline = secondary.create('span', {
-      'class': 'ui-chip ui-game-stats-inline _hidden',
+    const statsOnly = new Piece('div', this._gameNavBar);
+    statsOnly.node.classList.add('ui-game-nav__stats', '_hidden');
+    this._quickControls.gameNavStats = statsOnly.node;
+    this._statsInline = statsOnly.create('span', {
+      'class': 'ui-chip ui-game-stats-inline',
     }, '');
   }
 
@@ -403,13 +411,14 @@ export default class UserInterface {
     }
     if (!visible && this._statsInlineVisible) {
       this._statsInlineVisible = false;
-      if (this._statsInline !== undefined) {
-        this._statsInline.classList.add('_hidden');
-      }
+      this._set_game_nav_stats_mode(false);
       if (this._quickControls.statsButton !== undefined) {
         this._quickControls.statsButton.textContent = 'View stats';
         this._quickControls.statsButton.classList.remove('ui-button_accent');
       }
+    }
+    if (!visible) {
+      this._set_game_nav_stats_mode(false);
     }
   }
 
@@ -485,9 +494,7 @@ export default class UserInterface {
 
   _toggle_stats_inline() {
     this._statsInlineVisible = !this._statsInlineVisible;
-    if (this._statsInline !== undefined) {
-      this._statsInline.classList.toggle('_hidden', !this._statsInlineVisible);
-    }
+    this._set_game_nav_stats_mode(this._statsInlineVisible);
     if (this._quickControls.statsButton !== undefined) {
       this._quickControls.statsButton.textContent = (
                 this._statsInlineVisible ? 'Hide stats' : 'View stats'
@@ -497,6 +504,15 @@ export default class UserInterface {
       );
     }
     this._refresh_stats_inline();
+  }
+
+  _set_game_nav_stats_mode(showStatsOnly) {
+    if (this._quickControls.gameNavPrimary !== undefined) {
+      this._quickControls.gameNavPrimary.classList.toggle('_hidden', showStatsOnly);
+    }
+    if (this._quickControls.gameNavStats !== undefined) {
+      this._quickControls.gameNavStats.classList.toggle('_hidden', !showStatsOnly);
+    }
   }
 
   _refresh_stats_inline() {
@@ -604,6 +620,7 @@ export default class UserInterface {
       ['colour', 'Colour'],
       ['speed', 'Speed'],
       ['speech', 'Speech'],
+      ['prediction', 'Prediction'],
       ['display', 'Display'],
       ['message', 'Messages'],
       ['manage', 'Manage'],
@@ -1255,7 +1272,43 @@ export default class UserInterface {
     }
     this._load_display_controls();
     this._load_message_controls();
+    this._load_prediction_controls();
     this._load_developer_controls();
+  }
+
+  _load_prediction_controls() {
+    if (this._panels.prediction === undefined) {
+      return;
+    }
+    const panel = this._panels.prediction;
+    const numberOrFallback = (value, fallback) => {
+      const parsed = Number.parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const intOrFallback = (value, fallback) => {
+      const parsed = Number.parseInt(value, 10);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+    panel.ppmAlpha.listener = (value) => {
+      const next = clamp(numberOrFallback(value, 0.49), 0.01, 4);
+      ppmNewUpdatePPMConfig({'ppmAlpha': next});
+    };
+    panel.ppmBeta.listener = (value) => {
+      const next = clamp(numberOrFallback(value, 0.77), 0.01, 4);
+      ppmNewUpdatePPMConfig({'ppmBeta': next});
+    };
+    panel.ppmMaxNodes.listener = (value) => {
+      const next = Math.max(0, intOrFallback(value, 0));
+      ppmNewUpdatePPMConfig({'ppmMaxNodes': next});
+    };
+    panel.ppmUseExclusion.listener = (checked) => {
+      ppmNewUpdatePPMConfig({'ppmUseExclusion': !!checked});
+    };
+    panel.ppmUpdateExclusion.listener = (checked) => {
+      ppmNewUpdatePPMConfig({'ppmUpdateExclusion': !!checked});
+    };
   }
 
   _select_behaviour(index) {
@@ -1537,7 +1590,8 @@ export default class UserInterface {
     this._diagnostic_div_display();
     // Diagnostic area in which to display various numbers. This is an array
     // so that the values can be updated.
-    const diagnosticSpans = this._panels.developer.diagnostic.$.piece
+    const diagnosticPiece = this._panels.developer.diagnostic.$.piece;
+    const diagnosticSpans = diagnosticPiece
         .create(
             'span', {}, [
               'loading sizes ...',
@@ -1550,7 +1604,40 @@ export default class UserInterface {
     this._stopGoTextNode =
             diagnosticSpans[diagnosticSpans.length - 1].firstChild;
 
+    const ppmStats = diagnosticPiece.create('span', {}, ' | PPM: loading ...');
+    this._ppmStatsTextNode = ppmStats.firstChild;
+
     this._diagnosticSpans = diagnosticSpans;
+  }
+
+  _update_ppm_stats_diagnostic(timestamp) {
+    if (
+      this._ppmStatsTextNode === null ||
+      timestamp - this._lastPPMStatsRefresh < 500
+    ) {
+      return;
+    }
+    this._lastPPMStatsRefresh = timestamp;
+    const stats = ppmNewGetPPMStats();
+    if (!Array.isArray(stats) || stats.length === 0) {
+      this._ppmStatsTextNode.nodeValue = ' | PPM: unavailable';
+      return;
+    }
+
+    const summary = stats.map((corpusStats, index) => {
+      if (corpusStats === null || typeof corpusStats !== 'object') {
+        return `c${index}:n/a`;
+      }
+      const numNodes = Number.isFinite(corpusStats.numNodes) ?
+        corpusStats.numNodes : 0;
+      const maxNodes = Number.isFinite(corpusStats.maxNodes) ?
+        corpusStats.maxNodes : 0;
+      const skippedNodeAdds = Number.isFinite(corpusStats.skippedNodeAdds) ?
+        corpusStats.skippedNodeAdds : 0;
+      const limit = maxNodes > 0 ? maxNodes : 'inf';
+      return `c${index}:${numNodes}/${limit} skip:${skippedNodeAdds}`;
+    }).join(' ');
+    this._ppmStatsTextNode.nodeValue = ` | PPM: ${summary}`;
   }
 
   _load_pointer() {
@@ -1665,6 +1752,7 @@ export default class UserInterface {
       // thousand separators.
       this._heightTextNode.nodeValue = this.zoomBox.height.toLocaleString(
           undefined, {maximumFractionDigits: 0});
+      this._update_ppm_stats_diagnostic(Date.now());
       //
       // Update message to be the message of whichever box is across the
       // origin.
@@ -1743,10 +1831,12 @@ export default class UserInterface {
 
           this._renderAccumulator = Math.min(
               this._renderAccumulator + elapsed,
-              this._transitionMillis * 4,
+              this._transitionMillis * 2,
           );
 
-          while (this._renderAccumulator >= this._transitionMillis) {
+          // Avoid burst catch-up (multiple simulation steps in one paint),
+          // which feels like "snap forward then slow" under uneven frame time.
+          if (this._renderAccumulator >= this._transitionMillis) {
             this._renderAccumulator -= this._transitionMillis;
             if (!render_one()) {
               this._stop_render();
