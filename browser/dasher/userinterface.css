@@ -294,6 +294,31 @@ body {
     border-bottom: 1px solid #d8d9db;
 }
 
+#user-interface.ui-mobile-stack .ui-main-area {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) 120px;
+}
+
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-right .ui-message-resizer,
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-top .ui-message-resizer {
+    display: none;
+}
+
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-right > svg,
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-top > svg {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-right .ui-message-pane,
+#user-interface.ui-mobile-stack .ui-main-area.ui-message-position-top .ui-message-pane {
+    grid-column: 1;
+    grid-row: 2;
+    border-left: none;
+    border-top: 1px solid #d8d9db;
+    padding: 6px;
+}
+
 .ui-message-pane {
     min-width: 0;
     min-height: 0;

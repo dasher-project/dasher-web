@@ -167,6 +167,7 @@ export default class UserInterface {
     this._messagePosition = 'right';
     this._messagePaneWidth = 420;
     this._resizingMessagePane = false;
+    this._mobileStackLayout = false;
     this._uiPreferencesKey = 'dasher-ui-preferences';
     this._gameMode = false;
     this._gameTarget = '';
@@ -891,6 +892,13 @@ export default class UserInterface {
     if (this._svg !== undefined && this._pointer !== undefined) {
       setTimeout(() => this._on_resize(), 0);
     }
+  }
+
+  _update_mobile_layout() {
+    const width = this._parent.getBoundingClientRect().width;
+    const forceStack = width <= 1100;
+    this._mobileStackLayout = forceStack;
+    this._parent.classList.toggle('ui-mobile-stack', forceStack);
   }
 
   _attach_message_resizer() {
@@ -1708,6 +1716,7 @@ export default class UserInterface {
   }
 
   _finish_load() {
+    this._update_mobile_layout();
     this._limits.svgPiece = this._svg;
     this._on_resize();
     window.addEventListener('resize', this._on_resize.bind(this));
@@ -2017,6 +2026,7 @@ export default class UserInterface {
   }
 
   _on_resize() {
+    this._update_mobile_layout();
     this.svgRect = this._svg.node.getBoundingClientRect();
 
     if (this._controller !== null) {
