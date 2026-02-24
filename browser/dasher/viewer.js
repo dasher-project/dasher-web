@@ -4,6 +4,14 @@
 import Piece from './piece.js';
 
 export default class Viewer {
+  static _set_group_translate(groupNode, x, y) {
+    const value = `translate(${x}px, ${y}px)`;
+    groupNode.style.transform = value;
+    groupNode.style.webkitTransform = value;
+    // iOS Safari can fail to apply style transforms reliably on SVG groups.
+    groupNode.setAttribute('transform', `translate(${x} ${y})`);
+  }
+
   static view(svgPiece, limits) {
     const return_ = {
       'lower': new Piece('g', svgPiece, {'id': 'view-lower'}),
@@ -165,8 +173,8 @@ export default class Viewer {
     const [trimTop, trimBottom, renderMiddle] = this._trims(
         limitTop, limits.bottom, margin);
 
-    this._groupLower.node.style.transform =
-            `translate(${renderLeft}px, ${renderMiddle}px)`;
+    Viewer._set_group_translate(
+        this._groupLower.node, renderLeft, renderMiddle);
     // ToDo: Try changing the above to a transform list, see:
     // https://developer.mozilla.org/en-US/docs/Web/API/SVGTransformList
 
@@ -178,8 +186,8 @@ export default class Viewer {
     const textLeft = (
             renderLeft + limits.textLeft < edge ?
             edge - renderLeft : limits.textLeft);
-    this._groupUpper.node.style.transform =
-            `translate(${renderLeft + textLeft}px, ${renderMiddle}px)`;
+    Viewer._set_group_translate(
+        this._groupUpper.node, renderLeft + textLeft, renderMiddle);
 
     this._renderLeft = renderLeft;
 

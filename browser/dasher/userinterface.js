@@ -1711,6 +1711,11 @@ export default class UserInterface {
     this._limits.svgPiece = this._svg;
     this._on_resize();
     window.addEventListener('resize', this._on_resize.bind(this));
+    window.addEventListener('orientationchange', this._on_resize.bind(this));
+    if (window.visualViewport !== undefined) {
+      window.visualViewport.addEventListener(
+          'resize', this._on_resize.bind(this));
+    }
 
     // Initialise the view. It will insert a couple of SVG groups, and some
     // other business.
@@ -1731,6 +1736,9 @@ export default class UserInterface {
       this._on_resize();
       this.clicked_pointer();
     }, 0);
+    // Safari/WebKit can report unstable initial layout metrics while bars
+    // settle; re-run resize a few times after first paint.
+    [50, 200, 600].forEach((delay) => setTimeout(() => this._on_resize(), delay));
 
     // Activate intervals and controls.
     this._intervalRender = null;
