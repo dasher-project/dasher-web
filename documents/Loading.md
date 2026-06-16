@@ -99,5 +99,5 @@ loads.
 This document is part of the Dasher project and is under revision control here:  
 [https://github.com/dasher-project/dasher-web/tree/master/documents](https://github.com/dasher-project/dasher-web/tree/master/documents)
 
-(c) 2021 The ACE Centre-North, UK registered charity 1089313.  
+Copyright (c) dasher-project contributors.
 MIT licensed, see [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
