@@ -23,6 +23,7 @@
         canvas {
             border: 2px solid #ddd; border-radius: 4px; display: block;
             margin: 0 auto; cursor: crosshair; touch-action: none;
+            width: 100%; height: auto; aspect-ratio: 4 / 3;
         }
         .controls {
             width: 280px; background: white; border-radius: 8px; padding: 20px;
@@ -347,6 +348,25 @@
         ctx.font = '18px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('Loading DasherCore...', canvas.width / 2, canvas.height / 2);
+
+        // Responsive canvas: sync resolution to display size
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const w = Math.round(rect.width);
+            const h = Math.round(rect.height);
+            if (w > 0 && h > 0 && (w !== canvas.width || h !== canvas.height)) {
+                canvas.width = w;
+                canvas.height = h;
+                if (dasher && isRunning) {
+                    dasher.setScreenSize(w, h);
+                }
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        const resizeObserver = new ResizeObserver(resizeCanvas);
+        resizeObserver.observe(canvas);
+        resizeCanvas();
 
         window.addEventListener('beforeunload', () => {
             if (dasher) dasher.destroy();
