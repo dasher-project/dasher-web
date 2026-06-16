@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="English (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_en_Latn.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lower case">
+    <node label="a">
+      <textCharAction />
+    </node>
+    <node label="b">
+      <textCharAction />
+    </node>
+    <node label="c">
+      <textCharAction />
+    </node>
+    <node label="d">
+      <textCharAction />
+    </node>
+    <node label="e">
+      <textCharAction />
+    </node>
+    <node label="f">
+      <textCharAction />
+    </node>
+    <node label="g">
+      <textCharAction />
+    </node>
+    <node label="h">
+      <textCharAction />
+    </node>
+    <node label="i">
+      <textCharAction />
+    </node>
+    <node label="j">
+      <textCharAction />
+    </node>
+    <node label="k">
+      <textCharAction />
+    </node>
+    <node label="l">
+      <textCharAction />
+    </node>
+    <node label="m">
+      <textCharAction />
+    </node>
+    <node label="n">
+      <textCharAction />
+    </node>
+    <node label="o">
+      <textCharAction />
+    </node>
+    <node label="p">
+      <textCharAction />
+    </node>
+    <node label="q">
+      <textCharAction />
+    </node>
+    <node label="r">
+      <textCharAction />
+    </node>
+    <node label="s">
+      <textCharAction />
+    </node>
+    <node label="t">
+      <textCharAction />
+    </node>
+    <node label="u">
+      <textCharAction />
+    </node>
+    <node label="v">
+      <textCharAction />
+    </node>
+    <node label="w">
+      <textCharAction />
+    </node>
+    <node label="x">
+      <textCharAction />
+    </node>
+    <node label="y">
+      <textCharAction />
+    </node>
+    <node label="z">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="upper case">
+    <node label="A">
+      <textCharAction />
+    </node>
+    <node label="B">
+      <textCharAction />
+    </node>
+    <node label="C">
+      <textCharAction />
+    </node>
+    <node label="D">
+      <textCharAction />
+    </node>
+    <node label="E">
+      <textCharAction />
+    </node>
+    <node label="F">
+      <textCharAction />
+    </node>
+    <node label="G">
+      <textCharAction />
+    </node>
+    <node label="H">
+      <textCharAction />
+    </node>
+    <node label="I">
+      <textCharAction />
+    </node>
+    <node label="J">
+      <textCharAction />
+    </node>
+    <node label="K">
+      <textCharAction />
+    </node>
+    <node label="L">
+      <textCharAction />
+    </node>
+    <node label="M">
+      <textCharAction />
+    </node>
+    <node label="N">
+      <textCharAction />
+    </node>
+    <node label="O">
+      <textCharAction />
+    </node>
+    <node label="P">
+      <textCharAction />
+    </node>
+    <node label="Q">
+      <textCharAction />
+    </node>
+    <node label="R">
+      <textCharAction />
+    </node>
+    <node label="S">
+      <textCharAction />
+    </node>
+    <node label="T">
+      <textCharAction />
+    </node>
+    <node label="U">
+      <textCharAction />
+    </node>
+    <node label="V">
+      <textCharAction />
+    </node>
+    <node label="W">
+      <textCharAction />
+    </node>
+    <node label="X">
+      <textCharAction />
+    </node>
+    <node label="Y">
+      <textCharAction />
+    </node>
+    <node label="Z">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="digits">
+    <node label="0">
+      <textCharAction />
+    </node>
+    <node label="1">
+      <textCharAction />
+    </node>
+    <node label="2">
+      <textCharAction />
+    </node>
+    <node label="3">
+      <textCharAction />
+    </node>
+    <node label="4">
+      <textCharAction />
+    </node>
+    <node label="5">
+      <textCharAction />
+    </node>
+    <node label="6">
+      <textCharAction />
+    </node>
+    <node label="7">
+      <textCharAction />
+    </node>
+    <node label="8">
+      <textCharAction />
+    </node>
+    <node label="9">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="editing">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DasherCore WebAssembly Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { color: #333; margin: 0 0 10px 0; }
+        .header p { color: #666; margin: 0; }
+        .container { display: flex; gap: 20px; margin-bottom: 20px; }
+        .canvas-container {
+            flex: 1; background: white; border-radius: 8px; padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 2px solid #ddd; border-radius: 4px; display: block;
+            margin: 0 auto; cursor: crosshair; touch-action: none;
+        }
+        .controls {
+            width: 280px; background: white; border-radius: 8px; padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .control-group { margin-bottom: 15px; }
+        .control-group label {
+            display: block; margin-bottom: 5px; font-weight: bold; color: #333;
+        }
+        .control-group select, .control-group input {
+            width: 100%; padding: 8px; border: 1px solid #ddd;
+            border-radius: 4px; font-size: 14px;
+        }
+        .control-group button {
+            width: 100%; padding: 10px; background-color: #4CAF50; color: white;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 14px;
+        }
+        .control-group button:hover { background-color: #45a049; }
+        .control-group button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .toggle-group {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
+        }
+        .toggle-group label { margin: 0; cursor: pointer; font-weight: normal; }
+        .toggle-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+        .output-container {
+            background: white; border-radius: 8px; padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;
+        }
+        .output-container h2 { margin-top: 0; color: #333; }
+        #output-text {
+            width: 100%; height: 100px; padding: 10px; border: 1px solid #ddd;
+            border-radius: 4px; font-size: 16px; resize: vertical;
+        }
+        .status {
+            background: white; border-radius: 8px; padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;
+        }
+        .status.success { border-left: 4px solid #4CAF50; }
+        .status.error { border-left: 4px solid #f44336; }
+        .status.loading { border-left: 4px solid #ff9800; }
+        .status-text { color: #333; margin: 0; }
+        .instructions {
+            background: #e3f2fd; border-radius: 8px; padding: 15px;
+            border-left: 4px solid #2196F3; margin-bottom: 20px;
+        }
+        .instructions h3 { margin-top: 0; color: #1976D2; }
+        .instructions p { color: #333; margin: 5px 0; }
+        .canvas-stats { text-align: center; margin-top: 10px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DasherCore WebAssembly Demo</h1>
+        <p>Native DasherCore performance in your browser &mdash; Built with C++ and WebAssembly</p>
+    </div>
+
+    <div class="instructions">
+        <h3>How to use Dasher:</h3>
+        <p>1. Move your mouse over the canvas to steer &mdash; the letters zoom toward you</p>
+        <p>2. The crosshair (vertical line) is where text gets entered &mdash; move up/down to choose letters</p>
+        <p>3. Move further right to dash faster; move left to slow down / reverse</p>
+        <p>4. Typed text appears in the output box below</p>
+    </div>
+
+    <div class="status loading" id="status-container">
+        <p class="status-text" id="status">Loading DasherCore WebAssembly...</p>
+    </div>
+
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="dasher-canvas" width="800" height="600"></canvas>
+            <div class="canvas-stats">
+                <span id="fps">FPS: 0</span> | <span id="frame-time">Frame Time: 0ms</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="alphabet-select">Alphabet:</label>
+                <select id="alphabet-select" disabled></select>
+            </div>
+            <div class="control-group">
+                <label for="speed-slider">Speed: <span id="speed-value">100</span>%</label>
+                <input type="range" id="speed-slider" min="20" max="400" value="100" disabled>
+            </div>
+            <div class="toggle-group">
+                <input type="checkbox" id="autospeed-toggle" disabled>
+                <label for="autospeed-toggle">Auto speed (adjusts to your input)</label>
+            </div>
+            <div class="toggle-group">
+                <input type="checkbox" id="learning-toggle" disabled>
+                <label for="learning-toggle">Learning (adapt language model)</label>
+            </div>
+            <div class="control-group">
+                <button id="reset-btn" disabled>Clear Text</button>
+            </div>
+            <div class="control-group">
+                <button id="full-reset-btn" disabled>Full Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="output-container">
+        <h2>Output Text</h2>
+        <textarea id="output-text" readonly placeholder="Your text will appear here as you type..."></textarea>
+    </div>
+
+    <script src="dasher-wasm-wrapper.js"></script>
+    <script type="module">
+        const canvas = document.getElementById('dasher-canvas');
+        const ctx = canvas.getContext('2d');
+        const statusContainer = document.getElementById('status-container');
+        const statusText = document.getElementById('status');
+        const outputText = document.getElementById('output-text');
+        const alphabetSelect = document.getElementById('alphabet-select');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+        const autospeedToggle = document.getElementById('autospeed-toggle');
+        const learningToggle = document.getElementById('learning-toggle');
+        const resetBtn = document.getElementById('reset-btn');
+        const fullResetBtn = document.getElementById('full-reset-btn');
+        const fpsDisplay = document.getElementById('fps');
+        const frameTimeDisplay = document.getElementById('frame-time');
+
+        let dasher = null;
+        let isRunning = false;
+        let frameCount = 0;
+        let lastFpsTime = performance.now();
+
+        function updateStatus(message, type) {
+            statusText.textContent = message;
+            statusContainer.className = 'status ' + (type || 'loading');
+        }
+
+        function enableControls() {
+            alphabetSelect.disabled = false;
+            speedSlider.disabled = false;
+            autospeedToggle.disabled = false;
+            learningToggle.disabled = false;
+            resetBtn.disabled = false;
+            fullResetBtn.disabled = false;
+        }
+
+        function updateOutput() {
+            if (dasher) {
+                outputText.value = dasher.getOutputText();
+            }
+        }
+
+        async function initializeDasher() {
+            try {
+                updateStatus('Loading WebAssembly module...', 'loading');
+
+                const dasherModule = await import('./wasm/dasher.js');
+                const createModuleFunc = dasherModule.default;
+
+                dasher = new DasherWasm();
+                await dasher.init({
+                    canvas: canvas,
+                    moduleFactory: createModuleFunc,
+                    onOutput: (eventType, text) => {
+                        if (eventType === 0) {
+                            updateOutput();
+                        }
+                    },
+                    onMessage: (messageType, text) => {
+                        console.log('Dasher message:', text);
+                    }
+                });
+
+                updateStatus('Creating Dasher context...', 'loading');
+                dasher.createContext();
+
+                // setScreenSize triggers Realize() which loads alphabets/training/colours
+                dasher.setScreenSize(canvas.width, canvas.height);
+                dasher.setSpeed(parseInt(speedSlider.value));
+
+                // Read engine defaults for auto-speed and learning
+                const autospeedKey = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
+                const learningKey = dasher.findParameterKey('BP_LM_ADAPTIVE');
+                if (autospeedKey >= 0) {
+                    autospeedToggle.checked = dasher.getBoolParameter(autospeedKey);
+                }
+                if (learningKey >= 0) {
+                    learningToggle.checked = dasher.getBoolParameter(learningKey);
+                }
+
+                // Populate alphabet dropdown from actual available alphabets
+                const alphabets = dasher.getAlphabets();
+                const currentAlpha = dasher.getAlphabet();
+                alphabetSelect.innerHTML = '';
+                alphabets.forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    if (name === currentAlpha) opt.selected = true;
+                    alphabetSelect.appendChild(opt);
+                });
+
+                updateStatus('DasherCore ready! Move your mouse over the canvas to type.', 'success');
+                enableControls();
+                isRunning = true;
+                requestAnimationFrame(renderLoop);
+
+            } catch (error) {
+                updateStatus('Error: ' + error.message, 'error');
+                console.error('Initialization error:', error);
+            }
+        }
+
+        function renderLoop() {
+            if (!isRunning || !dasher) return;
+
+            const startTime = performance.now();
+
+            try {
+                dasher.frame(performance.now());
+                updateOutput();
+
+                const frameTime = performance.now() - startTime;
+                frameCount++;
+                const now = performance.now();
+                const elapsed = now - lastFpsTime;
+                if (elapsed >= 1000) {
+                    const fps = Math.round((frameCount * 1000) / elapsed);
+                    fpsDisplay.textContent = 'FPS: ' + fps;
+                    frameTimeDisplay.textContent = 'Frame Time: ' + frameTime.toFixed(1) + 'ms';
+                    frameCount = 0;
+                    lastFpsTime = now;
+                }
+            } catch (error) {
+                console.error('Render error:', error);
+                updateStatus('Render error: ' + error.message, 'error');
+                isRunning = false;
+                return;
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Mouse / touch input
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+            }
+        });
+
+        canvas.addEventListener('mousedown', () => { if (dasher) dasher.mouseDown(); });
+        canvas.addEventListener('mouseup', () => { if (dasher) dasher.mouseUp(); });
+        canvas.addEventListener('mouseleave', () => { if (dasher) dasher.mouseUp(); });
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+                dasher.mouseDown();
+            }
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+            }
+        });
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (dasher) dasher.mouseUp();
+        });
+
+        // Control events
+        alphabetSelect.addEventListener('change', (e) => {
+            if (dasher) dasher.setAlphabet(e.target.value);
+        });
+
+        speedSlider.addEventListener('input', (e) => {
+            speedValue.textContent = e.target.value;
+            if (dasher) dasher.setSpeed(parseInt(e.target.value));
+        });
+
+        autospeedToggle.addEventListener('change', (e) => {
+            if (dasher) {
+                const key = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
+                if (key >= 0) dasher.setBoolParameter(key, e.target.checked);
+            }
+        });
+
+        learningToggle.addEventListener('change', (e) => {
+            if (dasher) {
+                const key = dasher.findParameterKey('BP_LM_ADAPTIVE');
+                if (key >= 0) dasher.setBoolParameter(key, e.target.checked);
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (dasher) { dasher.resetOutputText(); updateOutput(); }
+        });
+
+        fullResetBtn.addEventListener('click', () => {
+            if (dasher) { dasher.reset(); updateOutput(); }
+        });
+
+        // Placeholder while loading
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#666';
+        ctx.font = '18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Loading DasherCore...', canvas.width / 2, canvas.height / 2);
+
+        window.addEventListener('beforeunload', () => {
+            if (dasher) dasher.destroy();
+        });
+
+        initializeDasher();
+    </script>
+</body>
+</html>

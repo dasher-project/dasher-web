@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="English, lower case" orientation="LR" trainingFilename="training_englishLC_GB.txt" colorsName="European/Asian">
+	<group name="Lower case Latin letters" colorInfoName="lowercase">
+		<node label="a">
+			<!--Old Char Color: 10-->
+			<textCharAction />
+		</node>
+		<node label="b">
+			<!--Old Char Color: 11-->
+			<textCharAction />
+		</node>
+		<node label="c">
+			<!--Old Char Color: 12-->
+			<textCharAction />
+		</node>
+		<node label="d">
+			<!--Old Char Color: 13-->
+			<textCharAction />
+		</node>
+		<node label="e">
+			<!--Old Char Color: 14-->
+			<textCharAction />
+		</node>
+		<node label="f">
+			<!--Old Char Color: 15-->
+			<textCharAction />
+		</node>
+		<node label="g">
+			<!--Old Char Color: 16-->
+			<textCharAction />
+		</node>
+		<node label="h">
+			<!--Old Char Color: 17-->
+			<textCharAction />
+		</node>
+		<node label="i">
+			<!--Old Char Color: 18-->
+			<textCharAction />
+		</node>
+		<node label="j">
+			<!--Old Char Color: 19-->
+			<textCharAction />
+		</node>
+		<node label="k">
+			<!--Old Char Color: 20-->
+			<textCharAction />
+		</node>
+		<node label="l">
+			<!--Old Char Color: 21-->
+			<textCharAction />
+		</node>
+		<node label="m">
+			<!--Old Char Color: 22-->
+			<textCharAction />
+		</node>
+		<node label="n">
+			<!--Old Char Color: 23-->
+			<textCharAction />
+		</node>
+		<node label="o">
+			<!--Old Char Color: 24-->
+			<textCharAction />
+		</node>
+		<node label="p">
+			<!--Old Char Color: 25-->
+			<textCharAction />
+		</node>
+		<node label="q">
+			<!--Old Char Color: 26-->
+			<textCharAction />
+		</node>
+		<node label="r">
+			<!--Old Char Color: 27-->
+			<textCharAction />
+		</node>
+		<node label="s">
+			<!--Old Char Color: 28-->
+			<textCharAction />
+		</node>
+		<node label="t">
+			<!--Old Char Color: 29-->
+			<textCharAction />
+		</node>
+		<node label="u">
+			<!--Old Char Color: 30-->
+			<textCharAction />
+		</node>
+		<node label="v">
+			<!--Old Char Color: 31-->
+			<textCharAction />
+		</node>
+		<node label="w">
+			<!--Old Char Color: 32-->
+			<textCharAction />
+		</node>
+		<node label="x">
+			<!--Old Char Color: 33-->
+			<textCharAction />
+		</node>
+		<node label="y">
+			<!--Old Char Color: 34-->
+			<textCharAction />
+		</node>
+		<node label="z">
+			<!--Old Char Color: 35-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="◌̓">
+			<!--Old Char Color: 105-->
+			<textCharAction unicode="39" />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label="·">
+			<!--Old Char Color: 104-->
+			<textCharAction unicode="46" />
+		</node>
+	</group>
+	<group name="space" colorInfoName="space">
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>
