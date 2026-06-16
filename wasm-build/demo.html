@@ -75,23 +75,6 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>DasherCore WebAssembly Demo</h1>
-        <p>Native DasherCore performance in your browser &mdash; Built with C++ and WebAssembly</p>
-    </div>
-
-    <div class="instructions">
-        <h3>How to use Dasher:</h3>
-        <p>1. Move your mouse over the canvas to steer &mdash; the letters zoom toward you</p>
-        <p>2. The crosshair (vertical line) is where text gets entered &mdash; move up/down to choose letters</p>
-        <p>3. Move further right to dash faster; move left to slow down / reverse</p>
-        <p>4. Typed text appears in the output box below</p>
-    </div>
-
-    <div class="status loading" id="status-container">
-        <p class="status-text" id="status">Loading DasherCore WebAssembly...</p>
-    </div>
-
     <div class="container">
         <div class="canvas-container">
             <canvas id="dasher-canvas" width="800" height="600"></canvas>
@@ -154,8 +137,8 @@
         let lastFpsTime = performance.now();
 
         function updateStatus(message, type) {
-            statusText.textContent = message;
-            statusContainer.className = 'status ' + (type || 'loading');
+            if (statusText) statusText.textContent = message;
+            if (statusContainer) statusContainer.className = 'status ' + (type || 'loading');
         }
 
         function enableControls() {
