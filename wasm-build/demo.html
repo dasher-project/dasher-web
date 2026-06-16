@@ -2,83 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DasherCore WebAssembly Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dasher</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e; color: #eee;
+            overflow: hidden;
         }
-        .container { display: flex; gap: 20px; margin-bottom: 20px; }
-        .canvas-container {
-            flex: 1; background: white; border-radius: 8px; padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        #app {
+            display: flex; flex-direction: column; height: 100vh; height: 100dvh;
+        }
+        .main-area {
+            flex: 1; display: flex; gap: 8px; padding: 8px;
+            min-height: 0;
+        }
+        .canvas-wrap {
+            flex: 1; display: flex; flex-direction: column;
+            background: #000; border-radius: 12px; overflow: hidden;
+            position: relative;
         }
         canvas {
-            border: 2px solid #ddd; border-radius: 4px; display: block;
-            margin: 0 auto; cursor: crosshair; touch-action: none;
-            width: 100%; height: auto; aspect-ratio: 4 / 3;
+            flex: 1; display: block; cursor: crosshair; touch-action: none;
+            width: 100%;
         }
-        .output-container {
-            width: 280px; background: white; border-radius: 8px; padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column;
+        .canvas-stats {
+            position: absolute; bottom: 8px; right: 12px;
+            font-size: 11px; color: rgba(255,255,255,0.4);
+            pointer-events: none;
         }
-        .output-container h2 { margin-top: 0; color: #333; font-size: 18px; }
+        .output-wrap {
+            width: 280px; min-width: 200px; display: flex; flex-direction: column;
+            background: #16213e; border-radius: 12px; padding: 12px;
+        }
+        .output-wrap h2 {
+            margin: 0 0 8px 0; font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; color: #8a8a9a;
+        }
         #output-text {
-            flex: 1; width: 100%; min-height: 100px; padding: 10px;
-            border: 1px solid #ddd; border-radius: 4px; font-size: 16px; resize: none;
+            flex: 1; width: 100%; border: none; background: transparent;
+            color: #e0e0e0; font-size: 18px; font-family: inherit;
+            resize: none; outline: none; line-height: 1.5;
         }
+        #output-text::placeholder { color: #4a4a5a; }
         .controls {
-            display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
-            background: white; border-radius: 8px; padding: 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+            padding: 10px 12px; background: #16213e;
         }
-        .control-group { margin-bottom: 0; }
         .control-group label {
-            display: block; margin-bottom: 5px; font-weight: bold; color: #333;
+            display: block; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; color: #8a8a9a;
+            margin-bottom: 4px;
         }
         .control-group select {
-            padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;
+            padding: 6px 10px; border: 1px solid #2a2a4e; border-radius: 6px;
+            background: #0f3460; color: #eee; font-size: 14px; cursor: pointer;
         }
         .control-group button {
-            padding: 8px 16px; background-color: #4CAF50; color: white;
-            border: none; border-radius: 4px; cursor: pointer; font-size: 14px;
+            padding: 8px 14px; border: none; border-radius: 6px;
+            background: #e94560; color: white; font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: background 0.15s;
         }
-        .control-group button:hover { background-color: #45a049; }
-        .control-group button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .control-group button:hover { background: #c81e45; }
+        .control-group button:disabled { background: #333; opacity: 0.5; cursor: not-allowed; }
         .toggle-group {
-            display: flex; align-items: center; gap: 6px; margin-bottom: 0;
+            display: flex; align-items: center; gap: 6px;
         }
-        .toggle-group label { margin: 0; cursor: pointer; font-weight: normal; color: #333; }
-        .toggle-group input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
-        .speed-group { min-width: 200px; }
-        .speed-group input[type="range"] { width: 100%; cursor: pointer; }
-        .canvas-stats { text-align: center; margin-top: 10px; font-size: 12px; color: #666; }
-        @media (max-width: 850px) {
-            .container { flex-direction: column; }
-            .output-container { width: 100%; }
+        .toggle-group label {
+            margin: 0; font-size: 14px; color: #ccc; cursor: pointer;
+        }
+        .toggle-group input[type="checkbox"] {
+            width: 20px; height: 20px; accent-color: #e94560; cursor: pointer;
+        }
+        .speed-group { min-width: 160px; flex: 1; max-width: 240px; }
+        .speed-group input[type="range"] {
+            width: 100%; cursor: pointer; accent-color: #e94560;
+        }
+        .btn-group { display: flex; gap: 8px; }
+
+        @media (max-width: 768px) {
+            .main-area { flex-direction: column; padding: 6px; gap: 6px; }
+            .output-wrap { width: 100%; min-height: 80px; max-height: 140px; }
+            .controls { padding: 8px; gap: 10px; }
+            .speed-group { min-width: 120px; }
+            .control-group select { font-size: 13px; }
+            .canvas-stats { font-size: 10px; }
+        }
+        @media (max-width: 480px) {
+            .controls { overflow-x: auto; flex-wrap: nowrap; }
+            .controls::-webkit-scrollbar { display: none; }
+            .toggle-group label { font-size: 13px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="canvas-container">
+<div id="app">
+    <div class="main-area">
+        <div class="canvas-wrap">
             <canvas id="dasher-canvas" width="800" height="600"></canvas>
             <div class="canvas-stats">
-                <span id="fps">FPS: 0</span> | <span id="frame-time">Frame Time: 0ms</span>
+                <span id="fps">FPS: 0</span> | <span id="frame-time">Frame: 0ms</span>
             </div>
         </div>
-
-        <div class="output-container">
+        <div class="output-wrap">
             <h2>Output</h2>
             <textarea id="output-text" readonly placeholder="Text appears here..."></textarea>
         </div>
     </div>
-
     <div class="controls">
         <div class="control-group">
             <label for="alphabet-select">Alphabet</label>
@@ -96,13 +128,12 @@
             <input type="checkbox" id="learning-toggle" disabled>
             <label for="learning-toggle">Learning</label>
         </div>
-        <div class="control-group">
-            <button id="reset-btn" disabled>Clear Text</button>
-        </div>
-        <div class="control-group">
-            <button id="full-reset-btn" disabled>Full Reset</button>
+        <div class="btn-group">
+            <button id="reset-btn" disabled>Clear</button>
+            <button id="full-reset-btn" disabled>Reset</button>
         </div>
     </div>
+</div>
 
     <script src="dasher-wasm-wrapper.js"></script>
     <script type="module">
@@ -337,6 +368,7 @@
         }
 
         window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
         const resizeObserver = new ResizeObserver(resizeCanvas);
         resizeObserver.observe(canvas);
         resizeCanvas();
