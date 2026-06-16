@@ -40,7 +40,7 @@ Features include:
 
 ```
 wasm-build/           WASM build (source, scripts, demo)
-  dashercore-src/     DasherCore C++ source (git submodule, branch feature-CAPI)
+  dashercore-src/     DasherCore C++ source (git submodule)
   data-bundle/        Curated data files for preloading
   demo.html           Interactive demo
   dasher-wasm-wrapper.js   JavaScript API wrapper

@@ -140,7 +140,7 @@ The `setScreenSize()` call triggers `Realize()` internally, which scans the MEMF
 
 ```
 wasm-build/
-├── dashercore-src/          DasherCore C++ source (git submodule, branch feature-CAPI)
+├── dashercore-src/          DasherCore C++ source (git submodule)
 │   ├── src/                 Source (including CAPI.cpp — the C API entry point)
 │   └── Thirdparty/          pugixml XML parser
 ├── data-bundle/             Curated data for preloading (alphabets, colours, training, Strings)
