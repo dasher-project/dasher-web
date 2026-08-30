@@ -1256,12 +1256,29 @@ export default class UserInterface {
 
     // Set up language selector
     const supportedLanguages = LanguageManager.getSupportedLanguages();
+    // Reset the stale selection before rebuilding the option list — the
+    // optionList setter preserves whatever _selectedIndex/_selectedString
+    // the <select> had, and after a list rebuild that may not be the
+    // default language.
+    this._panels.main.language._selectedIndex = 0;
+    this._panels.main.language._selectedString = '';
     this._panels.main.language.optionList = supportedLanguages.map((lang) => lang.name);
     this._panels.main.language.listener = async (index) => {
       const lang = supportedLanguages[index];
       await LanguageManager.setCurrentLanguage(lang.code);
       await this._onLanguageChanged(lang);
     };
+    // Explicitly select the default language — the optionList setter's
+    // select_option() fires the listener before it's set, leaving the
+    // dropdown on the browser-default index rather than the default language.
+    {
+      const defaultIndex = supportedLanguages.findIndex(
+          (lang) => lang.code === LanguageManager.getCurrentLanguage().code);
+      if (defaultIndex >= 0) {
+        this._panels.main.language.select_option(
+            supportedLanguages[defaultIndex].name, defaultIndex);
+      }
+    }
 
     this._panels.main.prediction.listener = (index) => {
       if (this._controllerPointer !== undefined) {
