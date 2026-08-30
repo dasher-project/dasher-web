@@ -1,0 +1,72 @@
+name: WASM Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Verify emcc
+        run: emcc --version
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+
+      - name: Build WASM module
+        working-directory: wasm-build
+        run: bash build.sh
+
+      - name: Record build metadata
+        run: |
+          cd wasm-build
+          echo "dasher-web $(git -C .. rev-parse --short HEAD)" > BUILD
+          git -C dashercore-src describe --tags --always >> BUILD || true
+          date -u +%Y-%m-%dT%H:%M:%SZ >> BUILD
+
+      - name: Package demo
+        run: |
+          TAG="${GITHUB_REF_NAME:-manual}"
+          STAGE="dasher-wasm-demo"
+          mkdir -p "${STAGE}/wasm"
+          cp wasm-build/demo.html "${STAGE}/index.html"
+          cp wasm-build/dasher-wasm-wrapper.js "${STAGE}/"
+          cp wasm-build/wasm/* "${STAGE}/wasm/"
+          cp wasm-build/BUILD "${STAGE}/"
+          du -sh "${STAGE}"
+          zip -qr "dasher-wasm-demo-${TAG}.zip" "${STAGE}"
+          du -h "dasher-wasm-demo-${TAG}.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dasher-wasm-demo
+          path: dasher-wasm-demo-*.zip
+
+      - name: Attach to GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dasher-wasm-demo-*.zip
+          generate_release_notes: true
