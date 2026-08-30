@@ -1,11 +1,14 @@
 {
   "name": "dasher-web",
-  "version": "1.0.0",
-  "description": "Dasher zooming text-entry interface — WebAssembly build of DasherCore",
+  "version": "0.2.0",
+  "description": "Dasher zooming text-entry interface — WebAssembly build of DasherCore with a pure-JS demo",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasher-project/dasher-web.git"
   },
-  "homepage": "https://dasher-project.github.io/dasher-web/"
+  "homepage": "https://dasher-project.github.io/dasher-web/",
+  "dependencies": {
+    "@willwade/ppmpredictor": "^0.0.13"
+  }
 }
