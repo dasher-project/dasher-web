@@ -50,7 +50,7 @@ const supportedLanguages = [
 {code: 'id', name: 'Indonesian', speechCode: 'id-ID', script: 'Latin', rtl: false},
 {code: 'ga', name: 'Irish', speechCode: 'ga-IE', script: 'Latin', rtl: false},
 {code: 'it', name: 'Italian', speechCode: 'it-IT', script: 'Latin', rtl: false},
-{code: 'ja', name: 'Japanese', speechCode: 'ja-JP', script: 'Hiragana', rtl: false},
+{code: 'ja', name: 'Japanese', speechCode: 'ja-JP', script: 'Japanese', rtl: false},
 {code: 'kn', name: 'Kannada', speechCode: 'kn-IN', script: 'Kannada', rtl: false},
 {code: 'kk', name: 'Kazakh', speechCode: 'kk-KZ', script: 'Cyrillic', rtl: false},
 {code: 'rn', name: 'Kirundi', speechCode: 'rn-BI', script: 'Latin', rtl: false},
@@ -164,8 +164,8 @@ const languageAlphabets = {
       0x4E18, 0x4E19, 0x4E1A, 0x4E1B, 0x4E1C, 0x4E1D, 0x4E1E, 0x4E1F,
       0x4E20, 0x4E21, 0x4E22, 0x4E23, 0x4E24, 0x4E25, 0x4E26, 0x4E27,
       0x4E28, 0x4E29, 0x4E2A, 0x4E2B, 0x4E2C, 0x4E2D, 0x4E2E, 0x4E2F,
-      // Common characters: 我, 你, 的, 是, 了, 不, 人, 在, 他, 有, 这
-      0x6211, 0x4F60, 0x7684, 0x662F, 0x4E0D, 0x4EBA, 0x4EBA, 0x5728, 0x4ED, 0x5728, 0x6709,
+      // Common characters: 我 你 的 是 了 不 人 在 他 有 这
+      0x6211, 0x4F60, 0x7684, 0x662F, 0x4E0D, 0x4EBA, 0x5728, 0x4ED6, 0x6709, 0x8FD9,
     ],
   },
   'ja': {
@@ -236,8 +236,181 @@ const languageAlphabets = {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
     uppercase: {start: 0x41, end: 0x5A}, // A-Z
   },
-  'pt-BR': 'pt', // Shares with Portuguese
-  'en-GB': 'en', // Shares with English for now
+};
+
+// Base letter inventories per script, used when a language has no explicit
+// alphabet entry above. Ranges cover each script's core letters; word
+// prediction still falls back to English frequencies (see getLexicon).
+const scriptAlphabets = {
+  'Latin': {
+    lowercase: {start: 0x61, end: 0x7A}, // a-z
+    uppercase: {start: 0x41, end: 0x5A}, // A-Z
+  },
+  'Cyrillic': {
+    lowercase: {start: 0x430, end: 0x44F}, // а-я
+    uppercase: {start: 0x410, end: 0x42F}, // А-Я
+    accented: [0x451, 0x401], // ё, Ё
+  },
+  'Greek': {
+    lowercase: {start: 0x3B1, end: 0x3C9}, // α-ω
+    uppercase: {start: 0x391, end: 0x3A9}, // Α-Ω
+  },
+  'Arabic': {
+    characters: (() => {
+      const points = [];
+      // Core Arabic letters ا-ي plus hamza forms and the Persian/Urdu
+      // extensions used by fa and ur.
+      for (let cp = 0x621; cp <= 0x64A; cp++) points.push(cp);
+      [0x67E, 0x686, 0x698, 0x6A9, 0x6AF, 0x6CC].forEach((cp) =>
+        points.push(cp)); // پ چ ژ ک گ ی
+      return points;
+    })(),
+  },
+  'Hebrew': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x5D0; cp <= 0x5EA; cp++) points.push(cp); // א-ת
+      return points;
+    })(),
+  },
+  'Devanagari': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x905; cp <= 0x939; cp++) points.push(cp); // अ-ह
+      return points;
+    })(),
+  },
+  'Bengali': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x985; cp <= 0x98C; cp++) points.push(cp); // অ-ঔ
+      for (let cp = 0x995; cp <= 0x9B9; cp++) points.push(cp); // ক-হ
+      return points;
+    })(),
+  },
+  'Gurmukhi': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xA05; cp <= 0xA0C; cp++) points.push(cp); // ਅ-ਔ
+      for (let cp = 0xA15; cp <= 0xA39; cp++) points.push(cp); // ਕ-ਹ
+      return points;
+    })(),
+  },
+  'Gujarati': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xA85; cp <= 0xA8C; cp++) points.push(cp); // અ-ઔ
+      for (let cp = 0xA95; cp <= 0xAB9; cp++) points.push(cp); // ક-હ
+      return points;
+    })(),
+  },
+  'Tamil': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xB85; cp <= 0xB8C; cp++) points.push(cp); // அ-ஔ
+      for (let cp = 0xB95; cp <= 0xBB9; cp++) points.push(cp); // க-ஹ
+      return points;
+    })(),
+  },
+  'Telugu': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xC05; cp <= 0xC0C; cp++) points.push(cp); // అ-ఔ
+      for (let cp = 0xC15; cp <= 0xC39; cp++) points.push(cp); // క-హ
+      return points;
+    })(),
+  },
+  'Kannada': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xC85; cp <= 0xC8C; cp++) points.push(cp); // ಅ-ಔ
+      for (let cp = 0xC95; cp <= 0xCB9; cp++) points.push(cp); // ಕ-ಹ
+      return points;
+    })(),
+  },
+  'Malayalam': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xD05; cp <= 0xD0C; cp++) points.push(cp); // അ-ഔ
+      for (let cp = 0xD15; cp <= 0xD39; cp++) points.push(cp); // ക-ഹ
+      return points;
+    })(),
+  },
+  'Sinhala': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xD85; cp <= 0xD96; cp++) points.push(cp); // අ-ඖ
+      for (let cp = 0xD9A; cp <= 0xDB1; cp++) points.push(cp); // ක-න
+      for (let cp = 0xDB3; cp <= 0xDBB; cp++) points.push(cp); // ඳ-ර
+      points.push(0xDBD, 0xDC0, 0xDC1, 0xDC2, 0xDC3, 0xDC4, 0xDC5, 0xDC6); // ල ව-ෆ
+      return points;
+    })(),
+  },
+  'Thai': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xE01; cp <= 0xE2E; cp++) points.push(cp); // ก-ฮ
+      return points;
+    })(),
+  },
+  'Lao': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0xE81; cp <= 0xE82; cp++) points.push(cp); // ກ-ຂ
+      points.push(0xE84); // ຄ
+      for (let cp = 0xE87; cp <= 0xE88; cp++) points.push(cp); // ງ-ຈ
+      points.push(0xE8A, 0xE8D); // ຊ ຍ
+      for (let cp = 0xE94; cp <= 0xE97; cp++) points.push(cp); // ດ-ທ
+      for (let cp = 0xE99; cp <= 0xE9F; cp++) points.push(cp); // ນ-ຟ
+      points.push(0xEA1, 0xEA2, 0xEA3, 0xEA5, 0xEA7); // ມ ຢ ຣ ລ ວ
+      for (let cp = 0xEAA; cp <= 0xEAB; cp++) points.push(cp); // ສ-ຫ
+      points.push(0xEAD, 0xEAE); // ອ ຮ
+      return points;
+    })(),
+  },
+  'Georgian': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x10D0; cp <= 0x10FA; cp++) points.push(cp); // ა-ჺ
+      return points;
+    })(),
+  },
+  'Armenian': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x561; cp <= 0x587; cp++) points.push(cp); // ա-ֆ
+      return points;
+    })(),
+  },
+  'Ethiopic': {
+    characters: (() => {
+      const points = [];
+      // Geʽez base order (ሀ-ሰ rows through ቀ) plus the ቐ..ቸ rows
+      for (let cp = 0x1200; cp <= 0x1248; cp++) points.push(cp);
+      return points;
+    })(),
+  },
+  'Cherokee': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x13A0; cp <= 0x13F4; cp++) points.push(cp); // Ꭰ-Ᏼ
+      return points;
+    })(),
+  },
+  'Myanmar': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x1000; cp <= 0x1021; cp++) points.push(cp); // က-ဏ
+      return points;
+    })(),
+  },
+  'Khmer': {
+    characters: (() => {
+      const points = [];
+      for (let cp = 0x1780; cp <= 0x17A2; cp++) points.push(cp); // ក-អ
+      return points;
+    })(),
+  },
 };
 
 // Common word lists for prediction (top 50 for each language)
@@ -498,6 +671,13 @@ export function getAlphabet(languageCode) {
   const baseCode = languageCode.split('-')[0];
   if (languageAlphabets[baseCode]) {
     return languageAlphabets[baseCode];
+  }
+
+  // Fall back to the language's script inventory (every entry in
+  // supportedLanguages carries a `script` name).
+  const lang = supportedLanguages.find((l) => l.code === baseCode);
+  if (lang && scriptAlphabets[lang.script]) {
+    return scriptAlphabets[lang.script];
   }
 
   // Fall back to English alphabet
