@@ -84,6 +84,6 @@ set up an intranet that is accessible to the mobile browser.
 
 # License
 
-Copyright (c) 2021 The ACE Centre-North, UK registered charity 1089313.  
+Copyright (c) dasher-project contributors.
 MIT licensed, see
 [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).

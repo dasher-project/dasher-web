@@ -1,0 +1,29 @@
+{
+  "name": "dasher-wasm",
+  "version": "1.0.0",
+  "description": "DasherCore WebAssembly Build - Native DasherCore performance in your browser",
+  "main": "dasher-wasm-wrapper.js",
+  "scripts": {
+    "build": "build.bat",
+    "build:unix": "bash build.sh",
+    "serve": "node server.js",
+    "serve:port": "node server.js",
+    "clean": "node -e \"const fs=require('fs');['build-wasm','wasm'].forEach(d=>{fs.rmSync(d,{recursive:true,force:true})})\""
+  },
+  "keywords": [
+    "dasher",
+    "accessibility",
+    "text-entry",
+    "wasm",
+    "webassembly",
+    "assistive-technology"
+  ],
+  "author": "Dasher Project",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dasher-project/dasher-web.git"
+  }
+}

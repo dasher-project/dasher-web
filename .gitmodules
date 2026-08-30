@@ -1,0 +1,4 @@
+[submodule "wasm-build/dashercore-src"]
+	path = wasm-build/dashercore-src
+	url = https://github.com/dasher-project/DasherCore.git
+	branch = feature-CAPI
