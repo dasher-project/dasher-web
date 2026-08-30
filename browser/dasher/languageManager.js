@@ -174,9 +174,8 @@ const languageAlphabets = {
     ],
   },
   'ja': {
-    // Japanese - hiragana and katakana base letters (kana are all letters,
-    // so assignedLetters prunes the two unassigned slots in each block).
-    characters: assignedLetters(0x3041, 0x3096) // ぁ-っ
+    // Japanese - hiragana and katakana base letters.
+    characters: assignedLetters(0x3041, 0x3096) // ぁ-ゖ
         .concat(assignedLetters(0x30A1, 0x30FA)), // ァ-ヺ
   },
   'ko': {
@@ -276,8 +275,8 @@ const scriptAlphabets = {
   },
   'Gujarati': {
     characters: assignedLetters(0xA85, 0xA8B) // અ-ઋ
-        .concat([0xA8D, 0xA8F, 0xA90]) // ઌ એ ઐ
-        .concat(assignedLetters(0xA93, 0xA95)) // ઑ ઓ ઔ
+        .concat([0xA8D, 0xA8F, 0xA90]) // ઍ એ ઐ
+        .concat(assignedLetters(0xA93, 0xA95)) // ઓ ઔ ક
         .concat(assignedLetters(0xA96, 0xAA8))
         .concat(assignedLetters(0xAAA, 0xAB0))
         .concat([0xAB2, 0xAB3])

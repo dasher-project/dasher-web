@@ -6,7 +6,7 @@
   with real training data in DasherCore v0.2.14+ (Tatoeba CC-BY corpora via
   WorldAlphabets); Chinese (Simplified) and Hindi retained from v0.1.0
 - Languages without an explicit alphabet definition now get a base letter
-  inventory generated from their script (Cyrillic, Greek, Arabic, Hebrew,
+  inventory generated from their script (Cyrillic, Arabic, Hebrew,
   Devanagari, Bengali, Gurmukhi, Gujarati, Tamil, Telugu, Kannada,
   Malayalam, Sinhala, Thai, Lao, Georgian, Ethiopic, Cherokee, Myanmar),
   filtered to assigned letters; Korean provides Hangul jamo, Japanese
