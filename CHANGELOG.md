@@ -7,7 +7,10 @@
   WorldAlphabets); Chinese (Simplified) and Hindi retained from v0.1.0
 - Languages without an explicit alphabet definition now get a base letter
   inventory generated from their script (Cyrillic, Greek, Arabic, Hebrew,
-  Indic scripts, Thai, Lao, Georgian, Armenian, Ethiopic, Cherokee, Myanmar)
+  Devanagari, Bengali, Gurmukhi, Gujarati, Tamil, Telugu, Kannada,
+  Malayalam, Sinhala, Thai, Lao, Georgian, Ethiopic, Cherokee, Myanmar),
+  filtered to assigned letters; Korean provides Hangul jamo, Japanese
+  provides kana
 - Word prediction falls back to English frequencies for languages without a
   bundled word list — the palette shows the correct script either way
 - Entries carry script name and RTL metadata; list sorted alphabetically

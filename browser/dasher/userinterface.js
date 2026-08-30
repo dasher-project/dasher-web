@@ -1313,9 +1313,9 @@ export default class UserInterface {
         originalSetValue(value);
       };
     }
-    // Ensure the default language is selected before the control panel
-    // snapshots default values, so a fresh session starts on English (the
-    // list's first entry) rather than an arbitrary browser default.
+    // Ensure the default language is selected. The select's own default
+    // after an optionList rebuild is arbitrary, so pin it to the current
+    // default language explicitly.
     {
       const defaultIndex = supportedLanguages.findIndex(
           (lang) => lang.code === LanguageManager.getCurrentLanguage().code);

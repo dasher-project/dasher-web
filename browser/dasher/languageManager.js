@@ -101,6 +101,19 @@ const supportedLanguages = [
 {code: 'zu', name: 'Zulu', speechCode: 'zu-ZA', script: 'Latin', rtl: false},
 ];
 
+// Collect assigned letter code points in [start, end]. Unassigned slots
+// (which would render as tofu) and combining marks fall through; extras are
+// appended verbatim.
+const assignedLetters = (start, end, extras = []) => {
+  const points = [];
+  for (let cp = start; cp <= end; cp++) {
+    if (/\p{L}/u.test(String.fromCodePoint(cp))) {
+      points.push(cp);
+    }
+  }
+  return points.concat(extras);
+};
+
 // Character ranges for each language
 const languageAlphabets = {
   'en': {
@@ -146,15 +159,6 @@ const languageAlphabets = {
     lowercase: {start: 0x0430, end: 0x044F}, // а-я
     uppercase: {start: 0x0410, end: 0x042F}, // А-Я
   },
-  'ar': {
-    // Arabic alphabet
-    characters: [
-      0x0627, 0x0628, 0x062A, 0x062B, 0x062C, 0x062F, 0x0633, 0x0647,
-      0x0648, 0x0649, 0x064A, 0x064B, 0x0644, 0x0645, 0x0646, 0x0621,
-      0x062E, 0x0631, 0x0634, 0x0635, 0x0636, 0x0637, 0x0638, 0x0639,
-      0x063A, 0x0641, 0x642, 0x643, 0x644, 0x645, 0x646, 0x647, 0x648,
-    ],
-  },
   'zh': {
     // Chinese - common simplified characters
     characters: [
@@ -164,22 +168,22 @@ const languageAlphabets = {
       0x4E18, 0x4E19, 0x4E1A, 0x4E1B, 0x4E1C, 0x4E1D, 0x4E1E, 0x4E1F,
       0x4E20, 0x4E21, 0x4E22, 0x4E23, 0x4E24, 0x4E25, 0x4E26, 0x4E27,
       0x4E28, 0x4E29, 0x4E2A, 0x4E2B, 0x4E2C, 0x4E2D, 0x4E2E, 0x4E2F,
-      // Common characters: 我 你 的 是 了 不 人 在 他 有 这
-      0x6211, 0x4F60, 0x7684, 0x662F, 0x4E0D, 0x4EBA, 0x5728, 0x4ED6, 0x6709, 0x8FD9,
+      // Common characters: 我 你 的 是 人 在 他 有 这 (不 0x4E0D already
+      // appears in the sequential range above, so it's not repeated here)
+      0x6211, 0x4F60, 0x7684, 0x662F, 0x4EBA, 0x5728, 0x4ED6, 0x6709, 0x8FD9,
     ],
   },
   'ja': {
-    // Japanese - Hiragana and Katakana
-    hiragana: {start: 0x3041, end: 0x309F}, // ぁ-ん
-    katakana: {start: 0x30A1, end: 0x30FF}, // ア-ン
+    // Japanese - hiragana and katakana base letters (kana are all letters,
+    // so assignedLetters prunes the two unassigned slots in each block).
+    characters: assignedLetters(0x3041, 0x3096) // ぁ-っ
+        .concat(assignedLetters(0x30A1, 0x30FA)), // ァ-ヺ
   },
   'ko': {
-    // Korean - Hangul Syllables
-    range: {start: 0xAC00, end: 0xD7A3}, // 가-힣
-  },
-  'hi': {
-    // Hindi - Devanagari
-    range: {start: 0x0900, end: 0x097F}, // अ-ह
+    // Korean - Hangul compatibility jamo (ㄱ-ㅣ). Korean text is typed by
+    // composing jamo; the full syllable block (11,172 glyphs) is far too
+    // large for the demo palette.
+    characters: assignedLetters(0x3131, 0x3163),
   },
   'sv': {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
@@ -212,20 +216,9 @@ const languageAlphabets = {
     accented: [0xE1, 0xE9, 0xEC, 0xF9, 0xF2, 0x165, 0x161, 0x17E, 0x017D], // á, é, í, ý, ó, ř, š, č, ň
   },
   'el': {
-    // Greek
-    lowercase: {start: 0x03B1, end: 0x03C9}, // α-ω
-    uppercase: {start: 0x0391, end: 0x03A9}, // Α-Ω
-  },
-  'he': {
-    // Hebrew - right-to-left
-    characters: [
-      0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7, 0x05D8, 0x05D9,
-      0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF, 0x05E0, 0x05E1, 0x05E2,
-    ], // א-ת
-  },
-  'th': {
-    // Thai
-    range: {start: 0x0E01, end: 0x0E5B}, // ก-ฺ
+    // Greek (flat lists skip the unassigned U+03A2 slot)
+    characters: assignedLetters(0x391, 0x3A9)
+        .concat(assignedLetters(0x3B1, 0x3C9)), // Α-Ω α-ω
   },
   'vi': {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
@@ -238,9 +231,10 @@ const languageAlphabets = {
   },
 };
 
+
 // Base letter inventories per script, used when a language has no explicit
-// alphabet entry above. Ranges cover each script's core letters; word
-// prediction still falls back to English frequencies (see getLexicon).
+// alphabet entry above. Word prediction still falls back to English
+// frequencies (see getLexicon).
 const scriptAlphabets = {
   'Latin': {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
@@ -251,165 +245,103 @@ const scriptAlphabets = {
     uppercase: {start: 0x410, end: 0x42F}, // А-Я
     accented: [0x451, 0x401], // ё, Ё
   },
-  'Greek': {
-    lowercase: {start: 0x3B1, end: 0x3C9}, // α-ω
-    uppercase: {start: 0x391, end: 0x3A9}, // Α-Ω
-  },
   'Arabic': {
-    characters: (() => {
-      const points = [];
-      // Core Arabic letters ا-ي plus hamza forms and the Persian/Urdu
-      // extensions used by fa and ur.
-      for (let cp = 0x621; cp <= 0x64A; cp++) points.push(cp);
-      [0x67E, 0x686, 0x698, 0x6A9, 0x6AF, 0x6CC].forEach((cp) =>
-        points.push(cp)); // پ چ ژ ک گ ی
-      return points;
-    })(),
+    // Core letters, plus the Persian/Urdu extensions پ چ ژ ک گ ی and the
+    // Urdu retroflex series ٹ ڈ ڑ ھ ے. Tatweel (0x640) is a joiner, not a
+    // letter, and is excluded.
+    characters: assignedLetters(0x621, 0x63A, [
+      0x67E, 0x686, 0x698, 0x6A9, 0x6AF, 0x6CC,
+      0x679, 0x688, 0x691, 0x6BE, 0x6D2,
+    ]).concat(assignedLetters(0x641, 0x64A)),
   },
   'Hebrew': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x5D0; cp <= 0x5EA; cp++) points.push(cp); // א-ת
-      return points;
-    })(),
+    characters: assignedLetters(0x5D0, 0x5EA), // א-ת
   },
   'Devanagari': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x905; cp <= 0x939; cp++) points.push(cp); // अ-ह
-      return points;
-    })(),
+    characters: assignedLetters(0x905, 0x939), // अ-ह
   },
   'Bengali': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x985; cp <= 0x98C; cp++) points.push(cp); // অ-ঔ
-      for (let cp = 0x995; cp <= 0x9B9; cp++) points.push(cp); // ক-হ
-      return points;
-    })(),
+    characters: assignedLetters(0x985, 0x98C) // অ-ঔ
+        .concat(assignedLetters(0x993, 0x99F)) // ও-ড় base rows
+        .concat(assignedLetters(0x9A1, 0x9A8))
+        .concat(assignedLetters(0x9AA, 0x9B0))
+        .concat([0x9B2, 0x9B6, 0x9B7, 0x9B8, 0x9B9]), // ল শ ষ স হ
   },
   'Gurmukhi': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xA05; cp <= 0xA0C; cp++) points.push(cp); // ਅ-ਔ
-      for (let cp = 0xA15; cp <= 0xA39; cp++) points.push(cp); // ਕ-ਹ
-      return points;
-    })(),
+    characters: assignedLetters(0xA05, 0xA0A) // ਅ-ਊ
+        .concat([0xA0F, 0xA10, 0xA13, 0xA14]) // ਏ ਐ ਓ ਔ
+        .concat(assignedLetters(0xA15, 0xA28))
+        .concat(assignedLetters(0xA2A, 0xA30))
+        .concat([0xA32, 0xA33, 0xA35, 0xA36, 0xA38, 0xA39]), // ਲ਼ ਸ਼ ਹ
   },
   'Gujarati': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xA85; cp <= 0xA8C; cp++) points.push(cp); // અ-ઔ
-      for (let cp = 0xA95; cp <= 0xAB9; cp++) points.push(cp); // ક-હ
-      return points;
-    })(),
+    characters: assignedLetters(0xA85, 0xA8B) // અ-ઋ
+        .concat([0xA8D, 0xA8F, 0xA90]) // ઌ એ ઐ
+        .concat(assignedLetters(0xA93, 0xA95)) // ઑ ઓ ઔ
+        .concat(assignedLetters(0xA96, 0xAA8))
+        .concat(assignedLetters(0xAAA, 0xAB0))
+        .concat([0xAB2, 0xAB3])
+        .concat(assignedLetters(0xAB5, 0xAB9)), // ક-હ
   },
   'Tamil': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xB85; cp <= 0xB8C; cp++) points.push(cp); // அ-ஔ
-      for (let cp = 0xB95; cp <= 0xBB9; cp++) points.push(cp); // க-ஹ
-      return points;
-    })(),
+    characters: assignedLetters(0xB85, 0xB8A) // அ-ஊ
+        .concat([0xB8E, 0xB8F, 0xB92, 0xB93, 0xB94]) // ஏ ஐ ஒ ஓ ஔ
+        .concat(assignedLetters(0xB95, 0xB95))
+        .concat([0xB99, 0xB9A, 0xB9C, 0xB9E, 0xB9F]) // ங ச ஜ ஞ ட
+        .concat(assignedLetters(0xBA3, 0xBA4))
+        .concat([0xBA8, 0xBA9, 0xBAA, 0xBAE, 0xBAF, 0xBB0, 0xBB1, 0xBB2, 0xBB3, 0xBB4, 0xBB5])
+        .concat(assignedLetters(0xBB7, 0xBB9)), // ற ல ள ழ வ ஷ ஸ ஹ
   },
   'Telugu': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xC05; cp <= 0xC0C; cp++) points.push(cp); // అ-ఔ
-      for (let cp = 0xC15; cp <= 0xC39; cp++) points.push(cp); // క-హ
-      return points;
-    })(),
+    characters: assignedLetters(0xC05, 0xC0C) // అ-ఌ
+        .concat([0xC0E, 0xC0F, 0xC10, 0xC12, 0xC13, 0xC14]) // ఎ-ఔ
+        .concat(assignedLetters(0xC15, 0xC28))
+        .concat(assignedLetters(0xC2A, 0xC39)), // య-హ
   },
   'Kannada': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xC85; cp <= 0xC8C; cp++) points.push(cp); // ಅ-ಔ
-      for (let cp = 0xC95; cp <= 0xCB9; cp++) points.push(cp); // ಕ-ಹ
-      return points;
-    })(),
+    characters: assignedLetters(0xC85, 0xC8C) // ಅ-ಌ
+        .concat([0xC8E, 0xC8F, 0xC90, 0xC92, 0xC93, 0xC94]) // ಎ-ಔ
+        .concat(assignedLetters(0xC95, 0xCA8))
+        .concat(assignedLetters(0xCAA, 0xCB3))
+        .concat(assignedLetters(0xCB5, 0xCB9)), // ಱ-ಹ
   },
   'Malayalam': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xD05; cp <= 0xD0C; cp++) points.push(cp); // അ-ഔ
-      for (let cp = 0xD15; cp <= 0xD39; cp++) points.push(cp); // ക-ഹ
-      return points;
-    })(),
+    characters: assignedLetters(0xD05, 0xD0C) // അ-ഌ
+        .concat([0xD0E, 0xD0F, 0xD10, 0xD12, 0xD13, 0xD14]) // എ-ഔ
+        .concat(assignedLetters(0xD15, 0xD28))
+        .concat(assignedLetters(0xD2A, 0xD39)), // യ-ഹ
   },
   'Sinhala': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xD85; cp <= 0xD96; cp++) points.push(cp); // අ-ඖ
-      for (let cp = 0xD9A; cp <= 0xDB1; cp++) points.push(cp); // ක-න
-      for (let cp = 0xDB3; cp <= 0xDBB; cp++) points.push(cp); // ඳ-ර
-      points.push(0xDBD, 0xDC0, 0xDC1, 0xDC2, 0xDC3, 0xDC4, 0xDC5, 0xDC6); // ල ව-ෆ
-      return points;
-    })(),
+    characters: assignedLetters(0xD85, 0xD96) // අ-ඖ
+        .concat(assignedLetters(0xD9A, 0xDB1)) // ක-න
+        .concat(assignedLetters(0xDB3, 0xDBB)) // ඳ-ර
+        .concat([0xDBD, 0xDC0, 0xDC1, 0xDC2, 0xDC3, 0xDC4, 0xDC5, 0xDC6]), // ල ව-ෆ
   },
   'Thai': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xE01; cp <= 0xE2E; cp++) points.push(cp); // ก-ฮ
-      return points;
-    })(),
+    characters: assignedLetters(0xE01, 0xE2E), // ก-ฮ
   },
   'Lao': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0xE81; cp <= 0xE82; cp++) points.push(cp); // ກ-ຂ
-      points.push(0xE84); // ຄ
-      for (let cp = 0xE87; cp <= 0xE88; cp++) points.push(cp); // ງ-ຈ
-      points.push(0xE8A, 0xE8D); // ຊ ຍ
-      for (let cp = 0xE94; cp <= 0xE97; cp++) points.push(cp); // ດ-ທ
-      for (let cp = 0xE99; cp <= 0xE9F; cp++) points.push(cp); // ນ-ຟ
-      points.push(0xEA1, 0xEA2, 0xEA3, 0xEA5, 0xEA7); // ມ ຢ ຣ ລ ວ
-      for (let cp = 0xEAA; cp <= 0xEAB; cp++) points.push(cp); // ສ-ຫ
-      points.push(0xEAD, 0xEAE); // ອ ຮ
-      return points;
-    })(),
+    characters: assignedLetters(0xE81, 0xE82) // ກ-ຂ
+        .concat([0xE84])
+        .concat(assignedLetters(0xE87, 0xE88)) // ງ-ຈ
+        .concat([0xE8A, 0xE8D])
+        .concat(assignedLetters(0xE94, 0xE97)) // ດ-ທ
+        .concat(assignedLetters(0xE99, 0xE9F)) // ນ-ຟ
+        .concat([0xEA1, 0xEA2, 0xEA3, 0xEA5, 0xEA7])
+        .concat(assignedLetters(0xEAA, 0xEAB))
+        .concat([0xEAD, 0xEAE]), // ອ ຮ
   },
   'Georgian': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x10D0; cp <= 0x10FA; cp++) points.push(cp); // ა-ჺ
-      return points;
-    })(),
-  },
-  'Armenian': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x561; cp <= 0x587; cp++) points.push(cp); // ա-ֆ
-      return points;
-    })(),
+    characters: assignedLetters(0x10D0, 0x10FA), // ა-ჺ
   },
   'Ethiopic': {
-    characters: (() => {
-      const points = [];
-      // Geʽez base order (ሀ-ሰ rows through ቀ) plus the ቐ..ቸ rows
-      for (let cp = 0x1200; cp <= 0x1248; cp++) points.push(cp);
-      return points;
-    })(),
+    characters: assignedLetters(0x1200, 0x1248), // ሀ-ቈ rows
   },
   'Cherokee': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x13A0; cp <= 0x13F4; cp++) points.push(cp); // Ꭰ-Ᏼ
-      return points;
-    })(),
+    characters: assignedLetters(0x13A0, 0x13F4), // Ꭰ-Ᏼ
   },
   'Myanmar': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x1000; cp <= 0x1021; cp++) points.push(cp); // က-ဏ
-      return points;
-    })(),
-  },
-  'Khmer': {
-    characters: (() => {
-      const points = [];
-      for (let cp = 0x1780; cp <= 0x17A2; cp++) points.push(cp); // ក-អ
-      return points;
-    })(),
+    characters: assignedLetters(0x1000, 0x1021), // က-ဏ
   },
 };
 
