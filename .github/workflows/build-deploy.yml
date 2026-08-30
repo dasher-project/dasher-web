@@ -51,6 +51,8 @@ jobs:
           cp wasm-build/demo.html _site/index.html
           cp wasm-build/dasher-wasm-wrapper.js _site/
           cp -r wasm-build/wasm _site/wasm
+          # The pure-JS demo (90 languages) lives at /js-demo/
+          cp -r browser _site/js-demo
           touch _site/.nojekyll
 
       - name: Upload artifact
