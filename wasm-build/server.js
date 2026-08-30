@@ -30,8 +30,17 @@ const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
 
     // Default to demo.html
-    let filePath = req.url === '/' ? '/demo.html' : req.url;
-    filePath = path.join(__dirname, filePath);
+    let urlPath = req.url === '/' ? '/demo.html' : req.url;
+    // Sanitize the requested path before use: strip any traversal segments
+    urlPath = path.normalize(urlPath).replace(/^(\.\.[\/\\])+/, '');
+    let filePath = path.join(__dirname, urlPath);
+
+    // Prevent path traversal outside of __dirname
+    if (!filePath.startsWith(__dirname)) {
+        res.writeHead(403, { 'Content-Type': 'text/html' });
+        res.end('<h1>403 - Forbidden</h1>');
+        return;
+    }
 
     // Check if file exists
     fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -58,6 +67,12 @@ const server = http.createServer((req, res) => {
         });
     });
 });
+
+// Mitigate resource exhaustion from unbounded concurrent/slow connections
+server.maxConnections = 100;
+server.timeout = 30000;
+server.headersTimeout = 10000;
+server.requestTimeout = 10000;
 
 server.listen(PORT, () => {
     console.log(`Dasher WASM Demo Server running at http://localhost:${PORT}/`);
