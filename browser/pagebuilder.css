@@ -1,0 +1,187 @@
+/* Copyright 2020 VMware, Inc.
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+/*
+
+** DON'T EDIT THIS COPY. **
+
+This is a copy of a file from the Captive Web View project.  
+It's like way easier to get the browser to load the copy from here.  
+The original is included by the captive-web-view sub-module, see also:  
+https://github.com/vmware/captive-web-view/tree/master/forAndroid/captivewebview/src/main/assets/library
+
+*/
+
+/* Style names make use of the Block Element Modifier convention, see:  
+ * https://en.bem.info/methodology/naming-convention/
+ */
+
+body {
+     /* Prevent horizontal scroll bar.
+      */
+    overflow-x: hidden;
+    /* width: 100%; */
+
+    /* The MDL CSS, for example, seems to set min-height 100%, which means that
+     * there is always a vertical scroll bar. Following rule stops that.
+     */
+    min-height: inherit;
+
+    margin: 0;
+
+    font-size: large;
+    font-family: sans-serif;
+}
+
+/* Push everything in from the sides of the screen a bit.
+ * The !important would override, for example, MDL zero margins on no-space
+ * grids.
+ */
+body > div, body > h2, body > form {
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+}
+
+:root {
+    --field-colour: rgb(224, 224, 224);
+    --accent-colour: rgb(98, 0, 234);
+    --line-colour: black;
+    --background-colour: white;
+
+    --border-radius: 6px;
+}
+
+div.cwv-transcript {
+    border-top: 2px solid black;
+    margin-top: 6px;
+    padding-top: 6px;
+}
+div .cwv-transcript__title { display: inline; }
+fieldset.cwv-transcript {
+    border: var(--field-colour) 1px solid;
+}
+.cwv-transcript__clear { float: right; }
+pre.cwv-transcript__log_line {
+    margin-top: 0;
+    margin-bottom: 0;
+
+    /* Fixed fonts appear larger, so reduce the size. */
+    font-size: 75%;
+
+    /* Wrap at spaces to prevent long transcript lines overflowing the screen.
+     */
+    white-space: pre-wrap;
+}
+/* Force long transcript lines to be wrapped wherever, even within a word, to 
+ * prevent them from overflowing the screen.
+ */
+.cwv-transcript__log_line {
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.cwv-button {
+    background-color: var(--field-colour);
+    font-size: large;
+    padding: 0.5em 1em 0.5em 1em;
+    border: none;
+    border-radius: var(--border-radius);
+    outline: none;
+}
+.cwv-button + .cwv-button {
+    margin-left: 0.5em;
+}
+.cwv-button_down {
+    background-color: var(--accent-colour);
+    color: var(--background-colour);
+}
+/* Button doesn't use the :focus selector because Android WebView makes a button
+ * focussed when it gets tapped, and leaves it focussed until something else
+ * takes focus.
+ */
+
+.cwv-input {
+    padding: 0.5em 0 0.5em 0;
+}
+.cwv-input__input {
+    font-size: x-large;
+    border: 1px solid black;
+    border-radius: var(--border-radius);
+    padding-left: 0.5em;
+    background-color: var(--field-colour);
+}
+.cwv-input__input:focus {
+    outline: none;
+    border-color: var(--accent-colour);
+    background-color: var(--background-colour);
+}
+.cwv-input__label {
+    font-size: medium;
+    display: block;
+}
+
+.cwv-anchor {
+    text-decoration: none;
+    padding: 0.5em 1em 0.5em 1em;
+    display: block;
+    border-bottom: 1px solid black;
+    color: var(--line-colour);
+    margin-top: 2px;
+}
+.cwv-anchor:first-of-type {
+    border-top: 1px solid black;
+}
+.cwv-anchor::after {
+    content: ">";
+    /* Another possible marker could be an angle quote, "\232A", but it didn't
+     * look quite right.
+     */
+    float: right;
+    font-size: x-large;
+    color: var(--line-colour);
+    margin-top: -5px;
+    margin-right: -0.5em;
+}
+.cwv-anchor_back::after {
+    content: none;
+}
+.cwv-anchor_back::before {
+    content: "<";
+    font-size: x-large;
+    color: var(--line-colour);
+    margin-top: -5px;
+    margin-right: 0.5em;
+}
+
+h1 .cwv-anchor {
+    border-bottom: none;
+    padding: 0 0.5em 0 0.5em;
+}
+h1 .cwv-anchor:first-of-type {
+    border-top: none;
+}
+.cwv-anchor_back::before {
+    position: relative;
+    top: -0.25em;
+}
+
+.cwv-progress {
+    height: 1em;
+    width: 100%;
+}
+/* This class sets the default style of one progress step. The following values
+ * will be calculated by the JS.
+ *
+ * -   width.
+ * -   height.
+ */
+.cwv-progress__step {
+    margin: 1px;
+    border: solid 1px var(--line-colour);
+}
+
+.cwv-progress__step > span {
+    background-color: var(--accent-colour);
+    transition: width 0.3s linear, background-color 0.3s linear;
+}

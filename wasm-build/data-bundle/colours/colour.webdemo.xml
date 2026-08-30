@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE colors SYSTEM "color.dtd">
+<!-- Palette for the web demo: mirrors the pure-JS demo's four-colour
+     alternation (two greens / two blues) so every letter box reads as a
+     complete box without outlines. Node colours cycle by index within each
+     group, and the alt sequences flip at odd tree depths, matching the
+     JS demo's sequence-{ordinal%2}-{index%2} scheme.
+
+     Group container nodes are made fully transparent: the legacy palettes
+     paint them with the background colour (an old-Dasher "invisible
+     container" convention that reads as white gaps when outlines are off),
+     or with strong group tints (a giant yellow block). Not drawing them
+     matches the JS demo, where only letter boxes exist. Parented to the
+     legacy European/Asian palette so groups not listed here still
+     resolve. -->
+<colors name="Web Demo" parentName="European/Asian (Original)"
+    rootNode="#b4eeb4">
+    <!-- Letter-family groups, including the names used by legacy alphabets
+         (Lower/Upper case Latin letters) and WorldAlphabets alphabets
+         (lowercase / Upper case). -->
+    <groupColorInfo name="lowercase"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#90ee90,#98fb98"
+        altNodeColorSequence="#add8e6,#87ceeb"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="Lower case Latin letters"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#90ee90,#98fb98"
+        altNodeColorSequence="#add8e6,#87ceeb"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="Upper case Latin letters"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#90ee90,#98fb98"
+        altNodeColorSequence="#add8e6,#87ceeb"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="uppercase"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#90ee90,#98fb98"
+        altNodeColorSequence="#add8e6,#87ceeb"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="space"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ebebeb,#e0e0e0"
+        altNodeColorSequence="#d8d8d8,#cfcfcf"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="paragraphSpace"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ebebeb,#e0e0e0"
+        altNodeColorSequence="#d8d8d8,#cfcfcf"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="punctuation"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ffbbff,#ffaad4"
+        altNodeColorSequence="#ffff00,#e6e600"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="Punctuation"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ffbbff,#ffaad4"
+        altNodeColorSequence="#ffff00,#e6e600"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="limitedPunctuation"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ffbbff,#ffaad4"
+        altNodeColorSequence="#ffff00,#e6e600"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="Digits"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#ffb0b0,#ff9a9a"
+        altNodeColorSequence="#d0b0ff,#b99aff"
+        nodeLabelColorSequence="#000000"/>
+    <groupColorInfo name="Editing"
+        groupColor="#ffffff00" altGroupColor="#ffffff00"
+        nodeColorSequence="#dcdcdc,#d0d0d0"
+        altNodeColorSequence="#c8c8c8,#bcbcbc"
+        nodeLabelColorSequence="#000000"/>
+</colors>

@@ -9,110 +9,95 @@ Manages language selection and provides alphabet and lexicon data for each langu
 
 // Supported languages with their metadata
 const supportedLanguages = [
-{code: 'en', name: 'English', speechCode: 'en-US', script: 'Latin', rtl: false},
-{code: 'af', name: 'Afrikaans', speechCode: 'af-ZA', script: 'Latin', rtl: false},
-{code: 'sq', name: 'Albanian', speechCode: 'sq-AL', script: 'Latin', rtl: false},
-{code: 'am', name: 'Amharic', speechCode: 'am-ET', script: 'Ethiopic', rtl: false},
-{code: 'ar', name: 'Arabic', speechCode: 'ar-SA', script: 'Arabic', rtl: true},
-{code: 'as', name: 'Assamese', speechCode: 'as-IN', script: 'Bengali', rtl: false},
-{code: 'eu', name: 'Basque', speechCode: 'eu-ES', script: 'Latin', rtl: false},
-{code: 'bn', name: 'Bengali', speechCode: 'bn-BD', script: 'Bengali', rtl: false},
-{code: 'bs', name: 'Bosnian', speechCode: 'bs-BA', script: 'Latin', rtl: false},
-{code: 'br', name: 'Breton', speechCode: 'br-FR', script: 'Latin', rtl: false},
-{code: 'bg', name: 'Bulgarian', speechCode: 'bg-BG', script: 'Cyrillic', rtl: false},
-{code: 'my', name: 'Burmese', speechCode: 'my-MM', script: 'Myanmar', rtl: false},
-{code: 'ca', name: 'Catalan', speechCode: 'ca-ES', script: 'Latin', rtl: false},
-{code: 'chr', name: 'Cherokee', speechCode: 'chr-US', script: 'Cherokee', rtl: false},
-{code: 'zh', name: 'Chinese (Simplified)', speechCode: 'zh-CN', script: 'Han', rtl: false},
-{code: 'co', name: 'Corsican', speechCode: 'co-FR', script: 'Latin', rtl: false},
-{code: 'hr', name: 'Croatian', speechCode: 'hr-HR', script: 'Latin', rtl: false},
-{code: 'cs', name: 'Czech', speechCode: 'cs-CZ', script: 'Latin', rtl: false},
-{code: 'da', name: 'Danish', speechCode: 'da-DK', script: 'Latin', rtl: false},
-{code: 'nl', name: 'Dutch', speechCode: 'nl-NL', script: 'Latin', rtl: false},
-{code: 'eo', name: 'Esperanto', speechCode: 'eo', script: 'Latin', rtl: false},
-{code: 'et', name: 'Estonian', speechCode: 'et-EE', script: 'Latin', rtl: false},
-{code: 'ee', name: 'Ewe', speechCode: 'ee-GH', script: 'Latin', rtl: false},
-{code: 'fo', name: 'Faroese', speechCode: 'fo-FO', script: 'Latin', rtl: false},
-{code: 'fi', name: 'Finnish', speechCode: 'fi-FI', script: 'Latin', rtl: false},
-{code: 'fr', name: 'French', speechCode: 'fr-FR', script: 'Latin', rtl: false},
-{code: 'gl', name: 'Galician', speechCode: 'gl-ES', script: 'Latin', rtl: false},
-{code: 'ka', name: 'Georgian', speechCode: 'ka-GE', script: 'Georgian', rtl: false},
-{code: 'de', name: 'German', speechCode: 'de-DE', script: 'Latin', rtl: false},
-{code: 'el', name: 'Greek', speechCode: 'el-GR', script: 'Greek', rtl: false},
-{code: 'gu', name: 'Gujarati', speechCode: 'gu-IN', script: 'Gujarati', rtl: false},
-{code: 'ha', name: 'Hausa', speechCode: 'ha-NG', script: 'Latin', rtl: false},
-{code: 'haw', name: 'Hawaiian', speechCode: 'haw-US', script: 'Latin', rtl: false},
-{code: 'he', name: 'Hebrew', speechCode: 'he-IL', script: 'Hebrew', rtl: true},
-{code: 'hi', name: 'Hindi', speechCode: 'hi-IN', script: 'Devanagari', rtl: false},
-{code: 'hu', name: 'Hungarian', speechCode: 'hu-HU', script: 'Latin', rtl: false},
-{code: 'is', name: 'Icelandic', speechCode: 'is-IS', script: 'Latin', rtl: false},
-{code: 'ig', name: 'Igbo', speechCode: 'ig-NG', script: 'Latin', rtl: false},
-{code: 'id', name: 'Indonesian', speechCode: 'id-ID', script: 'Latin', rtl: false},
-{code: 'ga', name: 'Irish', speechCode: 'ga-IE', script: 'Latin', rtl: false},
-{code: 'it', name: 'Italian', speechCode: 'it-IT', script: 'Latin', rtl: false},
-{code: 'ja', name: 'Japanese', speechCode: 'ja-JP', script: 'Japanese', rtl: false},
-{code: 'kn', name: 'Kannada', speechCode: 'kn-IN', script: 'Kannada', rtl: false},
-{code: 'kk', name: 'Kazakh', speechCode: 'kk-KZ', script: 'Cyrillic', rtl: false},
-{code: 'rn', name: 'Kirundi', speechCode: 'rn-BI', script: 'Latin', rtl: false},
-{code: 'ko', name: 'Korean', speechCode: 'ko-KR', script: 'Hangul', rtl: false},
-{code: 'ky', name: 'Kyrgyz', speechCode: 'ky-KG', script: 'Cyrillic', rtl: false},
-{code: 'lo', name: 'Lao', speechCode: 'lo-LA', script: 'Lao', rtl: false},
-{code: 'la', name: 'Latin', speechCode: 'la', script: 'Latin', rtl: false},
-{code: 'lt', name: 'Lithuanian', speechCode: 'lt-LT', script: 'Latin', rtl: false},
-{code: 'mk', name: 'Macedonian', speechCode: 'mk-MK', script: 'Cyrillic', rtl: false},
-{code: 'mt', name: 'Maltese', speechCode: 'mt-MT', script: 'Latin', rtl: false},
-{code: 'mn', name: 'Mongolian', speechCode: 'mn-MN', script: 'Cyrillic', rtl: false},
-{code: 'no', name: 'Norwegian', speechCode: 'no-NO', script: 'Latin', rtl: false},
-{code: 'oc', name: 'Occitan', speechCode: 'oc-FR', script: 'Latin', rtl: false},
-{code: 'fa', name: 'Persian', speechCode: 'fa-IR', script: 'Arabic', rtl: true},
-{code: 'pl', name: 'Polish', speechCode: 'pl-PL', script: 'Latin', rtl: false},
-{code: 'pt', name: 'Portuguese', speechCode: 'pt-PT', script: 'Latin', rtl: false},
-{code: 'pa', name: 'Punjabi', speechCode: 'pa-IN', script: 'Gurmukhi', rtl: false},
-{code: 'ro', name: 'Romanian', speechCode: 'ro-RO', script: 'Latin', rtl: false},
-{code: 'ru', name: 'Russian', speechCode: 'ru-RU', script: 'Cyrillic', rtl: false},
-{code: 'gd', name: 'Scottish Gaelic', speechCode: 'gd-GB', script: 'Latin', rtl: false},
-{code: 'sr', name: 'Serbian', speechCode: 'sr-RS', script: 'Cyrillic', rtl: false},
-{code: 'st', name: 'Sesotho', speechCode: 'st-ZA', script: 'Latin', rtl: false},
-{code: 'si', name: 'Sinhala', speechCode: 'si-LK', script: 'Sinhala', rtl: false},
-{code: 'sk', name: 'Slovak', speechCode: 'sk-SK', script: 'Latin', rtl: false},
-{code: 'sl', name: 'Slovenian', speechCode: 'sl-SI', script: 'Latin', rtl: false},
-{code: 'so', name: 'Somali', speechCode: 'so-SO', script: 'Latin', rtl: false},
-{code: 'es', name: 'Spanish', speechCode: 'es-ES', script: 'Latin', rtl: false},
-{code: 'sw', name: 'Swahili', speechCode: 'sw-KE', script: 'Latin', rtl: false},
-{code: 'ss', name: 'Swati', speechCode: 'ss-ZA', script: 'Latin', rtl: false},
-{code: 'sv', name: 'Swedish', speechCode: 'sv-SE', script: 'Latin', rtl: false},
-{code: 'tl', name: 'Tagalog', speechCode: 'tl-PH', script: 'Latin', rtl: false},
-{code: 'tg', name: 'Tajik', speechCode: 'tg-TJ', script: 'Cyrillic', rtl: false},
-{code: 'ta', name: 'Tamil', speechCode: 'ta-IN', script: 'Tamil', rtl: false},
-{code: 'te', name: 'Telugu', speechCode: 'te-IN', script: 'Telugu', rtl: false},
-{code: 'th', name: 'Thai', speechCode: 'th-TH', script: 'Thai', rtl: false},
-{code: 'ti', name: 'Tigrinya', speechCode: 'ti-ET', script: 'Ethiopic', rtl: false},
-{code: 'ts', name: 'Tsonga', speechCode: 'ts-ZA', script: 'Latin', rtl: false},
-{code: 'tn', name: 'Tswana', speechCode: 'tn-ZA', script: 'Latin', rtl: false},
-{code: 'tr', name: 'Turkish', speechCode: 'tr-TR', script: 'Latin', rtl: false},
-{code: 'tk', name: 'Turkmen', speechCode: 'tk-TM', script: 'Latin', rtl: false},
-{code: 'uk', name: 'Ukrainian', speechCode: 'uk-UA', script: 'Cyrillic', rtl: false},
-{code: 'ur', name: 'Urdu', speechCode: 'ur-PK', script: 'Arabic', rtl: true},
-{code: 'uz', name: 'Uzbek', speechCode: 'uz-UZ', script: 'Latin', rtl: false},
-{code: 'vi', name: 'Vietnamese', speechCode: 'vi-VN', script: 'Latin', rtl: false},
-{code: 'cy', name: 'Welsh', speechCode: 'cy-GB', script: 'Latin', rtl: false},
-{code: 'xh', name: 'Xhosa', speechCode: 'xh-ZA', script: 'Latin', rtl: false},
-{code: 'yo', name: 'Yoruba', speechCode: 'yo-NG', script: 'Latin', rtl: false},
-{code: 'zu', name: 'Zulu', speechCode: 'zu-ZA', script: 'Latin', rtl: false},
+  {code: 'af', name: 'Afrikaans', speechCode: 'af-ZA', script: 'Latin', rtl: false},
+  {code: 'sq', name: 'Albanian', speechCode: 'sq-AL', script: 'Latin', rtl: false},
+  {code: 'am', name: 'Amharic', speechCode: 'am-ET', script: 'Ethiopic', rtl: false},
+  {code: 'ar', name: 'Arabic', speechCode: 'ar-SA', script: 'Arabic', rtl: true},
+  {code: 'as', name: 'Assamese', speechCode: 'as-AS', script: 'Bengali', rtl: false},
+  {code: 'eu', name: 'Basque', speechCode: 'eu-ES', script: 'Latin', rtl: false},
+  {code: 'bn', name: 'Bengali', speechCode: 'bn-BD', script: 'Bengali', rtl: false},
+  {code: 'bs', name: 'Bosnian', speechCode: 'bs-BS', script: 'Latin', rtl: false},
+  {code: 'br', name: 'Breton', speechCode: 'br-FR', script: 'Latin', rtl: false},
+  {code: 'bg', name: 'Bulgarian', speechCode: 'bg-BG', script: 'Cyrillic', rtl: false},
+  {code: 'ca', name: 'Catalan', speechCode: 'ca-ES', script: 'Latin', rtl: false},
+  {code: 'chr', name: 'Cherokee', speechCode: 'chr-US', script: 'Cherokee', rtl: false},
+  {code: 'co', name: 'Corsican', speechCode: 'co-FR', script: 'Latin', rtl: false},
+  {code: 'hr', name: 'Croatian', speechCode: 'hr-HR', script: 'Latin', rtl: false},
+  {code: 'cs', name: 'Czech', speechCode: 'cs-CZ', script: 'Latin', rtl: false},
+  {code: 'da', name: 'Danish', speechCode: 'da-DK', script: 'Latin', rtl: false},
+  {code: 'nl', name: 'Dutch', speechCode: 'nl-NL', script: 'Latin', rtl: false},
+  {code: 'en', name: 'English', speechCode: 'en-US', script: 'Latin', rtl: false},
+  {code: 'eo', name: 'Esperanto', speechCode: 'eo', script: 'Latin', rtl: false},
+  {code: 'et', name: 'Estonian', speechCode: 'et-EE', script: 'Latin', rtl: false},
+  {code: 'ee', name: 'Ewe', speechCode: 'ee-GH', script: 'Latin', rtl: false},
+  {code: 'fi', name: 'Finnish', speechCode: 'fi-FI', script: 'Latin', rtl: false},
+  {code: 'fr', name: 'French', speechCode: 'fr-FR', script: 'Latin', rtl: false},
+  {code: 'gl', name: 'Galician', speechCode: 'gl-ES', script: 'Latin', rtl: false},
+  {code: 'ka', name: 'Georgian', speechCode: 'ka-GE', script: 'Georgian', rtl: false},
+  {code: 'de', name: 'German', speechCode: 'de-DE', script: 'Latin', rtl: false},
+  {code: 'el', name: 'Greek', speechCode: 'el-GR', script: 'Greek', rtl: false},
+  {code: 'he', name: 'Hebrew', speechCode: 'he-IL', script: 'Hebrew', rtl: true},
+  {code: 'hu', name: 'Hungarian', speechCode: 'hu-HU', script: 'Latin', rtl: false},
+  {code: 'is', name: 'Icelandic', speechCode: 'is-IS', script: 'Latin', rtl: false},
+  {code: 'id', name: 'Indonesian', speechCode: 'id-ID', script: 'Latin', rtl: false},
+  {code: 'ga', name: 'Irish', speechCode: 'ga-IE', script: 'Latin', rtl: false},
+  {code: 'it', name: 'Italian', speechCode: 'it-IT', script: 'Latin', rtl: false},
+  {code: 'ja', name: 'Japanese', speechCode: 'ja-JP', script: 'Hiragana', rtl: false},
+  {code: 'kn', name: 'Kannada', speechCode: 'kn-IN', script: 'Kannada', rtl: false},
+  {code: 'rn', name: 'Kirundi', speechCode: 'rn-BI', script: 'Latin', rtl: false},
+  {code: 'ko', name: 'Korean', speechCode: 'ko-KR', script: 'Hangul', rtl: false},
+  {code: 'ky', name: 'Kyrgyz', speechCode: 'ky-KG', script: 'Cyrillic', rtl: false},
+  {code: 'lo', name: 'Lao', speechCode: 'lo-LA', script: 'Lao', rtl: false},
+  {code: 'lt', name: 'Lithuanian', speechCode: 'lt-LT', script: 'Latin', rtl: false},
+  {code: 'mk', name: 'Macedonian', speechCode: 'mk-MK', script: 'Cyrillic', rtl: false},
+  {code: 'mt', name: 'Maltese', speechCode: 'mt-MT', script: 'Latin', rtl: false},
+  {code: 'no', name: 'Norwegian', speechCode: 'no-NO', script: 'Latin', rtl: false},
+  {code: 'oc', name: 'Occitan', speechCode: 'oc-FR', script: 'Latin', rtl: false},
+  {code: 'fa', name: 'Persian', speechCode: 'fa-IR', script: 'Arabic', rtl: true},
+  {code: 'pl', name: 'Polish', speechCode: 'pl-PL', script: 'Latin', rtl: false},
+  {code: 'pt', name: 'Portuguese', speechCode: 'pt-PT', script: 'Latin', rtl: false},
+  {code: 'pa', name: 'Punjabi', speechCode: 'pa-IN', script: 'Gurmukhi', rtl: false},
+  {code: 'ro', name: 'Romanian', speechCode: 'ro-RO', script: 'Latin', rtl: false},
+  {code: 'ru', name: 'Russian', speechCode: 'ru-RU', script: 'Cyrillic', rtl: false},
+  {code: 'gd', name: 'Scottish Gaelic', speechCode: 'gd-GB', script: 'Latin', rtl: false},
+  {code: 'sr', name: 'Serbian', speechCode: 'sr-SR', script: 'Cyrillic', rtl: false},
+  {code: 'si', name: 'Sinhala', speechCode: 'si-LK', script: 'Sinhala', rtl: false},
+  {code: 'sk', name: 'Slovak', speechCode: 'sk-SK', script: 'Latin', rtl: false},
+  {code: 'sl', name: 'Slovenian', speechCode: 'sl-SI', script: 'Latin', rtl: false},
+  {code: 'so', name: 'Somali', speechCode: 'so-SO', script: 'Latin', rtl: false},
+  {code: 'es', name: 'Spanish', speechCode: 'es-ES', script: 'Latin', rtl: false},
+  {code: 'sw', name: 'Swahili', speechCode: 'sw-KE', script: 'Latin', rtl: false},
+  {code: 'sv', name: 'Swedish', speechCode: 'sv-SE', script: 'Latin', rtl: false},
+  {code: 'tg', name: 'Tajik', speechCode: 'tg-TJ', script: 'Cyrillic', rtl: false},
+  {code: 'ta', name: 'Tamil', speechCode: 'ta-IN', script: 'Tamil', rtl: false},
+  {code: 'te', name: 'Telugu', speechCode: 'te-IN', script: 'Telugu', rtl: false},
+  {code: 'th', name: 'Thai', speechCode: 'th-TH', script: 'Thai', rtl: false},
+  {code: 'ti', name: 'Tigrinya', speechCode: 'ti-ET', script: 'Ethiopic', rtl: false},
+  {code: 'tr', name: 'Turkish', speechCode: 'tr-TR', script: 'Latin', rtl: false},
+  {code: 'tk', name: 'Turkmen', speechCode: 'tk-TM', script: 'Latin', rtl: false},
+  {code: 'uk', name: 'Ukrainian', speechCode: 'uk-UA', script: 'Cyrillic', rtl: false},
+  {code: 'ur', name: 'Urdu', speechCode: 'ur-PK', script: 'Arabic', rtl: true},
+  {code: 'uz', name: 'Uzbek', speechCode: 'uz-UZ', script: 'Latin', rtl: false},
+  {code: 'vi', name: 'Vietnamese', speechCode: 'vi-VN', script: 'Latin', rtl: false},
+  {code: 'cy', name: 'Welsh', speechCode: 'cy-GB', script: 'Latin', rtl: false},
+  {code: 'xh', name: 'Xhosa', speechCode: 'xh-ZA', script: 'Latin', rtl: false},
+  {code: 'yo', name: 'Yoruba', speechCode: 'yo-NG', script: 'Latin', rtl: false},
+  {code: 'zu', name: 'Zulu', speechCode: 'zu-ZA', script: 'Latin', rtl: false},
+  {code: 'fo', name: 'fo', speechCode: 'fo-FO', script: 'Latin', rtl: false},
+  {code: 'gu', name: 'gu', speechCode: 'gu-GU', script: 'Gujarati', rtl: false},
+  {code: 'ha', name: 'ha', speechCode: 'ha-HA', script: 'Latin', rtl: false},
+  {code: 'haw', name: 'haw', speechCode: 'haw-HAW', script: 'Latin', rtl: false},
+  {code: 'ig', name: 'ig', speechCode: 'ig-IG', script: 'Latin', rtl: false},
+  {code: 'kk', name: 'kk', speechCode: 'kk-KK', script: 'Cyrillic', rtl: false},
+  {code: 'la', name: 'la', speechCode: 'la-LA', script: 'Latin', rtl: false},
+  {code: 'mn', name: 'mn', speechCode: 'mn-MN', script: 'Cyrillic', rtl: false},
+  {code: 'my', name: 'my', speechCode: 'my-MY', script: 'Myanmar', rtl: false},
+  {code: 'ss', name: 'ss', speechCode: 'ss-SS', script: 'Latin', rtl: false},
+  {code: 'st', name: 'st', speechCode: 'st-ST', script: 'Latin', rtl: false},
+  {code: 'tl', name: 'tl', speechCode: 'tl-TL', script: 'Latin', rtl: false},
+  {code: 'tn', name: 'tn', speechCode: 'tn-TN', script: 'Latin', rtl: false},
+  {code: 'ts', name: 'Tsonga', speechCode: 'ts-ZA', script: 'Latin', rtl: false}
 ];
-
-// Collect assigned letter code points in [start, end]. Unassigned slots
-// (which would render as tofu) and combining marks fall through; extras are
-// appended verbatim.
-const assignedLetters = (start, end, extras = []) => {
-  const points = [];
-  for (let cp = start; cp <= end; cp++) {
-    if (/\p{L}/u.test(String.fromCodePoint(cp))) {
-      points.push(cp);
-    }
-  }
-  return points.concat(extras);
-};
 
 // Character ranges for each language
 const languageAlphabets = {
@@ -159,6 +144,15 @@ const languageAlphabets = {
     lowercase: {start: 0x0430, end: 0x044F}, // а-я
     uppercase: {start: 0x0410, end: 0x042F}, // А-Я
   },
+  'ar': {
+    // Arabic alphabet
+    characters: [
+      0x0627, 0x0628, 0x062A, 0x062B, 0x062C, 0x062F, 0x0633, 0x0647,
+      0x0648, 0x0649, 0x064A, 0x064B, 0x0644, 0x0645, 0x0646, 0x0621,
+      0x062E, 0x0631, 0x0634, 0x0635, 0x0636, 0x0637, 0x0638, 0x0639,
+      0x063A, 0x0641, 0x642, 0x643, 0x644, 0x645, 0x646, 0x647, 0x648,
+    ],
+  },
   'zh': {
     // Chinese - common simplified characters
     characters: [
@@ -168,21 +162,22 @@ const languageAlphabets = {
       0x4E18, 0x4E19, 0x4E1A, 0x4E1B, 0x4E1C, 0x4E1D, 0x4E1E, 0x4E1F,
       0x4E20, 0x4E21, 0x4E22, 0x4E23, 0x4E24, 0x4E25, 0x4E26, 0x4E27,
       0x4E28, 0x4E29, 0x4E2A, 0x4E2B, 0x4E2C, 0x4E2D, 0x4E2E, 0x4E2F,
-      // Common characters: 我 你 的 是 人 在 他 有 这 (不 0x4E0D already
-      // appears in the sequential range above, so it's not repeated here)
-      0x6211, 0x4F60, 0x7684, 0x662F, 0x4EBA, 0x5728, 0x4ED6, 0x6709, 0x8FD9,
+      // Common characters: 我, 你, 的, 是, 了, 不, 人, 在, 他, 有, 这
+      0x6211, 0x4F60, 0x7684, 0x662F, 0x4E0D, 0x4EBA, 0x4EBA, 0x5728, 0x4ED, 0x5728, 0x6709,
     ],
   },
   'ja': {
-    // Japanese - hiragana and katakana base letters.
-    characters: assignedLetters(0x3041, 0x3096) // ぁ-ゖ
-        .concat(assignedLetters(0x30A1, 0x30FA)), // ァ-ヺ
+    // Japanese - Hiragana and Katakana
+    hiragana: {start: 0x3041, end: 0x309F}, // ぁ-ん
+    katakana: {start: 0x30A1, end: 0x30FF}, // ア-ン
   },
   'ko': {
-    // Korean - Hangul compatibility jamo (ㄱ-ㅣ). Korean text is typed by
-    // composing jamo; the full syllable block (11,172 glyphs) is far too
-    // large for the demo palette.
-    characters: assignedLetters(0x3131, 0x3163),
+    // Korean - Hangul Syllables
+    range: {start: 0xAC00, end: 0xD7A3}, // 가-힣
+  },
+  'hi': {
+    // Hindi - Devanagari
+    range: {start: 0x0900, end: 0x097F}, // अ-ह
   },
   'sv': {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
@@ -215,9 +210,20 @@ const languageAlphabets = {
     accented: [0xE1, 0xE9, 0xEC, 0xF9, 0xF2, 0x165, 0x161, 0x17E, 0x017D], // á, é, í, ý, ó, ř, š, č, ň
   },
   'el': {
-    // Greek (flat lists skip the unassigned U+03A2 slot)
-    characters: assignedLetters(0x391, 0x3A9)
-        .concat(assignedLetters(0x3B1, 0x3C9)), // Α-Ω α-ω
+    // Greek
+    lowercase: {start: 0x03B1, end: 0x03C9}, // α-ω
+    uppercase: {start: 0x0391, end: 0x03A9}, // Α-Ω
+  },
+  'he': {
+    // Hebrew - right-to-left
+    characters: [
+      0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7, 0x05D8, 0x05D9,
+      0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF, 0x05E0, 0x05E1, 0x05E2,
+    ], // א-ת
+  },
+  'th': {
+    // Thai
+    range: {start: 0x0E01, end: 0x0E5B}, // ก-ฺ
   },
   'vi': {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
@@ -228,120 +234,8 @@ const languageAlphabets = {
     lowercase: {start: 0x61, end: 0x7A}, // a-z
     uppercase: {start: 0x41, end: 0x5A}, // A-Z
   },
-};
-
-
-// Base letter inventories per script, used when a language has no explicit
-// alphabet entry above. Word prediction still falls back to English
-// frequencies (see getLexicon).
-const scriptAlphabets = {
-  'Latin': {
-    lowercase: {start: 0x61, end: 0x7A}, // a-z
-    uppercase: {start: 0x41, end: 0x5A}, // A-Z
-  },
-  'Cyrillic': {
-    lowercase: {start: 0x430, end: 0x44F}, // а-я
-    uppercase: {start: 0x410, end: 0x42F}, // А-Я
-    accented: [0x451, 0x401], // ё, Ё
-  },
-  'Arabic': {
-    // Core letters, plus the Persian/Urdu extensions پ چ ژ ک گ ی and the
-    // Urdu retroflex series ٹ ڈ ڑ ھ ے. Tatweel (0x640) is a joiner, not a
-    // letter, and is excluded.
-    characters: assignedLetters(0x621, 0x63A, [
-      0x67E, 0x686, 0x698, 0x6A9, 0x6AF, 0x6CC,
-      0x679, 0x688, 0x691, 0x6BE, 0x6D2,
-    ]).concat(assignedLetters(0x641, 0x64A)),
-  },
-  'Hebrew': {
-    characters: assignedLetters(0x5D0, 0x5EA), // א-ת
-  },
-  'Devanagari': {
-    characters: assignedLetters(0x905, 0x939), // अ-ह
-  },
-  'Bengali': {
-    characters: assignedLetters(0x985, 0x98C) // অ-ঔ
-        .concat(assignedLetters(0x993, 0x99F)) // ও-ড় base rows
-        .concat(assignedLetters(0x9A1, 0x9A8))
-        .concat(assignedLetters(0x9AA, 0x9B0))
-        .concat([0x9B2, 0x9B6, 0x9B7, 0x9B8, 0x9B9]), // ল শ ষ স হ
-  },
-  'Gurmukhi': {
-    characters: assignedLetters(0xA05, 0xA0A) // ਅ-ਊ
-        .concat([0xA0F, 0xA10, 0xA13, 0xA14]) // ਏ ਐ ਓ ਔ
-        .concat(assignedLetters(0xA15, 0xA28))
-        .concat(assignedLetters(0xA2A, 0xA30))
-        .concat([0xA32, 0xA33, 0xA35, 0xA36, 0xA38, 0xA39]), // ਲ਼ ਸ਼ ਹ
-  },
-  'Gujarati': {
-    characters: assignedLetters(0xA85, 0xA8B) // અ-ઋ
-        .concat([0xA8D, 0xA8F, 0xA90]) // ઍ એ ઐ
-        .concat(assignedLetters(0xA93, 0xA95)) // ઓ ઔ ક
-        .concat(assignedLetters(0xA96, 0xAA8))
-        .concat(assignedLetters(0xAAA, 0xAB0))
-        .concat([0xAB2, 0xAB3])
-        .concat(assignedLetters(0xAB5, 0xAB9)), // ક-હ
-  },
-  'Tamil': {
-    characters: assignedLetters(0xB85, 0xB8A) // அ-ஊ
-        .concat([0xB8E, 0xB8F, 0xB92, 0xB93, 0xB94]) // ஏ ஐ ஒ ஓ ஔ
-        .concat(assignedLetters(0xB95, 0xB95))
-        .concat([0xB99, 0xB9A, 0xB9C, 0xB9E, 0xB9F]) // ங ச ஜ ஞ ட
-        .concat(assignedLetters(0xBA3, 0xBA4))
-        .concat([0xBA8, 0xBA9, 0xBAA, 0xBAE, 0xBAF, 0xBB0, 0xBB1, 0xBB2, 0xBB3, 0xBB4, 0xBB5])
-        .concat(assignedLetters(0xBB7, 0xBB9)), // ற ல ள ழ வ ஷ ஸ ஹ
-  },
-  'Telugu': {
-    characters: assignedLetters(0xC05, 0xC0C) // అ-ఌ
-        .concat([0xC0E, 0xC0F, 0xC10, 0xC12, 0xC13, 0xC14]) // ఎ-ఔ
-        .concat(assignedLetters(0xC15, 0xC28))
-        .concat(assignedLetters(0xC2A, 0xC39)), // య-హ
-  },
-  'Kannada': {
-    characters: assignedLetters(0xC85, 0xC8C) // ಅ-ಌ
-        .concat([0xC8E, 0xC8F, 0xC90, 0xC92, 0xC93, 0xC94]) // ಎ-ಔ
-        .concat(assignedLetters(0xC95, 0xCA8))
-        .concat(assignedLetters(0xCAA, 0xCB3))
-        .concat(assignedLetters(0xCB5, 0xCB9)), // ಱ-ಹ
-  },
-  'Malayalam': {
-    characters: assignedLetters(0xD05, 0xD0C) // അ-ഌ
-        .concat([0xD0E, 0xD0F, 0xD10, 0xD12, 0xD13, 0xD14]) // എ-ഔ
-        .concat(assignedLetters(0xD15, 0xD28))
-        .concat(assignedLetters(0xD2A, 0xD39)), // യ-ഹ
-  },
-  'Sinhala': {
-    characters: assignedLetters(0xD85, 0xD96) // අ-ඖ
-        .concat(assignedLetters(0xD9A, 0xDB1)) // ක-න
-        .concat(assignedLetters(0xDB3, 0xDBB)) // ඳ-ර
-        .concat([0xDBD, 0xDC0, 0xDC1, 0xDC2, 0xDC3, 0xDC4, 0xDC5, 0xDC6]), // ල ව-ෆ
-  },
-  'Thai': {
-    characters: assignedLetters(0xE01, 0xE2E), // ก-ฮ
-  },
-  'Lao': {
-    characters: assignedLetters(0xE81, 0xE82) // ກ-ຂ
-        .concat([0xE84])
-        .concat(assignedLetters(0xE87, 0xE88)) // ງ-ຈ
-        .concat([0xE8A, 0xE8D])
-        .concat(assignedLetters(0xE94, 0xE97)) // ດ-ທ
-        .concat(assignedLetters(0xE99, 0xE9F)) // ນ-ຟ
-        .concat([0xEA1, 0xEA2, 0xEA3, 0xEA5, 0xEA7])
-        .concat(assignedLetters(0xEAA, 0xEAB))
-        .concat([0xEAD, 0xEAE]), // ອ ຮ
-  },
-  'Georgian': {
-    characters: assignedLetters(0x10D0, 0x10FA), // ა-ჺ
-  },
-  'Ethiopic': {
-    characters: assignedLetters(0x1200, 0x1248), // ሀ-ቈ rows
-  },
-  'Cherokee': {
-    characters: assignedLetters(0x13A0, 0x13F4), // Ꭰ-Ᏼ
-  },
-  'Myanmar': {
-    characters: assignedLetters(0x1000, 0x1021), // က-ဏ
-  },
+  'pt-BR': 'pt', // Shares with Portuguese
+  'en-GB': 'en', // Shares with English for now
 };
 
 // Common word lists for prediction (top 50 for each language)
@@ -602,13 +496,6 @@ export function getAlphabet(languageCode) {
   const baseCode = languageCode.split('-')[0];
   if (languageAlphabets[baseCode]) {
     return languageAlphabets[baseCode];
-  }
-
-  // Fall back to the language's script inventory (every entry in
-  // supportedLanguages carries a `script` name).
-  const lang = supportedLanguages.find((l) => l.code === baseCode);
-  if (lang && scriptAlphabets[lang.script]) {
-    return scriptAlphabets[lang.script];
   }
 
   // Fall back to English alphabet

@@ -9,3 +9,7 @@ videos
 # Files created by the diagrams.net (aka draw.io) tool that don't get cleared up
 # sometimes.
 *.svg.bkp
+
+# local wasm build output (built by CI or copied for testing)
+wasm-build/wasm/
+wasm-build/build/

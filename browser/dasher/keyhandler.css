@@ -1,0 +1,25 @@
+/*
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.
+MIT licensed, see https://opensource.org/licenses/MIT
+*/
+
+/*
+Cascading Style Sheet for the key handler. This file is imported by the
+userinterface.css file.
+
+Try to follow the Block Element Modifier convention, see:  
+https://en.bem.info/methodology/naming-convention/
+*/
+
+.key-handler__display {
+    position: absolute;
+    display: inline-block;
+    left: 1em;
+    bottom: 5em;
+    padding: 0.5em;
+    border: 1px black solid;
+}
+
+.key-handler__display_inactive {
+    display: none;
+}

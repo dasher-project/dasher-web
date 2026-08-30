@@ -1,0 +1,75 @@
+/*
+(c) 2020 The ACE Centre-North, UK registered charity 1089313.
+MIT licensed, see https://opensource.org/licenses/MIT
+*/
+
+/*
+Cascading Style Sheet for the control panel. This file is imported by the
+userinterface.css file.
+
+Try to follow the Block Element Modifier convention, see:  
+https://en.bem.info/methodology/naming-convention/
+*/
+
+/* Style for the parent of all panels. */
+.control-panel__parent {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+/* Style for all panels. */
+.control-panel__panel {
+    display: inline-block;
+    flex: none;
+    /* border: 0.25rem red dashed; */
+}
+
+/* Legends will be clickable and styled as buttons, but smaller. */
+legend.cwv-button {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+/* Forward and back navigation hints on clickable legends.
+ */
+.control-panel__panel:nth-of-type(1) > legend.cwv-button::after {
+    content: " >";
+}
+.control-panel__panel:nth-of-type(n+2) > legend.cwv-button::before {
+    content: "< ";
+}
+
+/* Navigator panel.
+ */
+.control-panel__structure-navigator > div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+}
+
+.control-panel__structure-navigator > div .cwv-button
+{
+    margin: 0.25em;
+}
+
+.control-panel__structure-navigator > div .cwv-button::after {
+    content: " >";
+}
+
+/* Fading result display, used by the afterInstantiate.manager piece.
+ */
+.control-panel__result {
+    opacity: 1;
+    display: inline;
+}
+
+.control-panel__result-stale {
+    opacity: 0;
+    transition: opacity var(--transition) linear;
+}
+
+.control-panel__result pre {
+    font-family: monospace;
+    white-space: pre;
+    background-color: var(--field-colour);
+}

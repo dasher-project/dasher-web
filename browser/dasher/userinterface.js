@@ -1257,73 +1257,11 @@ export default class UserInterface {
     // Set up language selector
     const supportedLanguages = LanguageManager.getSupportedLanguages();
     this._panels.main.language.optionList = supportedLanguages.map((lang) => lang.name);
-    this._panels.main.language.listener = async (index, value) => {
-      // Resolve the language by its displayed name first. A restored index
-      // can be stale after the language list changes between versions
-      // (v0.1.0 saved 'English (UK)'/'Portuguese (Brazil)' entries whose
-      // old indices now point at other languages), so fall back to index
-      // only when the name doesn't match.
-      let lang;
-      if (typeof value === 'string') {
-        lang = supportedLanguages.find((l) => l.name === value);
-        if (lang === undefined) {
-          // 'English (UK)' -> 'English', 'Portuguese (Brazil)' -> 'Portuguese'
-          const base = value.replace(/\s*\(.*\)$/, '');
-          lang = supportedLanguages.find((l) => l.name === base);
-        }
-      }
-      if (lang === undefined) {
-        lang = supportedLanguages[index];
-      }
-      if (lang === undefined) {
-        return;
-      }
-      // Keep the dropdown in sync when resolution moved away from the
-      // index the control reported.
-      const resolvedIndex = supportedLanguages.indexOf(lang);
-      if (resolvedIndex !== index) {
-        this._panels.main.language.select_option(lang.name, resolvedIndex);
-      }
+    this._panels.main.language.listener = async (index) => {
+      const lang = supportedLanguages[index];
       await LanguageManager.setCurrentLanguage(lang.code);
       await this._onLanguageChanged(lang);
     };
-    // Migrate legacy saved language names before the control panel applies
-    // them. v0.1.0 stored 'English (UK)'/'Portuguese (Brazil)', which no
-    // longer exist as options; left alone, select_option would fall back to
-    // the stale saved index and silently switch the user's language.
-    {
-      const languageControl = this._panels.main.language;
-      const originalSetValue = languageControl.set_value.bind(languageControl);
-      languageControl.set_value = (value) => {
-        if (value !== null && typeof value === 'object' &&
-            typeof value.value === 'string') {
-          let lang = supportedLanguages.find((l) => l.name === value.value);
-          if (lang === undefined) {
-            // 'English (UK)' -> 'English', 'Portuguese (Brazil)' -> 'Portuguese'
-            const base = value.value.replace(/\s*\(.*\)$/, '');
-            lang = supportedLanguages.find((l) => l.name === base);
-          }
-          if (lang !== undefined && lang.name !== value.value) {
-            value = {
-              value: lang.name,
-              index: supportedLanguages.indexOf(lang),
-            };
-          }
-        }
-        originalSetValue(value);
-      };
-    }
-    // Ensure the default language is selected. The select's own default
-    // after an optionList rebuild is arbitrary, so pin it to the current
-    // default language explicitly.
-    {
-      const defaultIndex = supportedLanguages.findIndex(
-          (lang) => lang.code === LanguageManager.getCurrentLanguage().code);
-      if (defaultIndex >= 0) {
-        this._panels.main.language.select_option(
-            supportedLanguages[defaultIndex].name, defaultIndex);
-      }
-    }
 
     this._panels.main.prediction.listener = (index) => {
       if (this._controllerPointer !== undefined) {

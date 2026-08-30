@@ -201,6 +201,7 @@
                 const createModuleFunc = dasherModule.default;
 
                 dasher = new DasherWasm();
+                window.dasher = dasher; // debug/console access
                 await dasher.init({
                     canvas: canvas,
                     moduleFactory: createModuleFunc,
@@ -216,6 +217,25 @@
 
                 updateStatus('Creating Dasher context...', 'loading');
                 dasher.createContext();
+
+                // Dev fallback: shipped builds embed data-bundle in the
+                // .data file, but a local server may run against a stale
+                // build — overlay the palette before Realize loads colours.
+                try {
+                    const resp = await fetch('data-bundle/colours/colour.webdemo.xml');
+                    if (resp.ok && dasher.module && dasher.module.FS) {
+                        dasher.module.FS.writeFile(
+                            '/data/colours/colour.webdemo.xml', await resp.text());
+                    }
+                } catch (e) { /* not running from a source checkout */ }
+
+                // Use the Web Demo palette: alternating greens/blues (by
+                // sibling index and depth) so every letter box reads as a
+                // complete box, like the pure-JS demo. The legacy palettes
+                // render depth-2 nodes white (by design, from old Dasher),
+                // which reads as broken gaps on the web.
+                const colourKey = dasher.findParameterKey('SP_COLOUR_ID');
+                if (colourKey >= 0) dasher.setStringParameter(colourKey, 'Web Demo');
 
                 // setScreenSize triggers Realize() which loads alphabets/training/colours
                 dasher.setScreenSize(canvas.width, canvas.height);

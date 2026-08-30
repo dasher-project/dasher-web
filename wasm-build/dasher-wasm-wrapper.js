@@ -223,6 +223,41 @@ class DasherWasm {
     }
 
     /**
+     * Get a long parameter by key.
+     */
+    getLongParameter(key) {
+        if (!this.context) return 0;
+        return this.module._dasher_get_long_parameter(this.context, key);
+    }
+
+    /**
+     * Set a long parameter by key.
+     */
+    setLongParameter(key, value) {
+        if (!this.context) return;
+        this.module._dasher_set_long_parameter(this.context, key, value);
+    }
+
+    /**
+     * Get a string parameter by key.
+     */
+    getStringParameter(key) {
+        if (!this.context) return '';
+        const ptr = this.module._dasher_get_string_parameter(this.context, key);
+        return ptr ? this.module.UTF8ToString(ptr) : '';
+    }
+
+    /**
+     * Set a string parameter by key.
+     */
+    setStringParameter(key, value) {
+        if (!this.context) return;
+        this._flushPtrs();
+        const ptr = this._strToPtr(value);
+        this.module._dasher_set_string_parameter(this.context, key, ptr);
+    }
+
+    /**
      * Handle mouse movement.
      */
     mouseMove(x, y) {
@@ -283,6 +318,12 @@ class DasherWasm {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        // Stroke width for outlines. The flat command stream carries no
+        // per-rect thickness (opcode 6 sets it for polylines only), so scale
+        // a sensible default to the canvas resolution — a 1px hairline is
+        // invisible on HiDPI canvases.
+        this._lineWidth = Math.max(1, Math.round(this.canvas.width / 700));
+
         for (let i = 0; i < cmdCount; i += 6) {
             const opcode = this.module.getValue(cmds + i * 4, 'i32');
             const a = this.module.getValue(cmds + (i + 1) * 4, 'i32');
@@ -324,6 +365,7 @@ class DasherWasm {
 
             case 2: // Line
                 this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = this._cmdLineWidth || 1;
                 this.ctx.beginPath();
                 this.ctx.moveTo(a, b);
                 this.ctx.lineTo(c, d);
@@ -332,6 +374,7 @@ class DasherWasm {
 
             case 3: // Rectangle outline
                 this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = this._lineWidth || 1;
                 this.ctx.strokeRect(a, b, c - a, d - b);
                 break;
 
@@ -351,6 +394,10 @@ class DasherWasm {
                         this.ctx.fillText(text, a, b);
                     }
                 }
+                break;
+
+            case 6: // Set line width for subsequent polyline segments
+                this._cmdLineWidth = a;
                 break;
 
             default:
