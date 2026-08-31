@@ -5,13 +5,33 @@
 
 Dasher is a zooming text-entry interface, driven by continuous pointing gestures. This repo hosts a **WebAssembly build of the native DasherCore C++ engine** for in-browser use.
 
-**Live demo:** https://dasher-project.github.io/dasher-web/
+> **Positioning:** this is a **demo** of the Dasher engine on the web, not a
+> supported product. The same engine powers the desktop and mobile apps;
+> for daily use, prefer those (see the [downloads page](https://dasher.at/downloads/)).
+
+**Live demo:** https://dasher-project.github.io/dasher-web/ — the lean,
+embeddable demo (this is what dasher.at iframes).
 
 **Enhanced playground:** https://dasher-project.github.io/dasher-web/js-demo/ —
-theme picker (12 colour palettes), node-shape and outline controls, and a
-searchable catalogue of 470+ alphabets fetched on demand (20 bundled with
-training text; the rest lazy-load from the static catalogue and use
-fallback frequencies until you type).
+the full feature tour:
+
+- **Settings dialog generated from the engine's C-API manifest** — all 99
+  parameters, tabbed Input / Language / Output / Customization / Game Mode
+  (+ Privacy), including every input filter (Stylus, Click Mode, Compass
+  Mode, …)
+- **Locale picker** — 33 locales from
+  [dasher-shared-resources](https://github.com/dasher-project/dasher-shared-resources)
+- **Game mode** — type the target phrase, live progress and WPM
+- **Typing rate** — `cps · wpm` readout in the footer (RFC 0012, default on)
+- **Searchable 470+ alphabet catalogue** — 20 bundled with training text;
+  the rest lazy-load from the static catalogue and use fallback
+  frequencies until you type
+- **12 colour palettes + dark companions** that follow the OS colour
+  scheme (RFC 0007), node shapes, outline control
+- **Output-pane layouts** (right / left / bottom / top), speech
+  (speak-on-stop), clipboard actions, open/save text files
+- Chrome follows the [design guide](https://github.com/dasher-project/dasher-design-guide):
+  64px toolbar, 48px status bar, Lucide icons, light/dark tokens
 
 ## Quick Start
 
@@ -46,11 +66,15 @@ Features include:
 ## Repository Structure
 
 ```
-wasm-build/           WASM build (source, scripts, demo)
-  dashercore-src/     DasherCore C++ source (git submodule, branch main)
-  data-bundle/        Curated data files for preloading
-  demo.html           Interactive demo
-  dasher-wasm-wrapper.js   JavaScript API wrapper
+wasm-build/               WASM build (source, scripts, demos)
+  dashercore-src/         DasherCore C++ source (git submodule, branch main)
+  data-bundle/            Curated data files for preloading (10 languages,
+                          21 palettes incl. dark companions)
+  alphabet-catalogue/     455 extra alphabet XMLs + index, fetched on demand
+  strings/ui-strings.json Shared UI string catalogue (33 locales)
+  demo.html               Lean embeddable demo (deployed at /)
+  enhanced.html           Playground (deployed at /js-demo/)
+  dasher-wasm-wrapper.js  JavaScript API wrapper
   build.sh / build.bat    Build scripts
 ```
 
@@ -68,7 +92,9 @@ git checkout legacy-js-demo        # browse or run the JS demo
 
 Releases from **v0.2.0** also carried it. It was retired from `main`
 in favour of the WASM DasherCore build — same engine as the desktop
-and mobile apps, no separate JS codebase to maintain.
+and mobile apps, no separate JS codebase to maintain. The JS demo is
+**preserved but not actively developed or supported**; the tag stands
+as the record of Jim's work.
 
 ## Embedding in Your Site
 

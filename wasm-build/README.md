@@ -40,7 +40,7 @@ This produces three files in `wasm/`:
 ### Run the Demo
 
 ```bash
-node server.js
+npx serve .          # or any static file server
 ```
 
 Open http://localhost:8000/demo.html in your browser.
@@ -154,7 +154,6 @@ wasm-build/
 │   └── dasher.data          Preloaded data
 ├── build.sh                 Build script (Linux/Mac/WSL)
 ├── build.bat                Build script (Windows)
-├── server.js                Node.js demo server (serves on :8000)
 ├── dasher-wasm-wrapper.js   JavaScript API wrapper
 ├── demo.html                Interactive demo page
 ├── package.json             npm scripts
