@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.8 (2026-08-31)
+
+- CI fix: the release packaging step needed `cp -r` for the strings
+  directory — the v0.2.6/v0.2.7 tag builds failed there and never
+  published releases, so those tags were withdrawn and this release
+  carries everything from v0.2.3-v0.2.7. No product changes.
+
 ## v0.2.7 (2026-08-31)
 
 - GTK-parity chrome: output-pane Layout picker (right/left/bottom/top)
