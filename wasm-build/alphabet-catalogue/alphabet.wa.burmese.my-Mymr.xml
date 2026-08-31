@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Burmese (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_my_Mymr.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="က">
+      <textCharAction />
+    </node>
+    <node label="ခ">
+      <textCharAction />
+    </node>
+    <node label="ဂ">
+      <textCharAction />
+    </node>
+    <node label="ဃ">
+      <textCharAction />
+    </node>
+    <node label="င">
+      <textCharAction />
+    </node>
+    <node label="စ">
+      <textCharAction />
+    </node>
+    <node label="ဆ">
+      <textCharAction />
+    </node>
+    <node label="ဇ">
+      <textCharAction />
+    </node>
+    <node label="ဈ">
+      <textCharAction />
+    </node>
+    <node label="ဉ">
+      <textCharAction />
+    </node>
+    <node label="ည">
+      <textCharAction />
+    </node>
+    <node label="ဋ">
+      <textCharAction />
+    </node>
+    <node label="ဌ">
+      <textCharAction />
+    </node>
+    <node label="ဍ">
+      <textCharAction />
+    </node>
+    <node label="ဎ">
+      <textCharAction />
+    </node>
+    <node label="ဏ">
+      <textCharAction />
+    </node>
+    <node label="တ">
+      <textCharAction />
+    </node>
+    <node label="ထ">
+      <textCharAction />
+    </node>
+    <node label="ဒ">
+      <textCharAction />
+    </node>
+    <node label="ဓ">
+      <textCharAction />
+    </node>
+    <node label="န">
+      <textCharAction />
+    </node>
+    <node label="ပ">
+      <textCharAction />
+    </node>
+    <node label="ဖ">
+      <textCharAction />
+    </node>
+    <node label="ဗ">
+      <textCharAction />
+    </node>
+    <node label="ဘ">
+      <textCharAction />
+    </node>
+    <node label="မ">
+      <textCharAction />
+    </node>
+    <node label="ယ">
+      <textCharAction />
+    </node>
+    <node label="ရ">
+      <textCharAction />
+    </node>
+    <node label="လ">
+      <textCharAction />
+    </node>
+    <node label="ဝ">
+      <textCharAction />
+    </node>
+    <node label="သ">
+      <textCharAction />
+    </node>
+    <node label="ဟ">
+      <textCharAction />
+    </node>
+    <node label="ဠ">
+      <textCharAction />
+    </node>
+    <node label="အ">
+      <textCharAction />
+    </node>
+    <node label="ဣ">
+      <textCharAction />
+    </node>
+    <node label="ဤ">
+      <textCharAction />
+    </node>
+    <node label="ဥ">
+      <textCharAction />
+    </node>
+    <node label="ဦ">
+      <textCharAction />
+    </node>
+    <node label="ဧ">
+      <textCharAction />
+    </node>
+    <node label="ဩ">
+      <textCharAction />
+    </node>
+    <node label="ဪ">
+      <textCharAction />
+    </node>
+    <node label="ဿ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="က">
+      <textCharAction />
+    </node>
+    <node label="ခ">
+      <textCharAction />
+    </node>
+    <node label="ဂ">
+      <textCharAction />
+    </node>
+    <node label="ဃ">
+      <textCharAction />
+    </node>
+    <node label="င">
+      <textCharAction />
+    </node>
+    <node label="စ">
+      <textCharAction />
+    </node>
+    <node label="ဆ">
+      <textCharAction />
+    </node>
+    <node label="ဇ">
+      <textCharAction />
+    </node>
+    <node label="ဈ">
+      <textCharAction />
+    </node>
+    <node label="ဉ">
+      <textCharAction />
+    </node>
+    <node label="ည">
+      <textCharAction />
+    </node>
+    <node label="ဋ">
+      <textCharAction />
+    </node>
+    <node label="ဌ">
+      <textCharAction />
+    </node>
+    <node label="ဍ">
+      <textCharAction />
+    </node>
+    <node label="ဎ">
+      <textCharAction />
+    </node>
+    <node label="ဏ">
+      <textCharAction />
+    </node>
+    <node label="တ">
+      <textCharAction />
+    </node>
+    <node label="ထ">
+      <textCharAction />
+    </node>
+    <node label="ဒ">
+      <textCharAction />
+    </node>
+    <node label="ဓ">
+      <textCharAction />
+    </node>
+    <node label="န">
+      <textCharAction />
+    </node>
+    <node label="ပ">
+      <textCharAction />
+    </node>
+    <node label="ဖ">
+      <textCharAction />
+    </node>
+    <node label="ဗ">
+      <textCharAction />
+    </node>
+    <node label="ဘ">
+      <textCharAction />
+    </node>
+    <node label="မ">
+      <textCharAction />
+    </node>
+    <node label="ယ">
+      <textCharAction />
+    </node>
+    <node label="ရ">
+      <textCharAction />
+    </node>
+    <node label="လ">
+      <textCharAction />
+    </node>
+    <node label="ဝ">
+      <textCharAction />
+    </node>
+    <node label="သ">
+      <textCharAction />
+    </node>
+    <node label="ဟ">
+      <textCharAction />
+    </node>
+    <node label="ဠ">
+      <textCharAction />
+    </node>
+    <node label="အ">
+      <textCharAction />
+    </node>
+    <node label="ဣ">
+      <textCharAction />
+    </node>
+    <node label="ဤ">
+      <textCharAction />
+    </node>
+    <node label="ဥ">
+      <textCharAction />
+    </node>
+    <node label="ဦ">
+      <textCharAction />
+    </node>
+    <node label="ဧ">
+      <textCharAction />
+    </node>
+    <node label="ဩ">
+      <textCharAction />
+    </node>
+    <node label="ဪ">
+      <textCharAction />
+    </node>
+    <node label="ဿ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

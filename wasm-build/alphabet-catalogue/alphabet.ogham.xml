@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Ogham" orientation="LR" trainingFilename="training_ogham_XX.txt" colorsName="European/Asian">
+	<group name="Ogham">
+		<node label="ᚁ">
+			<!--Note:  OGHAM LETTER BEITH  -->
+			<textCharAction />
+		</node>
+		<node label="ᚂ">
+			<!--Note:  OGHAM LETTER LUIS  -->
+			<textCharAction />
+		</node>
+		<node label="ᚃ">
+			<!--Note:  OGHAM LETTER FEARN  -->
+			<textCharAction />
+		</node>
+		<node label="ᚄ">
+			<!--Note:  OGHAM LETTER SAIL  -->
+			<textCharAction />
+		</node>
+		<node label="ᚅ">
+			<!--Note:  OGHAM LETTER NION  -->
+			<textCharAction />
+		</node>
+		<node label="ᚆ">
+			<!--Note:  OGHAM LETTER UATH  -->
+			<textCharAction />
+		</node>
+		<node label="ᚇ">
+			<!--Note:  OGHAM LETTER DAIR  -->
+			<textCharAction />
+		</node>
+		<node label="ᚈ">
+			<!--Note:  OGHAM LETTER TINNE  -->
+			<textCharAction />
+		</node>
+		<node label="ᚉ">
+			<!--Note:  OGHAM LETTER COLL  -->
+			<textCharAction />
+		</node>
+		<node label="ᚊ">
+			<!--Note:  OGHAM LETTER CEIRT  -->
+			<textCharAction />
+		</node>
+		<node label="ᚋ">
+			<!--Note:  OGHAM LETTER MUIN  -->
+			<textCharAction />
+		</node>
+		<node label="ᚌ">
+			<!--Note:  OGHAM LETTER GORT  -->
+			<textCharAction />
+		</node>
+		<node label="ᚍ">
+			<!--Note:  OGHAM LETTER NGEADAL  -->
+			<textCharAction />
+		</node>
+		<node label="ᚎ">
+			<!--Note:  OGHAM LETTER STRAIF  -->
+			<textCharAction />
+		</node>
+		<node label="ᚏ">
+			<!--Note:  OGHAM LETTER RUIS  -->
+			<textCharAction />
+		</node>
+		<node label="ᚐ">
+			<!--Note:  OGHAM LETTER AILM  -->
+			<textCharAction />
+		</node>
+		<node label="ᚑ">
+			<!--Note:  OGHAM LETTER ONN  -->
+			<textCharAction />
+		</node>
+		<node label="ᚒ">
+			<!--Note:  OGHAM LETTER UR  -->
+			<textCharAction />
+		</node>
+		<node label="ᚓ">
+			<!--Note:  OGHAM LETTER EADHADH  -->
+			<textCharAction />
+		</node>
+		<node label="ᚔ">
+			<!--Note:  OGHAM LETTER IODHADH  -->
+			<textCharAction />
+		</node>
+		<node label="ᚕ">
+			<!--Note:  OGHAM LETTER EABHADH  -->
+			<textCharAction />
+		</node>
+		<node label="ᚖ">
+			<!--Note:  OGHAM LETTER OR  -->
+			<textCharAction />
+		</node>
+		<node label="ᚗ">
+			<!--Note:  OGHAM LETTER UILLEANN  -->
+			<textCharAction />
+		</node>
+		<node label="ᚘ">
+			<!--Note:  OGHAM LETTER IFIN  -->
+			<textCharAction />
+		</node>
+		<node label="ᚙ">
+			<!--Note:  OGHAM LETTER EAMHANCHOLL  -->
+			<textCharAction />
+		</node>
+		<node label="ᚚ">
+			<!--Note:  OGHAM LETTER PEITH  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Ogham marks" colorInfoName="lowercase">
+		<!--Old Group Color: 0-->
+		<node label="᚛">
+			<!--Note:  OGHAM FEATHER MARK  -->
+			<textCharAction />
+		</node>
+		<node label="᚜">
+			<!--Note:  OGHAM REVERSED FEATHER MARK -->
+			<textCharAction />
+		</node>
+		<node label=" ">
+			<!--Old Char Color: 9-->
+			<!--Note:  OGHAM SPACE MARK  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Latviešu / Latvian with punctuation and numerals" orientation="LR" trainingFilename="training_latvian_LV.txt" colorsName="Default">
+	<group name="lower case letters">
+		<node label="a">
+			<!--Note:  A -->
+			<textCharAction />
+		</node>
+		<node label="ā">
+			<!--Note:  A WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="b">
+			<!--Note:  B -->
+			<textCharAction />
+		</node>
+		<node label="c">
+			<!--Note:  C -->
+			<textCharAction />
+		</node>
+		<node label="č">
+			<!--Note:  C WITH CARON -->
+			<textCharAction />
+		</node>
+		<node label="d">
+			<!--Note:  D -->
+			<textCharAction />
+		</node>
+		<node label="e">
+			<!--Note:  E -->
+			<textCharAction />
+		</node>
+		<node label="ē">
+			<!--Note:  E WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="f">
+			<!--Note:  F -->
+			<textCharAction />
+		</node>
+		<node label="g">
+			<!--Note:  G -->
+			<textCharAction />
+		</node>
+		<node label="ģ">
+			<!--Note:  G WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="h">
+			<!--Note:  H -->
+			<textCharAction />
+		</node>
+		<node label="i">
+			<!--Note:  I -->
+			<textCharAction />
+		</node>
+		<node label="ī">
+			<!--Note:  I WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="y">
+			<!--Note:  Y -->
+			<textCharAction />
+		</node>
+		<node label="j">
+			<!--Note:  J -->
+			<textCharAction />
+		</node>
+		<node label="k">
+			<!--Note:  K -->
+			<textCharAction />
+		</node>
+		<node label="ķ">
+			<!--Note:  K WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="l">
+			<!--Note:  L -->
+			<textCharAction />
+		</node>
+		<node label="ļ">
+			<!--Note:  L WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="m">
+			<!--Note:  M -->
+			<textCharAction />
+		</node>
+		<node label="n">
+			<!--Note:  N -->
+			<textCharAction />
+		</node>
+		<node label="ņ">
+			<!--Note:  N WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="o">
+			<!--Note:  O -->
+			<textCharAction />
+		</node>
+		<node label="ō">
+			<!--Note:  O WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="p">
+			<!--Note:  P -->
+			<textCharAction />
+		</node>
+		<node label="q">
+			<!--Note:  Q -->
+			<textCharAction />
+		</node>
+		<node label="r">
+			<!--Note:  R -->
+			<textCharAction />
+		</node>
+		<node label="ŗ">
+			<!--Note:  R WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="s">
+			<!--Note:  S -->
+			<textCharAction />
+		</node>
+		<node label="š">
+			<!--Note:  S WITH CARON -->
+			<textCharAction />
+		</node>
+		<node label="t">
+			<!--Note:  T -->
+			<textCharAction />
+		</node>
+		<node label="u">
+			<!--Note:  U -->
+			<textCharAction />
+		</node>
+		<node label="ū">
+			<!--Note:  U WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="v">
+			<!--Note:  V -->
+			<textCharAction />
+		</node>
+		<node label="w">
+			<!--Note:  W -->
+			<textCharAction />
+		</node>
+		<node label="x">
+			<!--Note:  X -->
+			<textCharAction />
+		</node>
+		<node label="z">
+			<!--Note:  Z -->
+			<textCharAction />
+		</node>
+		<node label="ž">
+			<!--Note:  Z WITH CARON -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="upper case letters" colorInfoName="uppercase">
+		<!--Old Group Color: 111-->
+		<node label="A">
+			<!--Note:  A -->
+			<textCharAction />
+		</node>
+		<node label="Ā">
+			<!--Note:  A WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="B">
+			<!--Note:  B -->
+			<textCharAction />
+		</node>
+		<node label="C">
+			<!--Note:  C -->
+			<textCharAction />
+		</node>
+		<node label="Č">
+			<!--Note:  C WITH CARON -->
+			<textCharAction />
+		</node>
+		<node label="D">
+			<!--Note:  D -->
+			<textCharAction />
+		</node>
+		<node label="E">
+			<!--Note:  E -->
+			<textCharAction />
+		</node>
+		<node label="Ē">
+			<!--Note:  E WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="F">
+			<!--Note:  F -->
+			<textCharAction />
+		</node>
+		<node label="G">
+			<!--Note:  G -->
+			<textCharAction />
+		</node>
+		<node label="Ģ">
+			<!--Note:  G WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="H">
+			<!--Note:  H -->
+			<textCharAction />
+		</node>
+		<node label="I">
+			<!--Note:  I -->
+			<textCharAction />
+		</node>
+		<node label="Ī">
+			<!--Note:  I WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="Y">
+			<!--Note:  Y -->
+			<textCharAction />
+		</node>
+		<node label="J">
+			<!--Note:  J -->
+			<textCharAction />
+		</node>
+		<node label="K">
+			<!--Note:  K -->
+			<textCharAction />
+		</node>
+		<node label="Ķ">
+			<!--Note:  K WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="L">
+			<!--Note:  L -->
+			<textCharAction />
+		</node>
+		<node label="Ļ">
+			<!--Note:  L WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="M">
+			<!--Note:  M -->
+			<textCharAction />
+		</node>
+		<node label="N">
+			<!--Note:  N -->
+			<textCharAction />
+		</node>
+		<node label="Ņ">
+			<!--Note:  N WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="O">
+			<!--Note:  O -->
+			<textCharAction />
+		</node>
+		<node label="Ō">
+			<!--Note:  O WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="P">
+			<!--Note:  P -->
+			<textCharAction />
+		</node>
+		<node label="Q">
+			<!--Note:  Q -->
+			<textCharAction />
+		</node>
+		<node label="R">
+			<!--Note:  R -->
+			<textCharAction />
+		</node>
+		<node label="Ŗ">
+			<!--Note:  R WITH CEDILLA -->
+			<textCharAction />
+		</node>
+		<node label="S">
+			<!--Note:  S -->
+			<textCharAction />
+		</node>
+		<node label="Š">
+			<!--Note:  S WITH CARON -->
+			<textCharAction />
+		</node>
+		<node label="T">
+			<!--Note:  T -->
+			<textCharAction />
+		</node>
+		<node label="U">
+			<!--Note:  U -->
+			<textCharAction />
+		</node>
+		<node label="Ū">
+			<!--Note:  U WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="V">
+			<!--Note:  V -->
+			<textCharAction />
+		</node>
+		<node label="W">
+			<!--Note:  W -->
+			<textCharAction />
+		</node>
+		<node label="X">
+			<!--Note:  X -->
+			<textCharAction />
+		</node>
+		<node label="Z">
+			<!--Note:  Z -->
+			<textCharAction />
+		</node>
+		<node label="Ž">
+			<!--Note:  Z WITH CARON -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

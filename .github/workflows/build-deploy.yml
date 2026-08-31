@@ -51,8 +51,15 @@ jobs:
           cp wasm-build/demo.html _site/index.html
           cp wasm-build/dasher-wasm-wrapper.js _site/
           cp -r wasm-build/wasm _site/wasm
-          # The pure-JS demo (90 languages) lives at /js-demo/
-          cp -r browser _site/js-demo
+          # Enhanced playground (themes, node shapes, full alphabet
+          # catalogue with lazy loading) at /js-demo/ — self-contained
+          # copy of the engine assets so relative paths resolve.
+          mkdir -p _site/js-demo
+          cp wasm-build/enhanced.html _site/js-demo/index.html
+          cp wasm-build/dasher-wasm-wrapper.js _site/js-demo/
+          cp -r wasm-build/wasm _site/js-demo/wasm
+          # Static alphabet catalogue, fetched on demand by the playground
+          cp -r wasm-build/alphabet-catalogue _site/alphabet-catalogue
           touch _site/.nojekyll
 
       - name: Upload artifact

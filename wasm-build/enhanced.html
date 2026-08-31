@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dasher — Enhanced Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --bg: #1a1a2e; --surface: #16213e; --surface2: #0f3460;
+            --border: #2a2a4e; --text: #eee; --text-dim: #8a8a9a;
+            --text-muted: #4a4a5a; --canvas-bg: #000;
+            --accent: #e94560; --accent-hover: #c81e45;
+            --stats: rgba(255,255,255,0.4);
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f5f5f5; --surface: #fff; --surface2: #e8e8f0;
+                --border: #ddd; --text: #333; --text-dim: #666;
+                --text-muted: #aaa; --canvas-bg: #f0f0f0;
+                --accent: #007bff; --accent-hover: #0056b3;
+                --stats: rgba(0,0,0,0.3);
+            }
+        }
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text);
+            overflow: hidden;
+        }
+        #app {
+            display: flex; flex-direction: column; height: 100vh; height: 100dvh;
+        }
+        .main-area {
+            flex: 1; display: flex; gap: 8px; padding: 8px;
+            min-height: 0;
+        }
+        .canvas-wrap {
+            flex: 1; display: flex; flex-direction: column;
+            background: var(--canvas-bg); border-radius: 12px; overflow: hidden;
+            position: relative;
+        }
+        canvas {
+            flex: 1; display: block; cursor: crosshair; touch-action: none;
+            width: 100%;
+        }
+        .canvas-stats {
+            position: absolute; bottom: 8px; right: 12px;
+            font-size: 11px; color: var(--stats);
+            pointer-events: none;
+        }
+        .canvas-note {
+            position: absolute; top: 8px; left: 12px;
+            font-size: 11px; color: var(--stats);
+            pointer-events: none;
+        }
+        .output-wrap {
+            width: 280px; min-width: 200px; display: flex; flex-direction: column;
+            background: var(--surface); border-radius: 12px; padding: 12px;
+        }
+        .output-wrap h2 {
+            margin: 0 0 8px 0; font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+        }
+        #output-text {
+            flex: 1; width: 100%; border: none; background: transparent;
+            color: var(--text); font-size: 18px; font-family: inherit;
+            resize: none; outline: none; line-height: 1.5;
+        }
+        #output-text::placeholder { color: var(--text-muted); }
+        .controls {
+            display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+            padding: 10px 12px; background: var(--surface);
+        }
+        .control-group label {
+            display: block; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+        .control-group select {
+            padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--surface2); color: var(--text); font-size: 14px; cursor: pointer;
+        }
+        .control-group button {
+            padding: 8px 14px; border: none; border-radius: 6px;
+            background: var(--accent); color: white; font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .control-group button:hover { background: var(--accent-hover); }
+        .control-group button:disabled { background: var(--border); opacity: 0.5; cursor: not-allowed; }
+        .toggle-group {
+            display: flex; align-items: center; gap: 6px; padding-bottom: 6px;
+        }
+        .toggle-group label {
+            margin: 0; font-size: 14px; color: var(--text); cursor: pointer;
+        }
+        .toggle-group input[type="checkbox"] {
+            width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer;
+        }
+        .speed-group { min-width: 160px; flex: 1; max-width: 240px; }
+        .speed-group input[type="range"],
+        .outline-group input[type="range"] {
+            width: 100%; cursor: pointer; accent-color: var(--accent);
+        }
+        .outline-group { min-width: 140px; max-width: 200px; }
+        .btn-group { display: flex; gap: 8px; }
+        .alphabet-group { flex: 2; min-width: 220px; }
+        .alphabet-group .alpha-row { display: flex; gap: 6px; }
+        .alphabet-group input[type="text"] {
+            flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--surface2); color: var(--text); font-size: 14px;
+        }
+        .alphabet-group .alpha-note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+        @media (max-width: 900px) {
+            .main-area { flex-direction: column; padding: 6px; gap: 6px; }
+            .output-wrap { width: 100%; min-height: 80px; max-height: 140px; }
+            .controls { padding: 8px; gap: 10px; }
+            .speed-group { min-width: 120px; }
+            .control-group select { font-size: 13px; }
+            .canvas-stats, .canvas-note { font-size: 10px; }
+        }
+        @media (max-width: 480px) {
+            .controls { overflow-x: auto; flex-wrap: nowrap; }
+            .controls::-webkit-scrollbar { display: none; }
+            .toggle-group label { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="main-area">
+        <div class="canvas-wrap">
+            <canvas id="dasher-canvas" width="800" height="600"></canvas>
+            <div class="canvas-note" id="canvas-note"></div>
+            <div class="canvas-stats">
+                <span id="fps">FPS: 0</span> | <span id="frame-time">Frame: 0ms</span>
+            </div>
+        </div>
+        <div class="output-wrap">
+            <h2>Output</h2>
+            <textarea id="output-text" readonly placeholder="Text appears here..."></textarea>
+        </div>
+    </div>
+    <div class="controls">
+        <div class="control-group alphabet-group">
+            <label for="alphabet-input">Alphabet (type to search 470+)</label>
+            <div class="alpha-row">
+                <input type="text" id="alphabet-input" list="alphabet-list"
+                    placeholder="e.g. English, Cymraeg, العربية…" disabled>
+                <input type="checkbox" id="trained-only" disabled title="Only alphabets with bundled training text">
+                <label for="trained-only" style="margin:0; font-size:12px; cursor:pointer; align-self:center;">trained</label>
+            </div>
+            <div class="alpha-note" id="alpha-note"></div>
+            <datalist id="alphabet-list"></datalist>
+        </div>
+        <div class="control-group">
+            <label for="theme-select">Theme</label>
+            <select id="theme-select" disabled>
+                <option>Web Demo</option>
+                <option>Rainbow</option>
+                <option>European/Asian (Original)</option>
+                <option>European/Asian for Colourblind</option>
+                <option>Yellow on Blue</option>
+                <option>Yellow on Black</option>
+                <option>Blue on Dark Green</option>
+                <option>Blue on Light Green</option>
+                <option>Vowels</option>
+                <option>Vowels2</option>
+                <option>Thai</option>
+                <option>TurboLUT</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="shape-select">Node shape</label>
+            <select id="shape-select" disabled>
+                <option value="1">Overlapping boxes</option>
+                <option value="0">Disjoint boxes</option>
+                <option value="3">Truncated triangles</option>
+                <option value="2">Triangles</option>
+                <option value="4">Quadric</option>
+                <option value="5">Circle</option>
+                <option value="6">Cube</option>
+            </select>
+        </div>
+        <div class="control-group outline-group">
+            <label for="outline-slider">Outline: <span id="outline-value">0</span></label>
+            <input type="range" id="outline-slider" min="-10" max="20" value="0" disabled>
+        </div>
+        <div class="control-group speed-group">
+            <label for="speed-slider">Speed: <span id="speed-value">100</span>%</label>
+            <input type="range" id="speed-slider" min="20" max="400" value="100" disabled>
+        </div>
+        <div class="toggle-group">
+            <input type="checkbox" id="autospeed-toggle" disabled>
+            <label for="autospeed-toggle">Auto speed</label>
+        </div>
+        <div class="toggle-group">
+            <input type="checkbox" id="learning-toggle" disabled>
+            <label for="learning-toggle">Learning</label>
+        </div>
+        <div class="btn-group">
+            <button id="reset-btn" disabled>Clear</button>
+        </div>
+    </div>
+</div>
+
+    <script src="dasher-wasm-wrapper.js"></script>
+    <script type="module">
+        const canvas = document.getElementById('dasher-canvas');
+        const ctx = canvas.getContext('2d');
+        const outputText = document.getElementById('output-text');
+        const alphabetInput = document.getElementById('alphabet-input');
+        const alphabetList = document.getElementById('alphabet-list');
+        const trainedOnly = document.getElementById('trained-only');
+        const alphaNote = document.getElementById('alpha-note');
+        const themeSelect = document.getElementById('theme-select');
+        const shapeSelect = document.getElementById('shape-select');
+        const outlineSlider = document.getElementById('outline-slider');
+        const outlineValue = document.getElementById('outline-value');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+        const autospeedToggle = document.getElementById('autospeed-toggle');
+        const learningToggle = document.getElementById('learning-toggle');
+        const resetBtn = document.getElementById('reset-btn');
+        const fpsDisplay = document.getElementById('fps');
+        const frameTimeDisplay = document.getElementById('frame-time');
+        const canvasNote = document.getElementById('canvas-note');
+
+        let dasher = null;
+        let frameCount = 0;
+        let lastFpsTime = performance.now();
+        let catalogue = [];          // [{id, file, lang, script, trained, chars}]
+        let bundledAlphabets = [];   // ids shipped in the .data bundle
+        const loadedFiles = new Set();
+
+        function updateOutput() {
+            if (dasher) outputText.value = dasher.getOutputText();
+        }
+
+        function enableControls() {
+            alphabetInput.disabled = false;
+            trainedOnly.disabled = false;
+            themeSelect.disabled = false;
+            shapeSelect.disabled = false;
+            outlineSlider.disabled = false;
+            speedSlider.disabled = false;
+            autospeedToggle.disabled = false;
+            learningToggle.disabled = false;
+            resetBtn.disabled = false;
+        }
+
+        // --- Alphabet picker -------------------------------------------------
+
+        function rebuildDatalist() {
+            const filter = trainedOnly.checked;
+            const options = [];
+            for (const id of bundledAlphabets) {
+                options.push(`<option value="${escapeAttr(id)}" label="bundled + trained">`);
+            }
+            for (const a of catalogue) {
+                if (filter && !a.trained) continue;
+                const label = a.trained ? 'trained' : `${a.script || ''}${a.chars ? ' · ' + a.chars + ' chars' : ''}`;
+                options.push(`<option value="${escapeAttr(a.id)}" label="${escapeAttr(label)}">`);
+            }
+            alphabetList.innerHTML = options.join('');
+        }
+
+        const escapeAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+        async function switchAlphabet(id) {
+            if (!dasher || !id) return;
+            try {
+                if (!bundledAlphabets.includes(id) && !loadedFiles.has(id)) {
+                    alphaNote.textContent = `Fetching ${id}…`;
+                    const entry = catalogue.find((a) => a.id === id);
+                    if (!entry) {
+                        alphaNote.textContent = `“${id}” not found — pick from the list`;
+                        return;
+                    }
+                    const xml = await fetchCatalogueFile(entry.file);
+                    dasher.module.FS.writeFile('/data/alphabets/' + entry.file, xml);
+                    loadedFiles.add(id);
+                    // Re-realize so the engine rescans the alphabets directory
+                    dasher.setScreenSize(canvas.width, canvas.height);
+                }
+                dasher.setAlphabet(id);
+                const ok = dasher.getAlphabet();
+                alphaNote.textContent = (ok === id)
+                    ? `Using: ${id}`
+                    : `Could not switch to ${id}`;
+                canvasNote.textContent = ok === id ? '' : canvasNote.textContent;
+            } catch (e) {
+                alphaNote.textContent = `Error: ${e.message || e}`;
+            }
+        }
+
+        // Catalogue files are staged next to the demo (Pages: /alphabet-catalogue/)
+        let catalogueRoot = null;
+        async function fetchCatalogueFile(name) {
+            if (!catalogueRoot) {
+                for (const base of ['alphabet-catalogue/', '../alphabet-catalogue/']) {
+                    try {
+                        const r = await fetch(base + 'index.json');
+                        if (r.ok) { catalogueRoot = base; break; }
+                    } catch (e) { /* try next */ }
+                }
+            }
+            const resp = await fetch(catalogueRoot + name);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${name}`);
+            return resp.text();
+        }
+
+        async function loadCatalogueIndex() {
+            for (const base of ['alphabet-catalogue/', '../alphabet-catalogue/']) {
+                try {
+                    const r = await fetch(base + 'index.json');
+                    if (r.ok) {
+                        const data = await r.json();
+                        catalogue = data.alphabets || [];
+                        catalogueRoot = base;
+                        return;
+                    }
+                } catch (e) { /* try next */ }
+            }
+            catalogue = [];
+        }
+
+        alphabetInput.addEventListener('change', () => switchAlphabet(alphabetInput.value.trim()));
+        trainedOnly.addEventListener('change', rebuildDatalist);
+
+        // --- Engine -----------------------------------------------------------
+
+        async function initializeDasher() {
+            try {
+                canvasNote.textContent = 'Loading WebAssembly module…';
+
+                const dasherModule = await import('./wasm/dasher.js');
+                dasher = new DasherWasm();
+                window.dasher = dasher; // debug/console access
+                await dasher.init({
+                    canvas: canvas,
+                    moduleFactory: dasherModule.default,
+                    onOutput: (eventType) => {
+                        if (eventType === 0) updateOutput();
+                    },
+                    onMessage: (messageType, text) => {
+                        console.log('Dasher message:', text);
+                    }
+                });
+
+                canvasNote.textContent = 'Creating context…';
+                dasher.createContext();
+
+                // Dev fallback: shipped builds embed data-bundle in the
+                // .data file, but a local server may run against a stale
+                // build — overlay the palette before Realize loads colours.
+                try {
+                    const resp = await fetch('data-bundle/colours/colour.webdemo.xml');
+                    if (resp.ok && dasher.module && dasher.module.FS) {
+                        dasher.module.FS.writeFile(
+                            '/data/colours/colour.webdemo.xml', await resp.text());
+                    }
+                } catch (e) { /* not running from a source checkout */ }
+
+                // Default to the Web Demo palette: alternating greens/blues
+                // so letter boxes read as complete boxes.
+                const colourKey = dasher.findParameterKey('SP_COLOUR_ID');
+                if (colourKey >= 0) dasher.setStringParameter(colourKey, 'Web Demo');
+
+                dasher.setScreenSize(canvas.width, canvas.height);
+                dasher.setSpeed(parseInt(speedSlider.value));
+
+                const autospeedKey = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
+                const learningKey = dasher.findParameterKey('BP_LM_ADAPTIVE');
+                if (autospeedKey >= 0) autospeedToggle.checked = dasher.getBoolParameter(autospeedKey);
+                if (learningKey >= 0) learningToggle.checked = dasher.getBoolParameter(learningKey);
+
+                bundledAlphabets = dasher.getAlphabets();
+                await loadCatalogueIndex();
+                rebuildDatalist();
+                alphabetInput.value = dasher.getAlphabet();
+                alphaNote.textContent = `${bundledAlphabets.length} bundled + ${catalogue.length} catalogue alphabets`;
+                canvasNote.textContent = '';
+
+                enableControls();
+                startRenderLoop();
+            } catch (error) {
+                canvasNote.textContent = 'Failed to load: ' + (error.message || error);
+                console.error(error);
+            }
+        }
+
+        // --- Controls ---------------------------------------------------------
+
+        themeSelect.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('SP_COLOUR_ID');
+            if (key >= 0) dasher.setStringParameter(key, themeSelect.value);
+        });
+
+        shapeSelect.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('LP_SHAPE_TYPE');
+            if (key >= 0) dasher.setLongParameter(key, parseInt(shapeSelect.value));
+        });
+
+        outlineSlider.addEventListener('input', () => {
+            outlineValue.textContent = outlineSlider.value;
+            if (!dasher) return;
+            const key = dasher.findParameterKey('LP_OUTLINE_WIDTH');
+            if (key >= 0) dasher.setLongParameter(key, parseInt(outlineSlider.value));
+        });
+
+        speedSlider.addEventListener('input', () => {
+            speedValue.textContent = speedSlider.value;
+            if (dasher) dasher.setSpeed(parseInt(speedSlider.value));
+        });
+
+        autospeedToggle.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
+            if (key >= 0) dasher.setBoolParameter(key, autospeedToggle.checked);
+        });
+
+        learningToggle.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('BP_LM_ADAPTIVE');
+            if (key >= 0) dasher.setBoolParameter(key, learningToggle.checked);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (dasher) { dasher.resetOutputText(); updateOutput(); }
+        });
+
+        // --- Input ------------------------------------------------------------
+
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+            }
+        });
+        canvas.addEventListener('mousedown', () => { if (dasher) dasher.mouseDown(); });
+        canvas.addEventListener('mouseup', () => { if (dasher) dasher.mouseUp(); });
+        canvas.addEventListener('mouseleave', () => { if (dasher) dasher.mouseUp(); });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+                dasher.mouseDown();
+            }
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (dasher) {
+                const { x, y } = getCanvasCoords(e);
+                dasher.mouseMove(x, y);
+            }
+        }, { passive: false });
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (dasher) dasher.mouseUp();
+        }, { passive: false });
+
+        // --- Render loop --------------------------------------------------------
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.round(rect.width * dpr);
+            const h = Math.round(rect.height * dpr);
+            if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+                canvas.width = w;
+                canvas.height = h;
+                if (dasher) dasher.setScreenSize(w, h);
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
+
+        function renderLoop(time) {
+            if (dasher) {
+                const startTime = performance.now();
+                dasher.frame(time);
+                frameCount++;
+                if (time - lastFpsTime >= 1000) {
+                    const frameTime = performance.now() - startTime;
+                    fpsDisplay.textContent = `FPS: ${frameCount}`;
+                    frameTimeDisplay.textContent = `Frame: ${frameTime.toFixed(1)}ms`;
+                    frameCount = 0;
+                    lastFpsTime = time;
+                }
+            }
+            requestAnimationFrame(renderLoop);
+        }
+
+        function startRenderLoop() {
+            resizeCanvas();
+            requestAnimationFrame(renderLoop);
+        }
+
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        initializeDasher();
+    </script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Malayalam with punctuation and numerals" orientation="LR" trainingFilename="training_Malayalam_IN.txt" colorsName="Default">
+	<group name="MALAYALAM letters">
+		<node label="അ">
+			<!--Note: MALAYALAM LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="ആ">
+			<!--Note: MALAYALAM LETTER AA -->
+			<textCharAction />
+		</node>
+		<node label="ഇ">
+			<!--Note: MALAYALAM LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="ഈ">
+			<!--Note: MALAYALAM LETTER II -->
+			<textCharAction />
+		</node>
+		<node label="ഉ">
+			<!--Note: MALAYALAM LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="ഊ">
+			<!--Note: MALAYALAM LETTER UU -->
+			<textCharAction />
+		</node>
+		<node label="ഋ">
+			<!--Note: MALAYALAM LETTER VOCALIC R -->
+			<textCharAction />
+		</node>
+		<node label="ൠ">
+			<!--Note: MALAYALAM LETTER VOCALIC RR -->
+			<textCharAction />
+		</node>
+		<node label="ഌ">
+			<!--Note: MALAYALAM LETTER VOCALIC L -->
+			<textCharAction />
+		</node>
+		<node label="ൡ">
+			<!--Note: MALAYALAM LETTER VOCALIC LL -->
+			<textCharAction />
+		</node>
+		<node label="എ">
+			<!--Note: MALAYALAM LETTER E -->
+			<textCharAction />
+		</node>
+		<node label="ഏ">
+			<!--Note: MALAYALAM LETTER EE -->
+			<textCharAction />
+		</node>
+		<node label="ഐ">
+			<!--Note: MALAYALAM LETTER AI -->
+			<textCharAction />
+		</node>
+		<node label="ഒ">
+			<!--Note: MALAYALAM LETTER O -->
+			<textCharAction />
+		</node>
+		<node label="ഓ">
+			<!--Note: MALAYALAM LETTER OO -->
+			<textCharAction />
+		</node>
+		<node label="ഔ">
+			<!--Note: MALAYALAM LETTER AU -->
+			<textCharAction />
+		</node>
+		<node label="ക">
+			<!--Note: MALAYALAM LETTER KA -->
+			<textCharAction />
+		</node>
+		<node label="ഖ">
+			<!--Note: MALAYALAM LETTER KHA -->
+			<textCharAction />
+		</node>
+		<node label="ഗ">
+			<!--Note: MALAYALAM LETTER GA -->
+			<textCharAction />
+		</node>
+		<node label="ഘ">
+			<!--Note: MALAYALAM LETTER GHA -->
+			<textCharAction />
+		</node>
+		<node label="ങ">
+			<!--Note: MALAYALAM LETTER NGA -->
+			<textCharAction />
+		</node>
+		<node label="ച">
+			<!--Note: MALAYALAM LETTER CA -->
+			<textCharAction />
+		</node>
+		<node label="ഛ">
+			<!--Note: MALAYALAM LETTER CHA -->
+			<textCharAction />
+		</node>
+		<node label="ജ">
+			<!--Note: MALAYALAM LETTER JA -->
+			<textCharAction />
+		</node>
+		<node label="ഝ">
+			<!--Note: MALAYALAM LETTER JHA -->
+			<textCharAction />
+		</node>
+		<node label="ഞ">
+			<!--Note: MALAYALAM LETTER NYA -->
+			<textCharAction />
+		</node>
+		<node label="ട">
+			<!--Note: MALAYALAM LETTER TTA -->
+			<textCharAction />
+		</node>
+		<node label="ഠ">
+			<!--Note: MALAYALAM LETTER TTHA -->
+			<textCharAction />
+		</node>
+		<node label="ഡ">
+			<!--Note: MALAYALAM LETTER DDA -->
+			<textCharAction />
+		</node>
+		<node label="ഢ">
+			<!--Note: MALAYALAM LETTER DDHA -->
+			<textCharAction />
+		</node>
+		<node label="ണ">
+			<!--Note: MALAYALAM LETTER NNA -->
+			<textCharAction />
+		</node>
+		<node label="ത">
+			<!--Note: MALAYALAM LETTER TA -->
+			<textCharAction />
+		</node>
+		<node label="ഥ">
+			<!--Note: MALAYALAM LETTER THA -->
+			<textCharAction />
+		</node>
+		<node label="ദ">
+			<!--Note: MALAYALAM LETTER DA -->
+			<textCharAction />
+		</node>
+		<node label="ധ">
+			<!--Note: MALAYALAM LETTER DHA -->
+			<textCharAction />
+		</node>
+		<node label="ന">
+			<!--Note: MALAYALAM LETTER NA -->
+			<textCharAction />
+		</node>
+		<node label="പ">
+			<!--Note: MALAYALAM LETTER PA -->
+			<textCharAction />
+		</node>
+		<node label="ഫ">
+			<!--Note: MALAYALAM LETTER PHA -->
+			<textCharAction />
+		</node>
+		<node label="ബ">
+			<!--Note: MALAYALAM LETTER BA -->
+			<textCharAction />
+		</node>
+		<node label="ഭ">
+			<!--Note: MALAYALAM LETTER BHA -->
+			<textCharAction />
+		</node>
+		<node label="മ">
+			<!--Note: MALAYALAM LETTER MA -->
+			<textCharAction />
+		</node>
+		<node label="യ">
+			<!--Note: MALAYALAM LETTER YA -->
+			<textCharAction />
+		</node>
+		<node label="ര">
+			<!--Note: MALAYALAM LETTER RA -->
+			<textCharAction />
+		</node>
+		<node label="റ">
+			<!--Note: MALAYALAM LETTER RRA -->
+			<textCharAction />
+		</node>
+		<node label="ല">
+			<!--Note: MALAYALAM LETTER LA -->
+			<textCharAction />
+		</node>
+		<node label="ള">
+			<!--Note: MALAYALAM LETTER LLA -->
+			<textCharAction />
+		</node>
+		<node label="ഴ">
+			<!--Note: MALAYALAM LETTER LLLA -->
+			<textCharAction />
+		</node>
+		<node label="വ">
+			<!--Note: MALAYALAM LETTER VA -->
+			<textCharAction />
+		</node>
+		<node label="ശ">
+			<!--Note: MALAYALAM LETTER SHA -->
+			<textCharAction />
+		</node>
+		<node label="ഷ">
+			<!--Note: MALAYALAM LETTER SSA -->
+			<textCharAction />
+		</node>
+		<node label="സ">
+			<!--Note: MALAYALAM LETTER SA -->
+			<textCharAction />
+		</node>
+		<node label="ഹ">
+			<!--Note: MALAYALAM LETTER HA -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Vowels and other signs" colorInfoName="lowercase">
+		<!--Old Group Color: 111-->
+		<node label="◌ാ">
+			<!--Note: MALAYALAM VOWEL SIGN AA -->
+			<textCharAction unicode="3390" />
+		</node>
+		<node label="◌ി">
+			<!--Note: MALAYALAM VOWEL SIGN I -->
+			<textCharAction unicode="3391" />
+		</node>
+		<node label="◌ീ">
+			<!--Note: MALAYALAM VOWEL SIGN II -->
+			<textCharAction unicode="3392" />
+		</node>
+		<node label="◌ു">
+			<!--Note: MALAYALAM VOWEL SIGN U -->
+			<textCharAction unicode="3393" />
+		</node>
+		<node label="◌ൂ">
+			<!--Note: MALAYALAM VOWEL SIGN UU -->
+			<textCharAction unicode="3394" />
+		</node>
+		<node label="◌ൃ">
+			<!--Note: MALAYALAM VOWEL SIGN VOCALIC R -->
+			<textCharAction unicode="3395" />
+		</node>
+		<node label="◌െ">
+			<!--Note: MALAYALAM VOWEL SIGN E -->
+			<textCharAction unicode="3398" />
+		</node>
+		<node label="◌േ">
+			<!--Note: MALAYALAM VOWEL SIGN EE -->
+			<textCharAction unicode="3399" />
+		</node>
+		<node label="◌ൈ">
+			<!--Note: MALAYALAM VOWEL SIGN AI -->
+			<textCharAction unicode="3400" />
+		</node>
+		<node label="◌ൊ">
+			<!--Note: MALAYALAM VOWEL SIGN O -->
+			<textCharAction unicode="3402" />
+		</node>
+		<node label="◌ോ">
+			<!--Note: MALAYALAM VOWEL SIGN OO -->
+			<textCharAction unicode="3403" />
+		</node>
+		<node label="◌ൌ">
+			<!--Note: MALAYALAM VOWEL SIGN AU -->
+			<textCharAction unicode="3404" />
+		</node>
+		<node label="◌്">
+			<!--Note: MALAYALAM SIGN VIRAMA -->
+			<textCharAction unicode="3405" />
+		</node>
+		<node label="◌ൗ">
+			<!--Note: MALAYALAM AU LENGTH MARK -->
+			<textCharAction unicode="3415" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

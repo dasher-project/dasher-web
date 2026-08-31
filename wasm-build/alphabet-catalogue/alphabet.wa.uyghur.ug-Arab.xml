@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Uyghur (WorldAlphabets)" orientation="RL" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="ئ">
+      <textCharAction />
+    </node>
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ە">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="پ">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="چ">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="ژ">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ك">
+      <textCharAction />
+    </node>
+    <node label="گ">
+      <textCharAction />
+    </node>
+    <node label="ڭ">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ھ">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ۇ">
+      <textCharAction />
+    </node>
+    <node label="ۆ">
+      <textCharAction />
+    </node>
+    <node label="ۈ">
+      <textCharAction />
+    </node>
+    <node label="ۋ">
+      <textCharAction />
+    </node>
+    <node label="ې">
+      <textCharAction />
+    </node>
+    <node label="ى">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="ئ">
+      <textCharAction />
+    </node>
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ە">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="پ">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="چ">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="ژ">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ك">
+      <textCharAction />
+    </node>
+    <node label="گ">
+      <textCharAction />
+    </node>
+    <node label="ڭ">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ھ">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ۇ">
+      <textCharAction />
+    </node>
+    <node label="ۆ">
+      <textCharAction />
+    </node>
+    <node label="ۈ">
+      <textCharAction />
+    </node>
+    <node label="ۋ">
+      <textCharAction />
+    </node>
+    <node label="ې">
+      <textCharAction />
+    </node>
+    <node label="ى">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

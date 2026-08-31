@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Telugu (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_te_Telu.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="అ">
+      <textCharAction />
+    </node>
+    <node label="ఆ">
+      <textCharAction />
+    </node>
+    <node label="ఇ">
+      <textCharAction />
+    </node>
+    <node label="ఈ">
+      <textCharAction />
+    </node>
+    <node label="ఉ">
+      <textCharAction />
+    </node>
+    <node label="ఊ">
+      <textCharAction />
+    </node>
+    <node label="ఋ">
+      <textCharAction />
+    </node>
+    <node label="ౠ">
+      <textCharAction />
+    </node>
+    <node label="ఎ">
+      <textCharAction />
+    </node>
+    <node label="ఏ">
+      <textCharAction />
+    </node>
+    <node label="ఐ">
+      <textCharAction />
+    </node>
+    <node label="ఒ">
+      <textCharAction />
+    </node>
+    <node label="ఓ">
+      <textCharAction />
+    </node>
+    <node label="ఔ">
+      <textCharAction />
+    </node>
+    <node label="క">
+      <textCharAction />
+    </node>
+    <node label="ఖ">
+      <textCharAction />
+    </node>
+    <node label="గ">
+      <textCharAction />
+    </node>
+    <node label="ఘ">
+      <textCharAction />
+    </node>
+    <node label="ఙ">
+      <textCharAction />
+    </node>
+    <node label="చ">
+      <textCharAction />
+    </node>
+    <node label="ఛ">
+      <textCharAction />
+    </node>
+    <node label="జ">
+      <textCharAction />
+    </node>
+    <node label="ఝ">
+      <textCharAction />
+    </node>
+    <node label="ఞ">
+      <textCharAction />
+    </node>
+    <node label="ట">
+      <textCharAction />
+    </node>
+    <node label="ఠ">
+      <textCharAction />
+    </node>
+    <node label="డ">
+      <textCharAction />
+    </node>
+    <node label="ఢ">
+      <textCharAction />
+    </node>
+    <node label="ణ">
+      <textCharAction />
+    </node>
+    <node label="త">
+      <textCharAction />
+    </node>
+    <node label="థ">
+      <textCharAction />
+    </node>
+    <node label="ద">
+      <textCharAction />
+    </node>
+    <node label="ధ">
+      <textCharAction />
+    </node>
+    <node label="న">
+      <textCharAction />
+    </node>
+    <node label="ప">
+      <textCharAction />
+    </node>
+    <node label="ఫ">
+      <textCharAction />
+    </node>
+    <node label="బ">
+      <textCharAction />
+    </node>
+    <node label="భ">
+      <textCharAction />
+    </node>
+    <node label="మ">
+      <textCharAction />
+    </node>
+    <node label="య">
+      <textCharAction />
+    </node>
+    <node label="ర">
+      <textCharAction />
+    </node>
+    <node label="ఱ">
+      <textCharAction />
+    </node>
+    <node label="ల">
+      <textCharAction />
+    </node>
+    <node label="వ">
+      <textCharAction />
+    </node>
+    <node label="శ">
+      <textCharAction />
+    </node>
+    <node label="ష">
+      <textCharAction />
+    </node>
+    <node label="స">
+      <textCharAction />
+    </node>
+    <node label="హ">
+      <textCharAction />
+    </node>
+    <node label="ళ">
+      <textCharAction />
+    </node>
+    <node label="ఌ">
+      <textCharAction />
+    </node>
+    <node label="ౡ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="అ">
+      <textCharAction />
+    </node>
+    <node label="ఆ">
+      <textCharAction />
+    </node>
+    <node label="ఇ">
+      <textCharAction />
+    </node>
+    <node label="ఈ">
+      <textCharAction />
+    </node>
+    <node label="ఉ">
+      <textCharAction />
+    </node>
+    <node label="ఊ">
+      <textCharAction />
+    </node>
+    <node label="ఋ">
+      <textCharAction />
+    </node>
+    <node label="ౠ">
+      <textCharAction />
+    </node>
+    <node label="ఎ">
+      <textCharAction />
+    </node>
+    <node label="ఏ">
+      <textCharAction />
+    </node>
+    <node label="ఐ">
+      <textCharAction />
+    </node>
+    <node label="ఒ">
+      <textCharAction />
+    </node>
+    <node label="ఓ">
+      <textCharAction />
+    </node>
+    <node label="ఔ">
+      <textCharAction />
+    </node>
+    <node label="క">
+      <textCharAction />
+    </node>
+    <node label="ఖ">
+      <textCharAction />
+    </node>
+    <node label="గ">
+      <textCharAction />
+    </node>
+    <node label="ఘ">
+      <textCharAction />
+    </node>
+    <node label="ఙ">
+      <textCharAction />
+    </node>
+    <node label="చ">
+      <textCharAction />
+    </node>
+    <node label="ఛ">
+      <textCharAction />
+    </node>
+    <node label="జ">
+      <textCharAction />
+    </node>
+    <node label="ఝ">
+      <textCharAction />
+    </node>
+    <node label="ఞ">
+      <textCharAction />
+    </node>
+    <node label="ట">
+      <textCharAction />
+    </node>
+    <node label="ఠ">
+      <textCharAction />
+    </node>
+    <node label="డ">
+      <textCharAction />
+    </node>
+    <node label="ఢ">
+      <textCharAction />
+    </node>
+    <node label="ణ">
+      <textCharAction />
+    </node>
+    <node label="త">
+      <textCharAction />
+    </node>
+    <node label="థ">
+      <textCharAction />
+    </node>
+    <node label="ద">
+      <textCharAction />
+    </node>
+    <node label="ధ">
+      <textCharAction />
+    </node>
+    <node label="న">
+      <textCharAction />
+    </node>
+    <node label="ప">
+      <textCharAction />
+    </node>
+    <node label="ఫ">
+      <textCharAction />
+    </node>
+    <node label="బ">
+      <textCharAction />
+    </node>
+    <node label="భ">
+      <textCharAction />
+    </node>
+    <node label="మ">
+      <textCharAction />
+    </node>
+    <node label="య">
+      <textCharAction />
+    </node>
+    <node label="ర">
+      <textCharAction />
+    </node>
+    <node label="ఱ">
+      <textCharAction />
+    </node>
+    <node label="ల">
+      <textCharAction />
+    </node>
+    <node label="వ">
+      <textCharAction />
+    </node>
+    <node label="శ">
+      <textCharAction />
+    </node>
+    <node label="ష">
+      <textCharAction />
+    </node>
+    <node label="స">
+      <textCharAction />
+    </node>
+    <node label="హ">
+      <textCharAction />
+    </node>
+    <node label="ళ">
+      <textCharAction />
+    </node>
+    <node label="ఌ">
+      <textCharAction />
+    </node>
+    <node label="ౡ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

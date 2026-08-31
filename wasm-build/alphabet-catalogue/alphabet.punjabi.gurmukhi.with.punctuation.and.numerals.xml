@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Punjabi (Gurmukhi) with punctuation and numerals" orientation="LR" trainingFilename="training_wa_pa_Guru.txt" colorsName="Default">
+	<group name="GURMUKHI letters">
+		<node label="ੴ">
+			<!--Note: GURMUKHI EK ONKAR -->
+			<textCharAction />
+		</node>
+		<node label="ੳ">
+			<!--Note: GURMUKHI URA -->
+			<textCharAction />
+		</node>
+		<node label="ਉ">
+			<!--Note: GURMUKHI LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="ਊ">
+			<!--Note: GURMUKHI LETTER UU -->
+			<textCharAction />
+		</node>
+		<node label="ਓ">
+			<!--Note: GURMUKHI LETTER OO -->
+			<textCharAction />
+		</node>
+		<node label="ਅ">
+			<!--Note: GURMUKHI LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="ਆ">
+			<!--Note: GURMUKHI LETTER AA -->
+			<textCharAction />
+		</node>
+		<node label="ਐ">
+			<!--Note: GURMUKHI LETTER AI -->
+			<textCharAction />
+		</node>
+		<node label="ਔ">
+			<!--Note: GURMUKHI LETTER AU -->
+			<textCharAction />
+		</node>
+		<node label="ੲ">
+			<!--Note: GURMUKHI IRI -->
+			<textCharAction />
+		</node>
+		<node label="ਇ">
+			<!--Note: GURMUKHI LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="ਈ">
+			<!--Note: GURMUKHI LETTER II -->
+			<textCharAction />
+		</node>
+		<node label="ਏ">
+			<!--Note: GURMUKHI LETTER EE -->
+			<textCharAction />
+		</node>
+		<node label="ਸ">
+			<!--Note: GURMUKHI LETTER SA -->
+			<textCharAction />
+		</node>
+		<node label="ਸ਼">
+			<!--Note: GURMUKHI LETTER SHA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਹ">
+			<!--Note: GURMUKHI LETTER HA -->
+			<textCharAction />
+		</node>
+		<node label="ਕ">
+			<!--Note: GURMUKHI LETTER KA -->
+			<textCharAction />
+		</node>
+		<node label="ਖ">
+			<!--Note: GURMUKHI LETTER KHA -->
+			<textCharAction />
+		</node>
+		<node label="ਖ਼">
+			<!--Note: GURMUKHI LETTER KHHA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਗ">
+			<!--Note: GURMUKHI LETTER GA -->
+			<textCharAction />
+		</node>
+		<node label="ਗ਼">
+			<!--Note: GURMUKHI LETTER GHHA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਘ">
+			<!--Note: GURMUKHI LETTER GHA -->
+			<textCharAction />
+		</node>
+		<node label="ਙ">
+			<!--Note: GURMUKHI LETTER NGA -->
+			<textCharAction />
+		</node>
+		<node label="ਚ">
+			<!--Note: GURMUKHI LETTER CA -->
+			<textCharAction />
+		</node>
+		<node label="ਛ">
+			<!--Note: GURMUKHI LETTER CHA -->
+			<textCharAction />
+		</node>
+		<node label="ਜ">
+			<!--Note: GURMUKHI LETTER JA -->
+			<textCharAction />
+		</node>
+		<node label="ਜ਼">
+			<!--Note: GURMUKHI LETTER ZA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਝ">
+			<!--Note: GURMUKHI LETTER JHA -->
+			<textCharAction />
+		</node>
+		<node label="ਞ">
+			<!--Note: GURMUKHI LETTER NYA -->
+			<textCharAction />
+		</node>
+		<node label="ਟ">
+			<!--Note: GURMUKHI LETTER TTA -->
+			<textCharAction />
+		</node>
+		<node label="ਠ">
+			<!--Note: GURMUKHI LETTER TTHA -->
+			<textCharAction />
+		</node>
+		<node label="ਡ">
+			<!--Note: GURMUKHI LETTER DDA -->
+			<textCharAction />
+		</node>
+		<node label="ਢ">
+			<!--Note: GURMUKHI LETTER DDHA -->
+			<textCharAction />
+		</node>
+		<node label="ਣ">
+			<!--Note: GURMUKHI LETTER NNA -->
+			<textCharAction />
+		</node>
+		<node label="ਤ">
+			<!--Note: GURMUKHI LETTER TA -->
+			<textCharAction />
+		</node>
+		<node label="ਥ">
+			<!--Note: GURMUKHI LETTER THA -->
+			<textCharAction />
+		</node>
+		<node label="ਦ">
+			<!--Note: GURMUKHI LETTER DA -->
+			<textCharAction />
+		</node>
+		<node label="ਧ">
+			<!--Note: GURMUKHI LETTER DHA -->
+			<textCharAction />
+		</node>
+		<node label="ਨ">
+			<!--Note: GURMUKHI LETTER NA -->
+			<textCharAction />
+		</node>
+		<node label="ਪ">
+			<!--Note: GURMUKHI LETTER PA -->
+			<textCharAction />
+		</node>
+		<node label="ਫ">
+			<!--Note: GURMUKHI LETTER PHA -->
+			<textCharAction />
+		</node>
+		<node label="ਫ਼">
+			<!--Note: GURMUKHI LETTER FA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਬ">
+			<!--Note: GURMUKHI LETTER BA -->
+			<textCharAction />
+		</node>
+		<node label="ਭ">
+			<!--Note: GURMUKHI LETTER BHA -->
+			<textCharAction />
+		</node>
+		<node label="ਮ">
+			<!--Note: GURMUKHI LETTER MA -->
+			<textCharAction />
+		</node>
+		<node label="ਯ">
+			<!--Note: GURMUKHI LETTER YA -->
+			<textCharAction />
+		</node>
+		<node label="ਰ">
+			<!--Note: GURMUKHI LETTER RA -->
+			<textCharAction />
+		</node>
+		<node label="ਲ">
+			<!--Note: GURMUKHI LETTER LA -->
+			<textCharAction />
+		</node>
+		<node label="ਲ਼">
+			<!--Note: GURMUKHI LETTER LLA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ਵ">
+			<!--Note: GURMUKHI LETTER VA -->
+			<textCharAction />
+		</node>
+		<node label="ੜ">
+			<!--Note: GURMUKHI LETTER RRA -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="GURMUKHI vowels" colorInfoName="lowercase">
+		<!--Old Group Color: 111-->
+		<node label="◌ਾ">
+			<!--Note: GURMUKHI VOWEL SIGN AA -->
+			<textCharAction unicode="2622" />
+		</node>
+		<node label="◌ਿ">
+			<!--Note: GURMUKHI VOWEL SIGN I -->
+			<textCharAction unicode="2623" />
+		</node>
+		<node label="◌ੀ">
+			<!--Note: GURMUKHI VOWEL SIGN II -->
+			<textCharAction unicode="2624" />
+		</node>
+		<node label="◌ੁ">
+			<!--Note: GURMUKHI VOWEL SIGN U -->
+			<textCharAction unicode="2625" />
+		</node>
+		<node label="◌ੂ">
+			<!--Note: GURMUKHI VOWEL SIGN UU -->
+			<textCharAction unicode="2626" />
+		</node>
+		<node label="◌ੇ">
+			<!--Note: GURMUKHI VOWEL SIGN EE -->
+			<textCharAction unicode="2631" />
+		</node>
+		<node label="◌ੈ">
+			<!--Note: GURMUKHI VOWEL SIGN AI -->
+			<textCharAction unicode="2632" />
+		</node>
+		<node label="◌ੋ">
+			<!--Note: GURMUKHI VOWEL SIGN OO -->
+			<textCharAction unicode="2635" />
+		</node>
+		<node label="◌ੌ">
+			<!--Note: GURMUKHI VOWEL SIGN AU -->
+			<textCharAction unicode="2636" />
+		</node>
+		<node label="◌੍">
+			<!--Note: GURMUKHI SIGN VIRAMA -->
+			<textCharAction unicode="2637" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="◊">
+			<!--Old Char Color: 9-->
+			<!--Note: TAB (represented by a diamond)-->
+			<textCharAction unicode="9" />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

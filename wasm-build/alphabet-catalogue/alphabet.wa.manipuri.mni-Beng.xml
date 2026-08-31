@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Manipuri (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="অ">
+      <textCharAction />
+    </node>
+    <node label="আ">
+      <textCharAction />
+    </node>
+    <node label="ই">
+      <textCharAction />
+    </node>
+    <node label="ঈ">
+      <textCharAction />
+    </node>
+    <node label="উ">
+      <textCharAction />
+    </node>
+    <node label="ঊ">
+      <textCharAction />
+    </node>
+    <node label="ঋ">
+      <textCharAction />
+    </node>
+    <node label="এ">
+      <textCharAction />
+    </node>
+    <node label="ঐ">
+      <textCharAction />
+    </node>
+    <node label="ও">
+      <textCharAction />
+    </node>
+    <node label="ঔ">
+      <textCharAction />
+    </node>
+    <node label="ক">
+      <textCharAction />
+    </node>
+    <node label="খ">
+      <textCharAction />
+    </node>
+    <node label="গ">
+      <textCharAction />
+    </node>
+    <node label="ঘ">
+      <textCharAction />
+    </node>
+    <node label="ঙ">
+      <textCharAction />
+    </node>
+    <node label="চ">
+      <textCharAction />
+    </node>
+    <node label="ছ">
+      <textCharAction />
+    </node>
+    <node label="জ">
+      <textCharAction />
+    </node>
+    <node label="ঝ">
+      <textCharAction />
+    </node>
+    <node label="ঞ">
+      <textCharAction />
+    </node>
+    <node label="ট">
+      <textCharAction />
+    </node>
+    <node label="ঠ">
+      <textCharAction />
+    </node>
+    <node label="ড">
+      <textCharAction />
+    </node>
+    <node label="ঢ">
+      <textCharAction />
+    </node>
+    <node label="ণ">
+      <textCharAction />
+    </node>
+    <node label="ত">
+      <textCharAction />
+    </node>
+    <node label="থ">
+      <textCharAction />
+    </node>
+    <node label="দ">
+      <textCharAction />
+    </node>
+    <node label="ধ">
+      <textCharAction />
+    </node>
+    <node label="ন">
+      <textCharAction />
+    </node>
+    <node label="প">
+      <textCharAction />
+    </node>
+    <node label="ফ">
+      <textCharAction />
+    </node>
+    <node label="ব">
+      <textCharAction />
+    </node>
+    <node label="ভ">
+      <textCharAction />
+    </node>
+    <node label="ম">
+      <textCharAction />
+    </node>
+    <node label="য">
+      <textCharAction />
+    </node>
+    <node label="র">
+      <textCharAction />
+    </node>
+    <node label="ল">
+      <textCharAction />
+    </node>
+    <node label="ৱ">
+      <textCharAction />
+    </node>
+    <node label="শ">
+      <textCharAction />
+    </node>
+    <node label="ষ">
+      <textCharAction />
+    </node>
+    <node label="স">
+      <textCharAction />
+    </node>
+    <node label="হ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="অ">
+      <textCharAction />
+    </node>
+    <node label="আ">
+      <textCharAction />
+    </node>
+    <node label="ই">
+      <textCharAction />
+    </node>
+    <node label="ঈ">
+      <textCharAction />
+    </node>
+    <node label="উ">
+      <textCharAction />
+    </node>
+    <node label="ঊ">
+      <textCharAction />
+    </node>
+    <node label="ঋ">
+      <textCharAction />
+    </node>
+    <node label="এ">
+      <textCharAction />
+    </node>
+    <node label="ঐ">
+      <textCharAction />
+    </node>
+    <node label="ও">
+      <textCharAction />
+    </node>
+    <node label="ঔ">
+      <textCharAction />
+    </node>
+    <node label="ক">
+      <textCharAction />
+    </node>
+    <node label="খ">
+      <textCharAction />
+    </node>
+    <node label="গ">
+      <textCharAction />
+    </node>
+    <node label="ঘ">
+      <textCharAction />
+    </node>
+    <node label="ঙ">
+      <textCharAction />
+    </node>
+    <node label="চ">
+      <textCharAction />
+    </node>
+    <node label="ছ">
+      <textCharAction />
+    </node>
+    <node label="জ">
+      <textCharAction />
+    </node>
+    <node label="ঝ">
+      <textCharAction />
+    </node>
+    <node label="ঞ">
+      <textCharAction />
+    </node>
+    <node label="ট">
+      <textCharAction />
+    </node>
+    <node label="ঠ">
+      <textCharAction />
+    </node>
+    <node label="ড">
+      <textCharAction />
+    </node>
+    <node label="ঢ">
+      <textCharAction />
+    </node>
+    <node label="ণ">
+      <textCharAction />
+    </node>
+    <node label="ত">
+      <textCharAction />
+    </node>
+    <node label="থ">
+      <textCharAction />
+    </node>
+    <node label="দ">
+      <textCharAction />
+    </node>
+    <node label="ধ">
+      <textCharAction />
+    </node>
+    <node label="ন">
+      <textCharAction />
+    </node>
+    <node label="প">
+      <textCharAction />
+    </node>
+    <node label="ফ">
+      <textCharAction />
+    </node>
+    <node label="ব">
+      <textCharAction />
+    </node>
+    <node label="ভ">
+      <textCharAction />
+    </node>
+    <node label="ম">
+      <textCharAction />
+    </node>
+    <node label="য">
+      <textCharAction />
+    </node>
+    <node label="র">
+      <textCharAction />
+    </node>
+    <node label="ল">
+      <textCharAction />
+    </node>
+    <node label="ৱ">
+      <textCharAction />
+    </node>
+    <node label="শ">
+      <textCharAction />
+    </node>
+    <node label="ষ">
+      <textCharAction />
+    </node>
+    <node label="স">
+      <textCharAction />
+    </node>
+    <node label="হ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="০">
+      <textCharAction />
+    </node>
+    <node label="১">
+      <textCharAction />
+    </node>
+    <node label="২">
+      <textCharAction />
+    </node>
+    <node label="৩">
+      <textCharAction />
+    </node>
+    <node label="৪">
+      <textCharAction />
+    </node>
+    <node label="৫">
+      <textCharAction />
+    </node>
+    <node label="৬">
+      <textCharAction />
+    </node>
+    <node label="৭">
+      <textCharAction />
+    </node>
+    <node label="৮">
+      <textCharAction />
+    </node>
+    <node label="৯">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

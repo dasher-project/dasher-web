@@ -7,6 +7,12 @@ Dasher is a zooming text-entry interface, driven by continuous pointing gestures
 
 **Live demo:** https://dasher-project.github.io/dasher-web/
 
+**Enhanced playground:** https://dasher-project.github.io/dasher-web/js-demo/ —
+theme picker (12 colour palettes), node-shape and outline controls, and a
+searchable catalogue of 470+ alphabets fetched on demand (20 bundled with
+training text; the rest lazy-load from the static catalogue and use
+fallback frequencies until you type).
+
 ## Quick Start
 
 ```bash
@@ -17,9 +23,9 @@ cd dasher-web/wasm-build
 source /path/to/emsdk/emsdk_env.sh
 bash build.sh        # or build.bat on Windows
 
-# Run locally
-node server.js
-# Open http://localhost:8000/demo.html
+# Serve the output with any static server
+npx serve .
+# Open http://localhost:3000/demo.html
 ```
 
 See [`wasm-build/README.md`](wasm-build/README.md) for full build details, API docs, and architecture.
@@ -30,7 +36,8 @@ The native DasherCore engine (C++) is compiled to WebAssembly via Emscripten. Da
 
 Features include:
 - Full DasherCore engine with PPM language model
-- 14+ alphabets (English, German, French, Spanish, and more)
+- 10 trained languages (English, German, Spanish, French, Italian,
+  Portuguese, Dutch, Polish, Russian, Arabic) — 19 alphabets
 - Adjustable speed with auto-speed control
 - Learning toggle for language model adaptation
 - Mouse and touch input
@@ -40,14 +47,28 @@ Features include:
 
 ```
 wasm-build/           WASM build (source, scripts, demo)
-  dashercore-src/     DasherCore C++ source (git submodule, branch feature-CAPI)
+  dashercore-src/     DasherCore C++ source (git submodule, branch main)
   data-bundle/        Curated data files for preloading
   demo.html           Interactive demo
   dasher-wasm-wrapper.js   JavaScript API wrapper
   build.sh / build.bat    Build scripts
-  server.js           Local dev server
-documents/            Project specs and documentation
 ```
+
+## Legacy pure-JS demo
+
+Before the WASM build, this repo carried a complete pure-JavaScript
+Dasher demo (`browser/`) originally written by Jim Hawkins (ACE
+Centre-North, later VMware). It is preserved, with all its v0.2.0
+enhancements (90 languages, script-generated alphabets,
+saved-language migration), on the **`legacy-js-demo`** tag:
+
+```bash
+git checkout legacy-js-demo        # browse or run the JS demo
+```
+
+Releases from **v0.2.0** also carried it. It was retired from `main`
+in favour of the WASM DasherCore build — same engine as the desktop
+and mobile apps, no separate JS codebase to maintain.
 
 ## Embedding in Your Site
 

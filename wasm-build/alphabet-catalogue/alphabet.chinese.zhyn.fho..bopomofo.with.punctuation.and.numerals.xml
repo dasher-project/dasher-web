@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Chinese Zhùyīn fúhào  ㄅㄆㄇㄈ (Bopomofo) with punctuation and numerals" orientation="LR" trainingFilename="training_bopomofo_CN.txt" colorsName="Default">
+	<!-- the national phonetic system of the Republic of China
+ for teaching the Chinese languages, especially Mandarin.
+ The system uses 37 special symbols to represent the Mandarin
+ sounds: 21 consonants and 16 vowels. There is a
+ one symbol-one sound correspondence. -->
+	<!-- <s d="&#x2C9;" t="&#x2C9;" /> 1 -->
+	<!-- <s d="&#x2CA;" t="&#x2CA;" /> 2 -->
+	<!-- <s d="&#x2C7;" t="&#x2C7;" /> 3 -->
+	<!-- <s d="&#x2CB;" t="&#x2CB;" /> 4 -->
+	<group name="consonants (then vowels)">
+		<node label="ㄅ">
+			<!--Note: BOPOMOFO LETTER B -->
+			<textCharAction />
+		</node>
+		<node label="ㄆ">
+			<!--Note: BOPOMOFO LETTER P -->
+			<textCharAction />
+		</node>
+		<node label="ㄇ">
+			<!--Note: BOPOMOFO LETTER M -->
+			<textCharAction />
+		</node>
+		<node label="ㄈ">
+			<!--Note: BOPOMOFO LETTER F -->
+			<textCharAction />
+		</node>
+		<node label="ㄉ">
+			<!--Note: BOPOMOFO LETTER D -->
+			<textCharAction />
+		</node>
+		<node label="ㄊ">
+			<!--Note: BOPOMOFO LETTER T -->
+			<textCharAction />
+		</node>
+		<node label="ㄋ">
+			<!--Note: BOPOMOFO LETTER N -->
+			<textCharAction />
+		</node>
+		<node label="ㄌ">
+			<!--Note: BOPOMOFO LETTER L -->
+			<textCharAction />
+		</node>
+		<node label="ㄍ">
+			<!--Note: BOPOMOFO LETTER G -->
+			<textCharAction />
+		</node>
+		<node label="ㄎ">
+			<!--Note: BOPOMOFO LETTER K -->
+			<textCharAction />
+		</node>
+		<node label="ㄏ">
+			<!--Note: BOPOMOFO LETTER H -->
+			<textCharAction />
+		</node>
+		<node label="ㄐ">
+			<!--Note: BOPOMOFO LETTER J -->
+			<textCharAction />
+		</node>
+		<node label="ㄑ">
+			<!--Note: BOPOMOFO LETTER Q -->
+			<textCharAction />
+		</node>
+		<node label="ㄒ">
+			<!--Note: BOPOMOFO LETTER X -->
+			<textCharAction />
+		</node>
+		<node label="ㄓ">
+			<!--Note: BOPOMOFO LETTER ZH -->
+			<textCharAction />
+		</node>
+		<node label="ㄔ">
+			<!--Note: BOPOMOFO LETTER CH -->
+			<textCharAction />
+		</node>
+		<node label="ㄕ">
+			<!--Note: BOPOMOFO LETTER SH -->
+			<textCharAction />
+		</node>
+		<node label="ㄖ">
+			<!--Note: BOPOMOFO LETTER R -->
+			<textCharAction />
+		</node>
+		<node label="ㄗ">
+			<!--Note: BOPOMOFO LETTER Z -->
+			<textCharAction />
+		</node>
+		<node label="ㄘ">
+			<!--Note: BOPOMOFO LETTER C -->
+			<textCharAction />
+		</node>
+		<node label="ㄙ">
+			<!--Note: BOPOMOFO LETTER S -->
+			<textCharAction />
+		</node>
+		<!-- </group> -->
+		<!-- <group name="vowels" b="111"> -->
+		<node label="ㄚ">
+			<!--Note: BOPOMOFO LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="ㄛ">
+			<!--Note: BOPOMOFO LETTER O -->
+			<textCharAction />
+		</node>
+		<node label="ㄜ">
+			<!--Note: BOPOMOFO LETTER E -->
+			<textCharAction />
+		</node>
+		<node label="ㄝ">
+			<!--Note: BOPOMOFO LETTER EH -->
+			<textCharAction />
+		</node>
+		<node label="ㄞ">
+			<!--Note: BOPOMOFO LETTER AI -->
+			<textCharAction />
+		</node>
+		<node label="ㄟ">
+			<!--Note: BOPOMOFO LETTER EI -->
+			<textCharAction />
+		</node>
+		<node label="ㄠ">
+			<!--Note: BOPOMOFO LETTER AU -->
+			<textCharAction />
+		</node>
+		<node label="ㄡ">
+			<!--Note: BOPOMOFO LETTER OU -->
+			<textCharAction />
+		</node>
+		<node label="ㄢ">
+			<!--Note: BOPOMOFO LETTER AN -->
+			<textCharAction />
+		</node>
+		<node label="ㄣ">
+			<!--Note: BOPOMOFO LETTER EN -->
+			<textCharAction />
+		</node>
+		<node label="ㄤ">
+			<!--Note: BOPOMOFO LETTER ANG -->
+			<textCharAction />
+		</node>
+		<node label="ㄥ">
+			<!--Note: BOPOMOFO LETTER ENG -->
+			<textCharAction />
+		</node>
+		<node label="ㄦ">
+			<!--Note: BOPOMOFO LETTER ER -->
+			<textCharAction />
+		</node>
+		<node label="ㄧ">
+			<!--Note: BOPOMOFO LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="ㄨ">
+			<!--Note: BOPOMOFO LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="ㄩ">
+			<!--Note: BOPOMOFO LETTER IU -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="combining diacritics" colorInfoName="accents">
+		<!--Old Group Color: 110-->
+		<node label="◌̄">
+			<!--Old Char Color: 90-->
+			<textCharAction unicode="772" />
+		</node>
+		<!-- 1 -->
+		<node label="◌́">
+			<!--Old Char Color: 91-->
+			<textCharAction unicode="769" />
+		</node>
+		<!-- 2 -->
+		<node label="◌̆">
+			<!--Old Char Color: 92-->
+			<textCharAction unicode="774" />
+		</node>
+		<!-- 3 -->
+		<node label="◌̀">
+			<!--Old Char Color: 93-->
+			<textCharAction unicode="768" />
+		</node>
+		<!-- 4 -->
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+		<node label="「">
+			<!--Old Char Color: 17-->
+			<!--Note: Asian left single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="」">
+			<!--Old Char Color: 20-->
+			<!--Note: Asian right single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="『">
+			<!--Old Char Color: 17-->
+			<!--Note: Asian left double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="』">
+			<!--Old Char Color: 20-->
+			<!--Note: Asian right double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="‧">
+			<!--Old Char Color: 17-->
+			<!--Note: Asian partition dot-->
+			<textCharAction />
+		</node>
+		<node label="・">
+			<!--Old Char Color: 20-->
+			<!--Note: Square partition dot-->
+			<textCharAction />
+		</node>
+		<node label="．">
+			<!--Old Char Color: 17-->
+			<!--Note: middle dot-->
+			<textCharAction />
+		</node>
+		<node label="·">
+			<!--Old Char Color: 20-->
+			<!--Note: mid-dot-->
+			<textCharAction />
+		</node>
+		<node label="，">
+			<!--Old Char Color: 17-->
+			<!--Note: Asian comma-->
+			<textCharAction />
+		</node>
+		<node label="、">
+			<!--Old Char Color: 20-->
+			<!--Note: Chinese comma-->
+			<textCharAction />
+		</node>
+		<node label="。">
+			<!--Old Char Color: 17-->
+			<!--Note: Asian Period-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

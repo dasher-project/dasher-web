@@ -1,0 +1,1137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Kirghiz / Кыргыз with punctuation and numerals" orientation="LR" trainingFilename="training_wa_ky_Cyrl.txt" colorsName="Default">
+	<group name="lower case letters">
+		<node label="а">
+			<!--Note: CYRILLIC SMALL LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="ӑ">
+			<!--Note: CYRILLIC SMALL LETTER A WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="ӓ">
+			<!--Note: CYRILLIC SMALL LETTER A WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ә">
+			<!--Note: CYRILLIC SMALL LETTER SCHWA -->
+			<textCharAction />
+		</node>
+		<node label="ӛ">
+			<!--Note: CYRILLIC SMALL LETTER SCHWA WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="б">
+			<!--Note: CYRILLIC SMALL LETTER BE -->
+			<textCharAction />
+		</node>
+		<node label="в">
+			<!--Note: CYRILLIC SMALL LETTER VE -->
+			<textCharAction />
+		</node>
+		<node label="г">
+			<!--Note: CYRILLIC SMALL LETTER GHE -->
+			<textCharAction />
+		</node>
+		<node label="ґ">
+			<!--Note: CYRILLIC SMALL LETTER GHE WITH UPTURN -->
+			<textCharAction />
+		</node>
+		<node label="ғ">
+			<!--Note: CYRILLIC SMALL LETTER GHE WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="ҕ">
+			<!--Note: CYRILLIC SMALL LETTER GHE WITH MIDDLE HOOK -->
+			<textCharAction />
+		</node>
+		<node label="д">
+			<!--Note: CYRILLIC SMALL LETTER DE -->
+			<textCharAction />
+		</node>
+		<node label="ԁ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI DE -->
+			<textCharAction />
+		</node>
+		<node label="ђ">
+			<!--Note: CYRILLIC SMALL LETTER DJE -->
+			<textCharAction />
+		</node>
+		<node label="ԃ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI DJE -->
+			<textCharAction />
+		</node>
+		<node label="ѓ">
+			<!--Note: CYRILLIC SMALL LETTER GJE -->
+			<textCharAction />
+		</node>
+		<node label="ҙ">
+			<!--Note: CYRILLIC SMALL LETTER ZE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="е">
+			<!--Note: CYRILLIC SMALL LETTER IE -->
+			<textCharAction />
+		</node>
+		<node label="ѐ">
+			<!--Note: CYRILLIC SMALL LETTER IE WITH GRAVE -->
+			<textCharAction />
+		</node>
+		<node label="ё">
+			<!--Note: CYRILLIC SMALL LETTER IO -->
+			<textCharAction />
+		</node>
+		<node label="ӗ">
+			<!--Note: CYRILLIC SMALL LETTER IE WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="є">
+			<!--Note: CYRILLIC SMALL LETTER UKRAINIAN IE -->
+			<textCharAction />
+		</node>
+		<node label="ж">
+			<!--Note: CYRILLIC SMALL LETTER ZHE -->
+			<textCharAction />
+		</node>
+		<node label="ӂ">
+			<!--Note: CYRILLIC SMALL LETTER ZHE WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="ӝ">
+			<!--Note: CYRILLIC SMALL LETTER ZHE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="җ">
+			<!--Note: CYRILLIC SMALL LETTER ZHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="з">
+			<!--Note: CYRILLIC SMALL LETTER ZE -->
+			<textCharAction />
+		</node>
+		<node label="ԅ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI ZJE -->
+			<textCharAction />
+		</node>
+		<node label="ӟ">
+			<!--Note: CYRILLIC SMALL LETTER ZE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ѕ">
+			<!--Note: CYRILLIC SMALL LETTER DZE -->
+			<textCharAction />
+		</node>
+		<node label="ӡ">
+			<!--Note: CYRILLIC SMALL LETTER ABKHASIAN DZE -->
+			<textCharAction />
+		</node>
+		<node label="ԇ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI DZJE -->
+			<textCharAction />
+		</node>
+		<node label="и">
+			<!--Note: CYRILLIC SMALL LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="ѝ">
+			<!--Note: CYRILLIC SMALL LETTER I WITH GRAVE -->
+			<textCharAction />
+		</node>
+		<node label="ӣ">
+			<!--Note: CYRILLIC SMALL LETTER I WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="ҋ">
+			<!--Note: CYRILLIC SMALL LETTER SHORT I WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="ӥ">
+			<!--Note: CYRILLIC SMALL LETTER I WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="і">
+			<!--Note: CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I -->
+			<textCharAction />
+		</node>
+		<node label="ї">
+			<!--Note: CYRILLIC SMALL LETTER YI -->
+			<textCharAction />
+		</node>
+		<node label="й">
+			<!--Note: CYRILLIC SMALL LETTER SHORT I -->
+			<textCharAction />
+		</node>
+		<node label="ј">
+			<!--Note: CYRILLIC SMALL LETTER JE -->
+			<textCharAction />
+		</node>
+		<node label="к">
+			<!--Note: CYRILLIC SMALL LETTER KA -->
+			<textCharAction />
+		</node>
+		<node label="қ">
+			<!--Note: CYRILLIC SMALL LETTER KA WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="ӄ">
+			<!--Note: CYRILLIC SMALL LETTER KA WITH HOOK -->
+			<textCharAction />
+		</node>
+		<node label="ҡ">
+			<!--Note: CYRILLIC SMALL LETTER BASHKIR KA -->
+			<textCharAction />
+		</node>
+		<node label="ҟ">
+			<!--Note: CYRILLIC SMALL LETTER KA WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="ҝ">
+			<!--Note: CYRILLIC SMALL LETTER KA WITH VERTICAL STROKE -->
+			<textCharAction />
+		</node>
+		<node label="л">
+			<!--Note: CYRILLIC SMALL LETTER EL -->
+			<textCharAction />
+		</node>
+		<node label="ӆ">
+			<!--Note: CYRILLIC SMALL LETTER EL WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="љ">
+			<!--Note: CYRILLIC SMALL LETTER LJE -->
+			<textCharAction />
+		</node>
+		<node label="ԉ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI LJE -->
+			<textCharAction />
+		</node>
+		<node label="м">
+			<!--Note: CYRILLIC SMALL LETTER EM -->
+			<textCharAction />
+		</node>
+		<node label="ӎ">
+			<!--Note: CYRILLIC SMALL LETTER EM WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="н">
+			<!--Note: CYRILLIC SMALL LETTER EN -->
+			<textCharAction />
+		</node>
+		<node label="ӊ">
+			<!--Note: CYRILLIC SMALL LETTER EN WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="ң">
+			<!--Note: CYRILLIC SMALL LETTER EN WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="ӈ">
+			<!--Note: CYRILLIC SMALL LETTER EN WITH HOOK -->
+			<textCharAction />
+		</node>
+		<node label="њ">
+			<!--Note: CYRILLIC SMALL LETTER NJE -->
+			<textCharAction />
+		</node>
+		<node label="ԋ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI NJE -->
+			<textCharAction />
+		</node>
+		<node label="о">
+			<!--Note: CYRILLIC SMALL LETTER O -->
+			<textCharAction />
+		</node>
+		<node label="ӧ">
+			<!--Note: CYRILLIC SMALL LETTER O WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ө">
+			<!--Note: CYRILLIC SMALL LETTER BARRED O -->
+			<textCharAction />
+		</node>
+		<node label="ӫ">
+			<!--Note: CYRILLIC SMALL LETTER BARRED O WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="п">
+			<!--Note: CYRILLIC SMALL LETTER PE -->
+			<textCharAction />
+		</node>
+		<node label="ҧ">
+			<!--Note: CYRILLIC SMALL LETTER PE WITH MIDDLE HOOK -->
+			<textCharAction />
+		</node>
+		<node label="ҁ">
+			<!--Note: CYRILLIC SMALL LETTER KOPPA -->
+			<textCharAction />
+		</node>
+		<node label="р">
+			<!--Note: CYRILLIC SMALL LETTER ER -->
+			<textCharAction />
+		</node>
+		<node label="ҏ">
+			<!--Note: CYRILLIC SMALL LETTER ER WITH TICK -->
+			<textCharAction />
+		</node>
+		<node label="с">
+			<!--Note: CYRILLIC SMALL LETTER ES -->
+			<textCharAction />
+		</node>
+		<node label="ԍ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI SJE -->
+			<textCharAction />
+		</node>
+		<node label="ҫ">
+			<!--Note: CYRILLIC SMALL LETTER ES WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="т">
+			<!--Note: CYRILLIC SMALL LETTER TE -->
+			<textCharAction />
+		</node>
+		<node label="ԏ">
+			<!--Note: CYRILLIC SMALL LETTER KOMI TJE -->
+			<textCharAction />
+		</node>
+		<node label="ҭ">
+			<!--Note: CYRILLIC SMALL LETTER TE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="ћ">
+			<!--Note: CYRILLIC SMALL LETTER TSHE -->
+			<textCharAction />
+		</node>
+		<node label="ќ">
+			<!--Note: CYRILLIC SMALL LETTER KJE -->
+			<textCharAction />
+		</node>
+		<node label="у">
+			<!--Note: CYRILLIC SMALL LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="ӯ">
+			<!--Note: CYRILLIC SMALL LETTER U WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="ў">
+			<!--Note: CYRILLIC SMALL LETTER SHORT U -->
+			<textCharAction />
+		</node>
+		<node label="ӱ">
+			<!--Note: CYRILLIC SMALL LETTER U WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ӳ">
+			<!--Note: CYRILLIC SMALL LETTER U WITH DOUBLE ACUTE -->
+			<textCharAction />
+		</node>
+		<node label="ү">
+			<!--Note: CYRILLIC SMALL LETTER STRAIGHT U -->
+			<textCharAction />
+		</node>
+		<node label="ұ">
+			<!--Note: CYRILLIC SMALL LETTER STRAIGHT U WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="ѹ">
+			<!--Note: CYRILLIC SMALL LETTER UK -->
+			<textCharAction />
+		</node>
+		<node label="ф">
+			<!--Note: CYRILLIC SMALL LETTER EF -->
+			<textCharAction />
+		</node>
+		<node label="х">
+			<!--Note: CYRILLIC SMALL LETTER HA -->
+			<textCharAction />
+		</node>
+		<node label="ҳ">
+			<!--Note: CYRILLIC SMALL LETTER HA WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="һ">
+			<!--Note: CYRILLIC SMALL LETTER SHHA -->
+			<textCharAction />
+		</node>
+		<node label="ѡ">
+			<!--Note: CYRILLIC SMALL LETTER OMEGA -->
+			<textCharAction />
+		</node>
+		<node label="ѿ">
+			<!--Note: CYRILLIC SMALL LETTER OT -->
+			<textCharAction />
+		</node>
+		<node label="ѽ">
+			<!--Note: CYRILLIC SMALL LETTER OMEGA WITH TITLO -->
+			<textCharAction />
+		</node>
+		<node label="ѻ">
+			<!--Note: CYRILLIC SMALL LETTER ROUND OMEGA -->
+			<textCharAction />
+		</node>
+		<node label="ц">
+			<!--Note: CYRILLIC SMALL LETTER TSE -->
+			<textCharAction />
+		</node>
+		<node label="ч">
+			<!--Note: CYRILLIC SMALL LETTER CHE -->
+			<textCharAction />
+		</node>
+		<node label="ӵ">
+			<!--Note: CYRILLIC SMALL LETTER CHE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ҷ">
+			<!--Note: CYRILLIC SMALL LETTER CHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="ӌ">
+			<!--Note: CYRILLIC SMALL LETTER KHAKASSIAN CHE -->
+			<textCharAction />
+		</node>
+		<node label="ҹ">
+			<!--Note: CYRILLIC SMALL LETTER CHE WITH VERTICAL STROKE -->
+			<textCharAction />
+		</node>
+		<node label="ҽ">
+			<!--Note: CYRILLIC SMALL LETTER ABKHASIAN CHE -->
+			<textCharAction />
+		</node>
+		<node label="ҿ">
+			<!--Note: CYRILLIC SMALL LETTER ABKHASIAN CHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="џ">
+			<!--Note: CYRILLIC SMALL LETTER DZHE -->
+			<textCharAction />
+		</node>
+		<node label="ш">
+			<!--Note: CYRILLIC SMALL LETTER SHA -->
+			<textCharAction />
+		</node>
+		<node label="щ">
+			<!--Note: CYRILLIC SMALL LETTER SHCHA -->
+			<textCharAction />
+		</node>
+		<node label="ъ">
+			<!--Note: CYRILLIC SMALL LETTER HARD SIGN -->
+			<textCharAction />
+		</node>
+		<node label="ы">
+			<!--Note: CYRILLIC SMALL LETTER YERU -->
+			<textCharAction />
+		</node>
+		<node label="ӹ">
+			<!--Note: CYRILLIC SMALL LETTER YERU WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ь">
+			<!--Note: CYRILLIC SMALL LETTER SOFT SIGN -->
+			<textCharAction />
+		</node>
+		<node label="ҍ">
+			<!--Note: CYRILLIC SMALL LETTER SEMISOFT SIGN -->
+			<textCharAction />
+		</node>
+		<node label="ѣ">
+			<!--Note: CYRILLIC SMALL LETTER YAT -->
+			<textCharAction />
+		</node>
+		<node label="э">
+			<!--Note: CYRILLIC SMALL LETTER E -->
+			<textCharAction />
+		</node>
+		<node label="ӭ">
+			<!--Note: CYRILLIC SMALL LETTER E WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="ю">
+			<!--Note: CYRILLIC SMALL LETTER YU -->
+			<textCharAction />
+		</node>
+		<node label="я">
+			<!--Note: CYRILLIC SMALL LETTER YA -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="upper case letters" colorInfoName="uppercase">
+		<!--Old Group Color: 111-->
+		<node label="А">
+			<!--Note: CYRILLIC CAPITAL LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="Ӑ">
+			<!--Note: CYRILLIC CAPITAL LETTER A WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="Ӓ">
+			<!--Note: CYRILLIC CAPITAL LETTER A WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ә">
+			<!--Note: CYRILLIC CAPITAL LETTER SCHWA -->
+			<textCharAction />
+		</node>
+		<node label="Ӛ">
+			<!--Note: CYRILLIC CAPITAL LETTER SCHWA WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ӕ">
+			<!--Note: CYRILLIC CAPITAL LIGATURE A IE -->
+			<textCharAction />
+		</node>
+		<node label="Б">
+			<!--Note: CYRILLIC CAPITAL LETTER BE -->
+			<textCharAction />
+		</node>
+		<node label="В">
+			<!--Note: CYRILLIC CAPITAL LETTER VE -->
+			<textCharAction />
+		</node>
+		<node label="Г">
+			<!--Note: CYRILLIC CAPITAL LETTER GHE -->
+			<textCharAction />
+		</node>
+		<node label="Ґ">
+			<!--Note: CYRILLIC CAPITAL LETTER GHE WITH UPTURN -->
+			<textCharAction />
+		</node>
+		<node label="Ғ">
+			<!--Note: CYRILLIC CAPITAL LETTER GHE WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="Ҕ">
+			<!--Note: CYRILLIC CAPITAL LETTER GHE WITH MIDDLE HOOK -->
+			<textCharAction />
+		</node>
+		<node label="Д">
+			<!--Note: CYRILLIC CAPITAL LETTER DE -->
+			<textCharAction />
+		</node>
+		<node label="Ԁ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI DE -->
+			<textCharAction />
+		</node>
+		<node label="Ђ">
+			<!--Note: CYRILLIC CAPITAL LETTER DJE -->
+			<textCharAction />
+		</node>
+		<node label="Ԃ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI DJE -->
+			<textCharAction />
+		</node>
+		<node label="Ѓ">
+			<!--Note: CYRILLIC CAPITAL LETTER GJE -->
+			<textCharAction />
+		</node>
+		<node label="Ҙ">
+			<!--Note: CYRILLIC CAPITAL LETTER ZE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Е">
+			<!--Note: CYRILLIC CAPITAL LETTER IE -->
+			<textCharAction />
+		</node>
+		<node label="Ѐ">
+			<!--Note: CYRILLIC CAPITAL LETTER IE WITH GRAVE -->
+			<textCharAction />
+		</node>
+		<node label="Ё">
+			<!--Note: CYRILLIC CAPITAL LETTER IO -->
+			<textCharAction />
+		</node>
+		<node label="Ӗ">
+			<!--Note: CYRILLIC CAPITAL LETTER IE WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="Є">
+			<!--Note: CYRILLIC CAPITAL LETTER UKRAINIAN IE -->
+			<textCharAction />
+		</node>
+		<node label="Ж">
+			<!--Note: CYRILLIC CAPITAL LETTER ZHE -->
+			<textCharAction />
+		</node>
+		<node label="Ӂ">
+			<!--Note: CYRILLIC CAPITAL LETTER ZHE WITH BREVE -->
+			<textCharAction />
+		</node>
+		<node label="Ӝ">
+			<!--Note: CYRILLIC CAPITAL LETTER ZHE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Җ">
+			<!--Note: CYRILLIC CAPITAL LETTER ZHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="З">
+			<!--Note: CYRILLIC CAPITAL LETTER ZE -->
+			<textCharAction />
+		</node>
+		<node label="Ԅ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI ZJE -->
+			<textCharAction />
+		</node>
+		<node label="Ӟ">
+			<!--Note: CYRILLIC CAPITAL LETTER ZE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ѕ">
+			<!--Note: CYRILLIC CAPITAL LETTER DZE -->
+			<textCharAction />
+		</node>
+		<node label="Ӡ">
+			<!--Note: CYRILLIC CAPITAL LETTER ABKHASIAN DZE -->
+			<textCharAction />
+		</node>
+		<node label="Ԇ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI DZJE -->
+			<textCharAction />
+		</node>
+		<node label="И">
+			<!--Note: CYRILLIC CAPITAL LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="Ѝ">
+			<!--Note: CYRILLIC CAPITAL LETTER I WITH GRAVE -->
+			<textCharAction />
+		</node>
+		<node label="Ӣ">
+			<!--Note: CYRILLIC CAPITAL LETTER I WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="Ҋ">
+			<!--Note: CYRILLIC CAPITAL LETTER SHORT I WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="Ӥ">
+			<!--Note: CYRILLIC CAPITAL LETTER I WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="І">
+			<!--Note: CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I -->
+			<textCharAction />
+		</node>
+		<node label="Ї">
+			<!--Note: CYRILLIC CAPITAL LETTER YI -->
+			<textCharAction />
+		</node>
+		<node label="Й">
+			<!--Note: CYRILLIC CAPITAL LETTER SHORT I -->
+			<textCharAction />
+		</node>
+		<node label="Ј">
+			<!--Note: CYRILLIC CAPITAL LETTER JE -->
+			<textCharAction />
+		</node>
+		<node label="К">
+			<!--Note: CYRILLIC CAPITAL LETTER KA -->
+			<textCharAction />
+		</node>
+		<node label="Қ">
+			<!--Note: CYRILLIC CAPITAL LETTER KA WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Ӄ">
+			<!--Note: CYRILLIC CAPITAL LETTER KA WITH HOOK -->
+			<textCharAction />
+		</node>
+		<node label="Ҡ">
+			<!--Note: CYRILLIC CAPITAL LETTER BASHKIR KA -->
+			<textCharAction />
+		</node>
+		<node label="Ҟ">
+			<!--Note: CYRILLIC CAPITAL LETTER KA WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="Ҝ">
+			<!--Note: CYRILLIC CAPITAL LETTER KA WITH VERTICAL STROKE -->
+			<textCharAction />
+		</node>
+		<node label="Л">
+			<!--Note: CYRILLIC CAPITAL LETTER EL -->
+			<textCharAction />
+		</node>
+		<node label="Ӆ">
+			<!--Note: CYRILLIC CAPITAL LETTER EL WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="Љ">
+			<!--Note: CYRILLIC CAPITAL LETTER LJE -->
+			<textCharAction />
+		</node>
+		<node label="Ԉ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI LJE -->
+			<textCharAction />
+		</node>
+		<node label="М">
+			<!--Note: CYRILLIC CAPITAL LETTER EM -->
+			<textCharAction />
+		</node>
+		<node label="Ӎ">
+			<!--Note: CYRILLIC CAPITAL LETTER EM WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="Н">
+			<!--Note: CYRILLIC CAPITAL LETTER EN -->
+			<textCharAction />
+		</node>
+		<node label="Ӊ">
+			<!--Note: CYRILLIC CAPITAL LETTER EN WITH TAIL -->
+			<textCharAction />
+		</node>
+		<node label="Ң">
+			<!--Note: CYRILLIC CAPITAL LETTER EN WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Ӈ">
+			<!--Note: CYRILLIC CAPITAL LETTER EN WITH HOOK -->
+			<textCharAction />
+		</node>
+		<node label="Ҥ">
+			<!--Note: CYRILLIC CAPITAL LIGATURE EN GHE -->
+			<textCharAction />
+		</node>
+		<node label="Њ">
+			<!--Note: CYRILLIC CAPITAL LETTER NJE -->
+			<textCharAction />
+		</node>
+		<node label="Ԋ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI NJE -->
+			<textCharAction />
+		</node>
+		<node label="О">
+			<!--Note: CYRILLIC CAPITAL LETTER O -->
+			<textCharAction />
+		</node>
+		<node label="Ӧ">
+			<!--Note: CYRILLIC CAPITAL LETTER O WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ө">
+			<!--Note: CYRILLIC CAPITAL LETTER BARRED O -->
+			<textCharAction />
+		</node>
+		<node label="Ӫ">
+			<!--Note: CYRILLIC CAPITAL LETTER BARRED O WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="П">
+			<!--Note: CYRILLIC CAPITAL LETTER PE -->
+			<textCharAction />
+		</node>
+		<node label="Ҧ">
+			<!--Note: CYRILLIC CAPITAL LETTER PE WITH MIDDLE HOOK -->
+			<textCharAction />
+		</node>
+		<node label="Ҁ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOPPA -->
+			<textCharAction />
+		</node>
+		<node label="Р">
+			<!--Note: CYRILLIC CAPITAL LETTER ER -->
+			<textCharAction />
+		</node>
+		<node label="Ҏ">
+			<!--Note: CYRILLIC CAPITAL LETTER ER WITH TICK -->
+			<textCharAction />
+		</node>
+		<node label="С">
+			<!--Note: CYRILLIC CAPITAL LETTER ES -->
+			<textCharAction />
+		</node>
+		<node label="Ԍ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI SJE -->
+			<textCharAction />
+		</node>
+		<node label="Ҫ">
+			<!--Note: CYRILLIC CAPITAL LETTER ES WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Т">
+			<!--Note: CYRILLIC CAPITAL LETTER TE -->
+			<textCharAction />
+		</node>
+		<node label="Ԏ">
+			<!--Note: CYRILLIC CAPITAL LETTER KOMI TJE -->
+			<textCharAction />
+		</node>
+		<node label="Ҭ">
+			<!--Note: CYRILLIC CAPITAL LETTER TE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Ћ">
+			<!--Note: CYRILLIC CAPITAL LETTER TSHE -->
+			<textCharAction />
+		</node>
+		<node label="Ќ">
+			<!--Note: CYRILLIC CAPITAL LETTER KJE -->
+			<textCharAction />
+		</node>
+		<node label="У">
+			<!--Note: CYRILLIC CAPITAL LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="Ӯ">
+			<!--Note: CYRILLIC CAPITAL LETTER U WITH MACRON -->
+			<textCharAction />
+		</node>
+		<node label="Ў">
+			<!--Note: CYRILLIC CAPITAL LETTER SHORT U -->
+			<textCharAction />
+		</node>
+		<node label="Ӱ">
+			<!--Note: CYRILLIC CAPITAL LETTER U WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ӳ">
+			<!--Note: CYRILLIC CAPITAL LETTER U WITH DOUBLE ACUTE -->
+			<textCharAction />
+		</node>
+		<node label="Ү">
+			<!--Note: CYRILLIC CAPITAL LETTER STRAIGHT U -->
+			<textCharAction />
+		</node>
+		<node label="Ұ">
+			<!--Note: CYRILLIC CAPITAL LETTER STRAIGHT U WITH STROKE -->
+			<textCharAction />
+		</node>
+		<node label="Ѹ">
+			<!--Note: CYRILLIC CAPITAL LETTER UK -->
+			<textCharAction />
+		</node>
+		<node label="Ф">
+			<!--Note: CYRILLIC CAPITAL LETTER EF -->
+			<textCharAction />
+		</node>
+		<node label="Х">
+			<!--Note: CYRILLIC CAPITAL LETTER HA -->
+			<textCharAction />
+		</node>
+		<node label="Ҳ">
+			<!--Note: CYRILLIC CAPITAL LETTER HA WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Һ">
+			<!--Note: CYRILLIC CAPITAL LETTER SHHA -->
+			<textCharAction />
+		</node>
+		<node label="Ѡ">
+			<!--Note: CYRILLIC CAPITAL LETTER OMEGA -->
+			<textCharAction />
+		</node>
+		<node label="Ѿ">
+			<!--Note: CYRILLIC CAPITAL LETTER OT -->
+			<textCharAction />
+		</node>
+		<node label="Ѽ">
+			<!--Note: CYRILLIC CAPITAL LETTER OMEGA WITH TITLO -->
+			<textCharAction />
+		</node>
+		<node label="Ѻ">
+			<!--Note: CYRILLIC CAPITAL LETTER ROUND OMEGA -->
+			<textCharAction />
+		</node>
+		<node label="Ц">
+			<!--Note: CYRILLIC CAPITAL LETTER TSE -->
+			<textCharAction />
+		</node>
+		<node label="Ҵ">
+			<!--Note: CYRILLIC CAPITAL LIGATURE TE TSE -->
+			<textCharAction />
+		</node>
+		<node label="Ч">
+			<!--Note: CYRILLIC CAPITAL LETTER CHE -->
+			<textCharAction />
+		</node>
+		<node label="Ӵ">
+			<!--Note: CYRILLIC CAPITAL LETTER CHE WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ҷ">
+			<!--Note: CYRILLIC CAPITAL LETTER CHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Ӌ">
+			<!--Note: CYRILLIC CAPITAL LETTER KHAKASSIAN CHE -->
+			<textCharAction />
+		</node>
+		<node label="Ҹ">
+			<!--Note: CYRILLIC CAPITAL LETTER CHE WITH VERTICAL STROKE -->
+			<textCharAction />
+		</node>
+		<node label="Ҽ">
+			<!--Note: CYRILLIC CAPITAL LETTER ABKHASIAN CHE -->
+			<textCharAction />
+		</node>
+		<node label="Ҿ">
+			<!--Note: CYRILLIC CAPITAL LETTER ABKHASIAN CHE WITH DESCENDER -->
+			<textCharAction />
+		</node>
+		<node label="Џ">
+			<!--Note: CYRILLIC CAPITAL LETTER DZHE -->
+			<textCharAction />
+		</node>
+		<node label="Ш">
+			<!--Note: CYRILLIC CAPITAL LETTER SHA -->
+			<textCharAction />
+		</node>
+		<node label="Щ">
+			<!--Note: CYRILLIC CAPITAL LETTER SHCHA -->
+			<textCharAction />
+		</node>
+		<node label="Ъ">
+			<!--Note: CYRILLIC CAPITAL LETTER HARD SIGN -->
+			<textCharAction />
+		</node>
+		<node label="Ы">
+			<!--Note: CYRILLIC CAPITAL LETTER YERU -->
+			<textCharAction />
+		</node>
+		<node label="Ӹ">
+			<!--Note: CYRILLIC CAPITAL LETTER YERU WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ь">
+			<!--Note: CYRILLIC CAPITAL LETTER SOFT SIGN -->
+			<textCharAction />
+		</node>
+		<node label="Ҍ">
+			<!--Note: CYRILLIC CAPITAL LETTER SEMISOFT SIGN -->
+			<textCharAction />
+		</node>
+		<node label="Ѣ">
+			<!--Note: CYRILLIC CAPITAL LETTER YAT -->
+			<textCharAction />
+		</node>
+		<node label="Э">
+			<!--Note: CYRILLIC CAPITAL LETTER E -->
+			<textCharAction />
+		</node>
+		<node label="Ӭ">
+			<!--Note: CYRILLIC CAPITAL LETTER E WITH DIAERESIS -->
+			<textCharAction />
+		</node>
+		<node label="Ю">
+			<!--Note: CYRILLIC CAPITAL LETTER YU -->
+			<textCharAction />
+		</node>
+		<node label="Я">
+			<!--Note: CYRILLIC CAPITAL LETTER YA -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="2">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="3">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="4">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="5">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="6">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="7">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="8">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="9">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="0">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="*">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="+">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="=">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="/">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="#">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="$">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="|">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="\">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="~">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="^">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="_">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="@">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="[">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="]">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="{">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="}">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="(">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label=")">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="“">
+			<!--Old Char Color: 108-->
+			<!--Note: left double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<!--Old Char Color: 109-->
+			<!--Note: deprecated vertical double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="”">
+			<!--Old Char Color: 106-->
+			<!--Note: right double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="‘">
+			<!--Old Char Color: 107-->
+			<!--Note: left single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="’">
+			<!--Old Char Color: 108-->
+			<!--Note: right single quotation mark and apostrophe-->
+			<textCharAction />
+		</node>
+		<node label="`">
+			<!--Old Char Color: 109-->
+			<!--Note: left quote from keyboard-->
+			<textCharAction />
+		</node>
+		<node label="◌̓">
+			<!--Old Char Color: 105-->
+			<!--Note:  apostrophe-->
+			<textCharAction unicode="39" />
+		</node>
+		<node label="◊">
+			<!--Old Char Color: 9-->
+			<!--Note: TAB (represented by a diamond)-->
+			<textCharAction unicode="9" />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<textCharAction />
+		</node>
+		<node label=";">
+			<!--Old Char Color: 102-->
+			<textCharAction />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="_ Runic" orientation="LR" trainingFilename="training_runic_XX.txt" colorsName="Default">
+	<group name="Runic characters">
+		<node label="ᚠ">
+			<!--Note: RUNIC LETTER FEHU FEOH FE F-->
+			<textCharAction />
+		</node>
+		<node label="ᚡ">
+			<!--Note: RUNIC LETTER V-->
+			<textCharAction />
+		</node>
+		<node label="ᚢ">
+			<!--Note: RUNIC LETTER URUZ UR U-->
+			<textCharAction />
+		</node>
+		<node label="ᚣ">
+			<!--Note: RUNIC LETTER YR-->
+			<textCharAction />
+		</node>
+		<node label="ᚤ">
+			<!--Note: RUNIC LETTER Y-->
+			<textCharAction />
+		</node>
+		<node label="ᚥ">
+			<!--Note: RUNIC LETTER W-->
+			<textCharAction />
+		</node>
+		<node label="ᚦ">
+			<!--Note: RUNIC LETTER THURISAZ THURS THORN-->
+			<textCharAction />
+		</node>
+		<node label="ᚧ">
+			<!--Note: RUNIC LETTER ETH-->
+			<textCharAction />
+		</node>
+		<node label="ᚨ">
+			<!--Note: RUNIC LETTER ANSUZ A-->
+			<textCharAction />
+		</node>
+		<node label="ᚩ">
+			<!--Note: RUNIC LETTER OS O-->
+			<textCharAction />
+		</node>
+		<node label="ᚪ">
+			<!--Note: RUNIC LETTER AC A-->
+			<textCharAction />
+		</node>
+		<node label="ᚫ">
+			<!--Note: RUNIC LETTER AESC-->
+			<textCharAction />
+		</node>
+		<node label="ᚬ">
+			<!--Note: RUNIC LETTER LONG-BRANCH-OSS O-->
+			<textCharAction />
+		</node>
+		<node label="ᚭ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-OSS O-->
+			<textCharAction />
+		</node>
+		<node label="ᚮ">
+			<!--Note: RUNIC LETTER O-->
+			<textCharAction />
+		</node>
+		<node label="ᚯ">
+			<!--Note: RUNIC LETTER OE-->
+			<textCharAction />
+		</node>
+		<node label="ᚰ">
+			<!--Note: RUNIC LETTER ON-->
+			<textCharAction />
+		</node>
+		<node label="ᚱ">
+			<!--Note: RUNIC LETTER RAIDO RAD REID R-->
+			<textCharAction />
+		</node>
+		<node label="ᚲ">
+			<!--Note: RUNIC LETTER KAUNA-->
+			<textCharAction />
+		</node>
+		<node label="ᚳ">
+			<!--Note: RUNIC LETTER CEN-->
+			<textCharAction />
+		</node>
+		<node label="ᚴ">
+			<!--Note: RUNIC LETTER KAUN K-->
+			<textCharAction />
+		</node>
+		<node label="ᚵ">
+			<!--Note: RUNIC LETTER G-->
+			<textCharAction />
+		</node>
+		<node label="ᚶ">
+			<!--Note: RUNIC LETTER ENG-->
+			<textCharAction />
+		</node>
+		<node label="ᚷ">
+			<!--Note: RUNIC LETTER GEBO GYFU G-->
+			<textCharAction />
+		</node>
+		<node label="ᚸ">
+			<!--Note: RUNIC LETTER GAR-->
+			<textCharAction />
+		</node>
+		<node label="ᚹ">
+			<!--Note: RUNIC LETTER WUNJO WYNN W-->
+			<textCharAction />
+		</node>
+		<node label="ᚺ">
+			<!--Note: RUNIC LETTER HAGLAZ H-->
+			<textCharAction />
+		</node>
+		<node label="ᚻ">
+			<!--Note: RUNIC LETTER HAEGL H-->
+			<textCharAction />
+		</node>
+		<node label="ᚼ">
+			<!--Note: RUNIC LETTER LONG-BRANCH-HAGALL H-->
+			<textCharAction />
+		</node>
+		<node label="ᚽ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-HAGALL H-->
+			<textCharAction />
+		</node>
+		<node label="ᚾ">
+			<!--Note: RUNIC LETTER NAUDIZ NYD NAUD N-->
+			<textCharAction />
+		</node>
+		<node label="ᚿ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-NAUD N-->
+			<textCharAction />
+		</node>
+		<node label="ᛀ">
+			<!--Note: RUNIC LETTER DOTTED-N-->
+			<textCharAction />
+		</node>
+		<node label="ᛁ">
+			<!--Note: RUNIC LETTER ISAZ IS ISS I-->
+			<textCharAction />
+		</node>
+		<node label="ᛂ">
+			<!--Note: RUNIC LETTER E-->
+			<textCharAction />
+		</node>
+		<node label="ᛃ">
+			<!--Note: RUNIC LETTER JERAN J-->
+			<textCharAction />
+		</node>
+		<node label="ᛄ">
+			<!--Note: RUNIC LETTER GER-->
+			<textCharAction />
+		</node>
+		<node label="ᛅ">
+			<!--Note: RUNIC LETTER LONG-BRANCH-AR AE-->
+			<textCharAction />
+		</node>
+		<node label="ᛆ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-AR A-->
+			<textCharAction />
+		</node>
+		<node label="ᛇ">
+			<!--Note: RUNIC LETTER IWAZ EOH-->
+			<textCharAction />
+		</node>
+		<node label="ᛈ">
+			<!--Note: RUNIC LETTER PERTHO PEORTH P-->
+			<textCharAction />
+		</node>
+		<node label="ᛉ">
+			<!--Note: RUNIC LETTER ALGIZ EOLHX-->
+			<textCharAction />
+		</node>
+		<node label="ᛊ">
+			<!--Note: RUNIC LETTER SOWILO S-->
+			<textCharAction />
+		</node>
+		<node label="ᛋ">
+			<!--Note: RUNIC LETTER SIGEL LONG-BRANCH-SOL S-->
+			<textCharAction />
+		</node>
+		<node label="ᛌ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-SOL S-->
+			<textCharAction />
+		</node>
+		<node label="ᛍ">
+			<!--Note: RUNIC LETTER C-->
+			<textCharAction />
+		</node>
+		<node label="ᛎ">
+			<!--Note: RUNIC LETTER Z-->
+			<textCharAction />
+		</node>
+		<node label="ᛏ">
+			<!--Note: RUNIC LETTER TIWAZ TIR TYR T-->
+			<textCharAction />
+		</node>
+		<node label="ᛐ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-TYR T-->
+			<textCharAction />
+		</node>
+		<node label="ᛑ">
+			<!--Note: RUNIC LETTER D-->
+			<textCharAction />
+		</node>
+		<node label="ᛒ">
+			<!--Note: RUNIC LETTER BERKANAN BEORC BJARKAN B-->
+			<textCharAction />
+		</node>
+		<node label="ᛓ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-BJARKAN B-->
+			<textCharAction />
+		</node>
+		<node label="ᛔ">
+			<!--Note: RUNIC LETTER DOTTED-P-->
+			<textCharAction />
+		</node>
+		<node label="ᛕ">
+			<!--Note: RUNIC LETTER OPEN-P-->
+			<textCharAction />
+		</node>
+		<node label="ᛖ">
+			<!--Note: RUNIC LETTER EHWAZ EH E-->
+			<textCharAction />
+		</node>
+		<node label="ᛗ">
+			<!--Note: RUNIC LETTER MANNAZ MAN M-->
+			<textCharAction />
+		</node>
+		<node label="ᛘ">
+			<!--Note: RUNIC LETTER LONG-BRANCH-MADR M-->
+			<textCharAction />
+		</node>
+		<node label="ᛙ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-MADR M-->
+			<textCharAction />
+		</node>
+		<node label="ᛚ">
+			<!--Note: RUNIC LETTER LAUKAZ LAGU LOGR L-->
+			<textCharAction />
+		</node>
+		<node label="ᛛ">
+			<!--Note: RUNIC LETTER DOTTED-L-->
+			<textCharAction />
+		</node>
+		<node label="ᛜ">
+			<!--Note: RUNIC LETTER INGWAZ-->
+			<textCharAction />
+		</node>
+		<node label="ᛝ">
+			<!--Note: RUNIC LETTER ING-->
+			<textCharAction />
+		</node>
+		<node label="ᛞ">
+			<!--Note: RUNIC LETTER DAGAZ DAEG D-->
+			<textCharAction />
+		</node>
+		<node label="ᛟ">
+			<!--Note: RUNIC LETTER OTHALAN ETHEL O-->
+			<textCharAction />
+		</node>
+		<node label="ᛠ">
+			<!--Note: RUNIC LETTER EAR-->
+			<textCharAction />
+		</node>
+		<node label="ᛡ">
+			<!--Note: RUNIC LETTER IOR-->
+			<textCharAction />
+		</node>
+		<node label="ᛢ">
+			<!--Note: RUNIC LETTER CWEORTH-->
+			<textCharAction />
+		</node>
+		<node label="ᛣ">
+			<!--Note: RUNIC LETTER CALC-->
+			<textCharAction />
+		</node>
+		<node label="ᛤ">
+			<!--Note: RUNIC LETTER CEALC-->
+			<textCharAction />
+		</node>
+		<node label="ᛥ">
+			<!--Note: RUNIC LETTER STAN-->
+			<textCharAction />
+		</node>
+		<node label="ᛦ">
+			<!--Note: RUNIC LETTER LONG-BRANCH-YR-->
+			<textCharAction />
+		</node>
+		<node label="ᛧ">
+			<!--Note: RUNIC LETTER SHORT-TWIG-YR-->
+			<textCharAction />
+		</node>
+		<node label="ᛨ">
+			<!--Note: RUNIC LETTER ICELANDIC-YR-->
+			<textCharAction />
+		</node>
+		<node label="ᛩ">
+			<!--Note: RUNIC LETTER Q-->
+			<textCharAction />
+		</node>
+		<node label="ᛪ">
+			<!--Note: RUNIC LETTER X-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Runic punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 0-->
+		<node label="᛫">
+			<!--Note: RUNIC SINGLE PUNCTUATION-->
+			<textCharAction />
+		</node>
+		<node label="᛬">
+			<!--Note: RUNIC MULTIPLE PUNCTUATION-->
+			<textCharAction />
+		</node>
+		<node label="᛭">
+			<!--Note: RUNIC CROSS PUNCTUATION-->
+			<textCharAction />
+		</node>
+		<node label="ᛮ">
+			<!--Note: RUNIC ARLAUG SYMBOL-->
+			<textCharAction />
+		</node>
+		<node label="ᛯ">
+			<!--Note: RUNIC TVIMADUR SYMBOL-->
+			<textCharAction />
+		</node>
+		<node label="ᛰ">
+			<!--Note: RUNIC BELGTHOR SYMBOL-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

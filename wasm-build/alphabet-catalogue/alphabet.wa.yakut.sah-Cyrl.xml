@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Yakut (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="а">
+      <textCharAction />
+    </node>
+    <node label="б">
+      <textCharAction />
+    </node>
+    <node label="г">
+      <textCharAction />
+    </node>
+    <node label="ҕ">
+      <textCharAction />
+    </node>
+    <node label="д">
+      <textCharAction />
+    </node>
+    <node label="ь">
+      <textCharAction />
+    </node>
+    <node label="и">
+      <textCharAction />
+    </node>
+    <node label="й">
+      <textCharAction />
+    </node>
+    <node label="к">
+      <textCharAction />
+    </node>
+    <node label="л">
+      <textCharAction />
+    </node>
+    <node label="м">
+      <textCharAction />
+    </node>
+    <node label="н">
+      <textCharAction />
+    </node>
+    <node label="ҥ">
+      <textCharAction />
+    </node>
+    <node label="о">
+      <textCharAction />
+    </node>
+    <node label="ө">
+      <textCharAction />
+    </node>
+    <node label="п">
+      <textCharAction />
+    </node>
+    <node label="р">
+      <textCharAction />
+    </node>
+    <node label="с">
+      <textCharAction />
+    </node>
+    <node label="т">
+      <textCharAction />
+    </node>
+    <node label="у">
+      <textCharAction />
+    </node>
+    <node label="ү">
+      <textCharAction />
+    </node>
+    <node label="х">
+      <textCharAction />
+    </node>
+    <node label="һ">
+      <textCharAction />
+    </node>
+    <node label="ч">
+      <textCharAction />
+    </node>
+    <node label="ы">
+      <textCharAction />
+    </node>
+    <node label="э">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="А">
+      <textCharAction />
+    </node>
+    <node label="Б">
+      <textCharAction />
+    </node>
+    <node label="Г">
+      <textCharAction />
+    </node>
+    <node label="Ҕ">
+      <textCharAction />
+    </node>
+    <node label="Д">
+      <textCharAction />
+    </node>
+    <node label="Ь">
+      <textCharAction />
+    </node>
+    <node label="И">
+      <textCharAction />
+    </node>
+    <node label="Й">
+      <textCharAction />
+    </node>
+    <node label="К">
+      <textCharAction />
+    </node>
+    <node label="Л">
+      <textCharAction />
+    </node>
+    <node label="М">
+      <textCharAction />
+    </node>
+    <node label="Н">
+      <textCharAction />
+    </node>
+    <node label="Ҥ">
+      <textCharAction />
+    </node>
+    <node label="О">
+      <textCharAction />
+    </node>
+    <node label="Ө">
+      <textCharAction />
+    </node>
+    <node label="П">
+      <textCharAction />
+    </node>
+    <node label="Р">
+      <textCharAction />
+    </node>
+    <node label="С">
+      <textCharAction />
+    </node>
+    <node label="Т">
+      <textCharAction />
+    </node>
+    <node label="У">
+      <textCharAction />
+    </node>
+    <node label="Ү">
+      <textCharAction />
+    </node>
+    <node label="Х">
+      <textCharAction />
+    </node>
+    <node label="Һ">
+      <textCharAction />
+    </node>
+    <node label="Ч">
+      <textCharAction />
+    </node>
+    <node label="Ы">
+      <textCharAction />
+    </node>
+    <node label="Э">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="0">
+      <textCharAction />
+    </node>
+    <node label="1">
+      <textCharAction />
+    </node>
+    <node label="2">
+      <textCharAction />
+    </node>
+    <node label="3">
+      <textCharAction />
+    </node>
+    <node label="4">
+      <textCharAction />
+    </node>
+    <node label="5">
+      <textCharAction />
+    </node>
+    <node label="6">
+      <textCharAction />
+    </node>
+    <node label="7">
+      <textCharAction />
+    </node>
+    <node label="8">
+      <textCharAction />
+    </node>
+    <node label="9">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Greek (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_el_Grek.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="α">
+      <textCharAction />
+    </node>
+    <node label="β">
+      <textCharAction />
+    </node>
+    <node label="γ">
+      <textCharAction />
+    </node>
+    <node label="δ">
+      <textCharAction />
+    </node>
+    <node label="ε">
+      <textCharAction />
+    </node>
+    <node label="ζ">
+      <textCharAction />
+    </node>
+    <node label="η">
+      <textCharAction />
+    </node>
+    <node label="θ">
+      <textCharAction />
+    </node>
+    <node label="ι">
+      <textCharAction />
+    </node>
+    <node label="κ">
+      <textCharAction />
+    </node>
+    <node label="λ">
+      <textCharAction />
+    </node>
+    <node label="μ">
+      <textCharAction />
+    </node>
+    <node label="ν">
+      <textCharAction />
+    </node>
+    <node label="ξ">
+      <textCharAction />
+    </node>
+    <node label="ο">
+      <textCharAction />
+    </node>
+    <node label="π">
+      <textCharAction />
+    </node>
+    <node label="ρ">
+      <textCharAction />
+    </node>
+    <node label="ς">
+      <textCharAction />
+    </node>
+    <node label="σ">
+      <textCharAction />
+    </node>
+    <node label="τ">
+      <textCharAction />
+    </node>
+    <node label="υ">
+      <textCharAction />
+    </node>
+    <node label="φ">
+      <textCharAction />
+    </node>
+    <node label="χ">
+      <textCharAction />
+    </node>
+    <node label="ψ">
+      <textCharAction />
+    </node>
+    <node label="ω">
+      <textCharAction />
+    </node>
+    <node label="ΐ">
+      <textCharAction />
+    </node>
+    <node label="ά">
+      <textCharAction />
+    </node>
+    <node label="έ">
+      <textCharAction />
+    </node>
+    <node label="ή">
+      <textCharAction />
+    </node>
+    <node label="ί">
+      <textCharAction />
+    </node>
+    <node label="ΰ">
+      <textCharAction />
+    </node>
+    <node label="ϊ">
+      <textCharAction />
+    </node>
+    <node label="ϋ">
+      <textCharAction />
+    </node>
+    <node label="ό">
+      <textCharAction />
+    </node>
+    <node label="ύ">
+      <textCharAction />
+    </node>
+    <node label="ώ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="Α">
+      <textCharAction />
+    </node>
+    <node label="Β">
+      <textCharAction />
+    </node>
+    <node label="Γ">
+      <textCharAction />
+    </node>
+    <node label="Δ">
+      <textCharAction />
+    </node>
+    <node label="Ε">
+      <textCharAction />
+    </node>
+    <node label="Ζ">
+      <textCharAction />
+    </node>
+    <node label="Η">
+      <textCharAction />
+    </node>
+    <node label="Θ">
+      <textCharAction />
+    </node>
+    <node label="Ι">
+      <textCharAction />
+    </node>
+    <node label="Κ">
+      <textCharAction />
+    </node>
+    <node label="Λ">
+      <textCharAction />
+    </node>
+    <node label="Μ">
+      <textCharAction />
+    </node>
+    <node label="Ν">
+      <textCharAction />
+    </node>
+    <node label="Ξ">
+      <textCharAction />
+    </node>
+    <node label="Ο">
+      <textCharAction />
+    </node>
+    <node label="Π">
+      <textCharAction />
+    </node>
+    <node label="Ρ">
+      <textCharAction />
+    </node>
+    <node label="Σ">
+      <textCharAction />
+    </node>
+    <node label="Σ">
+      <textCharAction />
+    </node>
+    <node label="Τ">
+      <textCharAction />
+    </node>
+    <node label="Υ">
+      <textCharAction />
+    </node>
+    <node label="Φ">
+      <textCharAction />
+    </node>
+    <node label="Χ">
+      <textCharAction />
+    </node>
+    <node label="Ψ">
+      <textCharAction />
+    </node>
+    <node label="Ω">
+      <textCharAction />
+    </node>
+    <node label="Ϊ́">
+      <textCharAction />
+    </node>
+    <node label="Ά">
+      <textCharAction />
+    </node>
+    <node label="Έ">
+      <textCharAction />
+    </node>
+    <node label="Ή">
+      <textCharAction />
+    </node>
+    <node label="Ί">
+      <textCharAction />
+    </node>
+    <node label="Ϋ́">
+      <textCharAction />
+    </node>
+    <node label="Ϊ">
+      <textCharAction />
+    </node>
+    <node label="Ϋ">
+      <textCharAction />
+    </node>
+    <node label="Ό">
+      <textCharAction />
+    </node>
+    <node label="Ύ">
+      <textCharAction />
+    </node>
+    <node label="Ώ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

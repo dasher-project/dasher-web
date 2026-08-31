@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Abc (Musical language)" orientation="LR" trainingFilename="training_abc_XX.txt" colorsName="European/Asian">
+	<!-- alphabet file created from english.xml by David MacKay using
+ information from http://www.lesession.co.uk/abc/abc_notation.htm .
+ Rather than making Abc-specific groups, with a new alphabetical
+ order, I thought it might be more user-friendly to stick with the
+ English order. The only changes here are notes.
+  See also  http://staffweb.cms.gre.ac.uk/~c.walshaw/abc/
+ -->
+	<group name="Second octave notes" colorInfoName="lowercase">
+		<node label="a">
+			<!--Old Char Color: 10-->
+			<textCharAction />
+		</node>
+		<node label="b">
+			<!--Old Char Color: 11-->
+			<textCharAction />
+		</node>
+		<node label="c">
+			<!--Old Char Color: 12-->
+			<textCharAction />
+		</node>
+		<node label="d">
+			<!--Old Char Color: 13-->
+			<textCharAction />
+		</node>
+		<node label="e">
+			<!--Old Char Color: 14-->
+			<textCharAction />
+		</node>
+		<node label="f">
+			<!--Old Char Color: 15-->
+			<textCharAction />
+		</node>
+		<node label="g">
+			<!--Old Char Color: 16-->
+			<textCharAction />
+		</node>
+		<!-- end notes -->
+		<node label="h">
+			<!--Old Char Color: 17-->
+			<textCharAction />
+		</node>
+		<node label="i">
+			<!--Old Char Color: 18-->
+			<textCharAction />
+		</node>
+		<node label="j">
+			<!--Old Char Color: 19-->
+			<textCharAction />
+		</node>
+		<node label="k">
+			<!--Old Char Color: 20-->
+			<textCharAction />
+		</node>
+		<node label="l">
+			<!--Old Char Color: 21-->
+			<textCharAction />
+		</node>
+		<node label="m">
+			<!--Old Char Color: 22-->
+			<textCharAction />
+		</node>
+		<node label="n">
+			<!--Old Char Color: 23-->
+			<textCharAction />
+		</node>
+		<node label="o">
+			<!--Old Char Color: 24-->
+			<textCharAction />
+		</node>
+		<node label="p">
+			<!--Old Char Color: 25-->
+			<textCharAction />
+		</node>
+		<node label="q">
+			<!--Old Char Color: 26-->
+			<textCharAction />
+		</node>
+		<node label="r">
+			<!--Old Char Color: 27-->
+			<textCharAction />
+		</node>
+		<node label="s">
+			<!--Old Char Color: 28-->
+			<textCharAction />
+		</node>
+		<node label="t">
+			<!--Old Char Color: 29-->
+			<textCharAction />
+		</node>
+		<node label="u">
+			<!--Old Char Color: 30-->
+			<textCharAction />
+		</node>
+		<node label="v">
+			<!--Old Char Color: 31-->
+			<textCharAction />
+		</node>
+		<node label="w">
+			<!--Old Char Color: 32-->
+			<textCharAction />
+		</node>
+		<node label="x">
+			<!--Old Char Color: 33-->
+			<textCharAction />
+		</node>
+		<node label="y">
+			<!--Old Char Color: 34-->
+			<textCharAction />
+		</node>
+		<!-- -->
+		<node label="z">
+			<!--Old Char Color: 35-->
+			<!--Note: rest-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="First octave notes" colorInfoName="lowercase">
+		<!--Old Group Color: 111-->
+		<node label="A">
+			<!--Old Char Color: 10-->
+			<textCharAction />
+		</node>
+		<node label="B">
+			<!--Old Char Color: 11-->
+			<textCharAction />
+		</node>
+		<node label="C">
+			<!--Old Char Color: 12-->
+			<!--Note: composer-->
+			<textCharAction />
+		</node>
+		<node label="D">
+			<!--Old Char Color: 13-->
+			<textCharAction />
+		</node>
+		<node label="E">
+			<!--Old Char Color: 14-->
+			<textCharAction />
+		</node>
+		<node label="F">
+			<!--Old Char Color: 15-->
+			<textCharAction />
+		</node>
+		<node label="G">
+			<!--Old Char Color: 16-->
+			<textCharAction />
+		</node>
+		<node label="H">
+			<!--Old Char Color: 17-->
+			<textCharAction />
+		</node>
+		<node label="I">
+			<!--Old Char Color: 18-->
+			<textCharAction />
+		</node>
+		<node label="J">
+			<!--Old Char Color: 19-->
+			<textCharAction />
+		</node>
+		<node label="K">
+			<!--Old Char Color: 20-->
+			<!--Note: key signature-->
+			<textCharAction />
+		</node>
+		<node label="L">
+			<!--Old Char Color: 21-->
+			<!--Note: default duration-->
+			<textCharAction />
+		</node>
+		<node label="M">
+			<!--Old Char Color: 22-->
+			<!--Note: meter-->
+			<textCharAction />
+		</node>
+		<node label="N">
+			<!--Old Char Color: 23-->
+			<!--Note: notes-->
+			<textCharAction />
+		</node>
+		<node label="O">
+			<!--Old Char Color: 24-->
+			<!--Note: origin-->
+			<textCharAction />
+		</node>
+		<node label="P">
+			<!--Old Char Color: 25-->
+			<textCharAction />
+		</node>
+		<node label="Q">
+			<!--Old Char Color: 26-->
+			<!--Note: tempo-->
+			<textCharAction />
+		</node>
+		<node label="R">
+			<!--Old Char Color: 27-->
+			<textCharAction />
+		</node>
+		<node label="S">
+			<!--Old Char Color: 28-->
+			<!--Note: source-->
+			<textCharAction />
+		</node>
+		<node label="T">
+			<!--Old Char Color: 29-->
+			<!--Note: title-->
+			<textCharAction />
+		</node>
+		<node label="U">
+			<!--Old Char Color: 30-->
+			<textCharAction />
+		</node>
+		<node label="V">
+			<!--Old Char Color: 31-->
+			<textCharAction />
+		</node>
+		<node label="W">
+			<!--Old Char Color: 32-->
+			<textCharAction />
+		</node>
+		<node label="X">
+			<!--Old Char Color: 33-->
+			<!--Note: index-->
+			<textCharAction />
+		</node>
+		<node label="Y">
+			<!--Old Char Color: 34-->
+			<textCharAction />
+		</node>
+		<node label="Z">
+			<!--Old Char Color: 35-->
+			<!--Note: transcriber-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="2">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="3">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="4">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="5">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="6">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="7">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="8">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="9">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="0">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Annotation" colorInfoName="lowercase">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="*">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="+">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="=">
+			<!--Old Char Color: 93-->
+			<!--Note: natural-->
+			<textCharAction />
+		</node>
+		<node label="/">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="#">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="$">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="|">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="\">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="~">
+			<!--Old Char Color: 99-->
+			<!--Note: grace note-->
+			<textCharAction />
+		</node>
+		<node label="^">
+			<!--Old Char Color: 95-->
+			<!--Note: sharp-->
+			<textCharAction />
+		</node>
+		<node label="_">
+			<!--Old Char Color: 96-->
+			<!--Note: flat-->
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="@">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="[">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="]">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="{">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="}">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="(">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label=")">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="“">
+			<!--Old Char Color: 108-->
+			<!--Note: left double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<!--Old Char Color: 109-->
+			<!--Note: deprecated vertical double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="”">
+			<!--Old Char Color: 106-->
+			<!--Note: right double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="‘">
+			<!--Old Char Color: 107-->
+			<!--Note: left single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="’">
+			<!--Old Char Color: 108-->
+			<!--Note: right single quotation mark and apostrophe-->
+			<textCharAction />
+		</node>
+		<node label="`">
+			<!--Old Char Color: 109-->
+			<!--Note: left quote from keyboard-->
+			<textCharAction />
+		</node>
+		<node label="'">
+			<!--Old Char Color: 105-->
+			<!--Note: up an octave-->
+			<textCharAction />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<!--Note: tie notes of same pitch-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<!--Note: used in repeats and in header-->
+			<textCharAction />
+		</node>
+		<node label=";">
+			<!--Old Char Color: 102-->
+			<textCharAction />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<!--Note: down an octave-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

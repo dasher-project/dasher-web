@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Armenian (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ա">
+      <textCharAction />
+    </node>
+    <node label="բ">
+      <textCharAction />
+    </node>
+    <node label="գ">
+      <textCharAction />
+    </node>
+    <node label="դ">
+      <textCharAction />
+    </node>
+    <node label="ե">
+      <textCharAction />
+    </node>
+    <node label="զ">
+      <textCharAction />
+    </node>
+    <node label="է">
+      <textCharAction />
+    </node>
+    <node label="ը">
+      <textCharAction />
+    </node>
+    <node label="թ">
+      <textCharAction />
+    </node>
+    <node label="ժ">
+      <textCharAction />
+    </node>
+    <node label="ի">
+      <textCharAction />
+    </node>
+    <node label="լ">
+      <textCharAction />
+    </node>
+    <node label="խ">
+      <textCharAction />
+    </node>
+    <node label="ծ">
+      <textCharAction />
+    </node>
+    <node label="կ">
+      <textCharAction />
+    </node>
+    <node label="հ">
+      <textCharAction />
+    </node>
+    <node label="ձ">
+      <textCharAction />
+    </node>
+    <node label="ղ">
+      <textCharAction />
+    </node>
+    <node label="ճ">
+      <textCharAction />
+    </node>
+    <node label="մ">
+      <textCharAction />
+    </node>
+    <node label="յ">
+      <textCharAction />
+    </node>
+    <node label="ն">
+      <textCharAction />
+    </node>
+    <node label="շ">
+      <textCharAction />
+    </node>
+    <node label="ո">
+      <textCharAction />
+    </node>
+    <node label="չ">
+      <textCharAction />
+    </node>
+    <node label="պ">
+      <textCharAction />
+    </node>
+    <node label="ջ">
+      <textCharAction />
+    </node>
+    <node label="ռ">
+      <textCharAction />
+    </node>
+    <node label="ս">
+      <textCharAction />
+    </node>
+    <node label="վ">
+      <textCharAction />
+    </node>
+    <node label="տ">
+      <textCharAction />
+    </node>
+    <node label="ր">
+      <textCharAction />
+    </node>
+    <node label="ց">
+      <textCharAction />
+    </node>
+    <node label="ւ">
+      <textCharAction />
+    </node>
+    <node label="փ">
+      <textCharAction />
+    </node>
+    <node label="ք">
+      <textCharAction />
+    </node>
+    <node label="օ">
+      <textCharAction />
+    </node>
+    <node label="ֆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="Ա">
+      <textCharAction />
+    </node>
+    <node label="Բ">
+      <textCharAction />
+    </node>
+    <node label="Գ">
+      <textCharAction />
+    </node>
+    <node label="Դ">
+      <textCharAction />
+    </node>
+    <node label="Ե">
+      <textCharAction />
+    </node>
+    <node label="Զ">
+      <textCharAction />
+    </node>
+    <node label="Է">
+      <textCharAction />
+    </node>
+    <node label="Ը">
+      <textCharAction />
+    </node>
+    <node label="Թ">
+      <textCharAction />
+    </node>
+    <node label="Ժ">
+      <textCharAction />
+    </node>
+    <node label="Ի">
+      <textCharAction />
+    </node>
+    <node label="Լ">
+      <textCharAction />
+    </node>
+    <node label="Խ">
+      <textCharAction />
+    </node>
+    <node label="Ծ">
+      <textCharAction />
+    </node>
+    <node label="Կ">
+      <textCharAction />
+    </node>
+    <node label="Հ">
+      <textCharAction />
+    </node>
+    <node label="Ձ">
+      <textCharAction />
+    </node>
+    <node label="Ղ">
+      <textCharAction />
+    </node>
+    <node label="Ճ">
+      <textCharAction />
+    </node>
+    <node label="Մ">
+      <textCharAction />
+    </node>
+    <node label="Յ">
+      <textCharAction />
+    </node>
+    <node label="Ն">
+      <textCharAction />
+    </node>
+    <node label="Շ">
+      <textCharAction />
+    </node>
+    <node label="Ո">
+      <textCharAction />
+    </node>
+    <node label="Չ">
+      <textCharAction />
+    </node>
+    <node label="Պ">
+      <textCharAction />
+    </node>
+    <node label="Ջ">
+      <textCharAction />
+    </node>
+    <node label="Ռ">
+      <textCharAction />
+    </node>
+    <node label="Ս">
+      <textCharAction />
+    </node>
+    <node label="Վ">
+      <textCharAction />
+    </node>
+    <node label="Տ">
+      <textCharAction />
+    </node>
+    <node label="Ր">
+      <textCharAction />
+    </node>
+    <node label="Ց">
+      <textCharAction />
+    </node>
+    <node label="Ւ">
+      <textCharAction />
+    </node>
+    <node label="Փ">
+      <textCharAction />
+    </node>
+    <node label="Ք">
+      <textCharAction />
+    </node>
+    <node label="Օ">
+      <textCharAction />
+    </node>
+    <node label="Ֆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

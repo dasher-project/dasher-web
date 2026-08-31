@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Korean (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_ko_Hang.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ㄱ">
+      <textCharAction />
+    </node>
+    <node label="ㄴ">
+      <textCharAction />
+    </node>
+    <node label="ㄷ">
+      <textCharAction />
+    </node>
+    <node label="ㄹ">
+      <textCharAction />
+    </node>
+    <node label="ㅁ">
+      <textCharAction />
+    </node>
+    <node label="ㅂ">
+      <textCharAction />
+    </node>
+    <node label="ㅅ">
+      <textCharAction />
+    </node>
+    <node label="ㅇ">
+      <textCharAction />
+    </node>
+    <node label="ㅈ">
+      <textCharAction />
+    </node>
+    <node label="ㅊ">
+      <textCharAction />
+    </node>
+    <node label="ㅋ">
+      <textCharAction />
+    </node>
+    <node label="ㅌ">
+      <textCharAction />
+    </node>
+    <node label="ㅍ">
+      <textCharAction />
+    </node>
+    <node label="ㅎ">
+      <textCharAction />
+    </node>
+    <node label="ㅏ">
+      <textCharAction />
+    </node>
+    <node label="ㅑ">
+      <textCharAction />
+    </node>
+    <node label="ㅓ">
+      <textCharAction />
+    </node>
+    <node label="ㅕ">
+      <textCharAction />
+    </node>
+    <node label="ㅗ">
+      <textCharAction />
+    </node>
+    <node label="ㅛ">
+      <textCharAction />
+    </node>
+    <node label="ㅜ">
+      <textCharAction />
+    </node>
+    <node label="ㅠ">
+      <textCharAction />
+    </node>
+    <node label="ㅡ">
+      <textCharAction />
+    </node>
+    <node label="ㅣ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ㄱ">
+      <textCharAction />
+    </node>
+    <node label="ㄴ">
+      <textCharAction />
+    </node>
+    <node label="ㄷ">
+      <textCharAction />
+    </node>
+    <node label="ㄹ">
+      <textCharAction />
+    </node>
+    <node label="ㅁ">
+      <textCharAction />
+    </node>
+    <node label="ㅂ">
+      <textCharAction />
+    </node>
+    <node label="ㅅ">
+      <textCharAction />
+    </node>
+    <node label="ㅇ">
+      <textCharAction />
+    </node>
+    <node label="ㅈ">
+      <textCharAction />
+    </node>
+    <node label="ㅊ">
+      <textCharAction />
+    </node>
+    <node label="ㅋ">
+      <textCharAction />
+    </node>
+    <node label="ㅌ">
+      <textCharAction />
+    </node>
+    <node label="ㅍ">
+      <textCharAction />
+    </node>
+    <node label="ㅎ">
+      <textCharAction />
+    </node>
+    <node label="ㅏ">
+      <textCharAction />
+    </node>
+    <node label="ㅑ">
+      <textCharAction />
+    </node>
+    <node label="ㅓ">
+      <textCharAction />
+    </node>
+    <node label="ㅕ">
+      <textCharAction />
+    </node>
+    <node label="ㅗ">
+      <textCharAction />
+    </node>
+    <node label="ㅛ">
+      <textCharAction />
+    </node>
+    <node label="ㅜ">
+      <textCharAction />
+    </node>
+    <node label="ㅠ">
+      <textCharAction />
+    </node>
+    <node label="ㅡ">
+      <textCharAction />
+    </node>
+    <node label="ㅣ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

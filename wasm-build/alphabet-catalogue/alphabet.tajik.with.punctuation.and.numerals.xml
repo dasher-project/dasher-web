@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Tajik with punctuation and numerals" orientation="LR" trainingFilename="training_wa_tg_Cyrl.txt" colorsName="Default">
+	<group name="lower case letters">
+		<node label="а">
+			<textCharAction />
+		</node>
+		<node label="ӑ">
+			<textCharAction />
+		</node>
+		<node label="ӓ">
+			<textCharAction />
+		</node>
+		<node label="ә">
+			<textCharAction />
+		</node>
+		<node label="ӛ">
+			<textCharAction />
+		</node>
+		<node label="ӕ">
+			<textCharAction />
+		</node>
+		<node label="б">
+			<textCharAction />
+		</node>
+		<node label="в">
+			<textCharAction />
+		</node>
+		<node label="г">
+			<textCharAction />
+		</node>
+		<node label="ґ">
+			<textCharAction />
+		</node>
+		<node label="ҕ">
+			<textCharAction />
+		</node>
+		<node label="д">
+			<textCharAction />
+		</node>
+		<node label="ԁ">
+			<textCharAction />
+		</node>
+		<node label="ђ">
+			<textCharAction />
+		</node>
+		<node label="ԃ">
+			<textCharAction />
+		</node>
+		<node label="ѓ">
+			<textCharAction />
+		</node>
+		<node label="ҙ">
+			<textCharAction />
+		</node>
+		<node label="е">
+			<textCharAction />
+		</node>
+		<node label="ѐ">
+			<textCharAction />
+		</node>
+		<node label="ё">
+			<textCharAction />
+		</node>
+		<node label="ӗ">
+			<textCharAction />
+		</node>
+		<node label="є">
+			<textCharAction />
+		</node>
+		<node label="ж">
+			<textCharAction />
+		</node>
+		<node label="ӂ">
+			<textCharAction />
+		</node>
+		<node label="ӝ">
+			<textCharAction />
+		</node>
+		<node label="җ">
+			<textCharAction />
+		</node>
+		<node label="з">
+			<textCharAction />
+		</node>
+		<node label="ԅ">
+			<textCharAction />
+		</node>
+		<node label="ӟ">
+			<textCharAction />
+		</node>
+		<node label="ѕ">
+			<textCharAction />
+		</node>
+		<node label="ӡ">
+			<textCharAction />
+		</node>
+		<node label="ԇ">
+			<textCharAction />
+		</node>
+		<node label="и">
+			<textCharAction />
+		</node>
+		<node label="ѝ">
+			<textCharAction />
+		</node>
+		<node label="ҋ">
+			<textCharAction />
+		</node>
+		<node label="ӥ">
+			<textCharAction />
+		</node>
+		<node label="і">
+			<textCharAction />
+		</node>
+		<node label="ї">
+			<textCharAction />
+		</node>
+		<node label="й">
+			<textCharAction />
+		</node>
+		<node label="ј">
+			<textCharAction />
+		</node>
+		<node label="к">
+			<textCharAction />
+		</node>
+		<node label="ӄ">
+			<textCharAction />
+		</node>
+		<node label="ҡ">
+			<textCharAction />
+		</node>
+		<node label="ҟ">
+			<textCharAction />
+		</node>
+		<node label="ҝ">
+			<textCharAction />
+		</node>
+		<node label="л">
+			<textCharAction />
+		</node>
+		<!--ACL duplicated in uppercase also, unicode title is "small capital letter el"<s d="&#x1D2B;" t="&#x1D2B;" />-->
+		<node label="ӆ">
+			<textCharAction />
+		</node>
+		<node label="љ">
+			<textCharAction />
+		</node>
+		<node label="ԉ">
+			<textCharAction />
+		</node>
+		<node label="м">
+			<textCharAction />
+		</node>
+		<node label="ӎ">
+			<textCharAction />
+		</node>
+		<node label="н">
+			<textCharAction />
+		</node>
+		<node label="ӊ">
+			<textCharAction />
+		</node>
+		<node label="ң">
+			<textCharAction />
+		</node>
+		<node label="ӈ">
+			<textCharAction />
+		</node>
+		<node label="ҥ">
+			<textCharAction />
+		</node>
+		<node label="њ">
+			<textCharAction />
+		</node>
+		<node label="ԋ">
+			<textCharAction />
+		</node>
+		<node label="о">
+			<textCharAction />
+		</node>
+		<node label="ӧ">
+			<textCharAction />
+		</node>
+		<node label="ө">
+			<textCharAction />
+		</node>
+		<node label="ӫ">
+			<textCharAction />
+		</node>
+		<node label="п">
+			<textCharAction />
+		</node>
+		<node label="ҧ">
+			<textCharAction />
+		</node>
+		<node label="ҁ">
+			<textCharAction />
+		</node>
+		<node label="р">
+			<textCharAction />
+		</node>
+		<node label="ҏ">
+			<textCharAction />
+		</node>
+		<node label="с">
+			<textCharAction />
+		</node>
+		<node label="ԍ">
+			<textCharAction />
+		</node>
+		<node label="ҫ">
+			<textCharAction />
+		</node>
+		<node label="т">
+			<textCharAction />
+		</node>
+		<node label="ԏ">
+			<textCharAction />
+		</node>
+		<node label="ҭ">
+			<textCharAction />
+		</node>
+		<node label="ћ">
+			<textCharAction />
+		</node>
+		<node label="ќ">
+			<textCharAction />
+		</node>
+		<node label="у">
+			<textCharAction />
+		</node>
+		<node label="ў">
+			<textCharAction />
+		</node>
+		<node label="ӱ">
+			<textCharAction />
+		</node>
+		<node label="ӳ">
+			<textCharAction />
+		</node>
+		<node label="ү">
+			<textCharAction />
+		</node>
+		<node label="ұ">
+			<textCharAction />
+		</node>
+		<node label="ѹ">
+			<textCharAction />
+		</node>
+		<node label="ф">
+			<textCharAction />
+		</node>
+		<node label="х">
+			<textCharAction />
+		</node>
+		<node label="һ">
+			<textCharAction />
+		</node>
+		<node label="ѡ">
+			<textCharAction />
+		</node>
+		<node label="ѿ">
+			<textCharAction />
+		</node>
+		<node label="ѽ">
+			<textCharAction />
+		</node>
+		<node label="ѻ">
+			<textCharAction />
+		</node>
+		<node label="ц">
+			<textCharAction />
+		</node>
+		<node label="ҵ">
+			<textCharAction />
+		</node>
+		<node label="ч">
+			<textCharAction />
+		</node>
+		<node label="ӵ">
+			<textCharAction />
+		</node>
+		<node label="ӌ">
+			<textCharAction />
+		</node>
+		<node label="ҹ">
+			<textCharAction />
+		</node>
+		<node label="ҽ">
+			<textCharAction />
+		</node>
+		<node label="ҿ">
+			<textCharAction />
+		</node>
+		<node label="џ">
+			<textCharAction />
+		</node>
+		<node label="ш">
+			<textCharAction />
+		</node>
+		<node label="щ">
+			<textCharAction />
+		</node>
+		<node label="ъ">
+			<textCharAction />
+		</node>
+		<node label="ы">
+			<textCharAction />
+		</node>
+		<node label="ӹ">
+			<textCharAction />
+		</node>
+		<node label="ь">
+			<textCharAction />
+		</node>
+		<node label="ҍ">
+			<textCharAction />
+		</node>
+		<node label="ѣ">
+			<textCharAction />
+		</node>
+		<node label="э">
+			<textCharAction />
+		</node>
+		<node label="ӭ">
+			<textCharAction />
+		</node>
+		<node label="ю">
+			<textCharAction />
+		</node>
+		<node label="я">
+			<textCharAction />
+		</node>
+		<node label="ғ">
+			<textCharAction />
+		</node>
+		<node label="ӣ">
+			<textCharAction />
+		</node>
+		<node label="қ">
+			<textCharAction />
+		</node>
+		<node label="ӯ">
+			<textCharAction />
+		</node>
+		<node label="ҳ">
+			<textCharAction />
+		</node>
+		<node label="ҷ">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="upper case letters" colorInfoName="uppercase">
+		<!--Old Group Color: 111-->
+		<node label="А">
+			<textCharAction />
+		</node>
+		<node label="Ӑ">
+			<textCharAction />
+		</node>
+		<node label="Ӓ">
+			<textCharAction />
+		</node>
+		<node label="Ә">
+			<textCharAction />
+		</node>
+		<node label="Ӛ">
+			<textCharAction />
+		</node>
+		<node label="Ӕ">
+			<textCharAction />
+		</node>
+		<node label="Б">
+			<textCharAction />
+		</node>
+		<node label="В">
+			<textCharAction />
+		</node>
+		<node label="Г">
+			<textCharAction />
+		</node>
+		<node label="Ґ">
+			<textCharAction />
+		</node>
+		<node label="Ҕ">
+			<textCharAction />
+		</node>
+		<node label="Д">
+			<textCharAction />
+		</node>
+		<node label="Ԁ">
+			<textCharAction />
+		</node>
+		<node label="Ђ">
+			<textCharAction />
+		</node>
+		<node label="Ԃ">
+			<textCharAction />
+		</node>
+		<node label="Ѓ">
+			<textCharAction />
+		</node>
+		<node label="Ҙ">
+			<textCharAction />
+		</node>
+		<node label="Е">
+			<textCharAction />
+		</node>
+		<node label="Ѐ">
+			<textCharAction />
+		</node>
+		<node label="Ё">
+			<textCharAction />
+		</node>
+		<node label="Ӗ">
+			<textCharAction />
+		</node>
+		<node label="Є">
+			<textCharAction />
+		</node>
+		<node label="Ж">
+			<textCharAction />
+		</node>
+		<node label="Ӂ">
+			<textCharAction />
+		</node>
+		<node label="Ӝ">
+			<textCharAction />
+		</node>
+		<node label="Җ">
+			<textCharAction />
+		</node>
+		<node label="З">
+			<textCharAction />
+		</node>
+		<node label="Ԅ">
+			<textCharAction />
+		</node>
+		<node label="Ӟ">
+			<textCharAction />
+		</node>
+		<node label="Ѕ">
+			<textCharAction />
+		</node>
+		<node label="Ӡ">
+			<textCharAction />
+		</node>
+		<node label="Ԇ">
+			<textCharAction />
+		</node>
+		<node label="И">
+			<textCharAction />
+		</node>
+		<node label="Ѝ">
+			<textCharAction />
+		</node>
+		<node label="Ҋ">
+			<textCharAction />
+		</node>
+		<node label="Ӥ">
+			<textCharAction />
+		</node>
+		<node label="І">
+			<textCharAction />
+		</node>
+		<node label="Ї">
+			<textCharAction />
+		</node>
+		<node label="Й">
+			<textCharAction />
+		</node>
+		<node label="Ј">
+			<textCharAction />
+		</node>
+		<node label="К">
+			<textCharAction />
+		</node>
+		<node label="Ӄ">
+			<textCharAction />
+		</node>
+		<node label="Ҡ">
+			<textCharAction />
+		</node>
+		<node label="Ҟ">
+			<textCharAction />
+		</node>
+		<node label="Ҝ">
+			<textCharAction />
+		</node>
+		<node label="Л">
+			<textCharAction />
+		</node>
+		<node label="ᴫ">
+			<textCharAction />
+		</node>
+		<node label="Ӆ">
+			<textCharAction />
+		</node>
+		<node label="Љ">
+			<textCharAction />
+		</node>
+		<node label="Ԉ">
+			<textCharAction />
+		</node>
+		<node label="М">
+			<textCharAction />
+		</node>
+		<node label="Ӎ">
+			<textCharAction />
+		</node>
+		<node label="Н">
+			<textCharAction />
+		</node>
+		<node label="Ӊ">
+			<textCharAction />
+		</node>
+		<node label="Ң">
+			<textCharAction />
+		</node>
+		<node label="Ӈ">
+			<textCharAction />
+		</node>
+		<node label="Ҥ">
+			<textCharAction />
+		</node>
+		<node label="Њ">
+			<textCharAction />
+		</node>
+		<node label="Ԋ">
+			<textCharAction />
+		</node>
+		<node label="О">
+			<textCharAction />
+		</node>
+		<node label="Ӧ">
+			<textCharAction />
+		</node>
+		<node label="Ө">
+			<textCharAction />
+		</node>
+		<node label="Ӫ">
+			<textCharAction />
+		</node>
+		<node label="П">
+			<textCharAction />
+		</node>
+		<node label="Ҧ">
+			<textCharAction />
+		</node>
+		<node label="Ҁ">
+			<textCharAction />
+		</node>
+		<node label="Р">
+			<textCharAction />
+		</node>
+		<node label="Ҏ">
+			<textCharAction />
+		</node>
+		<node label="С">
+			<textCharAction />
+		</node>
+		<node label="Ԍ">
+			<textCharAction />
+		</node>
+		<node label="Ҫ">
+			<textCharAction />
+		</node>
+		<node label="Т">
+			<textCharAction />
+		</node>
+		<node label="Ԏ">
+			<textCharAction />
+		</node>
+		<node label="Ҭ">
+			<textCharAction />
+		</node>
+		<node label="Ћ">
+			<textCharAction />
+		</node>
+		<node label="Ќ">
+			<textCharAction />
+		</node>
+		<node label="У">
+			<textCharAction />
+		</node>
+		<node label="Ў">
+			<textCharAction />
+		</node>
+		<node label="Ӱ">
+			<textCharAction />
+		</node>
+		<node label="Ӳ">
+			<textCharAction />
+		</node>
+		<node label="Ү">
+			<textCharAction />
+		</node>
+		<node label="Ұ">
+			<textCharAction />
+		</node>
+		<node label="Ѹ">
+			<textCharAction />
+		</node>
+		<node label="Ф">
+			<textCharAction />
+		</node>
+		<node label="Х">
+			<textCharAction />
+		</node>
+		<node label="Һ">
+			<textCharAction />
+		</node>
+		<node label="Ѡ">
+			<textCharAction />
+		</node>
+		<node label="Ѿ">
+			<textCharAction />
+		</node>
+		<node label="Ѽ">
+			<textCharAction />
+		</node>
+		<node label="Ѻ">
+			<textCharAction />
+		</node>
+		<node label="Ц">
+			<textCharAction />
+		</node>
+		<node label="Ҵ">
+			<textCharAction />
+		</node>
+		<node label="Ч">
+			<textCharAction />
+		</node>
+		<node label="Ӵ">
+			<textCharAction />
+		</node>
+		<node label="Ӌ">
+			<textCharAction />
+		</node>
+		<node label="Ҹ">
+			<textCharAction />
+		</node>
+		<node label="Ҽ">
+			<textCharAction />
+		</node>
+		<node label="Ҿ">
+			<textCharAction />
+		</node>
+		<node label="Џ">
+			<textCharAction />
+		</node>
+		<node label="Ш">
+			<textCharAction />
+		</node>
+		<node label="Щ">
+			<textCharAction />
+		</node>
+		<node label="Ъ">
+			<textCharAction />
+		</node>
+		<node label="Ы">
+			<textCharAction />
+		</node>
+		<node label="Ӹ">
+			<textCharAction />
+		</node>
+		<node label="Ь">
+			<textCharAction />
+		</node>
+		<node label="Ҍ">
+			<textCharAction />
+		</node>
+		<node label="Ѣ">
+			<textCharAction />
+		</node>
+		<node label="Э">
+			<textCharAction />
+		</node>
+		<node label="Ӭ">
+			<textCharAction />
+		</node>
+		<node label="Ю">
+			<textCharAction />
+		</node>
+		<node label="Я">
+			<textCharAction />
+		</node>
+		<node label="Ғ">
+			<textCharAction />
+		</node>
+		<node label="Ӣ">
+			<textCharAction />
+		</node>
+		<node label="Қ">
+			<textCharAction />
+		</node>
+		<node label="Ӯ">
+			<textCharAction />
+		</node>
+		<node label="Ҳ">
+			<textCharAction />
+		</node>
+		<node label="Ҷ">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

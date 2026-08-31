@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Sindhi (WorldAlphabets)" orientation="RL" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ء">
+      <textCharAction />
+    </node>
+    <node label="آ">
+      <textCharAction />
+    </node>
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="ٻ">
+      <textCharAction />
+    </node>
+    <node label="پ">
+      <textCharAction />
+    </node>
+    <node label="ڀ">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ث">
+      <textCharAction />
+    </node>
+    <node label="ٺ">
+      <textCharAction />
+    </node>
+    <node label="ٽ">
+      <textCharAction />
+    </node>
+    <node label="ٿ">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="ڃ">
+      <textCharAction />
+    </node>
+    <node label="ڄ">
+      <textCharAction />
+    </node>
+    <node label="چ">
+      <textCharAction />
+    </node>
+    <node label="ڇ">
+      <textCharAction />
+    </node>
+    <node label="ح">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ذ">
+      <textCharAction />
+    </node>
+    <node label="ڊ">
+      <textCharAction />
+    </node>
+    <node label="ڌ">
+      <textCharAction />
+    </node>
+    <node label="ڍ">
+      <textCharAction />
+    </node>
+    <node label="ڏ">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="ڙ">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="ص">
+      <textCharAction />
+    </node>
+    <node label="ض">
+      <textCharAction />
+    </node>
+    <node label="ط">
+      <textCharAction />
+    </node>
+    <node label="ظ">
+      <textCharAction />
+    </node>
+    <node label="ع">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ڦ">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ک">
+      <textCharAction />
+    </node>
+    <node label="ڪ">
+      <textCharAction />
+    </node>
+    <node label="گ">
+      <textCharAction />
+    </node>
+    <node label="ڱ">
+      <textCharAction />
+    </node>
+    <node label="ڳ">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ڻ">
+      <textCharAction />
+    </node>
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="ھ">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ء">
+      <textCharAction />
+    </node>
+    <node label="آ">
+      <textCharAction />
+    </node>
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="ٻ">
+      <textCharAction />
+    </node>
+    <node label="پ">
+      <textCharAction />
+    </node>
+    <node label="ڀ">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ث">
+      <textCharAction />
+    </node>
+    <node label="ٺ">
+      <textCharAction />
+    </node>
+    <node label="ٽ">
+      <textCharAction />
+    </node>
+    <node label="ٿ">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="ڃ">
+      <textCharAction />
+    </node>
+    <node label="ڄ">
+      <textCharAction />
+    </node>
+    <node label="چ">
+      <textCharAction />
+    </node>
+    <node label="ڇ">
+      <textCharAction />
+    </node>
+    <node label="ح">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ذ">
+      <textCharAction />
+    </node>
+    <node label="ڊ">
+      <textCharAction />
+    </node>
+    <node label="ڌ">
+      <textCharAction />
+    </node>
+    <node label="ڍ">
+      <textCharAction />
+    </node>
+    <node label="ڏ">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="ڙ">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="ص">
+      <textCharAction />
+    </node>
+    <node label="ض">
+      <textCharAction />
+    </node>
+    <node label="ط">
+      <textCharAction />
+    </node>
+    <node label="ظ">
+      <textCharAction />
+    </node>
+    <node label="ع">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ڦ">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ک">
+      <textCharAction />
+    </node>
+    <node label="ڪ">
+      <textCharAction />
+    </node>
+    <node label="گ">
+      <textCharAction />
+    </node>
+    <node label="ڱ">
+      <textCharAction />
+    </node>
+    <node label="ڳ">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ڻ">
+      <textCharAction />
+    </node>
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="ھ">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

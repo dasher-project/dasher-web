@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Oriya with punctuation and numerals" orientation="LR" trainingFilename="training_Oriya_IN.txt" colorsName="Default">
+	<group name="ORIYA letters">
+		<node label="ଅ">
+			<!--Note: ORIYA LETTER A -->
+			<textCharAction />
+		</node>
+		<node label="ଆ">
+			<!--Note: ORIYA LETTER AA -->
+			<textCharAction />
+		</node>
+		<node label="ଇ">
+			<!--Note: ORIYA LETTER I -->
+			<textCharAction />
+		</node>
+		<node label="ଈ">
+			<!--Note: ORIYA LETTER II -->
+			<textCharAction />
+		</node>
+		<node label="ଉ">
+			<!--Note: ORIYA LETTER U -->
+			<textCharAction />
+		</node>
+		<node label="ଊ">
+			<!--Note: ORIYA LETTER UU -->
+			<textCharAction />
+		</node>
+		<node label="ଋ">
+			<!--Note: ORIYA LETTER VOCALIC R -->
+			<textCharAction />
+		</node>
+		<node label="ୠ">
+			<!--Note: ORIYA LETTER VOCALIC RR -->
+			<textCharAction />
+		</node>
+		<node label="ଌ">
+			<!--Note: ORIYA LETTER VOCALIC L -->
+			<textCharAction />
+		</node>
+		<node label="ୡ">
+			<!--Note: ORIYA LETTER VOCALIC LL -->
+			<textCharAction />
+		</node>
+		<node label="ଏ">
+			<!--Note: ORIYA LETTER E -->
+			<textCharAction />
+		</node>
+		<node label="ଐ">
+			<!--Note: ORIYA LETTER AI -->
+			<textCharAction />
+		</node>
+		<node label="ଓ">
+			<!--Note: ORIYA LETTER O -->
+			<textCharAction />
+		</node>
+		<node label="ଔ">
+			<!--Note: ORIYA LETTER AU -->
+			<textCharAction />
+		</node>
+		<node label="କ">
+			<!--Note: ORIYA LETTER KA -->
+			<textCharAction />
+		</node>
+		<node label="ଖ">
+			<!--Note: ORIYA LETTER KHA -->
+			<textCharAction />
+		</node>
+		<node label="ଗ">
+			<!--Note: ORIYA LETTER GA -->
+			<textCharAction />
+		</node>
+		<node label="ଘ">
+			<!--Note: ORIYA LETTER GHA -->
+			<textCharAction />
+		</node>
+		<node label="ଙ">
+			<!--Note: ORIYA LETTER NGA -->
+			<textCharAction />
+		</node>
+		<node label="ଚ">
+			<!--Note: ORIYA LETTER CA -->
+			<textCharAction />
+		</node>
+		<node label="ଛ">
+			<!--Note: ORIYA LETTER CHA -->
+			<textCharAction />
+		</node>
+		<node label="ଜ">
+			<!--Note: ORIYA LETTER JA -->
+			<textCharAction />
+		</node>
+		<node label="ଝ">
+			<!--Note: ORIYA LETTER JHA -->
+			<textCharAction />
+		</node>
+		<node label="ଞ">
+			<!--Note: ORIYA LETTER NYA -->
+			<textCharAction />
+		</node>
+		<node label="ଟ">
+			<!--Note: ORIYA LETTER TTA -->
+			<textCharAction />
+		</node>
+		<node label="ଠ">
+			<!--Note: ORIYA LETTER TTHA -->
+			<textCharAction />
+		</node>
+		<node label="ଡ">
+			<!--Note: ORIYA LETTER DDA -->
+			<textCharAction />
+		</node>
+		<node label="ଡ଼">
+			<!--Note: ORIYA LETTER RRA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ଢ">
+			<!--Note: ORIYA LETTER DDHA -->
+			<textCharAction />
+		</node>
+		<node label="ଢ଼">
+			<!--Note: ORIYA LETTER RHA class(s)-->
+			<textCharAction />
+		</node>
+		<node label="ଣ">
+			<!--Note: ORIYA LETTER NNA -->
+			<textCharAction />
+		</node>
+		<node label="ତ">
+			<!--Note: ORIYA LETTER TA -->
+			<textCharAction />
+		</node>
+		<node label="ଥ">
+			<!--Note: ORIYA LETTER THA -->
+			<textCharAction />
+		</node>
+		<node label="ଦ">
+			<!--Note: ORIYA LETTER DA -->
+			<textCharAction />
+		</node>
+		<node label="ଧ">
+			<!--Note: ORIYA LETTER DHA -->
+			<textCharAction />
+		</node>
+		<node label="ନ">
+			<!--Note: ORIYA LETTER NA -->
+			<textCharAction />
+		</node>
+		<node label="ପ">
+			<!--Note: ORIYA LETTER PA -->
+			<textCharAction />
+		</node>
+		<node label="ଫ">
+			<!--Note: ORIYA LETTER PHA -->
+			<textCharAction />
+		</node>
+		<node label="ବ">
+			<!--Note: ORIYA LETTER BA -->
+			<textCharAction />
+		</node>
+		<node label="ଭ">
+			<!--Note: ORIYA LETTER BHA -->
+			<textCharAction />
+		</node>
+		<node label="ମ">
+			<!--Note: ORIYA LETTER MA -->
+			<textCharAction />
+		</node>
+		<node label="ଯ">
+			<!--Note: ORIYA LETTER YA -->
+			<textCharAction />
+		</node>
+		<node label="ୟ">
+			<!--Note: ORIYA LETTER YYA -->
+			<textCharAction />
+		</node>
+		<node label="ର">
+			<!--Note: ORIYA LETTER RA -->
+			<textCharAction />
+		</node>
+		<node label="ଲ">
+			<!--Note: ORIYA LETTER LA -->
+			<textCharAction />
+		</node>
+		<node label="ଳ">
+			<!--Note: ORIYA LETTER LLA -->
+			<textCharAction />
+		</node>
+		<node label="ଵ">
+			<!--Note: ORIYA LETTER VA -->
+			<textCharAction />
+		</node>
+		<node label="ୱ">
+			<!--Note: ORIYA LETTER WA -->
+			<textCharAction />
+		</node>
+		<node label="ଶ">
+			<!--Note: ORIYA LETTER SHA -->
+			<textCharAction />
+		</node>
+		<node label="ଷ">
+			<!--Note: ORIYA LETTER SSA -->
+			<textCharAction />
+		</node>
+		<node label="ସ">
+			<!--Note: ORIYA LETTER SA -->
+			<textCharAction />
+		</node>
+		<node label="ହ">
+			<!--Note: ORIYA LETTER HA -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="vowels, other signs and marks">
+		<node label="ଽ">
+			<!--Note: ORIYA SIGN AVAGRAHA -->
+			<textCharAction />
+		</node>
+		<node label="ା">
+			<!--Note: ORIYA ◌ VOWEL SIGN AA -->
+			<textCharAction />
+		</node>
+		<node label="ି">
+			<!--Note: ORIYA ◌ VOWEL SIGN I -->
+			<textCharAction />
+		</node>
+		<node label="ୀ">
+			<!--Note: ORIYA ◌ VOWEL SIGN II -->
+			<textCharAction />
+		</node>
+		<node label="ୁ">
+			<!--Note: ORIYA ◌ VOWEL SIGN U -->
+			<textCharAction />
+		</node>
+		<node label="ୂ">
+			<!--Note: ORIYA ◌ VOWEL SIGN UU -->
+			<textCharAction />
+		</node>
+		<node label="ୃ">
+			<!--Note: ORIYA ◌ VOWEL SIGN VOCALIC R -->
+			<textCharAction />
+		</node>
+		<node label="େ">
+			<!--Note: ORIYA ◌ VOWEL SIGN E -->
+			<textCharAction />
+		</node>
+		<node label="ୈ">
+			<!--Note: ORIYA ◌ VOWEL SIGN AI -->
+			<textCharAction />
+		</node>
+		<node label="ୋ">
+			<!--Note: ORIYA ◌ VOWEL SIGN O -->
+			<textCharAction />
+		</node>
+		<node label="ୌ">
+			<!--Note: ORIYA ◌ VOWEL SIGN AU -->
+			<textCharAction />
+		</node>
+		<node label="୍">
+			<!--Note: ORIYA ◌ SIGN VIRAMA -->
+			<textCharAction />
+		</node>
+		<node label="ୖ">
+			<!--Note: ORIYA ◌ AI LENGTH MARK -->
+			<textCharAction />
+		</node>
+		<node label="ୗ">
+			<!--Note: ORIYA ◌ AU LENGTH MARK -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

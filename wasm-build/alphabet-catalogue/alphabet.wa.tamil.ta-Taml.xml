@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Tamil (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_ta_Taml.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="அ">
+      <textCharAction />
+    </node>
+    <node label="ஆ">
+      <textCharAction />
+    </node>
+    <node label="இ">
+      <textCharAction />
+    </node>
+    <node label="ஈ">
+      <textCharAction />
+    </node>
+    <node label="உ">
+      <textCharAction />
+    </node>
+    <node label="ஊ">
+      <textCharAction />
+    </node>
+    <node label="எ">
+      <textCharAction />
+    </node>
+    <node label="ஏ">
+      <textCharAction />
+    </node>
+    <node label="ஐ">
+      <textCharAction />
+    </node>
+    <node label="ஒ">
+      <textCharAction />
+    </node>
+    <node label="ஓ">
+      <textCharAction />
+    </node>
+    <node label="ஔ">
+      <textCharAction />
+    </node>
+    <node label="க">
+      <textCharAction />
+    </node>
+    <node label="ங">
+      <textCharAction />
+    </node>
+    <node label="ச">
+      <textCharAction />
+    </node>
+    <node label="ஞ">
+      <textCharAction />
+    </node>
+    <node label="ட">
+      <textCharAction />
+    </node>
+    <node label="ண">
+      <textCharAction />
+    </node>
+    <node label="த">
+      <textCharAction />
+    </node>
+    <node label="ந">
+      <textCharAction />
+    </node>
+    <node label="ப">
+      <textCharAction />
+    </node>
+    <node label="ம">
+      <textCharAction />
+    </node>
+    <node label="ய">
+      <textCharAction />
+    </node>
+    <node label="ர">
+      <textCharAction />
+    </node>
+    <node label="ல">
+      <textCharAction />
+    </node>
+    <node label="வ">
+      <textCharAction />
+    </node>
+    <node label="ழ">
+      <textCharAction />
+    </node>
+    <node label="ள">
+      <textCharAction />
+    </node>
+    <node label="ற">
+      <textCharAction />
+    </node>
+    <node label="ன">
+      <textCharAction />
+    </node>
+    <node label="ஃ">
+      <textCharAction />
+    </node>
+    <node label="ஜ">
+      <textCharAction />
+    </node>
+    <node label="ஷ">
+      <textCharAction />
+    </node>
+    <node label="ஸ">
+      <textCharAction />
+    </node>
+    <node label="ஹ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="அ">
+      <textCharAction />
+    </node>
+    <node label="ஆ">
+      <textCharAction />
+    </node>
+    <node label="இ">
+      <textCharAction />
+    </node>
+    <node label="ஈ">
+      <textCharAction />
+    </node>
+    <node label="உ">
+      <textCharAction />
+    </node>
+    <node label="ஊ">
+      <textCharAction />
+    </node>
+    <node label="எ">
+      <textCharAction />
+    </node>
+    <node label="ஏ">
+      <textCharAction />
+    </node>
+    <node label="ஐ">
+      <textCharAction />
+    </node>
+    <node label="ஒ">
+      <textCharAction />
+    </node>
+    <node label="ஓ">
+      <textCharAction />
+    </node>
+    <node label="ஔ">
+      <textCharAction />
+    </node>
+    <node label="க">
+      <textCharAction />
+    </node>
+    <node label="ங">
+      <textCharAction />
+    </node>
+    <node label="ச">
+      <textCharAction />
+    </node>
+    <node label="ஞ">
+      <textCharAction />
+    </node>
+    <node label="ட">
+      <textCharAction />
+    </node>
+    <node label="ண">
+      <textCharAction />
+    </node>
+    <node label="த">
+      <textCharAction />
+    </node>
+    <node label="ந">
+      <textCharAction />
+    </node>
+    <node label="ப">
+      <textCharAction />
+    </node>
+    <node label="ம">
+      <textCharAction />
+    </node>
+    <node label="ய">
+      <textCharAction />
+    </node>
+    <node label="ர">
+      <textCharAction />
+    </node>
+    <node label="ல">
+      <textCharAction />
+    </node>
+    <node label="வ">
+      <textCharAction />
+    </node>
+    <node label="ழ">
+      <textCharAction />
+    </node>
+    <node label="ள">
+      <textCharAction />
+    </node>
+    <node label="ற">
+      <textCharAction />
+    </node>
+    <node label="ன">
+      <textCharAction />
+    </node>
+    <node label="ஃ">
+      <textCharAction />
+    </node>
+    <node label="ஜ">
+      <textCharAction />
+    </node>
+    <node label="ஷ">
+      <textCharAction />
+    </node>
+    <node label="ஸ">
+      <textCharAction />
+    </node>
+    <node label="ஹ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

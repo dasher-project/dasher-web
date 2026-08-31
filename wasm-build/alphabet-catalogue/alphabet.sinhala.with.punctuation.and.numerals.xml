@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Sinhala with punctuation and numerals" orientation="LR" trainingFilename="training_wa_si_Sinh.txt" colorsName="Default">
+	<group name="SINHALA letters">
+		<node label="අ">
+			<!--Note: SINHALA LETTER AYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ආ">
+			<!--Note: SINHALA LETTER AAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඇ">
+			<!--Note: SINHALA LETTER AEYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඈ">
+			<!--Note: SINHALA LETTER AEEYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඉ">
+			<!--Note: SINHALA LETTER IYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඊ">
+			<!--Note: SINHALA LETTER IIYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="උ">
+			<!--Note: SINHALA LETTER UYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඌ">
+			<!--Note: SINHALA LETTER UUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඍ">
+			<!--Note: SINHALA LETTER IRUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඎ">
+			<!--Note: SINHALA LETTER IRUUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඏ">
+			<!--Note: SINHALA LETTER ILUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඐ">
+			<!--Note: SINHALA LETTER ILUUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="එ">
+			<!--Note: SINHALA LETTER EYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඒ">
+			<!--Note: SINHALA LETTER EEYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඓ">
+			<!--Note: SINHALA LETTER AIYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඔ">
+			<!--Note: SINHALA LETTER OYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඕ">
+			<!--Note: SINHALA LETTER OOYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඖ">
+			<!--Note: SINHALA LETTER AUYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ක">
+			<!--Note: SINHALA LETTER ALPAPRAANA KAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඛ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA KAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ග">
+			<!--Note: SINHALA LETTER ALPAPRAANA GAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඝ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA GAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඞ">
+			<!--Note: SINHALA LETTER KANTAJA NAASIKYAYA  -->
+			<textCharAction />
+		</node>
+		<node label="ඟ">
+			<!--Note: SINHALA LETTER SANYAKA GAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ච">
+			<!--Note: SINHALA LETTER ALPAPRAANA CAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඡ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA CAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ජ">
+			<!--Note: SINHALA LETTER ALPAPRAANA JAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඣ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA JAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඤ">
+			<!--Note: SINHALA LETTER TAALUJA NAASIKYAYA  -->
+			<textCharAction />
+		</node>
+		<node label="ඥ">
+			<!--Note: SINHALA LETTER TAALUJA SANYOOGA NAAKSIKYAYA  -->
+			<textCharAction />
+		</node>
+		<node label="ඦ">
+			<!--Note: SINHALA LETTER SANYAKA JAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ට">
+			<!--Note: SINHALA LETTER ALPAPRAANA TTAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඨ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA TTAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඩ">
+			<!--Note: SINHALA LETTER ALPAPRAANA DDAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඪ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA DDAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ණ">
+			<!--Note: SINHALA LETTER MUURDHAJA NAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඬ">
+			<!--Note: SINHALA LETTER SANYAKA DDAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ත">
+			<!--Note: SINHALA LETTER ALPAPRAANA TAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ථ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA TAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ද">
+			<!--Note: SINHALA LETTER ALPAPRAANA DAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ධ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA DAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="න">
+			<!--Note: SINHALA LETTER DANTAJA NAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඳ">
+			<!--Note: SINHALA LETTER SANYAKA DAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ප">
+			<!--Note: SINHALA LETTER ALPAPRAANA PAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඵ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA PAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="බ">
+			<!--Note: SINHALA LETTER ALPAPRAANA BAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="භ">
+			<!--Note: SINHALA LETTER MAHAAPRAANA BAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ම">
+			<!--Note: SINHALA LETTER MAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ඹ">
+			<!--Note: SINHALA LETTER AMBA BAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ය">
+			<!--Note: SINHALA LETTER YAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ර">
+			<!--Note: SINHALA LETTER RAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ල">
+			<!--Note: SINHALA LETTER DANTAJA LAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ව">
+			<!--Note: SINHALA LETTER VAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ශ">
+			<!--Note: SINHALA LETTER TAALUJA SAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ෂ">
+			<!--Note: SINHALA LETTER MUURDHAJA SAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ස">
+			<!--Note: SINHALA LETTER DANTAJA SAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="හ">
+			<!--Note: SINHALA LETTER HAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ළ">
+			<!--Note: SINHALA LETTER MUURDHAJA LAYANNA  -->
+			<textCharAction />
+		</node>
+		<node label="ෆ">
+			<!--Note: SINHALA LETTER FAYANNA  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="signs and vowels">
+		<node label="◌්">
+			<!--Note: SINHALA SIGN AL-LAKUNA  -->
+			<textCharAction unicode="3530" />
+		</node>
+		<node label="◌ා">
+			<!--Note: SINHALA VOWEL SIGN AELA-PILLA  -->
+			<textCharAction unicode="3535" />
+		</node>
+		<node label="◌ැ">
+			<!--Note: SINHALA VOWEL SIGN KETTI AEDA-PILLA  -->
+			<textCharAction unicode="3536" />
+		</node>
+		<node label="◌ෑ">
+			<!--Note: SINHALA VOWEL SIGN DIGA AEDA-PILLA  -->
+			<textCharAction unicode="3537" />
+		</node>
+		<node label="◌ි">
+			<!--Note: SINHALA VOWEL SIGN KETTI IS-PILLA  -->
+			<textCharAction unicode="3538" />
+		</node>
+		<node label="◌ී">
+			<!--Note: SINHALA VOWEL SIGN DIGA IS-PILLA  -->
+			<textCharAction unicode="3539" />
+		</node>
+		<node label="◌ු">
+			<!--Note: SINHALA VOWEL SIGN KETTI PAA-PILLA  -->
+			<textCharAction unicode="3540" />
+		</node>
+		<node label="◌ූ">
+			<!--Note: SINHALA VOWEL SIGN DIGA PAA-PILLA  -->
+			<textCharAction unicode="3542" />
+		</node>
+		<node label="◌ෘ">
+			<!--Note: SINHALA VOWEL SIGN GAETTA-PILLA  -->
+			<textCharAction unicode="3544" />
+		</node>
+		<node label="◌ෙ">
+			<!--Note: SINHALA VOWEL SIGN KOMBUVA  -->
+			<textCharAction unicode="3545" />
+		</node>
+		<node label="◌ේ">
+			<!--Note: SINHALA VOWEL SIGN DIGA KOMBUVA  -->
+			<textCharAction unicode="3546" />
+		</node>
+		<node label="◌ෛ">
+			<!--Note: SINHALA VOWEL SIGN KOMBU DEKA  -->
+			<textCharAction unicode="3547" />
+		</node>
+		<node label="◌ො">
+			<!--Note: SINHALA VOWEL SIGN KOMBUVA HAA AELA-PILLA  -->
+			<textCharAction unicode="3548" />
+		</node>
+		<node label="◌ෝ">
+			<!--Note: SINHALA VOWEL SIGN KOMBUVA HAA DIGA AELA-PILLA  -->
+			<textCharAction unicode="3549" />
+		</node>
+		<node label="◌ෞ">
+			<!--Note: SINHALA VOWEL SIGN KOMBUVA HAA GAYANUKITTA  -->
+			<textCharAction unicode="3550" />
+		</node>
+		<node label="◌ෟ">
+			<!--Note: SINHALA VOWEL SIGN GAYANUKITTA  -->
+			<textCharAction unicode="3551" />
+		</node>
+		<node label="◌ෲ">
+			<!--Note: SINHALA VOWEL SIGN DIGA GAETTA-PILLA  -->
+			<textCharAction unicode="3570" />
+		</node>
+		<node label="◌ෳ">
+			<!--Note: SINHALA VOWEL SIGN DIGA GAYANUKITTA  -->
+			<textCharAction unicode="3571" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label="·">
+			<textCharAction unicode="46" />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

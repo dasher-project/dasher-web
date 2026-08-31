@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Kara-Kalpak (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="а">
+      <textCharAction />
+    </node>
+    <node label="ә">
+      <textCharAction />
+    </node>
+    <node label="б">
+      <textCharAction />
+    </node>
+    <node label="в">
+      <textCharAction />
+    </node>
+    <node label="г">
+      <textCharAction />
+    </node>
+    <node label="ғ">
+      <textCharAction />
+    </node>
+    <node label="д">
+      <textCharAction />
+    </node>
+    <node label="е">
+      <textCharAction />
+    </node>
+    <node label="ё">
+      <textCharAction />
+    </node>
+    <node label="ж">
+      <textCharAction />
+    </node>
+    <node label="з">
+      <textCharAction />
+    </node>
+    <node label="и">
+      <textCharAction />
+    </node>
+    <node label="й">
+      <textCharAction />
+    </node>
+    <node label="к">
+      <textCharAction />
+    </node>
+    <node label="қ">
+      <textCharAction />
+    </node>
+    <node label="л">
+      <textCharAction />
+    </node>
+    <node label="м">
+      <textCharAction />
+    </node>
+    <node label="н">
+      <textCharAction />
+    </node>
+    <node label="ң">
+      <textCharAction />
+    </node>
+    <node label="о">
+      <textCharAction />
+    </node>
+    <node label="ө">
+      <textCharAction />
+    </node>
+    <node label="п">
+      <textCharAction />
+    </node>
+    <node label="р">
+      <textCharAction />
+    </node>
+    <node label="с">
+      <textCharAction />
+    </node>
+    <node label="т">
+      <textCharAction />
+    </node>
+    <node label="у">
+      <textCharAction />
+    </node>
+    <node label="ў">
+      <textCharAction />
+    </node>
+    <node label="ү">
+      <textCharAction />
+    </node>
+    <node label="ф">
+      <textCharAction />
+    </node>
+    <node label="х">
+      <textCharAction />
+    </node>
+    <node label="ҳ">
+      <textCharAction />
+    </node>
+    <node label="ц">
+      <textCharAction />
+    </node>
+    <node label="ч">
+      <textCharAction />
+    </node>
+    <node label="ш">
+      <textCharAction />
+    </node>
+    <node label="щ">
+      <textCharAction />
+    </node>
+    <node label="ъ">
+      <textCharAction />
+    </node>
+    <node label="ы">
+      <textCharAction />
+    </node>
+    <node label="ь">
+      <textCharAction />
+    </node>
+    <node label="э">
+      <textCharAction />
+    </node>
+    <node label="ю">
+      <textCharAction />
+    </node>
+    <node label="я">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="А">
+      <textCharAction />
+    </node>
+    <node label="Ә">
+      <textCharAction />
+    </node>
+    <node label="Б">
+      <textCharAction />
+    </node>
+    <node label="В">
+      <textCharAction />
+    </node>
+    <node label="Г">
+      <textCharAction />
+    </node>
+    <node label="Ғ">
+      <textCharAction />
+    </node>
+    <node label="Д">
+      <textCharAction />
+    </node>
+    <node label="Е">
+      <textCharAction />
+    </node>
+    <node label="Ё">
+      <textCharAction />
+    </node>
+    <node label="Ж">
+      <textCharAction />
+    </node>
+    <node label="З">
+      <textCharAction />
+    </node>
+    <node label="И">
+      <textCharAction />
+    </node>
+    <node label="Й">
+      <textCharAction />
+    </node>
+    <node label="К">
+      <textCharAction />
+    </node>
+    <node label="Қ">
+      <textCharAction />
+    </node>
+    <node label="Л">
+      <textCharAction />
+    </node>
+    <node label="М">
+      <textCharAction />
+    </node>
+    <node label="Н">
+      <textCharAction />
+    </node>
+    <node label="Ң">
+      <textCharAction />
+    </node>
+    <node label="О">
+      <textCharAction />
+    </node>
+    <node label="Ө">
+      <textCharAction />
+    </node>
+    <node label="П">
+      <textCharAction />
+    </node>
+    <node label="Р">
+      <textCharAction />
+    </node>
+    <node label="С">
+      <textCharAction />
+    </node>
+    <node label="Т">
+      <textCharAction />
+    </node>
+    <node label="У">
+      <textCharAction />
+    </node>
+    <node label="Ў">
+      <textCharAction />
+    </node>
+    <node label="Ү">
+      <textCharAction />
+    </node>
+    <node label="Ф">
+      <textCharAction />
+    </node>
+    <node label="Х">
+      <textCharAction />
+    </node>
+    <node label="Ҳ">
+      <textCharAction />
+    </node>
+    <node label="Ц">
+      <textCharAction />
+    </node>
+    <node label="Ч">
+      <textCharAction />
+    </node>
+    <node label="Ш">
+      <textCharAction />
+    </node>
+    <node label="Щ">
+      <textCharAction />
+    </node>
+    <node label="Ъ">
+      <textCharAction />
+    </node>
+    <node label="Ы">
+      <textCharAction />
+    </node>
+    <node label="Ь">
+      <textCharAction />
+    </node>
+    <node label="Э">
+      <textCharAction />
+    </node>
+    <node label="Ю">
+      <textCharAction />
+    </node>
+    <node label="Я">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="0">
+      <textCharAction />
+    </node>
+    <node label="1">
+      <textCharAction />
+    </node>
+    <node label="2">
+      <textCharAction />
+    </node>
+    <node label="3">
+      <textCharAction />
+    </node>
+    <node label="4">
+      <textCharAction />
+    </node>
+    <node label="5">
+      <textCharAction />
+    </node>
+    <node label="6">
+      <textCharAction />
+    </node>
+    <node label="7">
+      <textCharAction />
+    </node>
+    <node label="8">
+      <textCharAction />
+    </node>
+    <node label="9">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>
