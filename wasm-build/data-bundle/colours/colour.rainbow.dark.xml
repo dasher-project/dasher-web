@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE colors SYSTEM "color.dtd">
+<!-- Dark companion of "Rainbow" (RFC 0007). Inherits Rainbow's letter/group
+     colours and overrides only UI chrome so the canvas reads on a dark
+     background. Switched to by dasher_set_appearance(ctx, 2) when Rainbow is
+     active. -->
+<colors name="Rainbow Dark"
+        parentName="Rainbow"
+        appearance="dark"
+        companion="Rainbow"
+        backgroundColor="#1E1E1E"
+        defaultLabelColor="#FFFFFF"
+        defaultOutlineColor="#3A3A3A"
+        crosshairColor="#FFFFFF"
+        inputLineColor="#FF5A5A"
+        inputPositionColor="#FFFFFF"
+        rootNodeColor="#2F5D2F"
+        conversionNodeColor="#6A6A6A"
+        selectionHighlightColor="#FF5A5A"
+        selectionInactiveColor="#7A2A2A"
+        circleOutlineColor="#CCCCCC"
+        circleStoppedColor="#FF5A5A"
+        circleWaitingColor="#FFCC00"
+        circleStartedColor="#5AFF5A"
+        firstStartBoxColor="#FF5A5A"
+        secondStartBoxColor="#FFCC00"
+        twoPushDynamicActiveMarkerColor="#5AFF5A"
+        twoPushDynamicInactiveMarkerColor="#55FFFF"
+        twoPushDynamicOuterGuidesColor="#2F5D2F"
+        infoTextColor="#FFFFFF"
+        infoTextBackgroundColor="#000000"
+        warningTextColor="#1E1E1E"
+        warningTextBackgroundColor="#FFCC00"
+        gameGuideColor="#FF99CC">
+</colors>

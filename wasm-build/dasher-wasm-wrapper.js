@@ -332,6 +332,70 @@ class DasherWasm {
         }
     }
 
+    // ── Typing rate (RFC 0012) ─────────────────────────────────────────────
+
+    /** Words per minute over a short rolling window (WPM = CPS × 12). */
+    getWpm() {
+        if (!this.context || !this.module._dasher_get_wpm) return 0;
+        return this.module._dasher_get_wpm(this.context);
+    }
+
+    /** Characters per second over a short rolling window. */
+    getCps() {
+        if (!this.context || !this.module._dasher_get_cps) return 0;
+        return this.module._dasher_get_cps(this.context);
+    }
+
+    /** Reset the rolling typing-rate window. */
+    resetCps() {
+        if (!this.context || !this.module._dasher_reset_cps) return;
+        this.module._dasher_reset_cps(this.context);
+    }
+
+    // ── Game mode (RFC 0004 practice mode) ─────────────────────────────────
+
+    enterGameMode() {
+        if (!this.context) return false;
+        // Returns 0 on success, -1 on failure.
+        return this.module._dasher_enter_game_mode(this.context) === 0;
+    }
+
+    leaveGameMode() {
+        if (!this.context) return;
+        this.module._dasher_leave_game_mode(this.context);
+    }
+
+    gameModeActive() {
+        if (!this.context) return false;
+        return this.module._dasher_game_mode_active(this.context) !== 0;
+    }
+
+    /** Let the engine draw its target-text overlay on the canvas stream. */
+    gameSetCanvasText(enabled) {
+        if (!this.context) return;
+        this.module._dasher_game_set_canvas_text(this.context, enabled ? 1 : 0);
+    }
+
+    getGameTargetText() {
+        if (!this.context) return '';
+        return this.module.UTF8ToString(this.module._dasher_game_get_target_text(this.context));
+    }
+
+    getGameCorrectCount() {
+        if (!this.context) return 0;
+        return this.module._dasher_game_get_correct_count(this.context);
+    }
+
+    getGameTargetLength() {
+        if (!this.context) return 0;
+        return this.module._dasher_game_get_target_length(this.context);
+    }
+
+    getGameWrongText() {
+        if (!this.context) return '';
+        return this.module.UTF8ToString(this.module._dasher_game_get_wrong_text(this.context));
+    }
+
     /**
      * Handle mouse movement.
      */

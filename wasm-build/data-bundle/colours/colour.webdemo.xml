@@ -14,6 +14,7 @@
      legacy European/Asian palette so groups not listed here still
      resolve. -->
 <colors name="Web Demo" parentName="European/Asian (Original)"
+    appearance="light" companion="Web Demo Dark"
     rootNode="#b4eeb4">
     <!-- Letter-family groups, including the names used by legacy alphabets
          (Lower/Upper case Latin letters) and WorldAlphabets alphabets

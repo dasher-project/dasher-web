@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE colors SYSTEM "color.dtd">
+<!-- Dark companion of "Web Demo" (RFC 0007). Inherits the greens/blues node
+     sequences from Web Demo and overrides only the UI chrome so the canvas
+     is legible on a dark background. Node fills are light, so labels stay
+     Deep Navy for contrast on both appearances. -->
+<colors name="Web Demo Dark"
+        parentName="Web Demo"
+        appearance="dark"
+        companion="Web Demo"
+        backgroundColor="#12181B"
+        defaultLabelColor="#0F4B75"
+        defaultOutlineColor="#2A353D"
+        crosshairColor="#EB5B5C"
+        inputLineColor="#EB5B5C"
+        inputPositionColor="#E6EDF3"
+        rootNodeColor="#1D3A2A"
+        infoTextColor="#E6EDF3"
+        infoTextBackgroundColor="#12181B"
+        warningTextColor="#F8E063"
+        warningTextBackgroundColor="#12181B"
+        circleOutlineColor="#E6EDF3"/>

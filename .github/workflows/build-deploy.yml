@@ -45,6 +45,13 @@ jobs:
         working-directory: wasm-build
         run: bash build.sh
 
+      - name: Record build metadata
+        run: |
+          cd wasm-build
+          echo "dasher-web $(git -C .. rev-parse --short HEAD)" > BUILD
+          git -C dashercore-src describe --tags --always >> BUILD || true
+          date -u +%Y-%m-%dT%H:%M:%SZ >> BUILD
+
       - name: Stage demo for Pages
         run: |
           mkdir -p _site
@@ -62,6 +69,9 @@ jobs:
           cp -r wasm-build/alphabet-catalogue _site/alphabet-catalogue
           # Shared UI string catalogue (33 locales) for the settings dialog
           cp -r wasm-build/strings _site/strings
+          # Build metadata for the Settings → Privacy version row (RFC 0016)
+          cp wasm-build/BUILD _site/BUILD
+          cp wasm-build/BUILD _site/js-demo/BUILD
           touch _site/.nojekyll
 
       - name: Upload artifact

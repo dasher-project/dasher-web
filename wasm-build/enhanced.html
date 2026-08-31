@@ -100,6 +100,32 @@
             max-width: 60%;
         }
 
+        /* Game mode overlay */
+        #game-overlay {
+            position: absolute; top: var(--sp-md); left: 50%; transform: translateX(-50%);
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 10px 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            max-width: 86%; text-align: center; z-index: 5;
+        }
+        #game-overlay[hidden] { display: none; }
+        #game-target {
+            font-size: 1.0625rem; letter-spacing: 0.5px; line-height: 1.6;
+            word-break: break-word;
+        }
+        #game-target .done { color: #1F8A70; font-weight: 600; }
+        #game-target .todo { color: var(--text-dim); }
+        #game-target .wrong { color: var(--tertiary); font-weight: 600; text-decoration: line-through; }
+        #game-progress {
+            margin-top: 6px; display: flex; align-items: center; gap: 12px; justify-content: center;
+        }
+        #game-stats { font-size: 0.75rem; color: var(--text-dim); }
+        #game-exit {
+            border: 1px solid var(--border); background: var(--highlight);
+            color: var(--text); border-radius: var(--radius-sm);
+            font-size: 0.75rem; padding: 4px 10px; cursor: pointer;
+        }
+
         /* Editor pane (right) */
         .editor-pane {
             width: 300px; min-width: 220px; display: flex; flex-direction: column;
@@ -352,6 +378,23 @@
   <path d="M12 14v2" />
   <path d="M12 8v2" />
   <path d="M12 2v2" /></symbol>
+<symbol id="i-gamepad-2" viewBox="0 0 24 24"><svg
+  class="lucide lucide-gamepad-2"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="6" x2="10" y1="11" y2="11" />
+  <line x1="8" x2="8" y1="9" y2="13" />
+  <line x1="15" x2="15.01" y1="12" y2="12" />
+  <line x1="18" x2="18.01" y1="10" y2="10" />
+  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" /></symbol>
 <symbol id="i-settings" viewBox="0 0 24 24"><svg
   class="lucide lucide-settings"
   xmlns="http://www.w3.org/2000/svg"
@@ -444,7 +487,10 @@
             <svg id="tb-play-icon"><use href="#i-play"/></svg></button>
         <button class="tool-btn" id="tb-position" title="Position — cycle screen orientation" aria-label="Position" disabled>
             <svg><use href="#i-flip-horizontal"/></svg></button>
+        <button class="tool-btn" id="tb-game" title="Game mode — type the target text" aria-label="Game mode" disabled>
+            <svg><use href="#i-gamepad-2"/></svg></button>
         <div class="spacer"></div>
+        <span class="status-chip" id="wpm-chip" hidden>0 wpm</span>
         <span class="status-chip" id="fps-chip">FPS: 0</span>
         <button class="tool-btn" id="tb-settings" title="Preferences" aria-label="Preferences" disabled>
             <svg><use href="#i-settings"/></svg></button>
@@ -454,6 +500,12 @@
         <div class="canvas-wrap">
             <canvas id="dasher-canvas" width="800" height="600"></canvas>
             <div class="canvas-note" id="canvas-note"></div>
+            <div id="game-overlay" hidden>
+                <div id="game-target"></div>
+                <div id="game-progress"><span id="game-stats"></span>
+                    <button id="game-exit">Leave game mode</button>
+                </div>
+            </div>
         </div>
         <aside class="editor-pane">
             <h2 id="editor-title">Output</h2>
@@ -543,7 +595,12 @@
         const tbPlay = document.getElementById('tb-play');
         const tbPlayIcon = document.getElementById('tb-play-icon');
         const tbPosition = document.getElementById('tb-position');
+        const tbGame = document.getElementById('tb-game');
         const tbSettings = document.getElementById('tb-settings');
+        const wpmChip = document.getElementById('wpm-chip');
+        const gameOverlay = document.getElementById('game-overlay');
+        const gameTargetEl = document.getElementById('game-target');
+        const gameStatsEl = document.getElementById('game-stats');
 
         let dasher = null;
         let paused = false;
@@ -552,6 +609,7 @@
         let catalogue = [];
         let bundledAlphabets = [];
         let extraPrefix = '';   // text loaded via Open/Paste, shown before engine output
+        let gameTarget = '';    // cached target phrase
         const loadedFiles = new Set();
 
         function toast(message) {
@@ -578,6 +636,7 @@
             tbSave.disabled = false;
             tbPlay.disabled = false;
             tbPosition.disabled = false;
+            tbGame.disabled = false;
             tbSettings.disabled = false;
         }
 
@@ -760,6 +819,71 @@
             settingsOverlay.hidden = false;
         });
 
+        // ── Game mode (RFC 0004 practice mode) ───────────────────────────
+
+        function enterGame() {
+            if (!dasher) return;
+            dasher.resetCps && dasher.resetCps();
+            if (!dasher.enterGameMode()) {
+                toast('Game mode unavailable');
+                return;
+            }
+            dasher.gameSetCanvasText(false); // we render the target ourselves
+            gameTarget = dasher.getGameTargetText();
+            gameOverlay.hidden = false;
+            tbGame.classList.add('active');
+            wpmChip.hidden = false;
+            updateGamePanel();
+        }
+
+        function leaveGame() {
+            if (!dasher) return;
+            dasher.leaveGameMode();
+            gameOverlay.hidden = true;
+            tbGame.classList.remove('active');
+            if (!showTypingRate) wpmChip.hidden = true;
+        }
+
+        tbGame.addEventListener('click', () => {
+            if (dasher && dasher.gameModeActive()) leaveGame();
+            else enterGame();
+        });
+        document.getElementById('game-exit').addEventListener('click', leaveGame);
+
+        function updateGamePanel() {
+            if (!dasher || gameOverlay.hidden) return;
+            const target = dasher.getGameTargetText();
+            if (target !== gameTarget && target) gameTarget = target;
+            const correct = dasher.getGameCorrectCount();
+            const total = dasher.getGameTargetLength() || gameTarget.length;
+            const wrong = dasher.getGameWrongText();
+            const done = gameTarget.slice(0, Math.max(0, correct));
+            const todo = gameTarget.slice(Math.max(0, correct));
+            gameTargetEl.innerHTML = '';
+            const spanDone = document.createElement('span');
+            spanDone.className = 'done'; spanDone.textContent = done;
+            const spanTodo = document.createElement('span');
+            spanTodo.className = 'todo'; spanTodo.textContent = todo;
+            gameTargetEl.append(spanDone, spanTodo);
+            if (wrong) {
+                const spanWrong = document.createElement('span');
+                spanWrong.className = 'wrong'; spanWrong.textContent = ' ' + wrong;
+                gameTargetEl.appendChild(spanWrong);
+            }
+            const wpm = dasher.getWpm ? dasher.getWpm() : 0;
+            gameStatsEl.textContent = `${correct}/${total} · ${wpm.toFixed(0)} wpm`;
+        }
+
+        // ── Typing rate (RFC 0012) ───────────────────────────────────────
+
+        let showTypingRate = false;
+        try { showTypingRate = localStorage.getItem('showTypingRate') === '1'; } catch (e) { /* private mode */ }
+
+        function applyTypingRateVisibility() {
+            const inGame = dasher && dasher.gameModeActive();
+            wpmChip.hidden = !(showTypingRate || inGame);
+        }
+
         // ── Editor pane actions ─────────────────────────────────────────
 
         document.getElementById('ed-copy').addEventListener('click', async () => {
@@ -791,10 +915,40 @@
 
         // ── Status bar ───────────────────────────────────────────────────
 
+        // Theme selection stores a per-scheme preference; the OS can flip
+        // between light and dark companions (RFC 0007)
+        const DARK_COMPANIONS = new Map([
+            ['Web Demo', 'Web Demo Dark'],
+            ['Default', 'Default Dark'],
+            ['Rainbow', 'Rainbow Dark'],
+            ['European/Asian (Original)', 'European/Asian (Original) Dark'],
+            ['European/Asian for Colourblind', 'European/Asian for Colourblind Dark'],
+            ['Vowels', 'Vowels Dark'],
+            ['Vowels2', 'Vowels2 Dark'],
+            ['Thai', 'Thai Dark'],
+            ['TurboLUT', 'TurboLUT Dark'],
+        ]);
+        for (const [light, dark] of [...DARK_COMPANIONS]) DARK_COMPANIONS.set(dark, light);
+
+        const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+        darkQuery.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('SP_COLOUR_ID');
+            if (key < 0) return;
+            const current = dasher.getStringParameter(key);
+            const companion = DARK_COMPANIONS.get(current);
+            if (!companion) return;
+            dasher.setStringParameter(key, companion);
+            themeSelect.value = companion;
+        });
+
         themeSelect.addEventListener('change', () => {
             if (!dasher) return;
             const key = dasher.findParameterKey('SP_COLOUR_ID');
             if (key >= 0) dasher.setStringParameter(key, themeSelect.value);
+            try {
+                localStorage.setItem('palette.' + (darkQuery.matches ? 'dark' : 'light'), themeSelect.value);
+            } catch (e) { /* ignore */ }
         });
 
         fontSizeInput.addEventListener('change', () => {
@@ -978,8 +1132,60 @@
                 'This demo runs entirely in your browser. No analytics, no telemetry, ' +
                 'and no data leaves your device. Settings live in the page session only.');
             privacy.appendChild(note);
+
+            // Typing-rate toggle (RFC 0012: frontend opt-in; game mode always shows it)
+            const rateRow = document.createElement('div');
+            rateRow.className = 'setting-row';
+            const rateLabel = document.createElement('div');
+            rateLabel.className = 'setting-label';
+            rateLabel.textContent = t('show_typing_rate', 'Show typing rate (WPM)');
+            const rateSmall = document.createElement('small');
+            rateSmall.textContent = t('show_typing_rate_desc',
+                'Live words-per-minute in the toolbar. Always shown in game mode.');
+            rateLabel.appendChild(rateSmall);
+            const rateCb = document.createElement('input');
+            rateCb.type = 'checkbox';
+            rateCb.checked = showTypingRate;
+            rateCb.addEventListener('change', () => {
+                showTypingRate = rateCb.checked;
+                try { localStorage.setItem('showTypingRate', showTypingRate ? '1' : '0'); } catch (e) { /* ignore */ }
+                applyTypingRateVisibility();
+            });
+            rateRow.append(rateLabel, rateCb);
+            privacy.appendChild(rateRow);
+
+            // Version row (RFC 0016)
+            const versionRow = document.createElement('div');
+            versionRow.className = 'setting-row';
+            const versionLabel = document.createElement('div');
+            versionLabel.className = 'setting-label';
+            versionLabel.textContent = t('version', 'Version');
+            const versionSmall = document.createElement('small');
+            versionSmall.textContent = buildVersion;
+            versionLabel.appendChild(versionSmall);
+            versionRow.appendChild(versionLabel);
+            privacy.appendChild(versionRow);
+
             settingsBody.appendChild(privacy);
         }
+
+        // Build/version info (RFC 0016): the BUILD file is staged next to
+        // the demo by CI; absent on a plain source checkout.
+        let buildVersion = 'development build';
+        (async () => {
+            for (const base of ['BUILD', '../BUILD']) {
+                try {
+                    const r = await fetch(base);
+                    if (r.ok) {
+                        const lines = (await r.text()).trim().split('\n');
+                        const web = lines[0] || '';
+                        const core = lines[1] || '';
+                        buildVersion = `dasher-web ${web.replace('dasher-web ', '')} · DasherCore ${core}`.trim();
+                        return;
+                    }
+                } catch (e) { /* try next */ }
+            }
+        })();
 
         // ── Engine init ──────────────────────────────────────────────────
 
@@ -1004,11 +1210,30 @@
                 canvasNote.textContent = 'Creating context…';
                 dasher.createContext();
 
+                // Dev fallback: shipped builds embed data-bundle in the
+                // .data file, but a local server may run against a stale
+                // build — overlay the palette files before Realize loads
+                // colours.
                 try {
-                    const resp = await fetch('data-bundle/colours/colour.webdemo.xml');
-                    if (resp.ok && dasher.module && dasher.module.FS) {
-                        dasher.module.FS.writeFile(
-                            '/data/colours/colour.webdemo.xml', await resp.text());
+                    if (dasher.module && dasher.module.FS) {
+                        const colourFiles = [
+                            'colour.blue.xml', 'colour.ean.xml',
+                            'colour.euroasian.xml', 'colour.euroasian2.xml',
+                            'colour.jamie.xml', 'colour.rainbow.xml',
+                            'colour.thai.xml', 'colour.turbo.xml',
+                            'colour.vowels.xml', 'colour.vowels2.xml',
+                            'colour.webdemo.xml', 'colour.webdemo.dark.xml',
+                            'colour.default.dark.xml', 'colour.euroasian.dark.xml',
+                            'colour.euroasian2.dark.xml', 'colour.rainbow.dark.xml',
+                            'colour.thai.dark.xml', 'colour.turbo.dark.xml',
+                            'colour.vowels.dark.xml', 'colour.vowels2.dark.xml',
+                        ];
+                        for (const f of colourFiles) {
+                            const resp = await fetch('data-bundle/colours/' + f);
+                            if (resp.ok) {
+                                dasher.module.FS.writeFile('/data/colours/' + f, await resp.text());
+                            }
+                        }
                     }
                 } catch (e) { /* not running from a source checkout */ }
 
@@ -1030,7 +1255,17 @@
                     opt.value = p; opt.textContent = p;
                     themeSelect.appendChild(opt);
                 }
-                themeSelect.value = dasher.getStringParameter(colourKey);
+
+                // Appearance-aware palettes (RFC 0007): pick the stored (or
+                // default) palette for the current scheme, and follow the OS
+                // between companions.
+                const scheme = darkQuery.matches ? 'dark' : 'light';
+                const stored = localStorage.getItem('palette.' + scheme);
+                const fallback = scheme === 'dark' ? 'Web Demo Dark' : 'Web Demo';
+                const preferred = palettes.includes(stored) ? stored
+                    : (palettes.includes(fallback) ? fallback : palettes[0]);
+                dasher.setStringParameter(colourKey, preferred);
+                themeSelect.value = preferred;
 
                 const fontKey = dasher.findParameterKey('LP_DASHER_FONTSIZE');
                 if (fontKey >= 0) fontSizeInput.value = dasher.getLongParameter(fontKey);
@@ -1122,6 +1357,10 @@
                     frameCount = 0;
                     lastFpsTime = time;
                 }
+                if (!wpmChip.hidden && dasher.getWpm) {
+                    wpmChip.textContent = `${dasher.getWpm().toFixed(0)} wpm`;
+                }
+                updateGamePanel();
             }
             requestAnimationFrame(renderLoop);
         }
