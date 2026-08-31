@@ -5,275 +5,498 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dasher — Enhanced Demo</title>
     <style>
-        * { box-sizing: border-box; }
+        /* Design tokens: dasher-project/dasher-design-guide DESIGN.md (v6.0 alpha) */
         :root {
-            --bg: #1a1a2e; --surface: #16213e; --surface2: #0f3460;
-            --border: #2a2a4e; --text: #eee; --text-dim: #8a8a9a;
-            --text-muted: #4a4a5a; --canvas-bg: #000;
-            --accent: #e94560; --accent-hover: #c81e45;
-            --stats: rgba(255,255,255,0.4);
+            --primary: #99D4CD;      /* Dasher Teal */
+            --secondary: #F8E063;    /* Warm Yellow */
+            --tertiary: #EB5B5C;     /* Coral Red */
+            --text: #0F4B75;         /* Deep Navy */
+            --bg: #F4F7F6;
+            --surface: #FFFFFF;
+            --border: #E0E6E8;
+            --highlight: #E9F2F1;
+            --text-dim: #5A7184;
+            --canvas-bg: #FFFFFF;
+            --stats: rgba(15, 75, 117, 0.45);
+            --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+            --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px;
+            --topbar-h: 64px; --statusbar-h: 48px; --touch: 48px;
         }
-        @media (prefers-color-scheme: light) {
+        @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #f5f5f5; --surface: #fff; --surface2: #e8e8f0;
-                --border: #ddd; --text: #333; --text-dim: #666;
-                --text-muted: #aaa; --canvas-bg: #f0f0f0;
-                --accent: #007bff; --accent-hover: #0056b3;
-                --stats: rgba(0,0,0,0.3);
+                --text: #FFFFFF;
+                --bg: #12181B;
+                --surface: #1E262B;
+                --border: #2A353D;
+                --highlight: #1D2D35;
+                --text-dim: #9FB2BE;
+                --canvas-bg: #12181B;
+                --stats: rgba(255, 255, 255, 0.4);
             }
         }
+        * { box-sizing: border-box; }
         html, body {
             margin: 0; padding: 0; height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg); color: var(--text);
             overflow: hidden;
         }
-        #app {
-            display: flex; flex-direction: column; height: 100vh; height: 100dvh;
+        button, select, input, textarea { font-family: inherit; }
+        #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+        /* --- Top toolbar (64px): quick commands + status --- */
+        .topbar {
+            flex: none; height: var(--topbar-h);
+            display: flex; align-items: center; gap: var(--sp-xs);
+            padding: 0 var(--sp-md);
+            background: var(--surface); border-bottom: 1px solid var(--border);
         }
+        .brand {
+            display: flex; align-items: baseline; gap: 6px;
+            margin-right: var(--sp-md); user-select: none;
+        }
+        .brand strong { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.2px; }
+        .brand span { font-size: 0.75rem; font-weight: 300; color: var(--text-dim); }
+        .tool-btn {
+            width: var(--touch); height: var(--touch);
+            display: inline-flex; align-items: center; justify-content: center;
+            border: none; background: transparent; border-radius: var(--radius-md);
+            color: var(--text); cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .tool-btn:hover { background: var(--highlight); }
+        .tool-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .tool-btn.active { background: var(--primary); color: #0F4B75; }
+        .tool-btn svg { width: 24px; height: 24px; }
+        .topbar .spacer { flex: 1; }
+        .status-chip {
+            font-size: 0.75rem; font-weight: 300; color: var(--text-dim);
+            padding: 4px 10px; border-radius: 999px; background: var(--highlight);
+            white-space: nowrap;
+        }
+
+        /* --- Main area: canvas + editor pane --- */
         .main-area {
-            flex: 1; display: flex; gap: 8px; padding: 8px;
+            flex: 1; display: flex; gap: var(--sp-sm); padding: var(--sp-sm);
             min-height: 0;
         }
         .canvas-wrap {
             flex: 1; display: flex; flex-direction: column;
-            background: var(--canvas-bg); border-radius: 12px; overflow: hidden;
-            position: relative;
+            background: var(--canvas-bg);
+            border: 1px solid var(--border); border-radius: var(--radius-lg);
+            overflow: hidden; position: relative;
         }
         canvas {
             flex: 1; display: block; cursor: crosshair; touch-action: none;
             width: 100%;
         }
         .canvas-stats {
-            position: absolute; bottom: 8px; right: 12px;
-            font-size: 11px; color: var(--stats);
-            pointer-events: none;
+            position: absolute; bottom: var(--sp-sm); right: 12px;
+            font-size: 11px; color: var(--stats); pointer-events: none;
         }
         .canvas-note {
-            position: absolute; top: 8px; left: 12px;
-            font-size: 11px; color: var(--stats);
-            pointer-events: none;
+            position: absolute; top: var(--sp-sm); left: 12px;
+            font-size: 11px; color: var(--stats); pointer-events: none;
+            max-width: 60%;
         }
-        .output-wrap {
-            width: 280px; min-width: 200px; display: flex; flex-direction: column;
-            background: var(--surface); border-radius: 12px; padding: 12px;
+
+        /* Editor pane (right) */
+        .editor-pane {
+            width: 300px; min-width: 220px; display: flex; flex-direction: column;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: var(--sp-md);
         }
-        .output-wrap h2 {
-            margin: 0 0 8px 0; font-size: 13px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+        .editor-pane h2 {
+            margin: 0 0 var(--sp-sm) 0; font-size: 1rem; font-weight: 500;
+            color: var(--text);
         }
         #output-text {
-            flex: 1; width: 100%; border: none; background: transparent;
-            color: var(--text); font-size: 18px; font-family: inherit;
-            resize: none; outline: none; line-height: 1.5;
+            flex: 1; width: 100%; border: 1px solid var(--border);
+            border-radius: var(--radius-md); background: var(--bg);
+            color: var(--text); font-size: 1.0625rem; line-height: 1.5;
+            resize: none; outline: none; padding: var(--sp-sm);
         }
-        #output-text::placeholder { color: var(--text-muted); }
-        .controls {
-            display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
-            padding: 10px 12px; background: var(--surface);
+        .editor-actions {
+            display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-sm);
+            margin-top: var(--sp-sm);
         }
-        .control-group label {
-            display: block; font-size: 11px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim);
-            margin-bottom: 4px;
+        .editor-actions button {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            min-height: var(--touch); padding: 8px 10px;
+            border: 1px solid var(--border); border-radius: var(--radius-md);
+            background: var(--surface); color: var(--text);
+            font-size: 0.875rem; cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
         }
-        .control-group select {
-            padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface2); color: var(--text); font-size: 14px; cursor: pointer;
+        .editor-actions button:hover { background: var(--highlight); }
+        .editor-actions button.cta {
+            background: var(--primary); color: #0F4B75; border-color: transparent;
+            font-weight: 500; grid-column: 1 / -1;
         }
-        .control-group button {
-            padding: 8px 14px; border: none; border-radius: 6px;
-            background: var(--accent); color: white; font-size: 14px; font-weight: 500;
-            cursor: pointer; transition: background 0.15s;
+        .editor-actions button svg { width: 18px; height: 18px; }
+
+        /* --- Bottom status bar (48px): micro-adjustments --- */
+        .statusbar {
+            flex: none; height: var(--statusbar-h);
+            display: flex; align-items: center; gap: var(--sp-md);
+            padding: 0 var(--sp-md);
+            background: var(--surface); border-top: 1px solid var(--border);
+            overflow-x: auto; scrollbar-width: none;
         }
-        .control-group button:hover { background: var(--accent-hover); }
-        .control-group button:disabled { background: var(--border); opacity: 0.5; cursor: not-allowed; }
-        .toggle-group {
-            display: flex; align-items: center; gap: 6px; padding-bottom: 6px;
+        .statusbar::-webkit-scrollbar { display: none; }
+        .status-field { display: flex; align-items: center; gap: 6px; flex: none; }
+        .status-field > label {
+            font-size: 0.75rem; font-weight: 300; color: var(--text-dim);
+            white-space: nowrap;
         }
-        .toggle-group label {
-            margin: 0; font-size: 14px; color: var(--text); cursor: pointer;
+        .status-field select, .status-field input[type="text"] {
+            padding: 5px 8px; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); background: var(--bg);
+            color: var(--text); font-size: 0.8125rem;
         }
-        .toggle-group input[type="checkbox"] {
-            width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer;
+        .status-field select { max-width: 170px; }
+        #alphabet-input { width: 190px; }
+        .status-field input[type="range"] { width: 110px; accent-color: var(--primary); cursor: pointer; }
+        .status-field input[type="number"] {
+            width: 52px; padding: 5px 4px; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); background: var(--bg);
+            color: var(--text); font-size: 0.8125rem; text-align: center;
         }
-        .speed-group { min-width: 160px; flex: 1; max-width: 240px; }
-        .speed-group input[type="range"],
-        .outline-group input[type="range"] {
-            width: 100%; cursor: pointer; accent-color: var(--accent);
+        .switch { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+        .switch input {
+            width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;
         }
-        .outline-group { min-width: 140px; max-width: 200px; }
-        .btn-group { display: flex; gap: 8px; }
-        .alphabet-group { flex: 2; min-width: 220px; }
-        .alphabet-group .alpha-row { display: flex; gap: 6px; }
-        .alphabet-group input[type="text"] {
-            flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface2); color: var(--text); font-size: 14px;
-        }
-        .alphabet-group .alpha-note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .switch span { font-size: 0.8125rem; }
+        .alpha-note { font-size: 0.6875rem; color: var(--text-dim); flex: 1; min-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         @media (max-width: 900px) {
-            .main-area { flex-direction: column; padding: 6px; gap: 6px; }
-            .output-wrap { width: 100%; min-height: 80px; max-height: 140px; }
-            .controls { padding: 8px; gap: 10px; }
-            .speed-group { min-width: 120px; }
-            .control-group select { font-size: 13px; }
-            .canvas-stats, .canvas-note { font-size: 10px; }
+            .main-area { flex-direction: column; }
+            .editor-pane { width: 100%; min-height: 110px; max-height: 180px; }
+            .editor-actions { display: flex; }
+            .brand span { display: none; }
         }
         @media (max-width: 480px) {
-            .controls { overflow-x: auto; flex-wrap: nowrap; }
-            .controls::-webkit-scrollbar { display: none; }
-            .toggle-group label { font-size: 13px; }
+            .brand { display: none; }
+            .status-chip { display: none; }
         }
 
         /* --- Settings dialog --- */
         #settings-overlay {
             position: fixed; inset: 0; z-index: 100;
-            background: rgba(0,0,0,0.5);
+            background: rgba(18, 24, 27, 0.5);
             display: flex; align-items: center; justify-content: center;
         }
         #settings-overlay[hidden] { display: none; }
         #settings-dialog {
-            width: min(720px, 94vw); max-height: 88vh;
+            width: min(760px, 94vw); max-height: 88vh;
             display: flex; flex-direction: column;
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; overflow: hidden;
+            border-radius: var(--radius-lg); overflow: hidden;
         }
         .settings-head {
             display: flex; align-items: center; gap: 12px;
-            padding: 14px 16px; border-bottom: 1px solid var(--border);
+            padding: 14px var(--sp-md); border-bottom: 1px solid var(--border);
         }
-        .settings-head h2 { margin: 0; font-size: 16px; flex: 1; }
+        .settings-head h2 { margin: 0; font-size: 1.25rem; font-weight: 600; flex: 1; }
         .settings-head select {
-            padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface2); color: var(--text); font-size: 13px;
+            padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            background: var(--bg); color: var(--text); font-size: 0.8125rem;
         }
         #settings-close {
             border: none; background: none; color: var(--text);
-            font-size: 22px; cursor: pointer; padding: 0 6px;
+            font-size: 22px; cursor: pointer; padding: 0 6px; width: 40px; height: 40px;
         }
-        #settings-body { overflow-y: auto; padding: 8px 16px 16px; }
+        #settings-body { overflow-y: auto; padding: var(--sp-xs) var(--sp-md) var(--sp-md); }
         .settings-section { margin-top: 14px; }
         .settings-section > h3 {
-            margin: 0 0 8px 0; font-size: 13px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 1px; color: var(--accent);
+            margin: 0 0 8px 0; font-size: 0.8125rem; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--tertiary);
         }
-        .settings-section > .section-note { font-size: 12px; color: var(--text-dim); margin: 0 0 8px 0; }
-        .settings-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px;
-        }
+        .settings-section > .section-note { font-size: 0.75rem; color: var(--text-dim); margin: 0 0 8px 0; }
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
         @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }
         .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .setting-row .setting-label { font-size: 14px; }
-        .setting-row .setting-label small { display: block; color: var(--text-muted); font-size: 11px; }
+        .setting-row .setting-label { font-size: 0.875rem; }
+        .setting-row .setting-label small { display: block; color: var(--text-dim); font-size: 0.6875rem; }
         .setting-row input[type="checkbox"] {
-            width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; flex: none;
+            width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; flex: none;
         }
-        .setting-row input[type="range"] { width: 130px; accent-color: var(--accent); }
+        .setting-row input[type="range"] { width: 130px; accent-color: var(--primary); }
         .setting-row input[type="number"] {
-            width: 72px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface2); color: var(--text); font-size: 13px;
+            width: 72px; padding: 4px 6px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            background: var(--bg); color: var(--text); font-size: 0.8125rem;
         }
         .setting-row select {
-            max-width: 220px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface2); color: var(--text); font-size: 13px;
+            max-width: 220px; padding: 5px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            background: var(--bg); color: var(--text); font-size: 0.8125rem;
         }
-        .settings-advanced {
-            margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 8px;
-        }
+        .settings-advanced { margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 8px; }
         .settings-advanced summary {
-            font-size: 12px; color: var(--text-dim); cursor: pointer; user-select: none;
+            font-size: 0.75rem; color: var(--text-dim); cursor: pointer; user-select: none;
         }
         .settings-advanced .settings-grid { margin-top: 8px; }
         .settings-foot {
             display: flex; justify-content: flex-end; gap: 8px;
-            padding: 12px 16px; border-top: 1px solid var(--border);
+            padding: 12px var(--sp-md); border-top: 1px solid var(--border);
         }
         .settings-foot button {
-            padding: 8px 14px; border: none; border-radius: 6px;
-            background: var(--accent); color: white; font-size: 14px; cursor: pointer;
+            min-height: 44px; padding: 8px 14px; border: none; border-radius: var(--radius-md);
+            background: var(--primary); color: #0F4B75; font-size: 0.875rem; font-weight: 500;
+            cursor: pointer;
         }
-        .settings-foot button:hover { background: var(--accent-hover); }
+        .settings-foot button:hover { box-shadow: 0 1px 4px rgba(15, 75, 117, 0.3); }
+
+        /* Toast */
+        #toast {
+            position: fixed; bottom: calc(var(--statusbar-h) + var(--sp-sm));
+            left: 50%; transform: translateX(-50%);
+            background: var(--surface); color: var(--text);
+            border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 10px 16px; font-size: 0.875rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+            z-index: 200; max-width: 80vw;
+        }
+        #toast.show { opacity: 1; }
     </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!-- Lucide v1.37.0 (ISC) inlined; canvas glyphs use the Dasher font system -->
+<symbol id="i-file-plus" viewBox="0 0 24 24"><svg
+  class="lucide lucide-file-plus"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="M9 15h6" />
+  <path d="M12 18v-6" /></symbol>
+<symbol id="i-folder-open" viewBox="0 0 24 24"><svg
+  class="lucide lucide-folder-open"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" /></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><svg
+  class="lucide lucide-save"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+  <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
+  <path d="M7 3v4a1 1 0 0 0 1 1h7" /></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><svg
+  class="lucide lucide-play"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><svg
+  class="lucide lucide-pause"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="14" y="3" width="5" height="18" rx="1" />
+  <rect x="5" y="3" width="5" height="18" rx="1" /></symbol>
+<symbol id="i-flip-horizontal" viewBox="0 0 24 24"><svg
+  class="lucide lucide-flip-horizontal"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3" />
+  <path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3" />
+  <path d="M12 20v2" />
+  <path d="M12 14v2" />
+  <path d="M12 8v2" />
+  <path d="M12 2v2" /></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><svg
+  class="lucide lucide-settings"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" /></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><svg
+  class="lucide lucide-copy"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+<symbol id="i-clipboard-copy" viewBox="0 0 24 24"><svg
+  class="lucide lucide-clipboard-copy"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+  <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+  <path d="M16 4h2a2 2 0 0 1 2 2v4" />
+  <path d="M21 14H11" />
+  <path d="m15 10-4 4 4 4" /></symbol>
+<symbol id="i-clipboard-paste" viewBox="0 0 24 24"><svg
+  class="lucide lucide-clipboard-paste"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M11 14h10" />
+  <path d="M16 4h2a2 2 0 0 1 2 2v1.344" />
+  <path d="m17 18 4-4-4-4" />
+  <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113" />
+  <rect x="8" y="2" width="8" height="4" rx="1" /></symbol>
+<symbol id="i-volume-2" viewBox="0 0 24 24"><svg
+  class="lucide lucide-volume-2"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+  <path d="M16 9a5 5 0 0 1 0 6" />
+  <path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></symbol>
+</svg>
+
 <div id="app">
+    <header class="topbar" role="toolbar" aria-label="Main toolbar">
+        <div class="brand"><strong>Dasher</strong> <span>enhanced demo</span></div>
+        <button class="tool-btn" id="tb-new" title="New — clear text and restart" aria-label="New" disabled>
+            <svg><use href="#i-file-plus"/></svg></button>
+        <button class="tool-btn" id="tb-open" title="Open a text file into the editor" aria-label="Open" disabled>
+            <svg><use href="#i-folder-open"/></svg></button>
+        <button class="tool-btn" id="tb-save" title="Save output as a text file" aria-label="Save" disabled>
+            <svg><use href="#i-save"/></svg></button>
+        <button class="tool-btn" id="tb-play" title="Play / pause" aria-label="Play or pause" disabled>
+            <svg id="tb-play-icon"><use href="#i-play"/></svg></button>
+        <button class="tool-btn" id="tb-position" title="Position — cycle screen orientation" aria-label="Position" disabled>
+            <svg><use href="#i-flip-horizontal"/></svg></button>
+        <div class="spacer"></div>
+        <span class="status-chip" id="fps-chip">FPS: 0</span>
+        <button class="tool-btn" id="tb-settings" title="Preferences" aria-label="Preferences" disabled>
+            <svg><use href="#i-settings"/></svg></button>
+    </header>
+
     <div class="main-area">
         <div class="canvas-wrap">
             <canvas id="dasher-canvas" width="800" height="600"></canvas>
             <div class="canvas-note" id="canvas-note"></div>
-            <div class="canvas-stats">
-                <span id="fps">FPS: 0</span> | <span id="frame-time">Frame: 0ms</span>
-            </div>
         </div>
-        <div class="output-wrap">
-            <h2>Output</h2>
+        <aside class="editor-pane">
+            <h2 id="editor-title">Output</h2>
             <textarea id="output-text" readonly placeholder="Text appears here..."></textarea>
-        </div>
-    </div>
-    <div class="controls">
-        <div class="control-group alphabet-group">
-            <label for="alphabet-input">Alphabet (type to search 470+)</label>
-            <div class="alpha-row">
-                <input type="text" id="alphabet-input" list="alphabet-list"
-                    placeholder="e.g. English, Cymraeg, العربية…" disabled>
-                <input type="checkbox" id="trained-only" disabled title="Only alphabets with bundled training text">
-                <label for="trained-only" style="margin:0; font-size:12px; cursor:pointer; align-self:center;">trained</label>
+            <div class="editor-actions">
+                <button id="ed-copy" title="Copy output"><svg><use href="#i-copy"/></svg>Copy</button>
+                <button id="ed-copy-all" title="Copy all output"><svg><use href="#i-clipboard-copy"/></svg>Copy all</button>
+                <button id="ed-paste" title="Paste into the editor"><svg><use href="#i-clipboard-paste"/></svg>Paste</button>
+                <button id="ed-speak" class="cta" title="Speak the output aloud"><svg><use href="#i-volume-2"/></svg>Quick speak</button>
             </div>
-            <div class="alpha-note" id="alpha-note"></div>
-            <datalist id="alphabet-list"></datalist>
-        </div>
-        <div class="control-group">
-            <label for="theme-select">Theme</label>
-            <select id="theme-select" disabled>
-                <option>Web Demo</option>
-                <option>Rainbow</option>
-                <option>European/Asian (Original)</option>
-                <option>European/Asian for Colourblind</option>
-                <option>Yellow on Blue</option>
-                <option>Yellow on Black</option>
-                <option>Blue on Dark Green</option>
-                <option>Blue on Light Green</option>
-                <option>Vowels</option>
-                <option>Vowels2</option>
-                <option>Thai</option>
-                <option>TurboLUT</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="shape-select">Node shape</label>
-            <select id="shape-select" disabled>
-                <option value="1">Overlapping boxes</option>
-                <option value="0">Disjoint boxes</option>
-                <option value="3">Truncated triangles</option>
-                <option value="2">Triangles</option>
-                <option value="4">Quadric</option>
-                <option value="5">Circle</option>
-                <option value="6">Cube</option>
-            </select>
-        </div>
-        <div class="control-group outline-group">
-            <label for="outline-slider">Outline: <span id="outline-value">0</span></label>
-            <input type="range" id="outline-slider" min="-10" max="20" value="0" disabled>
-        </div>
-        <div class="control-group speed-group">
-            <label for="speed-slider">Speed: <span id="speed-value">100</span>%</label>
-            <input type="range" id="speed-slider" min="20" max="400" value="100" disabled>
-        </div>
-        <div class="toggle-group">
-            <input type="checkbox" id="autospeed-toggle" disabled>
-            <label for="autospeed-toggle">Auto speed</label>
-        </div>
-        <div class="toggle-group">
-            <input type="checkbox" id="learning-toggle" disabled>
-            <label for="learning-toggle">Learning</label>
-        </div>
-        <div class="btn-group">
-            <button id="reset-btn" disabled>Clear</button>
-            <button id="settings-btn" disabled>Settings</button>
-        </div>
+        </aside>
     </div>
+
+    <footer class="statusbar" role="status" aria-label="Adjustment controls">
+        <div class="status-field">
+            <label for="alphabet-input" id="lbl-alphabet">Alphabet</label>
+            <input type="text" id="alphabet-input" list="alphabet-list"
+                placeholder="search…" disabled autocomplete="off">
+            <input type="checkbox" id="trained-only" disabled title="Only alphabets with bundled training text"
+                aria-label="Trained alphabets only">
+            <label for="trained-only" id="lbl-trained" title="Only alphabets with bundled training text">★</label>
+        </div>
+        <div class="status-field">
+            <label for="speed-slider" id="lbl-speed">Speed</label>
+            <input type="range" id="speed-slider" min="20" max="400" value="100" disabled>
+            <span id="speed-value" style="font-size:0.75rem;min-width:34px;">100%</span>
+        </div>
+        <div class="status-field">
+            <label for="theme-select" id="lbl-theme">Theme</label>
+            <select id="theme-select" disabled></select>
+        </div>
+        <div class="status-field">
+            <label for="font-size" id="lbl-font">Font</label>
+            <input type="number" id="font-size" min="8" max="72" step="1" value="0" disabled>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="learning-toggle" disabled>
+            <span id="lbl-learning">Learning</span>
+        </label>
+        <div class="alpha-note" id="alpha-note"></div>
+    </footer>
 </div>
+<datalist id="alphabet-list"></datalist>
 
 <div id="settings-overlay" hidden>
     <div id="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
@@ -288,6 +511,8 @@
         </div>
     </div>
 </div>
+<div id="toast" role="status"></div>
+<input type="file" id="file-input" accept=".txt,text/plain" hidden>
 
     <script src="dasher-wasm-wrapper.js"></script>
     <script type="module">
@@ -299,47 +524,64 @@
         const trainedOnly = document.getElementById('trained-only');
         const alphaNote = document.getElementById('alpha-note');
         const themeSelect = document.getElementById('theme-select');
-        const shapeSelect = document.getElementById('shape-select');
-        const outlineSlider = document.getElementById('outline-slider');
-        const outlineValue = document.getElementById('outline-value');
+        const fontSizeInput = document.getElementById('font-size');
         const speedSlider = document.getElementById('speed-slider');
         const speedValue = document.getElementById('speed-value');
-        const autospeedToggle = document.getElementById('autospeed-toggle');
         const learningToggle = document.getElementById('learning-toggle');
-        const resetBtn = document.getElementById('reset-btn');
-        const settingsBtn = document.getElementById('settings-btn');
+        const fpsChip = document.getElementById('fps-chip');
+        const canvasNote = document.getElementById('canvas-note');
+        const toastEl = document.getElementById('toast');
+        const fileInput = document.getElementById('file-input');
         const settingsOverlay = document.getElementById('settings-overlay');
         const settingsBody = document.getElementById('settings-body');
         const localeSelect = document.getElementById('locale-select');
-        const fpsDisplay = document.getElementById('fps');
-        const frameTimeDisplay = document.getElementById('frame-time');
-        const canvasNote = document.getElementById('canvas-note');
+
+        // Toolbar
+        const tbNew = document.getElementById('tb-new');
+        const tbOpen = document.getElementById('tb-open');
+        const tbSave = document.getElementById('tb-save');
+        const tbPlay = document.getElementById('tb-play');
+        const tbPlayIcon = document.getElementById('tb-play-icon');
+        const tbPosition = document.getElementById('tb-position');
+        const tbSettings = document.getElementById('tb-settings');
 
         let dasher = null;
+        let paused = false;
         let frameCount = 0;
         let lastFpsTime = performance.now();
-        let catalogue = [];          // [{id, file, lang, script, trained, chars}]
-        let bundledAlphabets = [];   // ids shipped in the .data bundle
+        let catalogue = [];
+        let bundledAlphabets = [];
+        let extraPrefix = '';   // text loaded via Open/Paste, shown before engine output
         const loadedFiles = new Set();
 
+        function toast(message) {
+            toastEl.textContent = message;
+            toastEl.classList.add('show');
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => toastEl.classList.remove('show'), 2400);
+        }
+
+        const displayText = () => extraPrefix + (dasher ? dasher.getOutputText() : '');
         function updateOutput() {
-            if (dasher) outputText.value = dasher.getOutputText();
+            outputText.value = displayText();
         }
 
         function enableControls() {
             alphabetInput.disabled = false;
             trainedOnly.disabled = false;
             themeSelect.disabled = false;
-            shapeSelect.disabled = false;
-            outlineSlider.disabled = false;
+            fontSizeInput.disabled = false;
             speedSlider.disabled = false;
-            autospeedToggle.disabled = false;
             learningToggle.disabled = false;
-            resetBtn.disabled = false;
-            settingsBtn.disabled = false;
+            tbNew.disabled = false;
+            tbOpen.disabled = false;
+            tbSave.disabled = false;
+            tbPlay.disabled = false;
+            tbPosition.disabled = false;
+            tbSettings.disabled = false;
         }
 
-        // --- Alphabet picker -------------------------------------------------
+        // ── Alphabet picker ──────────────────────────────────────────────
 
         function rebuildDatalist() {
             const filter = trainedOnly.checked;
@@ -370,31 +612,19 @@
                     const xml = await fetchCatalogueFile(entry.file);
                     dasher.module.FS.writeFile('/data/alphabets/' + entry.file, xml);
                     loadedFiles.add(id);
-                    // Re-realize so the engine rescans the alphabets directory
                     dasher.setScreenSize(canvas.width, canvas.height);
                 }
                 dasher.setAlphabet(id);
-                const ok = dasher.getAlphabet();
-                alphaNote.textContent = (ok === id)
-                    ? `Using: ${id}`
-                    : `Could not switch to ${id}`;
-                canvasNote.textContent = ok === id ? '' : canvasNote.textContent;
+                alphaNote.textContent = (dasher.getAlphabet() === id)
+                    ? `Using: ${id}` : `Could not switch to ${id}`;
             } catch (e) {
                 alphaNote.textContent = `Error: ${e.message || e}`;
             }
         }
 
-        // Catalogue files are staged next to the demo (Pages: /alphabet-catalogue/)
         let catalogueRoot = null;
         async function fetchCatalogueFile(name) {
-            if (!catalogueRoot) {
-                for (const base of ['alphabet-catalogue/', '../alphabet-catalogue/']) {
-                    try {
-                        const r = await fetch(base + 'index.json');
-                        if (r.ok) { catalogueRoot = base; break; }
-                    } catch (e) { /* try next */ }
-                }
-            }
+            if (!catalogueRoot) await loadCatalogueIndex();
             const resp = await fetch(catalogueRoot + name);
             if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${name}`);
             return resp.text();
@@ -418,114 +648,7 @@
         alphabetInput.addEventListener('change', () => switchAlphabet(alphabetInput.value.trim()));
         trainedOnly.addEventListener('change', rebuildDatalist);
 
-        // --- Engine -----------------------------------------------------------
-
-        async function initializeDasher() {
-            try {
-                canvasNote.textContent = 'Loading WebAssembly module…';
-
-                const dasherModule = await import('./wasm/dasher.js');
-                dasher = new DasherWasm();
-                window.dasher = dasher; // debug/console access
-                await dasher.init({
-                    canvas: canvas,
-                    moduleFactory: dasherModule.default,
-                    onOutput: (eventType) => {
-                        if (eventType === 0) updateOutput();
-                    },
-                    onMessage: (messageType, text) => {
-                        console.log('Dasher message:', text);
-                    }
-                });
-
-                canvasNote.textContent = 'Creating context…';
-                dasher.createContext();
-
-                // Dev fallback: shipped builds embed data-bundle in the
-                // .data file, but a local server may run against a stale
-                // build — overlay the palette before Realize loads colours.
-                try {
-                    const resp = await fetch('data-bundle/colours/colour.webdemo.xml');
-                    if (resp.ok && dasher.module && dasher.module.FS) {
-                        dasher.module.FS.writeFile(
-                            '/data/colours/colour.webdemo.xml', await resp.text());
-                    }
-                } catch (e) { /* not running from a source checkout */ }
-
-                // Default to the Web Demo palette: alternating greens/blues
-                // so letter boxes read as complete boxes.
-                const colourKey = dasher.findParameterKey('SP_COLOUR_ID');
-                if (colourKey >= 0) dasher.setStringParameter(colourKey, 'Web Demo');
-
-                dasher.setScreenSize(canvas.width, canvas.height);
-                dasher.setSpeed(parseInt(speedSlider.value));
-
-                const autospeedKey = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
-                const learningKey = dasher.findParameterKey('BP_LM_ADAPTIVE');
-                if (autospeedKey >= 0) autospeedToggle.checked = dasher.getBoolParameter(autospeedKey);
-                if (learningKey >= 0) learningToggle.checked = dasher.getBoolParameter(learningKey);
-
-                bundledAlphabets = dasher.getAlphabets();
-                await loadCatalogueIndex();
-                await loadUiStrings();
-                buildLocaleSelect();
-                rebuildDatalist();
-                alphabetInput.value = dasher.getAlphabet();
-                alphaNote.textContent = `${bundledAlphabets.length} bundled + ${catalogue.length} catalogue alphabets`;
-                canvasNote.textContent = '';
-                applyLocale();
-
-                enableControls();
-                startRenderLoop();
-            } catch (error) {
-                canvasNote.textContent = 'Failed to load: ' + (error.message || error);
-                console.error(error);
-            }
-        }
-
-        // --- Controls ---------------------------------------------------------
-
-        themeSelect.addEventListener('change', () => {
-            if (!dasher) return;
-            const key = dasher.findParameterKey('SP_COLOUR_ID');
-            if (key >= 0) dasher.setStringParameter(key, themeSelect.value);
-        });
-
-        shapeSelect.addEventListener('change', () => {
-            if (!dasher) return;
-            const key = dasher.findParameterKey('LP_SHAPE_TYPE');
-            if (key >= 0) dasher.setLongParameter(key, parseInt(shapeSelect.value));
-        });
-
-        outlineSlider.addEventListener('input', () => {
-            outlineValue.textContent = outlineSlider.value;
-            if (!dasher) return;
-            const key = dasher.findParameterKey('LP_OUTLINE_WIDTH');
-            if (key >= 0) dasher.setLongParameter(key, parseInt(outlineSlider.value));
-        });
-
-        speedSlider.addEventListener('input', () => {
-            speedValue.textContent = speedSlider.value;
-            if (dasher) dasher.setSpeed(parseInt(speedSlider.value));
-        });
-
-        autospeedToggle.addEventListener('change', () => {
-            if (!dasher) return;
-            const key = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
-            if (key >= 0) dasher.setBoolParameter(key, autospeedToggle.checked);
-        });
-
-        learningToggle.addEventListener('change', () => {
-            if (!dasher) return;
-            const key = dasher.findParameterKey('BP_LM_ADAPTIVE');
-            if (key >= 0) dasher.setBoolParameter(key, learningToggle.checked);
-        });
-
-        resetBtn.addEventListener('click', () => {
-            if (dasher) { dasher.resetOutputText(); updateOutput(); }
-        });
-
-        // --- Locale (shared UI strings) -----------------------------------
+        // ── Locale (shared UI strings) ───────────────────────────────────
 
         let uiStrings = null;
         let locale = 'en';
@@ -534,10 +657,7 @@
             for (const base of ['strings/', '../strings/']) {
                 try {
                     const r = await fetch(base + 'ui-strings.json');
-                    if (r.ok) {
-                        uiStrings = await r.json();
-                        return;
-                    }
+                    if (r.ok) { uiStrings = await r.json(); return; }
                 } catch (e) { /* try next */ }
             }
             uiStrings = {meta: {locales: ['en']}, shared: {}};
@@ -568,22 +688,17 @@
         }
 
         function applyLocale() {
-            // Static chrome labels
-            const set = (id, key, fb) => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = t(key, fb);
-            };
-            document.querySelector('.output-wrap h2').textContent = t('output', 'Output');
-            set('reset-btn', 'clear', 'Clear');
-            set('settings-btn', 'settings', 'Settings');
-            set('settings-title', 'settings', 'Settings');
-            document.querySelector('label[for="alphabet-input"]').textContent =
-                t('alphabet_search', 'Alphabet (type to search)');
-            document.querySelector('label[for="theme-select"]').textContent = t('theme', 'Theme');
-            document.querySelector('label[for="shape-select"]').textContent = t('node_shape', 'Node shape');
-            document.querySelector('label[for="speed-slider"]').textContent =
-                t('speed', 'Speed') + ': ' + speedValue.textContent + '%';
-            rebuildSettings();   // regenerate the dialog with localized chrome
+            document.getElementById('editor-title').textContent = t('output', 'Output');
+            document.getElementById('lbl-alphabet').textContent = t('alphabet', 'Alphabet');
+            document.getElementById('lbl-speed').textContent = t('speed', 'Speed');
+            document.getElementById('lbl-theme').textContent = t('theme', 'Theme');
+            document.getElementById('lbl-font').textContent = t('font_size', 'Font');
+            document.getElementById('lbl-learning').textContent = t('learning', 'Learning');
+            tbNew.title = t('new', 'New — clear text and restart');
+            tbSave.title = t('save', 'Save output as a text file');
+            tbSettings.title = t('settings', 'Preferences');
+            document.getElementById('ed-speak').lastChild.textContent = ' ' + t('quick_speak', 'Quick speak');
+            rebuildSettings();
         }
 
         localeSelect.addEventListener('change', () => {
@@ -591,23 +706,123 @@
             applyLocale();
         });
 
-        // --- Settings dialog (generated from the CAPI manifest) -----------
+        // ── Toolbar actions ──────────────────────────────────────────────
 
-        settingsBtn.addEventListener('click', () => {
+        tbNew.addEventListener('click', () => {
+            extraPrefix = '';
+            if (dasher) { dasher.resetOutputText(); updateOutput(); }
+            toast(t('new_cleared', 'Started a new message'));
+        });
+
+        tbOpen.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files && fileInput.files[0];
+            fileInput.value = '';
+            if (!file) return;
+            const text = await file.text();
+            extraPrefix = text;
+            if (dasher) dasher.resetOutputText();
+            updateOutput();
+            toast(`${t('open', 'Opened')} ${file.name}`);
+        });
+
+        tbSave.addEventListener('click', () => {
+            const blob = new Blob([displayText()], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'dasher-output.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        function setPaused(p) {
+            paused = p;
+            tbPlayIcon.innerHTML = `<use href="#i-${paused ? 'play' : 'pause'}"/>`;
+            tbPlay.classList.toggle('active', paused);
+        }
+        tbPlay.addEventListener('click', () => setPaused(!paused));
+
+        tbPosition.addEventListener('click', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('LP_ORIENTATION');
+            if (key < 0) return;
+            const enums = dasher.getParameterEnumValues(key);
+            if (!enums.length) return;
+            const current = dasher.getLongParameter(key);
+            const idx = enums.findIndex((e) => e.value === current);
+            const next = enums[(idx + 1 + enums.length) % enums.length];
+            dasher.setLongParameter(key, next.value);
+            toast(`${t('position', 'Position')}: ${next.name}`);
+        });
+
+        tbSettings.addEventListener('click', () => {
             rebuildSettings();
             settingsOverlay.hidden = false;
         });
+
+        // ── Editor pane actions ─────────────────────────────────────────
+
+        document.getElementById('ed-copy').addEventListener('click', async () => {
+            const sel = outputText.value.substring(outputText.selectionStart, outputText.selectionEnd);
+            const text = sel || displayText();
+            try { await navigator.clipboard.writeText(text); toast(t('copied', 'Copied')); }
+            catch (e) { toast('Clipboard unavailable'); }
+        });
+        document.getElementById('ed-copy-all').addEventListener('click', async () => {
+            try { await navigator.clipboard.writeText(displayText()); toast(t('copied', 'Copied')); }
+            catch (e) { toast('Clipboard unavailable'); }
+        });
+        document.getElementById('ed-paste').addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                extraPrefix += text;
+                updateOutput();
+                toast(t('pasted', 'Pasted'));
+            } catch (e) { toast('Clipboard unavailable — needs permission or HTTPS'); }
+        });
+        document.getElementById('ed-speak').addEventListener('click', () => {
+            const text = displayText().trim();
+            if (!text) { toast(t('nothing_to_speak', 'Nothing to speak yet')); return; }
+            const u = new SpeechSynthesisUtterance(text);
+            if (speechSynthesis.speaking) speechSynthesis.cancel();
+            u.lang = locale;
+            speechSynthesis.speak(u);
+        });
+
+        // ── Status bar ───────────────────────────────────────────────────
+
+        themeSelect.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('SP_COLOUR_ID');
+            if (key >= 0) dasher.setStringParameter(key, themeSelect.value);
+        });
+
+        fontSizeInput.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('LP_DASHER_FONTSIZE');
+            if (key >= 0) dasher.setLongParameter(key, parseInt(fontSizeInput.value) || 12);
+        });
+
+        speedSlider.addEventListener('input', () => {
+            speedValue.textContent = speedSlider.value + '%';
+            if (dasher) dasher.setSpeed(parseInt(speedSlider.value));
+        });
+
+        learningToggle.addEventListener('change', () => {
+            if (!dasher) return;
+            const key = dasher.findParameterKey('BP_LM_ADAPTIVE');
+            if (key >= 0) dasher.setBoolParameter(key, learningToggle.checked);
+        });
+
+        // ── Settings dialog (generated from the CAPI manifest) ──────────
+
         document.getElementById('settings-close').addEventListener('click', () => {
             settingsOverlay.hidden = true;
         });
         settingsOverlay.addEventListener('click', (e) => {
             if (e.target === settingsOverlay) settingsOverlay.hidden = true;
         });
-        document.getElementById('settings-defaults').addEventListener('click', () => {
-            // Engine settings live in the WASM filesystem for the session;
-            // a reload restores engine defaults.
-            location.reload();
-        });
+        document.getElementById('settings-defaults').addEventListener('click', () => location.reload());
 
         const GROUP_ORDER = ['Input', 'Language', 'Appearance', 'Speed', 'Output'];
         const GROUP_KEYS = {
@@ -630,15 +845,15 @@
             }
             wrap.appendChild(label);
 
-            if (p.type === 0) { // bool
+            if (p.type === 0) {
                 const cb = document.createElement('input');
                 cb.type = 'checkbox';
                 cb.checked = dasher.getBoolParameter(p.key);
                 cb.addEventListener('change', () => dasher.setBoolParameter(p.key, cb.checked));
                 wrap.appendChild(cb);
-            } else if (p.type === 1) { // long
+            } else if (p.type === 1) {
                 const enums = dasher.getParameterEnumValues(p.key);
-                if (enums.length > 0 && p.uiType === 5 /* Enum */) {
+                if (enums.length > 0 && p.uiType === 5) {
                     const sel = document.createElement('select');
                     const current = dasher.getLongParameter(p.key);
                     for (const e of enums) {
@@ -650,12 +865,10 @@
                     }
                     sel.addEventListener('change', () => {
                         dasher.setLongParameter(p.key, parseInt(sel.value));
-                        syncTopBar();
+                        syncStatusbar();
                     });
                     wrap.appendChild(sel);
                 } else {
-                    const box = document.createElement('label');
-                    box.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0;';
                     const num = document.createElement('input');
                     num.type = 'number';
                     num.min = p.min; num.max = p.max; num.step = p.step || 1;
@@ -663,12 +876,11 @@
                     num.style.width = '72px';
                     num.addEventListener('change', () => {
                         dasher.setLongParameter(p.key, parseInt(num.value) || 0);
-                        syncTopBar();
+                        syncStatusbar();
                     });
-                    box.appendChild(num);
-                    wrap.appendChild(box);
+                    wrap.appendChild(num);
                 }
-            } else { // string
+            } else {
                 const values = dasher.getParameterStringValues(p.key);
                 if (values.length > 0) {
                     const sel = document.createElement('select');
@@ -682,7 +894,7 @@
                     }
                     sel.addEventListener('change', () => {
                         dasher.setStringParameter(p.key, sel.value);
-                        syncTopBar();
+                        syncStatusbar();
                     });
                     wrap.appendChild(sel);
                 } else {
@@ -697,12 +909,12 @@
             return wrap;
         }
 
-        // Keep the top-bar controls in step with changes made in the dialog
-        function syncTopBar() {
-            themeSelect.value = dasher.getStringParameter(dasher.findParameterKey('SP_COLOUR_ID')) || themeSelect.value;
-            shapeSelect.value = String(dasher.getLongParameter(dasher.findParameterKey('LP_SHAPE_TYPE')));
-            const sk = dasher.findParameterKey('LP_MAX_BITRATE');
-            if (sk >= 0) speedValue.textContent = dasher.getLongParameter(sk);
+        function syncStatusbar() {
+            const cKey = dasher.findParameterKey('SP_COLOUR_ID');
+            const cVal = dasher.getStringParameter(cKey);
+            if (cVal && [...themeSelect.options].some((o) => o.value === cVal)) themeSelect.value = cVal;
+            const fKey = dasher.findParameterKey('LP_DASHER_FONTSIZE');
+            if (fKey >= 0) fontSizeInput.value = dasher.getLongParameter(fKey);
         }
 
         function sectionEl(titleKey, fallback) {
@@ -735,7 +947,6 @@
             for (const group of groups) {
                 const params = byGroup.get(group);
                 const section = sectionEl(GROUP_KEYS[group] || 'settings_other', group);
-
                 const normal = params.filter((p) => !p.advanced);
                 const advanced = params.filter((p) => p.advanced);
 
@@ -760,7 +971,6 @@
                 settingsBody.appendChild(section);
             }
 
-            // Static privacy section: honest statement about the demo
             const privacy = sectionEl('settings_privacy', 'Privacy');
             const note = document.createElement('p');
             note.className = 'section-note';
@@ -771,7 +981,79 @@
             settingsBody.appendChild(privacy);
         }
 
-        // --- Input ------------------------------------------------------------
+        // ── Engine init ──────────────────────────────────────────────────
+
+        async function initializeDasher() {
+            try {
+                canvasNote.textContent = 'Loading WebAssembly module…';
+
+                const dasherModule = await import('./wasm/dasher.js');
+                dasher = new DasherWasm();
+                window.dasher = dasher; // debug/console access
+                await dasher.init({
+                    canvas: canvas,
+                    moduleFactory: dasherModule.default,
+                    onOutput: (eventType) => {
+                        if (eventType === 0) updateOutput();
+                    },
+                    onMessage: (messageType, text) => {
+                        console.log('Dasher message:', text);
+                    }
+                });
+
+                canvasNote.textContent = 'Creating context…';
+                dasher.createContext();
+
+                try {
+                    const resp = await fetch('data-bundle/colours/colour.webdemo.xml');
+                    if (resp.ok && dasher.module && dasher.module.FS) {
+                        dasher.module.FS.writeFile(
+                            '/data/colours/colour.webdemo.xml', await resp.text());
+                    }
+                } catch (e) { /* not running from a source checkout */ }
+
+                const colourKey = dasher.findParameterKey('SP_COLOUR_ID');
+                if (colourKey >= 0) dasher.setStringParameter(colourKey, 'Web Demo');
+
+                dasher.setScreenSize(canvas.width, canvas.height);
+                dasher.setSpeed(parseInt(speedSlider.value));
+
+                const autospeedKey = dasher.findParameterKey('BP_AUTO_SPEEDCONTROL');
+                const learningKey = dasher.findParameterKey('BP_LM_ADAPTIVE');
+                if (learningKey >= 0) learningToggle.checked = dasher.getBoolParameter(learningKey);
+
+                // Theme options straight from the engine
+                const palettes = dasher.getParameterStringValues(colourKey);
+                themeSelect.innerHTML = '';
+                for (const p of palettes) {
+                    const opt = document.createElement('option');
+                    opt.value = p; opt.textContent = p;
+                    themeSelect.appendChild(opt);
+                }
+                themeSelect.value = dasher.getStringParameter(colourKey);
+
+                const fontKey = dasher.findParameterKey('LP_DASHER_FONTSIZE');
+                if (fontKey >= 0) fontSizeInput.value = dasher.getLongParameter(fontKey);
+
+                bundledAlphabets = dasher.getAlphabets();
+                await loadCatalogueIndex();
+                await loadUiStrings();
+                buildLocaleSelect();
+                rebuildDatalist();
+                alphabetInput.value = dasher.getAlphabet();
+                alphaNote.textContent = `${bundledAlphabets.length} bundled + ${catalogue.length} catalogue`;
+                canvasNote.textContent = '';
+                applyLocale();
+
+                enableControls();
+                startRenderLoop();
+            } catch (error) {
+                canvasNote.textContent = 'Failed to load: ' + (error.message || error);
+                console.error(error);
+            }
+        }
+
+        // ── Input ────────────────────────────────────────────────────────
 
         function getCanvasCoords(e) {
             const rect = canvas.getBoundingClientRect();
@@ -786,18 +1068,18 @@
         }
 
         canvas.addEventListener('mousemove', (e) => {
-            if (dasher) {
+            if (dasher && !paused) {
                 const { x, y } = getCanvasCoords(e);
                 dasher.mouseMove(x, y);
             }
         });
-        canvas.addEventListener('mousedown', () => { if (dasher) dasher.mouseDown(); });
+        canvas.addEventListener('mousedown', () => { if (dasher && !paused) dasher.mouseDown(); });
         canvas.addEventListener('mouseup', () => { if (dasher) dasher.mouseUp(); });
         canvas.addEventListener('mouseleave', () => { if (dasher) dasher.mouseUp(); });
 
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            if (dasher) {
+            if (dasher && !paused) {
                 const { x, y } = getCanvasCoords(e);
                 dasher.mouseMove(x, y);
                 dasher.mouseDown();
@@ -805,7 +1087,7 @@
         }, { passive: false });
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
-            if (dasher) {
+            if (dasher && !paused) {
                 const { x, y } = getCanvasCoords(e);
                 dasher.mouseMove(x, y);
             }
@@ -815,7 +1097,7 @@
             if (dasher) dasher.mouseUp();
         }, { passive: false });
 
-        // --- Render loop --------------------------------------------------------
+        // ── Render loop ─────────────────────────────────────────────────
 
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
@@ -832,14 +1114,11 @@
         window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
 
         function renderLoop(time) {
-            if (dasher) {
-                const startTime = performance.now();
+            if (dasher && !paused) {
                 dasher.frame(time);
                 frameCount++;
                 if (time - lastFpsTime >= 1000) {
-                    const frameTime = performance.now() - startTime;
-                    fpsDisplay.textContent = `FPS: ${frameCount}`;
-                    frameTimeDisplay.textContent = `Frame: ${frameTime.toFixed(1)}ms`;
+                    fpsChip.textContent = `FPS: ${frameCount}`;
                     frameCount = 0;
                     lastFpsTime = time;
                 }
@@ -852,7 +1131,7 @@
             requestAnimationFrame(renderLoop);
         }
 
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = '#F4F7F6';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         initializeDasher();
     </script>
