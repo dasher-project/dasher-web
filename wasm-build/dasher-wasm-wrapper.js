@@ -257,6 +257,81 @@ class DasherWasm {
         this.module._dasher_set_string_parameter(this.context, key, ptr);
     }
 
+    // ── Settings manifest (dasher_get_parameter_*) ─────────────────────────
+    // Struct dasher_parameter_info (wasm32: i32/ptr/long all 4 bytes):
+    //   0 key, 4 name*, 8 desc*, 12 type, 16 ui_type, 20 min, 24 max,
+    //   28 step, 32 advanced, 36 group*, 40 subgroup*
+
+    /**
+     * Number of parameters in the settings manifest.
+     */
+    getParameterCount() {
+        return this.module._dasher_get_parameter_count();
+    }
+
+    /**
+     * Manifest info for the parameter at index (0..count-1):
+     * {key, name, desc, type, uiType, min, max, step, advanced, group, subgroup}
+     */
+    getParameterInfo(index) {
+        const m = this.module;
+        const ptr = m._malloc(44);
+        try {
+            if (m._dasher_get_parameter_info(index, ptr) !== 0) return null;
+            return {
+                key: m.getValue(ptr, 'i32'),
+                name: m.UTF8ToString(m.getValue(ptr + 4, '*')),
+                desc: m.UTF8ToString(m.getValue(ptr + 8, '*')),
+                type: m.getValue(ptr + 12, 'i32'),
+                uiType: m.getValue(ptr + 16, 'i32'),
+                min: m.getValue(ptr + 20, 'i32'),
+                max: m.getValue(ptr + 24, 'i32'),
+                step: m.getValue(ptr + 28, 'i32') || 1,
+                advanced: m.getValue(ptr + 32, 'i32') === 1,
+                group: m.UTF8ToString(m.getValue(ptr + 36, '*')),
+                subgroup: m.UTF8ToString(m.getValue(ptr + 40, '*')),
+            };
+        } finally {
+            m._free(ptr);
+        }
+    }
+
+    /**
+     * Permitted values for an enum-typed long parameter: [{name, value}].
+     */
+    getParameterEnumValues(key) {
+        const m = this.module;
+        const count = m._dasher_get_parameter_enum_count(key);
+        const values = [];
+        for (let i = 0; i < count; i++) {
+            values.push({
+                name: m.UTF8ToString(m._dasher_get_parameter_enum_name(key, i)),
+                value: m._dasher_get_parameter_enum_value(key, i),
+            });
+        }
+        return values;
+    }
+
+    /**
+     * Permitted values for a string parameter (e.g. alphabet, palette,
+     * input filter): [names].
+     */
+    getParameterStringValues(key) {
+        const m = this.module;
+        const max = 512;
+        const ptr = m._malloc(4 * max);
+        try {
+            const count = m._dasher_get_parameter_string_values(this.context, key, ptr, max);
+            const values = [];
+            for (let i = 0; i < count && i < max; i++) {
+                values.push(m.UTF8ToString(m.getValue(ptr + i * 4, '*')));
+            }
+            return values;
+        } finally {
+            m._free(ptr);
+        }
+    }
+
     /**
      * Handle mouse movement.
      */

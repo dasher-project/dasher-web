@@ -60,6 +60,8 @@ jobs:
           cp -r wasm-build/wasm _site/js-demo/wasm
           # Static alphabet catalogue, fetched on demand by the playground
           cp -r wasm-build/alphabet-catalogue _site/alphabet-catalogue
+          # Shared UI string catalogue (33 locales) for the settings dialog
+          cp -r wasm-build/strings _site/strings
           touch _site/.nojekyll
 
       - name: Upload artifact

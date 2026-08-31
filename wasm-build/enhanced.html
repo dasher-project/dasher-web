@@ -125,6 +125,75 @@
             .controls::-webkit-scrollbar { display: none; }
             .toggle-group label { font-size: 13px; }
         }
+
+        /* --- Settings dialog --- */
+        #settings-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        #settings-overlay[hidden] { display: none; }
+        #settings-dialog {
+            width: min(720px, 94vw); max-height: 88vh;
+            display: flex; flex-direction: column;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden;
+        }
+        .settings-head {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+        }
+        .settings-head h2 { margin: 0; font-size: 16px; flex: 1; }
+        .settings-head select {
+            padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--surface2); color: var(--text); font-size: 13px;
+        }
+        #settings-close {
+            border: none; background: none; color: var(--text);
+            font-size: 22px; cursor: pointer; padding: 0 6px;
+        }
+        #settings-body { overflow-y: auto; padding: 8px 16px 16px; }
+        .settings-section { margin-top: 14px; }
+        .settings-section > h3 {
+            margin: 0 0 8px 0; font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--accent);
+        }
+        .settings-section > .section-note { font-size: 12px; color: var(--text-dim); margin: 0 0 8px 0; }
+        .settings-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px;
+        }
+        @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }
+        .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .setting-row .setting-label { font-size: 14px; }
+        .setting-row .setting-label small { display: block; color: var(--text-muted); font-size: 11px; }
+        .setting-row input[type="checkbox"] {
+            width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; flex: none;
+        }
+        .setting-row input[type="range"] { width: 130px; accent-color: var(--accent); }
+        .setting-row input[type="number"] {
+            width: 72px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--surface2); color: var(--text); font-size: 13px;
+        }
+        .setting-row select {
+            max-width: 220px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--surface2); color: var(--text); font-size: 13px;
+        }
+        .settings-advanced {
+            margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 8px;
+        }
+        .settings-advanced summary {
+            font-size: 12px; color: var(--text-dim); cursor: pointer; user-select: none;
+        }
+        .settings-advanced .settings-grid { margin-top: 8px; }
+        .settings-foot {
+            display: flex; justify-content: flex-end; gap: 8px;
+            padding: 12px 16px; border-top: 1px solid var(--border);
+        }
+        .settings-foot button {
+            padding: 8px 14px; border: none; border-radius: 6px;
+            background: var(--accent); color: white; font-size: 14px; cursor: pointer;
+        }
+        .settings-foot button:hover { background: var(--accent-hover); }
     </style>
 </head>
 <body>
@@ -201,6 +270,21 @@
         </div>
         <div class="btn-group">
             <button id="reset-btn" disabled>Clear</button>
+            <button id="settings-btn" disabled>Settings</button>
+        </div>
+    </div>
+</div>
+
+<div id="settings-overlay" hidden>
+    <div id="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="settings-head">
+            <h2 id="settings-title">Settings</h2>
+            <select id="locale-select" title="Language"></select>
+            <button id="settings-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="settings-body"></div>
+        <div class="settings-foot">
+            <button id="settings-defaults">Reset all to defaults</button>
         </div>
     </div>
 </div>
@@ -223,6 +307,10 @@
         const autospeedToggle = document.getElementById('autospeed-toggle');
         const learningToggle = document.getElementById('learning-toggle');
         const resetBtn = document.getElementById('reset-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const settingsBody = document.getElementById('settings-body');
+        const localeSelect = document.getElementById('locale-select');
         const fpsDisplay = document.getElementById('fps');
         const frameTimeDisplay = document.getElementById('frame-time');
         const canvasNote = document.getElementById('canvas-note');
@@ -248,6 +336,7 @@
             autospeedToggle.disabled = false;
             learningToggle.disabled = false;
             resetBtn.disabled = false;
+            settingsBtn.disabled = false;
         }
 
         // --- Alphabet picker -------------------------------------------------
@@ -378,10 +467,13 @@
 
                 bundledAlphabets = dasher.getAlphabets();
                 await loadCatalogueIndex();
+                await loadUiStrings();
+                buildLocaleSelect();
                 rebuildDatalist();
                 alphabetInput.value = dasher.getAlphabet();
                 alphaNote.textContent = `${bundledAlphabets.length} bundled + ${catalogue.length} catalogue alphabets`;
                 canvasNote.textContent = '';
+                applyLocale();
 
                 enableControls();
                 startRenderLoop();
@@ -432,6 +524,252 @@
         resetBtn.addEventListener('click', () => {
             if (dasher) { dasher.resetOutputText(); updateOutput(); }
         });
+
+        // --- Locale (shared UI strings) -----------------------------------
+
+        let uiStrings = null;
+        let locale = 'en';
+
+        async function loadUiStrings() {
+            for (const base of ['strings/', '../strings/']) {
+                try {
+                    const r = await fetch(base + 'ui-strings.json');
+                    if (r.ok) {
+                        uiStrings = await r.json();
+                        return;
+                    }
+                } catch (e) { /* try next */ }
+            }
+            uiStrings = {meta: {locales: ['en']}, shared: {}};
+        }
+
+        const t = (key, fallback) => {
+            const entry = uiStrings && uiStrings.shared[key];
+            if (entry) return entry[locale] || entry.en || fallback || key;
+            return fallback || key;
+        };
+
+        const localeName = (code) => {
+            try {
+                return new Intl.DisplayNames([locale], {type: 'language'}).of(code) || code;
+            } catch (e) { return code; }
+        };
+
+        function buildLocaleSelect() {
+            const locales = (uiStrings && uiStrings.meta.locales) || ['en'];
+            localeSelect.innerHTML = '';
+            for (const code of locales) {
+                const opt = document.createElement('option');
+                opt.value = code;
+                opt.textContent = `${localeName(code)} (${code})`;
+                if (code === locale) opt.selected = true;
+                localeSelect.appendChild(opt);
+            }
+        }
+
+        function applyLocale() {
+            // Static chrome labels
+            const set = (id, key, fb) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = t(key, fb);
+            };
+            document.querySelector('.output-wrap h2').textContent = t('output', 'Output');
+            set('reset-btn', 'clear', 'Clear');
+            set('settings-btn', 'settings', 'Settings');
+            set('settings-title', 'settings', 'Settings');
+            document.querySelector('label[for="alphabet-input"]').textContent =
+                t('alphabet_search', 'Alphabet (type to search)');
+            document.querySelector('label[for="theme-select"]').textContent = t('theme', 'Theme');
+            document.querySelector('label[for="shape-select"]').textContent = t('node_shape', 'Node shape');
+            document.querySelector('label[for="speed-slider"]').textContent =
+                t('speed', 'Speed') + ': ' + speedValue.textContent + '%';
+            rebuildSettings();   // regenerate the dialog with localized chrome
+        }
+
+        localeSelect.addEventListener('change', () => {
+            locale = localeSelect.value || 'en';
+            applyLocale();
+        });
+
+        // --- Settings dialog (generated from the CAPI manifest) -----------
+
+        settingsBtn.addEventListener('click', () => {
+            rebuildSettings();
+            settingsOverlay.hidden = false;
+        });
+        document.getElementById('settings-close').addEventListener('click', () => {
+            settingsOverlay.hidden = true;
+        });
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) settingsOverlay.hidden = true;
+        });
+        document.getElementById('settings-defaults').addEventListener('click', () => {
+            // Engine settings live in the WASM filesystem for the session;
+            // a reload restores engine defaults.
+            location.reload();
+        });
+
+        const GROUP_ORDER = ['Input', 'Language', 'Appearance', 'Speed', 'Output'];
+        const GROUP_KEYS = {
+            'Input': 'settings_input', 'Language': 'settings_language',
+            'Appearance': 'settings_appearance', 'Speed': 'settings_speed',
+            'Output': 'settings_output', 'Other': 'settings_other',
+            'Privacy': 'settings_privacy',
+        };
+
+        function makeControl(p) {
+            const wrap = document.createElement('div');
+            wrap.className = 'setting-row';
+            const label = document.createElement('div');
+            label.className = 'setting-label';
+            label.textContent = p.name;
+            if (p.desc) {
+                const small = document.createElement('small');
+                small.textContent = p.desc;
+                label.appendChild(small);
+            }
+            wrap.appendChild(label);
+
+            if (p.type === 0) { // bool
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = dasher.getBoolParameter(p.key);
+                cb.addEventListener('change', () => dasher.setBoolParameter(p.key, cb.checked));
+                wrap.appendChild(cb);
+            } else if (p.type === 1) { // long
+                const enums = dasher.getParameterEnumValues(p.key);
+                if (enums.length > 0 && p.uiType === 5 /* Enum */) {
+                    const sel = document.createElement('select');
+                    const current = dasher.getLongParameter(p.key);
+                    for (const e of enums) {
+                        const opt = document.createElement('option');
+                        opt.value = e.value;
+                        opt.textContent = e.name;
+                        if (e.value === current) opt.selected = true;
+                        sel.appendChild(opt);
+                    }
+                    sel.addEventListener('change', () => {
+                        dasher.setLongParameter(p.key, parseInt(sel.value));
+                        syncTopBar();
+                    });
+                    wrap.appendChild(sel);
+                } else {
+                    const box = document.createElement('label');
+                    box.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0;';
+                    const num = document.createElement('input');
+                    num.type = 'number';
+                    num.min = p.min; num.max = p.max; num.step = p.step || 1;
+                    num.value = dasher.getLongParameter(p.key);
+                    num.style.width = '72px';
+                    num.addEventListener('change', () => {
+                        dasher.setLongParameter(p.key, parseInt(num.value) || 0);
+                        syncTopBar();
+                    });
+                    box.appendChild(num);
+                    wrap.appendChild(box);
+                }
+            } else { // string
+                const values = dasher.getParameterStringValues(p.key);
+                if (values.length > 0) {
+                    const sel = document.createElement('select');
+                    const current = dasher.getStringParameter(p.key);
+                    for (const v of values) {
+                        const opt = document.createElement('option');
+                        opt.value = v;
+                        opt.textContent = v;
+                        if (v === current) opt.selected = true;
+                        sel.appendChild(opt);
+                    }
+                    sel.addEventListener('change', () => {
+                        dasher.setStringParameter(p.key, sel.value);
+                        syncTopBar();
+                    });
+                    wrap.appendChild(sel);
+                } else {
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.value = dasher.getStringParameter(p.key);
+                    inp.addEventListener('change', () =>
+                        dasher.setStringParameter(p.key, inp.value));
+                    wrap.appendChild(inp);
+                }
+            }
+            return wrap;
+        }
+
+        // Keep the top-bar controls in step with changes made in the dialog
+        function syncTopBar() {
+            themeSelect.value = dasher.getStringParameter(dasher.findParameterKey('SP_COLOUR_ID')) || themeSelect.value;
+            shapeSelect.value = String(dasher.getLongParameter(dasher.findParameterKey('LP_SHAPE_TYPE')));
+            const sk = dasher.findParameterKey('LP_MAX_BITRATE');
+            if (sk >= 0) speedValue.textContent = dasher.getLongParameter(sk);
+        }
+
+        function sectionEl(titleKey, fallback) {
+            const section = document.createElement('div');
+            section.className = 'settings-section';
+            const h3 = document.createElement('h3');
+            h3.textContent = t(titleKey, fallback);
+            section.appendChild(h3);
+            return section;
+        }
+
+        function rebuildSettings() {
+            if (!dasher) return;
+            settingsBody.innerHTML = '';
+
+            const count = dasher.getParameterCount();
+            const byGroup = new Map();
+            for (let i = 0; i < count; i++) {
+                const p = dasher.getParameterInfo(i);
+                if (!p || !p.name) continue;
+                const group = p.group && p.group !== '' ? p.group : 'Other';
+                if (!byGroup.has(group)) byGroup.set(group, []);
+                byGroup.get(group).push(p);
+            }
+            const groups = [...byGroup.keys()].sort((a, b) => {
+                const ai = GROUP_ORDER.indexOf(a), bi = GROUP_ORDER.indexOf(b);
+                return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.localeCompare(b);
+            });
+
+            for (const group of groups) {
+                const params = byGroup.get(group);
+                const section = sectionEl(GROUP_KEYS[group] || 'settings_other', group);
+
+                const normal = params.filter((p) => !p.advanced);
+                const advanced = params.filter((p) => p.advanced);
+
+                if (normal.length) {
+                    const grid = document.createElement('div');
+                    grid.className = 'settings-grid';
+                    for (const p of normal) grid.appendChild(makeControl(p));
+                    section.appendChild(grid);
+                }
+                if (advanced.length) {
+                    const det = document.createElement('details');
+                    det.className = 'settings-advanced';
+                    const sum = document.createElement('summary');
+                    sum.textContent = t('advanced_settings', 'Advanced settings');
+                    det.appendChild(sum);
+                    const grid = document.createElement('div');
+                    grid.className = 'settings-grid';
+                    for (const p of advanced) grid.appendChild(makeControl(p));
+                    det.appendChild(grid);
+                    section.appendChild(det);
+                }
+                settingsBody.appendChild(section);
+            }
+
+            // Static privacy section: honest statement about the demo
+            const privacy = sectionEl('settings_privacy', 'Privacy');
+            const note = document.createElement('p');
+            note.className = 'section-note';
+            note.textContent = t('privacy_local_only',
+                'This demo runs entirely in your browser. No analytics, no telemetry, ' +
+                'and no data leaves your device. Settings live in the page session only.');
+            privacy.appendChild(note);
+            settingsBody.appendChild(privacy);
+        }
 
         // --- Input ------------------------------------------------------------
 
