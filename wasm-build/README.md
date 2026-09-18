@@ -92,6 +92,16 @@ data-bundle/
 
 This is loaded into the WASM filesystem at `/data` at build time via `--preload-file`.
 
+**Local-only files — never delete in a DasherCore sync:**
+
+- `colours/colour.webdemo.xml` and `colours/colour.webdemo.dark.xml` are
+  dasher-web additions (they do not exist in DasherCore). `demo.html` sets
+  `SP_COLOUR_ID = 'Web Demo'` and overlays these into the engine FS before
+  `Realize()`. Without them the engine falls back to a palette with black
+  text on a near-black background — the canvas renders as unreadable black
+  (seen live after the v0.2.25 sync, which dropped them). When syncing the
+  bundle from a new DasherCore tag, re-add these two files afterwards.
+
 ## JavaScript API (`DasherWasm`)
 
 ```javascript
