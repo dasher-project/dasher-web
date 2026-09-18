@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Dhivehi (thaana) with punctuation and numerals" orientation="RL" trainingFilename="training_thaana_MV.txt" colorsName="Default">
+	<group name="thaana letters">
+		<node label="ހ">
+			<!--Note: HAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޙ">
+			<!--Note: HHAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޚ">
+			<!--Note: KHAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ށ">
+			<!--Note: SHAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ނ">
+			<!--Note: NOONU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ރ">
+			<!--Note: RAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޜ">
+			<!--Note: ZAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ބ">
+			<!--Note: BAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޅ">
+			<!--Note: LHAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ކ">
+			<!--Note: KAAFU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="އ">
+			<!--Note: ALIFU (silent vowel carrier) class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޢ">
+			<!--Note: AINU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޣ">
+			<!--Note: GHAINU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ވ">
+			<!--Note: VAAVU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޥ">
+			<!--Note: WAAVU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="މ">
+			<!--Note: MEEMU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ފ">
+			<!--Note: FAAFU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ދ">
+			<!--Note: DHAALU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޛ">
+			<!--Note: THAALU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ތ">
+			<!--Note: THAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޘ">
+			<!--Note: TTAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޠ">
+			<!--Note: TO  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޡ">
+			<!--Note: ZO  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ލ">
+			<!--Note: LAAMU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ގ">
+			<!--Note: GAAFU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޤ">
+			<!--Note: QAAFU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޏ">
+			<!--Note: GNAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ސ">
+			<!--Note: SEENU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޝ">
+			<!--Note: SHEENU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޞ">
+			<!--Note: SAADHU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޟ">
+			<!--Note: DAADHU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޑ">
+			<!--Note: DAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޒ">
+			<!--Note: ZAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޓ">
+			<!--Note: TAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޔ">
+			<!--Note: YAA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޕ">
+			<!--Note: PAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޖ">
+			<!--Note: JAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޗ">
+			<!--Note: CHAVIYANI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ޱ">
+			<!--Note: NAA  class(p)-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="thaana vowels">
+		<node label="◌ަ">
+			<!--Note: ABAFILI  class(p)-->
+			<textCharAction unicode="1958" />
+		</node>
+		<node label="◌ާ">
+			<!--Note: AABAAFILI  class(p)-->
+			<textCharAction unicode="1959" />
+		</node>
+		<node label="◌ި">
+			<!--Note: IBIFILI  class(p)-->
+			<textCharAction unicode="1960" />
+		</node>
+		<node label="◌ީ">
+			<!--Note: EEBEEFILI  class(p)-->
+			<textCharAction unicode="1961" />
+		</node>
+		<node label="◌ު">
+			<!--Note: UBUFILI  class(p)-->
+			<textCharAction unicode="1962" />
+		</node>
+		<node label="◌ޫ">
+			<!--Note: OOBOOFILI  class(p)-->
+			<textCharAction unicode="1963" />
+		</node>
+		<node label="◌ެ">
+			<!--Note: EBEFILI  class(p)-->
+			<textCharAction unicode="1964" />
+		</node>
+		<node label="◌ޭ">
+			<!--Note: EYBEYFILI  class(p)-->
+			<textCharAction unicode="1965" />
+		</node>
+		<node label="◌ޮ">
+			<!--Note: OBOFILI  class(p)-->
+			<textCharAction unicode="1966" />
+		</node>
+		<node label="◌ޯ">
+			<!--Note: OABOAFILI  class(p)-->
+			<textCharAction unicode="1967" />
+		</node>
+		<node label="◌ް">
+			<!--Note: SUKUN  class(p)-->
+			<textCharAction unicode="1968" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label="·">
+			<textCharAction unicode="46" />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Thai (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_th_Thai.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ก">
+      <textCharAction />
+    </node>
+    <node label="ข">
+      <textCharAction />
+    </node>
+    <node label="ฃ">
+      <textCharAction />
+    </node>
+    <node label="ค">
+      <textCharAction />
+    </node>
+    <node label="ฅ">
+      <textCharAction />
+    </node>
+    <node label="ฆ">
+      <textCharAction />
+    </node>
+    <node label="ง">
+      <textCharAction />
+    </node>
+    <node label="จ">
+      <textCharAction />
+    </node>
+    <node label="ฉ">
+      <textCharAction />
+    </node>
+    <node label="ช">
+      <textCharAction />
+    </node>
+    <node label="ซ">
+      <textCharAction />
+    </node>
+    <node label="ฌ">
+      <textCharAction />
+    </node>
+    <node label="ญ">
+      <textCharAction />
+    </node>
+    <node label="ฎ">
+      <textCharAction />
+    </node>
+    <node label="ฏ">
+      <textCharAction />
+    </node>
+    <node label="ฐ">
+      <textCharAction />
+    </node>
+    <node label="ฑ">
+      <textCharAction />
+    </node>
+    <node label="ฒ">
+      <textCharAction />
+    </node>
+    <node label="ณ">
+      <textCharAction />
+    </node>
+    <node label="ด">
+      <textCharAction />
+    </node>
+    <node label="ต">
+      <textCharAction />
+    </node>
+    <node label="ถ">
+      <textCharAction />
+    </node>
+    <node label="ท">
+      <textCharAction />
+    </node>
+    <node label="ธ">
+      <textCharAction />
+    </node>
+    <node label="น">
+      <textCharAction />
+    </node>
+    <node label="บ">
+      <textCharAction />
+    </node>
+    <node label="ป">
+      <textCharAction />
+    </node>
+    <node label="ผ">
+      <textCharAction />
+    </node>
+    <node label="ฝ">
+      <textCharAction />
+    </node>
+    <node label="พ">
+      <textCharAction />
+    </node>
+    <node label="ฟ">
+      <textCharAction />
+    </node>
+    <node label="ภ">
+      <textCharAction />
+    </node>
+    <node label="ม">
+      <textCharAction />
+    </node>
+    <node label="ย">
+      <textCharAction />
+    </node>
+    <node label="ร">
+      <textCharAction />
+    </node>
+    <node label="ฤ">
+      <textCharAction />
+    </node>
+    <node label="ล">
+      <textCharAction />
+    </node>
+    <node label="ฦ">
+      <textCharAction />
+    </node>
+    <node label="ว">
+      <textCharAction />
+    </node>
+    <node label="ศ">
+      <textCharAction />
+    </node>
+    <node label="ษ">
+      <textCharAction />
+    </node>
+    <node label="ส">
+      <textCharAction />
+    </node>
+    <node label="ห">
+      <textCharAction />
+    </node>
+    <node label="ฬ">
+      <textCharAction />
+    </node>
+    <node label="อ">
+      <textCharAction />
+    </node>
+    <node label="ฮ">
+      <textCharAction />
+    </node>
+    <node label="ฯ">
+      <textCharAction />
+    </node>
+    <node label="ะ">
+      <textCharAction />
+    </node>
+    <node label="า">
+      <textCharAction />
+    </node>
+    <node label="ำ">
+      <textCharAction />
+    </node>
+    <node label="เ">
+      <textCharAction />
+    </node>
+    <node label="แ">
+      <textCharAction />
+    </node>
+    <node label="โ">
+      <textCharAction />
+    </node>
+    <node label="ใ">
+      <textCharAction />
+    </node>
+    <node label="ไ">
+      <textCharAction />
+    </node>
+    <node label="ๅ">
+      <textCharAction />
+    </node>
+    <node label="ๆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ก">
+      <textCharAction />
+    </node>
+    <node label="ข">
+      <textCharAction />
+    </node>
+    <node label="ฃ">
+      <textCharAction />
+    </node>
+    <node label="ค">
+      <textCharAction />
+    </node>
+    <node label="ฅ">
+      <textCharAction />
+    </node>
+    <node label="ฆ">
+      <textCharAction />
+    </node>
+    <node label="ง">
+      <textCharAction />
+    </node>
+    <node label="จ">
+      <textCharAction />
+    </node>
+    <node label="ฉ">
+      <textCharAction />
+    </node>
+    <node label="ช">
+      <textCharAction />
+    </node>
+    <node label="ซ">
+      <textCharAction />
+    </node>
+    <node label="ฌ">
+      <textCharAction />
+    </node>
+    <node label="ญ">
+      <textCharAction />
+    </node>
+    <node label="ฎ">
+      <textCharAction />
+    </node>
+    <node label="ฏ">
+      <textCharAction />
+    </node>
+    <node label="ฐ">
+      <textCharAction />
+    </node>
+    <node label="ฑ">
+      <textCharAction />
+    </node>
+    <node label="ฒ">
+      <textCharAction />
+    </node>
+    <node label="ณ">
+      <textCharAction />
+    </node>
+    <node label="ด">
+      <textCharAction />
+    </node>
+    <node label="ต">
+      <textCharAction />
+    </node>
+    <node label="ถ">
+      <textCharAction />
+    </node>
+    <node label="ท">
+      <textCharAction />
+    </node>
+    <node label="ธ">
+      <textCharAction />
+    </node>
+    <node label="น">
+      <textCharAction />
+    </node>
+    <node label="บ">
+      <textCharAction />
+    </node>
+    <node label="ป">
+      <textCharAction />
+    </node>
+    <node label="ผ">
+      <textCharAction />
+    </node>
+    <node label="ฝ">
+      <textCharAction />
+    </node>
+    <node label="พ">
+      <textCharAction />
+    </node>
+    <node label="ฟ">
+      <textCharAction />
+    </node>
+    <node label="ภ">
+      <textCharAction />
+    </node>
+    <node label="ม">
+      <textCharAction />
+    </node>
+    <node label="ย">
+      <textCharAction />
+    </node>
+    <node label="ร">
+      <textCharAction />
+    </node>
+    <node label="ฤ">
+      <textCharAction />
+    </node>
+    <node label="ล">
+      <textCharAction />
+    </node>
+    <node label="ฦ">
+      <textCharAction />
+    </node>
+    <node label="ว">
+      <textCharAction />
+    </node>
+    <node label="ศ">
+      <textCharAction />
+    </node>
+    <node label="ษ">
+      <textCharAction />
+    </node>
+    <node label="ส">
+      <textCharAction />
+    </node>
+    <node label="ห">
+      <textCharAction />
+    </node>
+    <node label="ฬ">
+      <textCharAction />
+    </node>
+    <node label="อ">
+      <textCharAction />
+    </node>
+    <node label="ฮ">
+      <textCharAction />
+    </node>
+    <node label="ฯ">
+      <textCharAction />
+    </node>
+    <node label="ะ">
+      <textCharAction />
+    </node>
+    <node label="า">
+      <textCharAction />
+    </node>
+    <node label="ำ">
+      <textCharAction />
+    </node>
+    <node label="เ">
+      <textCharAction />
+    </node>
+    <node label="แ">
+      <textCharAction />
+    </node>
+    <node label="โ">
+      <textCharAction />
+    </node>
+    <node label="ใ">
+      <textCharAction />
+    </node>
+    <node label="ไ">
+      <textCharAction />
+    </node>
+    <node label="ๅ">
+      <textCharAction />
+    </node>
+    <node label="ๆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Coptic (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ⲁ">
+      <textCharAction />
+    </node>
+    <node label="ⲃ">
+      <textCharAction />
+    </node>
+    <node label="ⲅ">
+      <textCharAction />
+    </node>
+    <node label="ⲇ">
+      <textCharAction />
+    </node>
+    <node label="ⲉ">
+      <textCharAction />
+    </node>
+    <node label="ⲋ">
+      <textCharAction />
+    </node>
+    <node label="ⲍ">
+      <textCharAction />
+    </node>
+    <node label="ⲏ">
+      <textCharAction />
+    </node>
+    <node label="ⲑ">
+      <textCharAction />
+    </node>
+    <node label="ⲓ">
+      <textCharAction />
+    </node>
+    <node label="ⲕ">
+      <textCharAction />
+    </node>
+    <node label="ⲗ">
+      <textCharAction />
+    </node>
+    <node label="ⲙ">
+      <textCharAction />
+    </node>
+    <node label="ⲛ">
+      <textCharAction />
+    </node>
+    <node label="ⲝ">
+      <textCharAction />
+    </node>
+    <node label="ⲟ">
+      <textCharAction />
+    </node>
+    <node label="ⲡ">
+      <textCharAction />
+    </node>
+    <node label="ⲣ">
+      <textCharAction />
+    </node>
+    <node label="ⲥ">
+      <textCharAction />
+    </node>
+    <node label="ⲧ">
+      <textCharAction />
+    </node>
+    <node label="ⲩ">
+      <textCharAction />
+    </node>
+    <node label="ⲫ">
+      <textCharAction />
+    </node>
+    <node label="ⲭ">
+      <textCharAction />
+    </node>
+    <node label="ⲯ">
+      <textCharAction />
+    </node>
+    <node label="ⲱ">
+      <textCharAction />
+    </node>
+    <node label="ϣ">
+      <textCharAction />
+    </node>
+    <node label="ϥ">
+      <textCharAction />
+    </node>
+    <node label="ϧ">
+      <textCharAction />
+    </node>
+    <node label="ϩ">
+      <textCharAction />
+    </node>
+    <node label="ϫ">
+      <textCharAction />
+    </node>
+    <node label="ϭ">
+      <textCharAction />
+    </node>
+    <node label="ϯ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="Ⲁ">
+      <textCharAction />
+    </node>
+    <node label="Ⲃ">
+      <textCharAction />
+    </node>
+    <node label="Ⲅ">
+      <textCharAction />
+    </node>
+    <node label="Ⲇ">
+      <textCharAction />
+    </node>
+    <node label="Ⲉ">
+      <textCharAction />
+    </node>
+    <node label="Ⲋ">
+      <textCharAction />
+    </node>
+    <node label="Ⲍ">
+      <textCharAction />
+    </node>
+    <node label="Ⲏ">
+      <textCharAction />
+    </node>
+    <node label="Ⲑ">
+      <textCharAction />
+    </node>
+    <node label="Ⲓ">
+      <textCharAction />
+    </node>
+    <node label="Ⲕ">
+      <textCharAction />
+    </node>
+    <node label="Ⲗ">
+      <textCharAction />
+    </node>
+    <node label="Ⲙ">
+      <textCharAction />
+    </node>
+    <node label="Ⲛ">
+      <textCharAction />
+    </node>
+    <node label="Ⲝ">
+      <textCharAction />
+    </node>
+    <node label="Ⲟ">
+      <textCharAction />
+    </node>
+    <node label="Ⲡ">
+      <textCharAction />
+    </node>
+    <node label="Ⲣ">
+      <textCharAction />
+    </node>
+    <node label="Ⲥ">
+      <textCharAction />
+    </node>
+    <node label="Ⲧ">
+      <textCharAction />
+    </node>
+    <node label="Ⲩ">
+      <textCharAction />
+    </node>
+    <node label="Ⲫ">
+      <textCharAction />
+    </node>
+    <node label="Ⲭ">
+      <textCharAction />
+    </node>
+    <node label="Ⲯ">
+      <textCharAction />
+    </node>
+    <node label="Ⲱ">
+      <textCharAction />
+    </node>
+    <node label="Ϣ">
+      <textCharAction />
+    </node>
+    <node label="Ϥ">
+      <textCharAction />
+    </node>
+    <node label="Ϧ">
+      <textCharAction />
+    </node>
+    <node label="Ϩ">
+      <textCharAction />
+    </node>
+    <node label="Ϫ">
+      <textCharAction />
+    </node>
+    <node label="Ϭ">
+      <textCharAction />
+    </node>
+    <node label="Ϯ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="0">
+      <textCharAction />
+    </node>
+    <node label="1">
+      <textCharAction />
+    </node>
+    <node label="2">
+      <textCharAction />
+    </node>
+    <node label="3">
+      <textCharAction />
+    </node>
+    <node label="4">
+      <textCharAction />
+    </node>
+    <node label="5">
+      <textCharAction />
+    </node>
+    <node label="6">
+      <textCharAction />
+    </node>
+    <node label="7">
+      <textCharAction />
+    </node>
+    <node label="8">
+      <textCharAction />
+    </node>
+    <node label="9">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

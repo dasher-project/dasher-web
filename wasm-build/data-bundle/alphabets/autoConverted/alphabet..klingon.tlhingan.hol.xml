@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="_ Klingon / tlhIngan Hol" orientation="LR" trainingFilename="training_klingon_US.txt" colorsName="Default">
+	<group name="Klingon / pIqaD">
+		<node label="">
+			<!--Note: a-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: b-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: ch-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: D-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: e-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: gh-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: H-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: I-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: j-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: l-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: m-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: n-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: ng-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: o-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: p-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: q-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: Q-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: r-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: S-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: t-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: tlh-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: u-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: v-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: w-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: y-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numerals" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="">
+			<!--Note: 0-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 1-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 2-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 3-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 4-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 5-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 6-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 7-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 8-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: 9-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation, etc" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="'">
+			<!--Note: latin glottal stop ()-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: glottal stop ()-->
+			<textCharAction />
+		</node>
+		<node label="">
+			<!--Note: Empire-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

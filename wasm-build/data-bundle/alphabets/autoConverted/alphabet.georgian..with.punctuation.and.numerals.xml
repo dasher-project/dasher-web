@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Georgian / ქართული ენა with punctuation and numerals" orientation="LR" trainingFilename="training_wa_ka_Geor.txt" colorsName="Default">
+	<!-- Mkhedruli is used to write Georgian, Mingrelian -->
+	<!-- see http://www.omniglot.com/writing/georgian2.htm -->
+	<group name="lower case georgian letters (Mkhedruli) ">
+		<node label="ა">
+			<!--Note: GEORGIAN  AN -->
+			<textCharAction />
+		</node>
+		<node label="ბ">
+			<!--Note: GEORGIAN  BAN -->
+			<textCharAction />
+		</node>
+		<node label="გ">
+			<!--Note: GEORGIAN  GAN -->
+			<textCharAction />
+		</node>
+		<node label="დ">
+			<!--Note: GEORGIAN  DON -->
+			<textCharAction />
+		</node>
+		<node label="ე">
+			<!--Note: GEORGIAN  EN -->
+			<textCharAction />
+		</node>
+		<node label="ვ">
+			<!--Note: GEORGIAN  VIN -->
+			<textCharAction />
+		</node>
+		<node label="ზ">
+			<!--Note: GEORGIAN  ZEN -->
+			<textCharAction />
+		</node>
+		<node label="ჱ">
+			<!--Note: GEORGIAN  HE -->
+			<textCharAction />
+		</node>
+		<node label="თ">
+			<!--Note: GEORGIAN  TAN -->
+			<textCharAction />
+		</node>
+		<node label="ი">
+			<!--Note: GEORGIAN  IN -->
+			<textCharAction />
+		</node>
+		<node label="კ">
+			<!--Note: GEORGIAN  KAN -->
+			<textCharAction />
+		</node>
+		<node label="ლ">
+			<!--Note: GEORGIAN  LAS -->
+			<textCharAction />
+		</node>
+		<node label="მ">
+			<!--Note: GEORGIAN  MAN -->
+			<textCharAction />
+		</node>
+		<node label="ნ">
+			<!--Note: GEORGIAN  NAR -->
+			<textCharAction />
+		</node>
+		<node label="ჲ">
+			<!--Note: GEORGIAN  HIE -->
+			<textCharAction />
+		</node>
+		<node label="ო">
+			<!--Note: GEORGIAN  ON -->
+			<textCharAction />
+		</node>
+		<node label="პ">
+			<!--Note: GEORGIAN  PAR -->
+			<textCharAction />
+		</node>
+		<node label="ჟ">
+			<!--Note: GEORGIAN  ZHAR -->
+			<textCharAction />
+		</node>
+		<node label="რ">
+			<!--Note: GEORGIAN  RAE -->
+			<textCharAction />
+		</node>
+		<node label="ს">
+			<!--Note: GEORGIAN  SAN -->
+			<textCharAction />
+		</node>
+		<node label="ტ">
+			<!--Note: GEORGIAN  TAR -->
+			<textCharAction />
+		</node>
+		<node label="ჳ">
+			<!--Note: GEORGIAN  WE -->
+			<textCharAction />
+		</node>
+		<node label="უ">
+			<!--Note: GEORGIAN  UN -->
+			<textCharAction />
+		</node>
+		<node label="ფ">
+			<!--Note: GEORGIAN  PHAR -->
+			<textCharAction />
+		</node>
+		<node label="ქ">
+			<!--Note: GEORGIAN  KHAR -->
+			<textCharAction />
+		</node>
+		<node label="ღ">
+			<!--Note: GEORGIAN  GHAN -->
+			<textCharAction />
+		</node>
+		<node label="ყ">
+			<!--Note: GEORGIAN  QAR -->
+			<textCharAction />
+		</node>
+		<node label="შ">
+			<!--Note: GEORGIAN  SHIN -->
+			<textCharAction />
+		</node>
+		<node label="ჩ">
+			<!--Note: GEORGIAN  CHIN -->
+			<textCharAction />
+		</node>
+		<node label="ც">
+			<!--Note: GEORGIAN  CAN -->
+			<textCharAction />
+		</node>
+		<node label="ძ">
+			<!--Note: GEORGIAN  JIL -->
+			<textCharAction />
+		</node>
+		<node label="წ">
+			<!--Note: GEORGIAN  CIL -->
+			<textCharAction />
+		</node>
+		<node label="ჭ">
+			<!--Note: GEORGIAN  CHAR -->
+			<textCharAction />
+		</node>
+		<node label="ხ">
+			<!--Note: GEORGIAN  XAN -->
+			<textCharAction />
+		</node>
+		<node label="ჴ">
+			<!--Note: GEORGIAN  HAR -->
+			<textCharAction />
+		</node>
+		<node label="ჯ">
+			<!--Note: GEORGIAN  JHAN -->
+			<textCharAction />
+		</node>
+		<node label="ჰ">
+			<!--Note: GEORGIAN  HAE -->
+			<textCharAction />
+		</node>
+		<node label="ჵ">
+			<!--Note: GEORGIAN  HOE -->
+			<textCharAction />
+		</node>
+		<node label="ჶ">
+			<!--Note: GEORGIAN  FI -->
+			<textCharAction />
+		</node>
+		<node label="ჷ">
+			<!--Note: GEORGIAN  YN -->
+			<textCharAction />
+		</node>
+		<node label="ჸ">
+			<!--Note: GEORGIAN  ELIFI -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="upper case letters (Mkhedruli) " colorInfoName="uppercase">
+		<!--Old Group Color: 111-->
+		<node label="Ⴀ">
+			<!--Note: GEORGIAN CAPITAL  AN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴁ">
+			<!--Note: GEORGIAN CAPITAL  BAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴂ">
+			<!--Note: GEORGIAN CAPITAL  GAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴃ">
+			<!--Note: GEORGIAN CAPITAL  DON -->
+			<textCharAction />
+		</node>
+		<node label="Ⴄ">
+			<!--Note: GEORGIAN CAPITAL  EN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴅ">
+			<!--Note: GEORGIAN CAPITAL  VIN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴆ">
+			<!--Note: GEORGIAN CAPITAL  ZEN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴡ">
+			<!--Note: GEORGIAN CAPITAL  HE -->
+			<textCharAction />
+		</node>
+		<node label="Ⴇ">
+			<!--Note: GEORGIAN CAPITAL  TAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴈ">
+			<!--Note: GEORGIAN CAPITAL  IN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴉ">
+			<!--Note: GEORGIAN CAPITAL  KAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴊ">
+			<!--Note: GEORGIAN CAPITAL  LAS -->
+			<textCharAction />
+		</node>
+		<node label="Ⴋ">
+			<!--Note: GEORGIAN CAPITAL  MAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴌ">
+			<!--Note: GEORGIAN CAPITAL  NAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴢ">
+			<!--Note: GEORGIAN CAPITAL  HIE -->
+			<textCharAction />
+		</node>
+		<node label="Ⴍ">
+			<!--Note: GEORGIAN CAPITAL  ON -->
+			<textCharAction />
+		</node>
+		<node label="Ⴎ">
+			<!--Note: GEORGIAN CAPITAL  PAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴏ">
+			<!--Note: GEORGIAN CAPITAL  ZHAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴐ">
+			<!--Note: GEORGIAN CAPITAL  RAE -->
+			<textCharAction />
+		</node>
+		<node label="Ⴑ">
+			<!--Note: GEORGIAN CAPITAL  SAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴒ">
+			<!--Note: GEORGIAN CAPITAL  TAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴣ">
+			<!--Note: GEORGIAN CAPITAL  WE -->
+			<textCharAction />
+		</node>
+		<node label="Ⴓ">
+			<!--Note: GEORGIAN CAPITAL  UN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴔ">
+			<!--Note: GEORGIAN CAPITAL  PHAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴕ">
+			<!--Note: GEORGIAN CAPITAL  KHAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴖ">
+			<!--Note: GEORGIAN CAPITAL  GHAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴗ">
+			<!--Note: GEORGIAN CAPITAL  QAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴘ">
+			<!--Note: GEORGIAN CAPITAL  SHIN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴙ">
+			<!--Note: GEORGIAN CAPITAL  CHIN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴚ">
+			<!--Note: GEORGIAN CAPITAL  CAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴛ">
+			<!--Note: GEORGIAN CAPITAL  JIL -->
+			<textCharAction />
+		</node>
+		<node label="Ⴜ">
+			<!--Note: GEORGIAN CAPITAL  CIL -->
+			<textCharAction />
+		</node>
+		<node label="Ⴝ">
+			<!--Note: GEORGIAN CAPITAL  CHAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴞ">
+			<!--Note: GEORGIAN CAPITAL  XAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴤ">
+			<!--Note: GEORGIAN CAPITAL  HAR -->
+			<textCharAction />
+		</node>
+		<node label="Ⴟ">
+			<!--Note: GEORGIAN CAPITAL  JHAN -->
+			<textCharAction />
+		</node>
+		<node label="Ⴠ">
+			<!--Note: GEORGIAN CAPITAL  HAE -->
+			<textCharAction />
+		</node>
+		<node label="Ⴥ">
+			<!--Note: GEORGIAN CAPITAL  HOE -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="◊">
+			<!--Old Char Color: 9-->
+			<!--Note: TAB (represented by a diamond)-->
+			<textCharAction unicode="9" />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<textCharAction />
+		</node>
+		<node label=";">
+			<!--Old Char Color: 102-->
+			<textCharAction />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

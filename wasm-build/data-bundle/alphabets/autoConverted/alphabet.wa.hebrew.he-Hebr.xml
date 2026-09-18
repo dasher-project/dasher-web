@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Hebrew (WorldAlphabets)" orientation="RL" trainingFilename="training_wa_he_Hebr.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="א">
+      <textCharAction />
+    </node>
+    <node label="ב">
+      <textCharAction />
+    </node>
+    <node label="ג">
+      <textCharAction />
+    </node>
+    <node label="ד">
+      <textCharAction />
+    </node>
+    <node label="ה">
+      <textCharAction />
+    </node>
+    <node label="ו">
+      <textCharAction />
+    </node>
+    <node label="ז">
+      <textCharAction />
+    </node>
+    <node label="ח">
+      <textCharAction />
+    </node>
+    <node label="ט">
+      <textCharAction />
+    </node>
+    <node label="י">
+      <textCharAction />
+    </node>
+    <node label="כ">
+      <textCharAction />
+    </node>
+    <node label="ל">
+      <textCharAction />
+    </node>
+    <node label="מ">
+      <textCharAction />
+    </node>
+    <node label="נ">
+      <textCharAction />
+    </node>
+    <node label="ס">
+      <textCharAction />
+    </node>
+    <node label="ע">
+      <textCharAction />
+    </node>
+    <node label="פ">
+      <textCharAction />
+    </node>
+    <node label="צ">
+      <textCharAction />
+    </node>
+    <node label="ק">
+      <textCharAction />
+    </node>
+    <node label="ר">
+      <textCharAction />
+    </node>
+    <node label="ש">
+      <textCharAction />
+    </node>
+    <node label="ת">
+      <textCharAction />
+    </node>
+    <node label="ך">
+      <textCharAction />
+    </node>
+    <node label="ם">
+      <textCharAction />
+    </node>
+    <node label="ן">
+      <textCharAction />
+    </node>
+    <node label="ף">
+      <textCharAction />
+    </node>
+    <node label="ץ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="א">
+      <textCharAction />
+    </node>
+    <node label="ב">
+      <textCharAction />
+    </node>
+    <node label="ג">
+      <textCharAction />
+    </node>
+    <node label="ד">
+      <textCharAction />
+    </node>
+    <node label="ה">
+      <textCharAction />
+    </node>
+    <node label="ו">
+      <textCharAction />
+    </node>
+    <node label="ז">
+      <textCharAction />
+    </node>
+    <node label="ח">
+      <textCharAction />
+    </node>
+    <node label="ט">
+      <textCharAction />
+    </node>
+    <node label="י">
+      <textCharAction />
+    </node>
+    <node label="כ">
+      <textCharAction />
+    </node>
+    <node label="ל">
+      <textCharAction />
+    </node>
+    <node label="מ">
+      <textCharAction />
+    </node>
+    <node label="נ">
+      <textCharAction />
+    </node>
+    <node label="ס">
+      <textCharAction />
+    </node>
+    <node label="ע">
+      <textCharAction />
+    </node>
+    <node label="פ">
+      <textCharAction />
+    </node>
+    <node label="צ">
+      <textCharAction />
+    </node>
+    <node label="ק">
+      <textCharAction />
+    </node>
+    <node label="ר">
+      <textCharAction />
+    </node>
+    <node label="ש">
+      <textCharAction />
+    </node>
+    <node label="ת">
+      <textCharAction />
+    </node>
+    <node label="ך">
+      <textCharAction />
+    </node>
+    <node label="ם">
+      <textCharAction />
+    </node>
+    <node label="ן">
+      <textCharAction />
+    </node>
+    <node label="ף">
+      <textCharAction />
+    </node>
+    <node label="ץ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

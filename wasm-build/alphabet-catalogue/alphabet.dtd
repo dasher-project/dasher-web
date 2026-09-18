@@ -1,0 +1,82 @@
+<!-- alphabet defintion for Dasher -->
+
+<!ELEMENT alphabet (group*)>
+<!ATTLIST alphabet name CDATA #REQUIRED> <!-- unique name that can be referenced in Dasher to choose this alphabet -->
+<!ATTLIST alphabet orientation (LR|RL|TB|BT) #REQUIRED> <!-- orientation in which this alphabet is typed. Example: LR=Left-to-Right -->
+<!ATTLIST alphabet conversionMode (none|mandarin|routingContextInsensitive|routingContextSensitive) "none"> <!-- conversion mode that is used internally to spawn a decoder that can handle phonetic writing -->
+<!ATTLIST alphabet trainingFilename CDATA #IMPLIED> <!-- filename that is referenced for training the language model -->
+<!ATTLIST alphabet colorsName CDATA "Default"> <!-- unique name of the color schema that should be used by default -->
+
+<!-- Logical groups of symbols, eg name="lowercase" -->
+<!ELEMENT group (node*|group*)>
+<!ATTLIST group colorInfoName CDATA #IMPLIED>
+<!ATTLIST group name CDATA #IMPLIED>
+<!ATTLIST group label CDATA #IMPLIED>
+
+<!-- Single symbols -->
+<!ELEMENT node (textCharAction*|deleteTextAction*|moveCursorAction*|fixedTTSAction*|contextTTSAction*|repeatTTSAction*|stopTTSAction*|pauseDasherAction*|atspiAction*|keyboardAction*)>
+<!ATTLIST node label CDATA #REQUIRED>
+<!ATTLIST node text CDATA #IMPLIED> <!-- represents the text that is output and also used for training, defaults to the same value as label -->
+<!ATTLIST node fixedProbability CDATA #IMPLIED>
+<!ATTLIST node speedFactor CDATA #IMPLIED>
+
+<!-- Actions that can happen if the node is selected -->
+
+<!-- Text output: -->
+<!ELEMENT textCharAction EMPTY>
+<!ATTLIST textCharAction unicode CDATA #IMPLIED> <!-- If the Unicode value is unspecified, the label will be used to determine it. If the label is empty or consists of more than one character, an error will be thrown. -->
+
+<!ELEMENT deleteTextAction EMPTY>
+<!ATTLIST deleteTextAction distance CDATA #REQUIRED> <!-- Can be "(last|next) (char|word|sentence|paragraph)", or "all" -->
+
+<!ELEMENT moveCursorAction EMPTY>
+<!ATTLIST moveCursorAction distance CDATA #REQUIRED> <!-- Can be "(last|next) (char|word|sentence|paragraph)" -->
+
+<!-- Text-to-Speech: -->
+<!ELEMENT fixedTTSAction EMPTY>
+<!ATTLIST fixedTTSAction text CDATA #REQUIRED> <!-- speaks out the given text -->
+
+<!ELEMENT contextTTSAction EMPTY>
+<!ATTLIST contextTTSAction context (word|sentence|paragraph|all) #REQUIRED> <!-- Reads out the last word/sentence/paragraph/all -->
+
+<!ELEMENT repeatTTSAction EMPTY> <!-- Repeats the last TTS output -->
+
+<!ELEMENT stopTTSAction EMPTY> <!-- Stops any currently ongoing TTS -->
+
+<!-- Dasher-internal: -->
+<!ELEMENT pauseDasherAction EMPTY> <!-- Stops any currently ongoing TTS -->
+<!ATTLIST pauseDasherAction time CDATA #IMPLIED> <!-- Pauses Dasher for the given time, or stops forever if time is unspecified -->
+
+<!-- System/application control: -->
+
+<!ELEMENT changeSettingAction EMPTY>
+<!ATTLIST changeSettingAction settingsName CDATA #REQUIRED> <!-- Stringname of the Setting -->
+<!ATTLIST changeSettingAction doValue CDATA #IMPLIED> <!-- New Value of the Setting in case of selection -->
+<!ATTLIST changeSettingAction undoValue CDATA #IMPLIED> <!-- New Value of the Setting in case of deselection -->
+
+<!-- These two actions enable triggering any action in an application that can be bound to a keyboard shortcut or is accessible
+     via the Assistive Technology Service Provider Interface (AT-SPI). Anything else probably isn't technically feasible. -->
+<!ELEMENT atspiAction EMPTY>
+<!ATTLIST atspiAction action CDATA #REQUIRED> <!-- Sends the specified AT-SPI action to the currently focused application -->
+<!ATTLIST atspiAction undoAction CDATA #REQUIRED> <!-- Sends the specified AT-SPI action to the currently focused application -->
+
+<!ELEMENT keyboardAction EMPTY>
+<!ATTLIST keyboardAction key CDATA #IMPLIED> <!-- Emulates a keyboard shortcut, possibly with several modifiers, given as keyboard scancodes divided by commas (e.g. "1d,38,e053" for Ctrl+Alt+Entf), performing a press and a release -->
+<!ATTLIST keyboardAction press CDATA #IMPLIED> <!-- As above, but only performing the press -->
+<!ATTLIST keyboardAction release CDATA #IMPLIED> <!-- As above, but only performing the release -->
+<!ATTLIST keyboardAction undoKey CDATA #IMPLIED> <!-- Emulates a keyboard shortcut, possibly with several modifiers, given as keyboard scancodes divided by commas (e.g. "1d,38,e053" for Ctrl+Alt+Entf), performing a press and a release -->
+<!ATTLIST keyboardAction undoPress CDATA #IMPLIED> <!-- As above, but only performing the press -->
+<!ATTLIST keyboardAction undoRelease CDATA #IMPLIED> <!-- As above, but only performing the release -->
+
+<!-- External actions: -->
+<!-- Similar to the socket input option, this action enables connecting Dasher to other accessibility tools, sending messages that the other tool can process. -->
+<!ELEMENT socketOutputAction EMPTY>
+<!ATTLIST socketOutputAction socketName CDATA #IMPLIED>
+<!ATTLIST socketOutputAction doString CDATA #IMPLIED>
+<!ATTLIST socketOutputAction undoString CDATA #IMPLIED>
+<!ATTLIST socketOutputAction suppressNewline CDATA #IMPLIED>
+
+<!-- Especially for the last two, it probably makes sense to add a windowTitle attribute to nodes: -->
+<!-- <node label="New Tab" windowTitle=".*(Firefox|Chrome|Edge).*" fixedProbability="0.02"> Only shows this node if the title of the currently focused window matches the given regex. -->
+ <!--  <atspiAction action="NewTab"/> -->
+<!-- </node> -->

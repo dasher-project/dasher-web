@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Sinhala (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_si_Sinh.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="අ">
+      <textCharAction />
+    </node>
+    <node label="ආ">
+      <textCharAction />
+    </node>
+    <node label="ඇ">
+      <textCharAction />
+    </node>
+    <node label="ඈ">
+      <textCharAction />
+    </node>
+    <node label="ඉ">
+      <textCharAction />
+    </node>
+    <node label="ඊ">
+      <textCharAction />
+    </node>
+    <node label="උ">
+      <textCharAction />
+    </node>
+    <node label="ඌ">
+      <textCharAction />
+    </node>
+    <node label="ඍ">
+      <textCharAction />
+    </node>
+    <node label="එ">
+      <textCharAction />
+    </node>
+    <node label="ඒ">
+      <textCharAction />
+    </node>
+    <node label="ඓ">
+      <textCharAction />
+    </node>
+    <node label="ඔ">
+      <textCharAction />
+    </node>
+    <node label="ඕ">
+      <textCharAction />
+    </node>
+    <node label="ඖ">
+      <textCharAction />
+    </node>
+    <node label="ක">
+      <textCharAction />
+    </node>
+    <node label="ඛ">
+      <textCharAction />
+    </node>
+    <node label="ග">
+      <textCharAction />
+    </node>
+    <node label="ඝ">
+      <textCharAction />
+    </node>
+    <node label="ඞ">
+      <textCharAction />
+    </node>
+    <node label="ඟ">
+      <textCharAction />
+    </node>
+    <node label="ච">
+      <textCharAction />
+    </node>
+    <node label="ඡ">
+      <textCharAction />
+    </node>
+    <node label="ජ">
+      <textCharAction />
+    </node>
+    <node label="ඣ">
+      <textCharAction />
+    </node>
+    <node label="ඥ">
+      <textCharAction />
+    </node>
+    <node label="ඤ">
+      <textCharAction />
+    </node>
+    <node label="ට">
+      <textCharAction />
+    </node>
+    <node label="ඨ">
+      <textCharAction />
+    </node>
+    <node label="ඩ">
+      <textCharAction />
+    </node>
+    <node label="ඪ">
+      <textCharAction />
+    </node>
+    <node label="ණ">
+      <textCharAction />
+    </node>
+    <node label="ඬ">
+      <textCharAction />
+    </node>
+    <node label="ත">
+      <textCharAction />
+    </node>
+    <node label="ථ">
+      <textCharAction />
+    </node>
+    <node label="ද">
+      <textCharAction />
+    </node>
+    <node label="ධ">
+      <textCharAction />
+    </node>
+    <node label="න">
+      <textCharAction />
+    </node>
+    <node label="ඳ">
+      <textCharAction />
+    </node>
+    <node label="ප">
+      <textCharAction />
+    </node>
+    <node label="ඵ">
+      <textCharAction />
+    </node>
+    <node label="බ">
+      <textCharAction />
+    </node>
+    <node label="භ">
+      <textCharAction />
+    </node>
+    <node label="ම">
+      <textCharAction />
+    </node>
+    <node label="ඹ">
+      <textCharAction />
+    </node>
+    <node label="ය">
+      <textCharAction />
+    </node>
+    <node label="ර">
+      <textCharAction />
+    </node>
+    <node label="ල">
+      <textCharAction />
+    </node>
+    <node label="ව">
+      <textCharAction />
+    </node>
+    <node label="ශ">
+      <textCharAction />
+    </node>
+    <node label="ෂ">
+      <textCharAction />
+    </node>
+    <node label="ස">
+      <textCharAction />
+    </node>
+    <node label="හ">
+      <textCharAction />
+    </node>
+    <node label="ළ">
+      <textCharAction />
+    </node>
+    <node label="ෆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="අ">
+      <textCharAction />
+    </node>
+    <node label="ආ">
+      <textCharAction />
+    </node>
+    <node label="ඇ">
+      <textCharAction />
+    </node>
+    <node label="ඈ">
+      <textCharAction />
+    </node>
+    <node label="ඉ">
+      <textCharAction />
+    </node>
+    <node label="ඊ">
+      <textCharAction />
+    </node>
+    <node label="උ">
+      <textCharAction />
+    </node>
+    <node label="ඌ">
+      <textCharAction />
+    </node>
+    <node label="ඍ">
+      <textCharAction />
+    </node>
+    <node label="එ">
+      <textCharAction />
+    </node>
+    <node label="ඒ">
+      <textCharAction />
+    </node>
+    <node label="ඓ">
+      <textCharAction />
+    </node>
+    <node label="ඔ">
+      <textCharAction />
+    </node>
+    <node label="ඕ">
+      <textCharAction />
+    </node>
+    <node label="ඖ">
+      <textCharAction />
+    </node>
+    <node label="ක">
+      <textCharAction />
+    </node>
+    <node label="ඛ">
+      <textCharAction />
+    </node>
+    <node label="ග">
+      <textCharAction />
+    </node>
+    <node label="ඝ">
+      <textCharAction />
+    </node>
+    <node label="ඞ">
+      <textCharAction />
+    </node>
+    <node label="ඟ">
+      <textCharAction />
+    </node>
+    <node label="ච">
+      <textCharAction />
+    </node>
+    <node label="ඡ">
+      <textCharAction />
+    </node>
+    <node label="ජ">
+      <textCharAction />
+    </node>
+    <node label="ඣ">
+      <textCharAction />
+    </node>
+    <node label="ඥ">
+      <textCharAction />
+    </node>
+    <node label="ඤ">
+      <textCharAction />
+    </node>
+    <node label="ට">
+      <textCharAction />
+    </node>
+    <node label="ඨ">
+      <textCharAction />
+    </node>
+    <node label="ඩ">
+      <textCharAction />
+    </node>
+    <node label="ඪ">
+      <textCharAction />
+    </node>
+    <node label="ණ">
+      <textCharAction />
+    </node>
+    <node label="ඬ">
+      <textCharAction />
+    </node>
+    <node label="ත">
+      <textCharAction />
+    </node>
+    <node label="ථ">
+      <textCharAction />
+    </node>
+    <node label="ද">
+      <textCharAction />
+    </node>
+    <node label="ධ">
+      <textCharAction />
+    </node>
+    <node label="න">
+      <textCharAction />
+    </node>
+    <node label="ඳ">
+      <textCharAction />
+    </node>
+    <node label="ප">
+      <textCharAction />
+    </node>
+    <node label="ඵ">
+      <textCharAction />
+    </node>
+    <node label="බ">
+      <textCharAction />
+    </node>
+    <node label="භ">
+      <textCharAction />
+    </node>
+    <node label="ම">
+      <textCharAction />
+    </node>
+    <node label="ඹ">
+      <textCharAction />
+    </node>
+    <node label="ය">
+      <textCharAction />
+    </node>
+    <node label="ර">
+      <textCharAction />
+    </node>
+    <node label="ල">
+      <textCharAction />
+    </node>
+    <node label="ව">
+      <textCharAction />
+    </node>
+    <node label="ශ">
+      <textCharAction />
+    </node>
+    <node label="ෂ">
+      <textCharAction />
+    </node>
+    <node label="ස">
+      <textCharAction />
+    </node>
+    <node label="හ">
+      <textCharAction />
+    </node>
+    <node label="ළ">
+      <textCharAction />
+    </node>
+    <node label="ෆ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

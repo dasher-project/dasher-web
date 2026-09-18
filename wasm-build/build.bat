@@ -47,6 +47,10 @@ if not exist "%ROOT%\wasm" mkdir "%ROOT%\wasm"
 
 em++ -O3 -DNDEBUG -fwasm-exceptions ^
     "%ROOT%\dashercore-src\src\CAPI.cpp" ^
+ "%ROOT%\dashercore-src\src\CAPI_appearance.cpp" ^
+ "%ROOT%\dashercore-src\src\CAPI_edit.cpp" ^
+ "%ROOT%\dashercore-src\src\CAPI_locale.cpp" ^
+ "%ROOT%\dashercore-src\src\CAPI_params.cpp" ^
     -I "%ROOT%\dashercore-src\src" ^
     -I "%ROOT%\dashercore-src\Thirdparty\pugixml\src" ^
     "%BUILD_DIR%\libDasherCore.a" ^

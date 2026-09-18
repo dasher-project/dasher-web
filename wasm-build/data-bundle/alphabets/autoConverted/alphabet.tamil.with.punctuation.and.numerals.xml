@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Tamil with punctuation and numerals" orientation="LR" trainingFilename="training_wa_ta_Taml.txt" colorsName="Default">
+	<group name="TAMIL letters">
+		<node label="ஃ">
+			<!--Note: TAMIL SIGN VISARGA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="அ">
+			<!--Note: TAMIL LETTER A  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஆ">
+			<!--Note: TAMIL LETTER AA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="இ">
+			<!--Note: TAMIL LETTER I  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஈ">
+			<!--Note: TAMIL LETTER II  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="உ">
+			<!--Note: TAMIL LETTER U  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஊ">
+			<!--Note: TAMIL LETTER UU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="எ">
+			<!--Note: TAMIL LETTER E  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஏ">
+			<!--Note: TAMIL LETTER EE  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஐ">
+			<!--Note: TAMIL LETTER AI  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஒ">
+			<!--Note: TAMIL LETTER O  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஓ">
+			<!--Note: TAMIL LETTER OO  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஔ">
+			<!--Note: TAMIL LETTER AU  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="க">
+			<!--Note: TAMIL LETTER KA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ங">
+			<!--Note: TAMIL LETTER NGA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ச">
+			<!--Note: TAMIL LETTER CA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஜ">
+			<!--Note: TAMIL LETTER JA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஞ">
+			<!--Note: TAMIL LETTER NYA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ட">
+			<!--Note: TAMIL LETTER TTA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ண">
+			<!--Note: TAMIL LETTER NNA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="த">
+			<!--Note: TAMIL LETTER TA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ந">
+			<!--Note: TAMIL LETTER NA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ன">
+			<!--Note: TAMIL LETTER NNNA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ப">
+			<!--Note: TAMIL LETTER PA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ம">
+			<!--Note: TAMIL LETTER MA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ய">
+			<!--Note: TAMIL LETTER YA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ர">
+			<!--Note: TAMIL LETTER RA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ற">
+			<!--Note: TAMIL LETTER RRA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ல">
+			<!--Note: TAMIL LETTER LA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ள">
+			<!--Note: TAMIL LETTER LLA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ழ">
+			<!--Note: TAMIL LETTER LLLA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="வ">
+			<!--Note: TAMIL LETTER VA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஷ">
+			<!--Note: TAMIL LETTER SSA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஸ">
+			<!--Note: TAMIL LETTER SA  class(p)-->
+			<textCharAction />
+		</node>
+		<node label="ஹ">
+			<!--Note: TAMIL LETTER HA  class(p)-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="other signs, marks, and vowels">
+		<node label="◌ா">
+			<!--Note: TAMIL VOWEL SIGN AA  class(p)-->
+			<textCharAction unicode="3006" />
+		</node>
+		<node label="◌ி">
+			<!--Note: TAMIL VOWEL SIGN I  class(p)-->
+			<textCharAction unicode="3007" />
+		</node>
+		<node label="◌ீ">
+			<!--Note: TAMIL VOWEL SIGN II  class(p)-->
+			<textCharAction unicode="3008" />
+		</node>
+		<node label="◌ு">
+			<!--Note: TAMIL VOWEL SIGN U  class(p)-->
+			<textCharAction unicode="3009" />
+		</node>
+		<node label="◌ூ">
+			<!--Note: TAMIL VOWEL SIGN UU  class(p)-->
+			<textCharAction unicode="3010" />
+		</node>
+		<node label="◌ெ">
+			<!--Note: TAMIL VOWEL SIGN E  class(p)-->
+			<textCharAction unicode="3014" />
+		</node>
+		<node label="◌ே">
+			<!--Note: TAMIL VOWEL SIGN EE  class(p)-->
+			<textCharAction unicode="3015" />
+		</node>
+		<node label="◌ை">
+			<!--Note: TAMIL VOWEL SIGN AI  class(p)-->
+			<textCharAction unicode="3016" />
+		</node>
+		<node label="◌ொ">
+			<!--Note: TAMIL VOWEL SIGN O  class(p)-->
+			<textCharAction unicode="3018" />
+		</node>
+		<node label="◌ோ">
+			<!--Note: TAMIL VOWEL SIGN OO  class(p)-->
+			<textCharAction unicode="3019" />
+		</node>
+		<node label="◌ௌ">
+			<!--Note: TAMIL VOWEL SIGN AU  class(p)-->
+			<textCharAction unicode="3020" />
+		</node>
+		<node label="◌்">
+			<!--Note: TAMIL SIGN VIRAMA  class(p)-->
+			<textCharAction unicode="3021" />
+		</node>
+		<node label="◌ௗ">
+			<!--Note: TAMIL AU LENGTH MARK  class(p)-->
+			<textCharAction unicode="3031" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label="·">
+			<textCharAction unicode="46" />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

@@ -1,0 +1,170 @@
+{
+  "_comment": "Canonical list of locales DasherCore supports. Mirrors the strings_*.json files in this directory — the single source of truth for every frontend's locale picker (RFC 0003). Display ordering is the frontend's concern. Regenerate with the table in RFC 0003; keep in sync with strings_*.json.",
+  "locales": [
+    {
+      "code": "af",
+      "endonym": "Afrikaans",
+      "rtl": false
+    },
+    {
+      "code": "ar",
+      "endonym": "العربية",
+      "rtl": true
+    },
+    {
+      "code": "bn",
+      "endonym": "বাংলা",
+      "rtl": false
+    },
+    {
+      "code": "cs",
+      "endonym": "Čeština",
+      "rtl": false
+    },
+    {
+      "code": "da",
+      "endonym": "Dansk",
+      "rtl": false
+    },
+    {
+      "code": "de",
+      "endonym": "Deutsch",
+      "rtl": false
+    },
+    {
+      "code": "el",
+      "endonym": "Ελληνικά",
+      "rtl": false
+    },
+    {
+      "code": "en",
+      "endonym": "English",
+      "rtl": false
+    },
+    {
+      "code": "es",
+      "endonym": "Español",
+      "rtl": false
+    },
+    {
+      "code": "fa",
+      "endonym": "فارسی",
+      "rtl": true
+    },
+    {
+      "code": "fi",
+      "endonym": "Suomi",
+      "rtl": false
+    },
+    {
+      "code": "fr",
+      "endonym": "Français",
+      "rtl": false
+    },
+    {
+      "code": "gu",
+      "endonym": "ગુજરાતી",
+      "rtl": false
+    },
+    {
+      "code": "hi",
+      "endonym": "हिन्दी",
+      "rtl": false
+    },
+    {
+      "code": "hu",
+      "endonym": "Magyar",
+      "rtl": false
+    },
+    {
+      "code": "it",
+      "endonym": "Italiano",
+      "rtl": false
+    },
+    {
+      "code": "kn",
+      "endonym": "ಕನ್ನಡ",
+      "rtl": false
+    },
+    {
+      "code": "ml",
+      "endonym": "മലയാളം",
+      "rtl": false
+    },
+    {
+      "code": "mr",
+      "endonym": "मराठी",
+      "rtl": false
+    },
+    {
+      "code": "nl",
+      "endonym": "Nederlands",
+      "rtl": false
+    },
+    {
+      "code": "pa",
+      "endonym": "ਪੰਜਾਬੀ",
+      "rtl": false
+    },
+    {
+      "code": "pl",
+      "endonym": "Polski",
+      "rtl": false
+    },
+    {
+      "code": "pt",
+      "endonym": "Português (Brasil)",
+      "rtl": false
+    },
+    {
+      "code": "pt-PT",
+      "endonym": "Português (Portugal)",
+      "rtl": false
+    },
+    {
+      "code": "ru",
+      "endonym": "Русский",
+      "rtl": false
+    },
+    {
+      "code": "sv",
+      "endonym": "Svenska",
+      "rtl": false
+    },
+    {
+      "code": "sw",
+      "endonym": "Kiswahili",
+      "rtl": false
+    },
+    {
+      "code": "ta",
+      "endonym": "தமிழ்",
+      "rtl": false
+    },
+    {
+      "code": "te",
+      "endonym": "తెలుగు",
+      "rtl": false
+    },
+    {
+      "code": "th",
+      "endonym": "ไทย",
+      "rtl": false
+    },
+    {
+      "code": "ur",
+      "endonym": "اردو",
+      "rtl": true
+    },
+    {
+      "code": "zh-CN",
+      "endonym": "中文（简体）",
+      "rtl": false
+    },
+    {
+      "code": "zu",
+      "endonym": "isiZulu",
+      "rtl": false
+    }
+  ]
+}

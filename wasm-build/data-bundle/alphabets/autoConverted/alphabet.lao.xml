@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Lao" orientation="LR" trainingFilename="training_wa_lo_Laoo.txt" colorsName="European/Asian">
+	<group name="lao tones (combining)">
+		<node label="◌ໆ">
+			<!--Note:  LAO KO LA  -->
+			<textCharAction unicode="3782" />
+		</node>
+		<node label="◌່">
+			<!--Note:  LAO TONE MAI EK  -->
+			<textCharAction unicode="3784" />
+		</node>
+		<node label="◌້">
+			<!--Note:  LAO TONE MAI THO  -->
+			<textCharAction unicode="3785" />
+		</node>
+		<node label="◌໊">
+			<!--Note:  LAO TONE MAI TI  -->
+			<textCharAction unicode="3786" />
+		</node>
+		<node label="◌໋">
+			<!--Note:  LAO TONE MAI CATAWA  -->
+			<textCharAction unicode="3787" />
+		</node>
+	</group>
+	<group name="Lao letters" colorInfoName="lowercase">
+		<!--Old Group Color: 0-->
+		<node label="ກ">
+			<!--Note:  LAO LETTER KO  -->
+			<textCharAction />
+		</node>
+		<node label="ຂ">
+			<!--Note:  LAO LETTER KHO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ຄ">
+			<!--Note:  LAO LETTER KHO TAM  -->
+			<textCharAction />
+		</node>
+		<node label="ງ">
+			<!--Note:  LAO LETTER NGO  -->
+			<textCharAction />
+		</node>
+		<node label="ຈ">
+			<!--Note:  LAO LETTER CO  -->
+			<textCharAction />
+		</node>
+		<node label="ຊ">
+			<!--Note:  LAO LETTER SO TAM  -->
+			<textCharAction />
+		</node>
+		<node label="ຍ">
+			<!--Note:  LAO LETTER NYO  -->
+			<textCharAction />
+		</node>
+		<node label="ດ">
+			<!--Note:  LAO LETTER DO  -->
+			<textCharAction />
+		</node>
+		<node label="ຕ">
+			<!--Note:  LAO LETTER TO  -->
+			<textCharAction />
+		</node>
+		<node label="ຖ">
+			<!--Note:  LAO LETTER THO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ທ">
+			<!--Note:  LAO LETTER THO TAM  -->
+			<textCharAction />
+		</node>
+		<node label="ນ">
+			<!--Note:  LAO LETTER NO  -->
+			<textCharAction />
+		</node>
+		<node label="ບ">
+			<!--Note:  LAO LETTER BO  -->
+			<textCharAction />
+		</node>
+		<node label="ປ">
+			<!--Note:  LAO LETTER PO  -->
+			<textCharAction />
+		</node>
+		<node label="ຜ">
+			<!--Note:  LAO LETTER PHO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ຝ">
+			<!--Note:  LAO LETTER FO TAM  -->
+			<textCharAction />
+		</node>
+		<node label="ພ">
+			<!--Note:  LAO LETTER PHO TAM  -->
+			<textCharAction />
+		</node>
+		<node label="ຟ">
+			<!--Note:  LAO LETTER FO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ມ">
+			<!--Note:  LAO LETTER MO  -->
+			<textCharAction />
+		</node>
+		<node label="ຢ">
+			<!--Note:  LAO LETTER YO  -->
+			<textCharAction />
+		</node>
+		<node label="ຣ">
+			<!--Note:  LAO LETTER LO LING  -->
+			<textCharAction />
+		</node>
+		<node label="ລ">
+			<!--Note:  LAO LETTER LO LOOT  -->
+			<textCharAction />
+		</node>
+		<node label="ວ">
+			<!--Note:  LAO LETTER WO  -->
+			<textCharAction />
+		</node>
+		<node label="ສ">
+			<!--Note:  LAO LETTER SO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ຫ">
+			<!--Note:  LAO LETTER HO SUNG  -->
+			<textCharAction />
+		</node>
+		<node label="ອ">
+			<!--Note:  LAO LETTER O  -->
+			<textCharAction />
+		</node>
+		<node label="ຮ">
+			<!--Note:  LAO LETTER HO TAM  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="lao vowels (combining)" colorInfoName="accents">
+		<!--Old Group Color: 111-->
+		<node label="◌ະ">
+			<!--Note:  LAO VOWEL SIGN A  -->
+			<textCharAction unicode="3760" />
+		</node>
+		<node label="◌ັ">
+			<!--Note:  LAO VOWEL SIGN MAI KAN  -->
+			<textCharAction unicode="3761" />
+		</node>
+		<node label="◌າ">
+			<!--Note:  LAO VOWEL SIGN AA  -->
+			<textCharAction unicode="3762" />
+		</node>
+		<node label="◌ຳ">
+			<!--Note:  LAO VOWEL SIGN AM  -->
+			<textCharAction unicode="3763" />
+		</node>
+		<node label="◌ິ">
+			<!--Note:  LAO VOWEL SIGN I  -->
+			<textCharAction unicode="3764" />
+		</node>
+		<node label="◌ີ">
+			<!--Note:  LAO VOWEL SIGN II  -->
+			<textCharAction unicode="3765" />
+		</node>
+		<node label="◌ຶ">
+			<!--Note:  LAO VOWEL SIGN Y  -->
+			<textCharAction unicode="3766" />
+		</node>
+		<node label="◌ື">
+			<!--Note:  LAO VOWEL SIGN YY  -->
+			<textCharAction unicode="3767" />
+		</node>
+		<node label="◌ຸ">
+			<!--Note:  LAO VOWEL SIGN U  -->
+			<textCharAction unicode="3768" />
+		</node>
+		<node label="◌ູ">
+			<!--Note:  LAO VOWEL SIGN UU  -->
+			<textCharAction unicode="3769" />
+		</node>
+		<node label="◌ົ">
+			<!--Note:  LAO VOWEL SIGN MAI KON  -->
+			<textCharAction unicode="3771" />
+		</node>
+		<node label="◌ຼ">
+			<!--Note:  LAO SEMIVOWEL SIGN LO  -->
+			<textCharAction unicode="3772" />
+		</node>
+		<node label="◌ຽ">
+			<!--Note:  LAO SEMIVOWEL SIGN NYO  -->
+			<textCharAction unicode="3773" />
+		</node>
+		<node label="◌ເ">
+			<!--Note:  LAO VOWEL SIGN E  -->
+			<textCharAction unicode="3776" />
+		</node>
+		<node label="◌ແ">
+			<!--Note:  LAO VOWEL SIGN EI  -->
+			<textCharAction unicode="3777" />
+		</node>
+		<node label="◌ໂ">
+			<!--Note:  LAO VOWEL SIGN O  -->
+			<textCharAction unicode="3778" />
+		</node>
+		<node label="◌ໃ">
+			<!--Note:  LAO VOWEL SIGN AY  -->
+			<textCharAction unicode="3779" />
+		</node>
+		<node label="◌ໄ">
+			<!--Note:  LAO VOWEL SIGN AI  -->
+			<textCharAction unicode="3780" />
+		</node>
+	</group>
+	<group name="Punctuation?" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="ຯ">
+			<!--Note:  LAO ELLIPSIS  -->
+			<textCharAction />
+		</node>
+		<node label="◌໌">
+			<!--Note:  LAO CANCELLATION MARK  -->
+			<textCharAction unicode="3788" />
+		</node>
+		<node label="◌ໍ">
+			<!--Note:  LAO NIGGAHITA  -->
+			<textCharAction unicode="3789" />
+		</node>
+		<node label="ໜ">
+			<!--Note:  LAO HO NO  -->
+			<textCharAction />
+		</node>
+		<node label="ໝ">
+			<!--Note:  LAO HO MO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="໐">
+			<!--Note:  LAO DIGIT ZERO  -->
+			<textCharAction />
+		</node>
+		<node label="໑">
+			<!--Note:  LAO DIGIT ONE  -->
+			<textCharAction />
+		</node>
+		<node label="໒">
+			<!--Note:  LAO DIGIT TWO  -->
+			<textCharAction />
+		</node>
+		<node label="໓">
+			<!--Note:  LAO DIGIT THREE  -->
+			<textCharAction />
+		</node>
+		<node label="໔">
+			<!--Note:  LAO DIGIT FOUR  -->
+			<textCharAction />
+		</node>
+		<node label="໕">
+			<!--Note:  LAO DIGIT FIVE  -->
+			<textCharAction />
+		</node>
+		<node label="໖">
+			<!--Note:  LAO DIGIT SIX  -->
+			<textCharAction />
+		</node>
+		<node label="໗">
+			<!--Note:  LAO DIGIT SEVEN  -->
+			<textCharAction />
+		</node>
+		<node label="໘">
+			<!--Note:  LAO DIGIT EIGHT  -->
+			<textCharAction />
+		</node>
+		<node label="໙">
+			<!--Note:  LAO DIGIT NINE  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

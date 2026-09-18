@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Georgian (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_ka_Geor.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ა">
+      <textCharAction />
+    </node>
+    <node label="ბ">
+      <textCharAction />
+    </node>
+    <node label="გ">
+      <textCharAction />
+    </node>
+    <node label="დ">
+      <textCharAction />
+    </node>
+    <node label="ე">
+      <textCharAction />
+    </node>
+    <node label="ვ">
+      <textCharAction />
+    </node>
+    <node label="ზ">
+      <textCharAction />
+    </node>
+    <node label="თ">
+      <textCharAction />
+    </node>
+    <node label="ი">
+      <textCharAction />
+    </node>
+    <node label="კ">
+      <textCharAction />
+    </node>
+    <node label="ლ">
+      <textCharAction />
+    </node>
+    <node label="მ">
+      <textCharAction />
+    </node>
+    <node label="ნ">
+      <textCharAction />
+    </node>
+    <node label="ო">
+      <textCharAction />
+    </node>
+    <node label="პ">
+      <textCharAction />
+    </node>
+    <node label="ჟ">
+      <textCharAction />
+    </node>
+    <node label="რ">
+      <textCharAction />
+    </node>
+    <node label="ს">
+      <textCharAction />
+    </node>
+    <node label="ტ">
+      <textCharAction />
+    </node>
+    <node label="უ">
+      <textCharAction />
+    </node>
+    <node label="ფ">
+      <textCharAction />
+    </node>
+    <node label="ქ">
+      <textCharAction />
+    </node>
+    <node label="ღ">
+      <textCharAction />
+    </node>
+    <node label="ყ">
+      <textCharAction />
+    </node>
+    <node label="შ">
+      <textCharAction />
+    </node>
+    <node label="ჩ">
+      <textCharAction />
+    </node>
+    <node label="ც">
+      <textCharAction />
+    </node>
+    <node label="ძ">
+      <textCharAction />
+    </node>
+    <node label="წ">
+      <textCharAction />
+    </node>
+    <node label="ჭ">
+      <textCharAction />
+    </node>
+    <node label="ხ">
+      <textCharAction />
+    </node>
+    <node label="ჯ">
+      <textCharAction />
+    </node>
+    <node label="ჰ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ა">
+      <textCharAction />
+    </node>
+    <node label="ბ">
+      <textCharAction />
+    </node>
+    <node label="გ">
+      <textCharAction />
+    </node>
+    <node label="დ">
+      <textCharAction />
+    </node>
+    <node label="ე">
+      <textCharAction />
+    </node>
+    <node label="ვ">
+      <textCharAction />
+    </node>
+    <node label="ზ">
+      <textCharAction />
+    </node>
+    <node label="თ">
+      <textCharAction />
+    </node>
+    <node label="ი">
+      <textCharAction />
+    </node>
+    <node label="კ">
+      <textCharAction />
+    </node>
+    <node label="ლ">
+      <textCharAction />
+    </node>
+    <node label="მ">
+      <textCharAction />
+    </node>
+    <node label="ნ">
+      <textCharAction />
+    </node>
+    <node label="ო">
+      <textCharAction />
+    </node>
+    <node label="პ">
+      <textCharAction />
+    </node>
+    <node label="ჟ">
+      <textCharAction />
+    </node>
+    <node label="რ">
+      <textCharAction />
+    </node>
+    <node label="ს">
+      <textCharAction />
+    </node>
+    <node label="ტ">
+      <textCharAction />
+    </node>
+    <node label="უ">
+      <textCharAction />
+    </node>
+    <node label="ფ">
+      <textCharAction />
+    </node>
+    <node label="ქ">
+      <textCharAction />
+    </node>
+    <node label="ღ">
+      <textCharAction />
+    </node>
+    <node label="ყ">
+      <textCharAction />
+    </node>
+    <node label="შ">
+      <textCharAction />
+    </node>
+    <node label="ჩ">
+      <textCharAction />
+    </node>
+    <node label="ც">
+      <textCharAction />
+    </node>
+    <node label="ძ">
+      <textCharAction />
+    </node>
+    <node label="წ">
+      <textCharAction />
+    </node>
+    <node label="ჭ">
+      <textCharAction />
+    </node>
+    <node label="ხ">
+      <textCharAction />
+    </node>
+    <node label="ჯ">
+      <textCharAction />
+    </node>
+    <node label="ჰ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

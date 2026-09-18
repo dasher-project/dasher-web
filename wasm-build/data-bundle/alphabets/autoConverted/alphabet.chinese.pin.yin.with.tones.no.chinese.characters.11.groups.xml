@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Chinese Pin Yin with tones (no chinese characters) (11 groups)" orientation="LR" trainingFilename="training_pinyin_CN.txt" colorsName="European/Asian">
+	<!--
+ Hanyu pinyin: A system of romanization
+  (phonetic notation and transliteration to roman script) for
+  Mandarin Chinese used in the People's Republic of China.
+ Cantonese also has a pinyin-type system called Penkyamp
+-->
+	<group name="pin yin roman letters">
+		<group name="a" colorInfoName="lowercase">
+			<!--Old Group Color: 60-->
+			<node label="a">
+				<!--Old Char Color: 70-->
+				<textCharAction />
+			</node>
+			<!-- a -->
+			<node label="ā">
+				<!--Old Char Color: 80-->
+				<textCharAction />
+			</node>
+			<!-- a1 -->
+			<node label="á">
+				<!--Old Char Color: 70-->
+				<textCharAction />
+			</node>
+			<!-- a2 -->
+			<node label="ǎ">
+				<!--Old Char Color: 80-->
+				<textCharAction />
+			</node>
+			<!-- a3 -->
+			<!-- alternative a3 &#259; -->
+			<node label="à">
+				<!--Old Char Color: 70-->
+				<textCharAction />
+			</node>
+			<!-- a4 -->
+		</group>
+		<group name="b-d" colorInfoName="lowercase">
+			<!--Old Group Color: 61-->
+			<node label="b">
+				<!--Old Char Color: 11-->
+				<textCharAction />
+			</node>
+			<node label="c">
+				<!--Old Char Color: 12-->
+				<textCharAction />
+			</node>
+			<node label="d">
+				<!--Old Char Color: 13-->
+				<textCharAction />
+			</node>
+		</group>
+		<group name="e" colorInfoName="lowercase">
+			<!--Old Group Color: 62-->
+			<node label="e">
+				<!--Old Char Color: 72-->
+				<textCharAction />
+			</node>
+			<!-- e -->
+			<node label="ē">
+				<!--Old Char Color: 82-->
+				<textCharAction />
+			</node>
+			<!-- e1 -->
+			<node label="é">
+				<!--Old Char Color: 72-->
+				<textCharAction />
+			</node>
+			<!-- e2 -->
+			<node label="ě">
+				<!--Old Char Color: 82-->
+				<textCharAction />
+			</node>
+			<!-- e3 -->
+			<!-- alternative e3 &#277; -->
+			<node label="è">
+				<!--Old Char Color: 72-->
+				<textCharAction />
+			</node>
+			<!-- e4 -->
+		</group>
+		<group name="f-h" colorInfoName="lowercase">
+			<!--Old Group Color: 63-->
+			<node label="f">
+				<!--Old Char Color: 15-->
+				<textCharAction />
+			</node>
+			<node label="g">
+				<!--Old Char Color: 16-->
+				<textCharAction />
+			</node>
+			<node label="h">
+				<!--Old Char Color: 17-->
+				<textCharAction />
+			</node>
+		</group>
+		<group name="i" colorInfoName="lowercase">
+			<!--Old Group Color: 64-->
+			<node label="i">
+				<!--Old Char Color: 74-->
+				<textCharAction />
+			</node>
+			<!-- i -->
+			<node label="ī">
+				<!--Old Char Color: 84-->
+				<textCharAction />
+			</node>
+			<!-- i1 -->
+			<node label="í">
+				<!--Old Char Color: 74-->
+				<textCharAction />
+			</node>
+			<!-- i2 -->
+			<node label="ǐ">
+				<!--Old Char Color: 84-->
+				<textCharAction />
+			</node>
+			<!-- i3 -->
+			<!-- alternative i3 &#301; -->
+			<node label="ì">
+				<!--Old Char Color: 74-->
+				<textCharAction />
+			</node>
+			<!-- i4 -->
+		</group>
+		<group name="j-n" colorInfoName="lowercase">
+			<!--Old Group Color: 65-->
+			<node label="j">
+				<!--Old Char Color: 19-->
+				<textCharAction />
+			</node>
+			<node label="k">
+				<!--Old Char Color: 20-->
+				<textCharAction />
+			</node>
+			<node label="l">
+				<!--Old Char Color: 21-->
+				<textCharAction />
+			</node>
+			<node label="m">
+				<!--Old Char Color: 22-->
+				<textCharAction />
+			</node>
+			<node label="n">
+				<!--Old Char Color: 23-->
+				<textCharAction />
+			</node>
+		</group>
+		<group name="o" colorInfoName="lowercase">
+			<!--Old Group Color: 66-->
+			<node label="o">
+				<!--Old Char Color: 76-->
+				<textCharAction />
+			</node>
+			<!-- o -->
+			<node label="ō">
+				<!--Old Char Color: 86-->
+				<textCharAction />
+			</node>
+			<!-- o1 -->
+			<node label="ó">
+				<!--Old Char Color: 76-->
+				<textCharAction />
+			</node>
+			<!-- o2 -->
+			<node label="ǒ">
+				<!--Old Char Color: 86-->
+				<textCharAction />
+			</node>
+			<!-- o3 -->
+			<!-- alternative o3  &#335; -->
+			<node label="ò">
+				<!--Old Char Color: 76-->
+				<textCharAction />
+			</node>
+			<!-- o4 -->
+		</group>
+		<group name="p-t" colorInfoName="lowercase">
+			<!--Old Group Color: 67-->
+			<node label="p">
+				<!--Old Char Color: 25-->
+				<textCharAction />
+			</node>
+			<node label="q">
+				<!--Old Char Color: 26-->
+				<textCharAction />
+			</node>
+			<node label="r">
+				<!--Old Char Color: 27-->
+				<textCharAction />
+			</node>
+			<node label="s">
+				<!--Old Char Color: 28-->
+				<textCharAction />
+			</node>
+			<node label="t">
+				<!--Old Char Color: 29-->
+				<textCharAction />
+			</node>
+		</group>
+		<group name="u" colorInfoName="lowercase">
+			<!--Old Group Color: 68-->
+			<node label="u">
+				<!--Old Char Color: 78-->
+				<textCharAction />
+			</node>
+			<!-- u -->
+			<node label="ū">
+				<!--Old Char Color: 88-->
+				<textCharAction />
+			</node>
+			<!-- u1 -->
+			<node label="ú">
+				<!--Old Char Color: 78-->
+				<textCharAction />
+			</node>
+			<!-- u2 -->
+			<node label="ǔ">
+				<!--Old Char Color: 88-->
+				<textCharAction />
+			</node>
+			<!-- u3 -->
+			<!-- alternative u3 &#365; -->
+			<node label="ù">
+				<!--Old Char Color: 78-->
+				<textCharAction />
+			</node>
+			<!-- u4 -->
+		</group>
+		<group name="ü" colorInfoName="lowercase">
+			<!--Old Group Color: 69-->
+			<node label="ü">
+				<!--Old Char Color: 79-->
+				<textCharAction />
+			</node>
+			<!-- &#252; u: -->
+			<node label="ǖ">
+				<!--Old Char Color: 89-->
+				<textCharAction />
+			</node>
+			<!-- &#252;1 u:1 -->
+			<node label="ǘ">
+				<!--Old Char Color: 79-->
+				<textCharAction />
+			</node>
+			<!-- &#252;2 u:2 -->
+			<node label="ǚ">
+				<!--Old Char Color: 89-->
+				<textCharAction />
+			</node>
+			<!-- &#252;3 u:3 -->
+			<node label="ǜ">
+				<!--Old Char Color: 79-->
+				<textCharAction />
+			</node>
+			<!-- &#252;4 u:4 -->
+		</group>
+		<group name="v-z" colorInfoName="lowercase">
+			<!--Old Group Color: 60-->
+			<node label="v">
+				<!--Old Char Color: 31-->
+				<textCharAction />
+			</node>
+			<node label="w">
+				<!--Old Char Color: 32-->
+				<textCharAction />
+			</node>
+			<node label="x">
+				<!--Old Char Color: 33-->
+				<textCharAction />
+			</node>
+			<node label="y">
+				<!--Old Char Color: 34-->
+				<textCharAction />
+			</node>
+			<node label="z">
+				<!--Old Char Color: 35-->
+				<textCharAction />
+			</node>
+		</group>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="2">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="3">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="4">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="5">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="6">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="7">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="8">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="9">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="0">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="*">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="+">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="=">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="/">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="#">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="$">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="|">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="\">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="~">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="^">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="_">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="@">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="[">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="]">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="{">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="}">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="(">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label=")">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="`">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="'">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="◊">
+			<!--Old Char Color: 9-->
+			<!--Note: TAB (represented by a diamond)-->
+			<textCharAction unicode="9" />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<textCharAction />
+		</node>
+		<node label=";">
+			<!--Old Char Color: 102-->
+			<textCharAction />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label="·">
+			<!--Old Char Color: 104-->
+			<textCharAction unicode="46" />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

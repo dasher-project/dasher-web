@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Hiragana ひらがな 83 (diacritical groups)" orientation="LR" trainingFilename="training_hiragana83_JP.txt" colorsName="European/Asian">
+	<group name="aiueo" colorInfoName="lowercase">
+		<node label="ぁ">
+			<!--Old Char Color: 70-->
+			<!--Note:  SMALL A -->
+			<textCharAction />
+		</node>
+		<node label="あ">
+			<!--Old Char Color: 80-->
+			<!--Note:  A -->
+			<textCharAction />
+		</node>
+		<node label="ぃ">
+			<!--Old Char Color: 70-->
+			<!--Note:  SMALL I -->
+			<textCharAction />
+		</node>
+		<node label="い">
+			<!--Old Char Color: 80-->
+			<!--Note:  I -->
+			<textCharAction />
+		</node>
+		<node label="ぅ">
+			<!--Old Char Color: 70-->
+			<!--Note:  SMALL U -->
+			<textCharAction />
+		</node>
+		<node label="う">
+			<!--Old Char Color: 80-->
+			<!--Note:  U -->
+			<textCharAction />
+		</node>
+		<node label="ぇ">
+			<!--Old Char Color: 70-->
+			<!--Note:  SMALL E -->
+			<textCharAction />
+		</node>
+		<node label="え">
+			<!--Old Char Color: 80-->
+			<!--Note:  E -->
+			<textCharAction />
+		</node>
+		<node label="ぉ">
+			<!--Old Char Color: 70-->
+			<!--Note:  SMALL O -->
+			<textCharAction />
+		</node>
+		<node label="お">
+			<!--Old Char Color: 80-->
+			<!--Note:  O -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" label="か" colorInfoName="">
+		<!--Old Group Color: 71-->
+		<node label="">
+			<!--Old Char Color: 71-->
+			<!--Note:  KA -->
+			<textCharAction unicode="12363" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  GA -->
+			<textCharAction unicode="12364" />
+		</node>
+	</group>
+	<group name="" label="き" colorInfoName="">
+		<!--Old Group Color: 81-->
+		<node label="">
+			<!--Old Char Color: 81-->
+			<!--Note:  KI -->
+			<textCharAction unicode="12365" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  GI -->
+			<textCharAction unicode="12366" />
+		</node>
+	</group>
+	<group name="" label="く" colorInfoName="">
+		<!--Old Group Color: 71-->
+		<node label="">
+			<!--Old Char Color: 71-->
+			<!--Note:  KU -->
+			<textCharAction unicode="12367" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  GU -->
+			<textCharAction unicode="12368" />
+		</node>
+	</group>
+	<group name="" label="け" colorInfoName="">
+		<!--Old Group Color: 81-->
+		<node label="">
+			<!--Old Char Color: 81-->
+			<!--Note:  KE -->
+			<textCharAction unicode="12369" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  GE -->
+			<textCharAction unicode="12370" />
+		</node>
+	</group>
+	<group name="" label="こ" colorInfoName="">
+		<!--Old Group Color: 71-->
+		<node label="">
+			<!--Old Char Color: 71-->
+			<!--Note:  KO -->
+			<textCharAction unicode="12371" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  GO -->
+			<textCharAction unicode="12372" />
+		</node>
+	</group>
+	<group name="" label="さ" colorInfoName="">
+		<!--Old Group Color: 72-->
+		<node label="">
+			<!--Old Char Color: 72-->
+			<!--Note:  SA -->
+			<textCharAction unicode="12373" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  ZA -->
+			<textCharAction unicode="12374" />
+		</node>
+	</group>
+	<group name="" label="し" colorInfoName="">
+		<!--Old Group Color: 82-->
+		<node label="">
+			<!--Old Char Color: 82-->
+			<!--Note:  SI -->
+			<textCharAction unicode="12375" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  ZI -->
+			<textCharAction unicode="12376" />
+		</node>
+	</group>
+	<group name="" label="す" colorInfoName="">
+		<!--Old Group Color: 72-->
+		<node label="">
+			<!--Old Char Color: 72-->
+			<!--Note:  SU -->
+			<textCharAction unicode="12377" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  ZU -->
+			<textCharAction unicode="12378" />
+		</node>
+	</group>
+	<group name="" label="せ" colorInfoName="">
+		<!--Old Group Color: 82-->
+		<node label="">
+			<!--Old Char Color: 82-->
+			<!--Note:  SE -->
+			<textCharAction unicode="12379" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  ZE -->
+			<textCharAction unicode="12380" />
+		</node>
+	</group>
+	<group name="" label="そ" colorInfoName="">
+		<!--Old Group Color: 72-->
+		<node label="">
+			<!--Old Char Color: 72-->
+			<!--Note:  SO -->
+			<textCharAction unicode="12381" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  ZO -->
+			<textCharAction unicode="12382" />
+		</node>
+	</group>
+	<group name="" label="た" colorInfoName="">
+		<!--Old Group Color: 73-->
+		<node label="">
+			<!--Old Char Color: 73-->
+			<!--Note:  TA -->
+			<textCharAction unicode="12383" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  DA -->
+			<textCharAction unicode="12384" />
+		</node>
+	</group>
+	<group name="" label="ち" colorInfoName="">
+		<!--Old Group Color: 83-->
+		<node label="">
+			<!--Old Char Color: 83-->
+			<!--Note:  TI -->
+			<textCharAction unicode="12385" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  DI -->
+			<textCharAction unicode="12386" />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: 73-->
+		<node label="っ">
+			<!--Old Char Color: 73-->
+			<!--Note:  SMALL TU -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" label="つ" colorInfoName="">
+		<!--Old Group Color: 83-->
+		<node label="">
+			<!--Old Char Color: 83-->
+			<!--Note:  TU -->
+			<textCharAction unicode="12388" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  DU -->
+			<textCharAction unicode="12389" />
+		</node>
+	</group>
+	<group name="" label="て" colorInfoName="">
+		<!--Old Group Color: 73-->
+		<node label="">
+			<!--Old Char Color: 73-->
+			<!--Note:  TE -->
+			<textCharAction unicode="12390" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  DE -->
+			<textCharAction unicode="12391" />
+		</node>
+	</group>
+	<group name="" label="と" colorInfoName="">
+		<!--Old Group Color: 83-->
+		<node label="">
+			<!--Old Char Color: 83-->
+			<!--Note:  TO -->
+			<textCharAction unicode="12392" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  DO -->
+			<textCharAction unicode="12393" />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: 64-->
+		<node label="な">
+			<!--Old Char Color: 74-->
+			<!--Note:  NA -->
+			<textCharAction />
+		</node>
+		<node label="に">
+			<!--Old Char Color: 84-->
+			<!--Note:  NI -->
+			<textCharAction />
+		</node>
+		<node label="ぬ">
+			<!--Old Char Color: 74-->
+			<!--Note:  NU -->
+			<textCharAction />
+		</node>
+		<node label="ね">
+			<!--Old Char Color: 84-->
+			<!--Note:  NE -->
+			<textCharAction />
+		</node>
+		<node label="の">
+			<!--Old Char Color: 74-->
+			<!--Note:  NO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" label="は" colorInfoName="">
+		<!--Old Group Color: 75-->
+		<node label="">
+			<!--Old Char Color: 75-->
+			<!--Note:  HA -->
+			<textCharAction unicode="12399" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  BA -->
+			<textCharAction unicode="12400" />
+		</node>
+		<node label="゜">
+			<!--Old Char Color: 97-->
+			<!--Note:  PA -->
+			<textCharAction unicode="12401" />
+		</node>
+	</group>
+	<group name="" label="ひ" colorInfoName="">
+		<!--Old Group Color: 85-->
+		<node label="">
+			<!--Old Char Color: 85-->
+			<!--Note:  HI -->
+			<textCharAction unicode="12402" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  BI -->
+			<textCharAction unicode="12403" />
+		</node>
+		<node label="゜">
+			<!--Old Char Color: 97-->
+			<!--Note:  PI -->
+			<textCharAction unicode="12404" />
+		</node>
+	</group>
+	<group name="" label="ふ" colorInfoName="">
+		<!--Old Group Color: 75-->
+		<node label="">
+			<!--Old Char Color: 75-->
+			<!--Note:  HU -->
+			<textCharAction unicode="12405" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  BU -->
+			<textCharAction unicode="12406" />
+		</node>
+		<node label="゜">
+			<!--Old Char Color: 97-->
+			<!--Note:  PU -->
+			<textCharAction unicode="12407" />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: 85-->
+		<node label="">
+			<!--Old Char Color: 85-->
+			<!--Note:  HE -->
+			<textCharAction unicode="12408" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  BE -->
+			<textCharAction unicode="12409" />
+		</node>
+		<node label="゜">
+			<!--Old Char Color: 97-->
+			<!--Note:  PE -->
+			<textCharAction unicode="12410" />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: 75-->
+		<node label="">
+			<!--Old Char Color: 75-->
+			<!--Note:  HO -->
+			<textCharAction unicode="12411" />
+		</node>
+		<node label="゛">
+			<!--Old Char Color: 99-->
+			<!--Note:  BO -->
+			<textCharAction unicode="12412" />
+		</node>
+		<node label="゜">
+			<!--Old Char Color: 97-->
+			<!--Note:  PO -->
+			<textCharAction unicode="12413" />
+		</node>
+	</group>
+	<group name="m" colorInfoName="lowercase">
+		<!--Old Group Color: -->
+		<node label="ま">
+			<!--Old Char Color: 76-->
+			<!--Note:  MA -->
+			<textCharAction />
+		</node>
+		<node label="み">
+			<!--Old Char Color: 86-->
+			<!--Note:  MI -->
+			<textCharAction />
+		</node>
+		<node label="む">
+			<!--Old Char Color: 76-->
+			<!--Note:  MU -->
+			<textCharAction />
+		</node>
+		<node label="め">
+			<!--Old Char Color: 86-->
+			<!--Note:  ME -->
+			<textCharAction />
+		</node>
+		<node label="も">
+			<!--Old Char Color: 76-->
+			<!--Note:  MO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: -->
+		<node label="ゃ">
+			<!--Old Char Color: 77-->
+			<!--Note:  SMALL YA -->
+			<textCharAction />
+		</node>
+		<node label="や">
+			<!--Old Char Color: 87-->
+			<!--Note:  YA -->
+			<textCharAction />
+		</node>
+		<node label="ゅ">
+			<!--Old Char Color: 77-->
+			<!--Note:  SMALL YU -->
+			<textCharAction />
+		</node>
+		<node label="ゆ">
+			<!--Old Char Color: 87-->
+			<!--Note:  YU -->
+			<textCharAction />
+		</node>
+		<node label="ょ">
+			<!--Old Char Color: 77-->
+			<!--Note:  SMALL YO -->
+			<textCharAction />
+		</node>
+		<node label="よ">
+			<!--Old Char Color: 87-->
+			<!--Note:  YO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: -->
+		<node label="ら">
+			<!--Old Char Color: 78-->
+			<!--Note:  RA -->
+			<textCharAction />
+		</node>
+		<node label="り">
+			<!--Old Char Color: 88-->
+			<!--Note:  RI -->
+			<textCharAction />
+		</node>
+		<node label="る">
+			<!--Old Char Color: 78-->
+			<!--Note:  RU -->
+			<textCharAction />
+		</node>
+		<node label="れ">
+			<!--Old Char Color: 88-->
+			<!--Note:  RE -->
+			<textCharAction />
+		</node>
+		<node label="ろ">
+			<!--Old Char Color: 78-->
+			<!--Note:  RO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: -->
+		<!-- <s d="&#12430;" t="&#12430;" b="79" note=" SMALL WA (not needed?) " /> -->
+		<node label="わ">
+			<!--Old Char Color: 89-->
+			<!--Note:  WA -->
+			<textCharAction />
+		</node>
+		<!-- s d="&#12432;" t="&#12432;" b="79" note=" WI " /> -->
+		<!-- s d="&#12433;" t="&#12433;" b="89" note=" WE " /> -->
+		<node label="を">
+			<!--Old Char Color: 79-->
+			<!--Note:  WO -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: -->
+		<node label="ん">
+			<!--Old Char Color: 74-->
+			<!--Note:  N -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="" colorInfoName="">
+		<!--Old Group Color: -->
+		<node label="ー">
+			<!--Old Char Color: 96-->
+			<!--Note: Japanese long dash (long tone)-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 9-->
+		<node label="．">
+			<!--Old Char Color: 10-->
+			<textCharAction unicode="46" />
+		</node>
+		<node label="「">
+			<!--Old Char Color: 90-->
+			<!--Note: Asian left single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="」">
+			<!--Old Char Color: 91-->
+			<!--Note: Asian right single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="『">
+			<!--Old Char Color: 92-->
+			<!--Note: Asian left double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="』">
+			<!--Old Char Color: 93-->
+			<!--Note: Asian right double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="？">
+			<!--Old Char Color: 94-->
+			<!--Note: Japanese question mark-->
+			<textCharAction />
+		</node>
+		<node label="、">
+			<!--Old Char Color: 90-->
+			<!--Note: Asian comma-->
+			<textCharAction />
+		</node>
+		<node label="。">
+			<!--Old Char Color: 91-->
+			<!--Note: Japanese full-stop-->
+			<textCharAction />
+		</node>
+		<!--- <s d="&#xff61;" t="&#xff61;" b="77" /> -->
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>
