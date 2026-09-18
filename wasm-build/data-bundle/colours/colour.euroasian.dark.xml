@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE colors SYSTEM "color.dtd">
-<!-- Dark companion of "European/Asian (Original)" (RFC 0007). Inherits all
+<!-- Dark companion of "European/Asian" (RFC 0007). Inherits all
      node/group colours and overrides only UI chrome for a dark background. -->
-<colors name="European/Asian (Original) Dark"
-        parentName="European/Asian (Original)"
+<colors name="European/Asian Dark"
+        parentName="European/Asian"
         appearance="dark"
-        companion="European/Asian (Original)"
+        companion="European/Asian"
         backgroundColor="#1E1E1E"
         defaultLabelColor="#FFFFFF"
         defaultOutlineColor="#3A3A3A"

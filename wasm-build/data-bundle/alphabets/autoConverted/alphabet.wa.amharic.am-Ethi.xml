@@ -1,0 +1,1751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Amharic (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_am_Ethi.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ሀ">
+      <textCharAction />
+    </node>
+    <node label="ለ">
+      <textCharAction />
+    </node>
+    <node label="ሐ">
+      <textCharAction />
+    </node>
+    <node label="መ">
+      <textCharAction />
+    </node>
+    <node label="ሠ">
+      <textCharAction />
+    </node>
+    <node label="ረ">
+      <textCharAction />
+    </node>
+    <node label="ሰ">
+      <textCharAction />
+    </node>
+    <node label="ሸ">
+      <textCharAction />
+    </node>
+    <node label="ቀ">
+      <textCharAction />
+    </node>
+    <node label="ቈ">
+      <textCharAction />
+    </node>
+    <node label="በ">
+      <textCharAction />
+    </node>
+    <node label="ቨ">
+      <textCharAction />
+    </node>
+    <node label="ተ">
+      <textCharAction />
+    </node>
+    <node label="ቸ">
+      <textCharAction />
+    </node>
+    <node label="ኀ">
+      <textCharAction />
+    </node>
+    <node label="ኈ">
+      <textCharAction />
+    </node>
+    <node label="ነ">
+      <textCharAction />
+    </node>
+    <node label="ኘ">
+      <textCharAction />
+    </node>
+    <node label="አ">
+      <textCharAction />
+    </node>
+    <node label="ከ">
+      <textCharAction />
+    </node>
+    <node label="ኰ">
+      <textCharAction />
+    </node>
+    <node label="ኸ">
+      <textCharAction />
+    </node>
+    <node label="ወ">
+      <textCharAction />
+    </node>
+    <node label="ዐ">
+      <textCharAction />
+    </node>
+    <node label="ዘ">
+      <textCharAction />
+    </node>
+    <node label="ዠ">
+      <textCharAction />
+    </node>
+    <node label="የ">
+      <textCharAction />
+    </node>
+    <node label="ደ">
+      <textCharAction />
+    </node>
+    <node label="ጀ">
+      <textCharAction />
+    </node>
+    <node label="ገ">
+      <textCharAction />
+    </node>
+    <node label="ጐ">
+      <textCharAction />
+    </node>
+    <node label="ጠ">
+      <textCharAction />
+    </node>
+    <node label="ጨ">
+      <textCharAction />
+    </node>
+    <node label="ጰ">
+      <textCharAction />
+    </node>
+    <node label="ጸ">
+      <textCharAction />
+    </node>
+    <node label="ፀ">
+      <textCharAction />
+    </node>
+    <node label="ፈ">
+      <textCharAction />
+    </node>
+    <node label="ፐ">
+      <textCharAction />
+    </node>
+    <node label="ሁ">
+      <textCharAction />
+    </node>
+    <node label="ሂ">
+      <textCharAction />
+    </node>
+    <node label="ሃ">
+      <textCharAction />
+    </node>
+    <node label="ሄ">
+      <textCharAction />
+    </node>
+    <node label="ህ">
+      <textCharAction />
+    </node>
+    <node label="ሆ">
+      <textCharAction />
+    </node>
+    <node label="ሉ">
+      <textCharAction />
+    </node>
+    <node label="ሊ">
+      <textCharAction />
+    </node>
+    <node label="ላ">
+      <textCharAction />
+    </node>
+    <node label="ሌ">
+      <textCharAction />
+    </node>
+    <node label="ል">
+      <textCharAction />
+    </node>
+    <node label="ሎ">
+      <textCharAction />
+    </node>
+    <node label="ሏ">
+      <textCharAction />
+    </node>
+    <node label="ሑ">
+      <textCharAction />
+    </node>
+    <node label="ሒ">
+      <textCharAction />
+    </node>
+    <node label="ሓ">
+      <textCharAction />
+    </node>
+    <node label="ሔ">
+      <textCharAction />
+    </node>
+    <node label="ሕ">
+      <textCharAction />
+    </node>
+    <node label="ሖ">
+      <textCharAction />
+    </node>
+    <node label="ሗ">
+      <textCharAction />
+    </node>
+    <node label="ሙ">
+      <textCharAction />
+    </node>
+    <node label="ሚ">
+      <textCharAction />
+    </node>
+    <node label="ማ">
+      <textCharAction />
+    </node>
+    <node label="ሜ">
+      <textCharAction />
+    </node>
+    <node label="ም">
+      <textCharAction />
+    </node>
+    <node label="ሞ">
+      <textCharAction />
+    </node>
+    <node label="ሟ">
+      <textCharAction />
+    </node>
+    <node label="ሡ">
+      <textCharAction />
+    </node>
+    <node label="ሢ">
+      <textCharAction />
+    </node>
+    <node label="ሣ">
+      <textCharAction />
+    </node>
+    <node label="ሤ">
+      <textCharAction />
+    </node>
+    <node label="ሥ">
+      <textCharAction />
+    </node>
+    <node label="ሦ">
+      <textCharAction />
+    </node>
+    <node label="ሧ">
+      <textCharAction />
+    </node>
+    <node label="ሩ">
+      <textCharAction />
+    </node>
+    <node label="ሪ">
+      <textCharAction />
+    </node>
+    <node label="ራ">
+      <textCharAction />
+    </node>
+    <node label="ሬ">
+      <textCharAction />
+    </node>
+    <node label="ር">
+      <textCharAction />
+    </node>
+    <node label="ሮ">
+      <textCharAction />
+    </node>
+    <node label="ሯ">
+      <textCharAction />
+    </node>
+    <node label="ሱ">
+      <textCharAction />
+    </node>
+    <node label="ሲ">
+      <textCharAction />
+    </node>
+    <node label="ሳ">
+      <textCharAction />
+    </node>
+    <node label="ሴ">
+      <textCharAction />
+    </node>
+    <node label="ስ">
+      <textCharAction />
+    </node>
+    <node label="ሶ">
+      <textCharAction />
+    </node>
+    <node label="ሷ">
+      <textCharAction />
+    </node>
+    <node label="ሹ">
+      <textCharAction />
+    </node>
+    <node label="ሺ">
+      <textCharAction />
+    </node>
+    <node label="ሻ">
+      <textCharAction />
+    </node>
+    <node label="ሼ">
+      <textCharAction />
+    </node>
+    <node label="ሽ">
+      <textCharAction />
+    </node>
+    <node label="ሾ">
+      <textCharAction />
+    </node>
+    <node label="ሿ">
+      <textCharAction />
+    </node>
+    <node label="ቁ">
+      <textCharAction />
+    </node>
+    <node label="ቂ">
+      <textCharAction />
+    </node>
+    <node label="ቃ">
+      <textCharAction />
+    </node>
+    <node label="ቄ">
+      <textCharAction />
+    </node>
+    <node label="ቅ">
+      <textCharAction />
+    </node>
+    <node label="ቆ">
+      <textCharAction />
+    </node>
+    <node label="ቊ">
+      <textCharAction />
+    </node>
+    <node label="ቋ">
+      <textCharAction />
+    </node>
+    <node label="ቌ">
+      <textCharAction />
+    </node>
+    <node label="ቍ">
+      <textCharAction />
+    </node>
+    <node label="ቡ">
+      <textCharAction />
+    </node>
+    <node label="ቢ">
+      <textCharAction />
+    </node>
+    <node label="ባ">
+      <textCharAction />
+    </node>
+    <node label="ቤ">
+      <textCharAction />
+    </node>
+    <node label="ብ">
+      <textCharAction />
+    </node>
+    <node label="ቦ">
+      <textCharAction />
+    </node>
+    <node label="ቧ">
+      <textCharAction />
+    </node>
+    <node label="ቩ">
+      <textCharAction />
+    </node>
+    <node label="ቪ">
+      <textCharAction />
+    </node>
+    <node label="ቫ">
+      <textCharAction />
+    </node>
+    <node label="ቬ">
+      <textCharAction />
+    </node>
+    <node label="ቭ">
+      <textCharAction />
+    </node>
+    <node label="ቮ">
+      <textCharAction />
+    </node>
+    <node label="ቯ">
+      <textCharAction />
+    </node>
+    <node label="ቱ">
+      <textCharAction />
+    </node>
+    <node label="ቲ">
+      <textCharAction />
+    </node>
+    <node label="ታ">
+      <textCharAction />
+    </node>
+    <node label="ቴ">
+      <textCharAction />
+    </node>
+    <node label="ት">
+      <textCharAction />
+    </node>
+    <node label="ቶ">
+      <textCharAction />
+    </node>
+    <node label="ቷ">
+      <textCharAction />
+    </node>
+    <node label="ቹ">
+      <textCharAction />
+    </node>
+    <node label="ቺ">
+      <textCharAction />
+    </node>
+    <node label="ቻ">
+      <textCharAction />
+    </node>
+    <node label="ቼ">
+      <textCharAction />
+    </node>
+    <node label="ች">
+      <textCharAction />
+    </node>
+    <node label="ቾ">
+      <textCharAction />
+    </node>
+    <node label="ቿ">
+      <textCharAction />
+    </node>
+    <node label="ኁ">
+      <textCharAction />
+    </node>
+    <node label="ኂ">
+      <textCharAction />
+    </node>
+    <node label="ኃ">
+      <textCharAction />
+    </node>
+    <node label="ኄ">
+      <textCharAction />
+    </node>
+    <node label="ኅ">
+      <textCharAction />
+    </node>
+    <node label="ኆ">
+      <textCharAction />
+    </node>
+    <node label="ኊ">
+      <textCharAction />
+    </node>
+    <node label="ኋ">
+      <textCharAction />
+    </node>
+    <node label="ኌ">
+      <textCharAction />
+    </node>
+    <node label="ኍ">
+      <textCharAction />
+    </node>
+    <node label="ኑ">
+      <textCharAction />
+    </node>
+    <node label="ኒ">
+      <textCharAction />
+    </node>
+    <node label="ና">
+      <textCharAction />
+    </node>
+    <node label="ኔ">
+      <textCharAction />
+    </node>
+    <node label="ን">
+      <textCharAction />
+    </node>
+    <node label="ኖ">
+      <textCharAction />
+    </node>
+    <node label="ኗ">
+      <textCharAction />
+    </node>
+    <node label="ኙ">
+      <textCharAction />
+    </node>
+    <node label="ኚ">
+      <textCharAction />
+    </node>
+    <node label="ኛ">
+      <textCharAction />
+    </node>
+    <node label="ኜ">
+      <textCharAction />
+    </node>
+    <node label="ኝ">
+      <textCharAction />
+    </node>
+    <node label="ኞ">
+      <textCharAction />
+    </node>
+    <node label="ኟ">
+      <textCharAction />
+    </node>
+    <node label="ኡ">
+      <textCharAction />
+    </node>
+    <node label="ኢ">
+      <textCharAction />
+    </node>
+    <node label="ኣ">
+      <textCharAction />
+    </node>
+    <node label="ኤ">
+      <textCharAction />
+    </node>
+    <node label="እ">
+      <textCharAction />
+    </node>
+    <node label="ኦ">
+      <textCharAction />
+    </node>
+    <node label="ኧ">
+      <textCharAction />
+    </node>
+    <node label="ኩ">
+      <textCharAction />
+    </node>
+    <node label="ኪ">
+      <textCharAction />
+    </node>
+    <node label="ካ">
+      <textCharAction />
+    </node>
+    <node label="ኬ">
+      <textCharAction />
+    </node>
+    <node label="ክ">
+      <textCharAction />
+    </node>
+    <node label="ኮ">
+      <textCharAction />
+    </node>
+    <node label="ኲ">
+      <textCharAction />
+    </node>
+    <node label="ኳ">
+      <textCharAction />
+    </node>
+    <node label="ኴ">
+      <textCharAction />
+    </node>
+    <node label="ኵ">
+      <textCharAction />
+    </node>
+    <node label="ኹ">
+      <textCharAction />
+    </node>
+    <node label="ኺ">
+      <textCharAction />
+    </node>
+    <node label="ኻ">
+      <textCharAction />
+    </node>
+    <node label="ኼ">
+      <textCharAction />
+    </node>
+    <node label="ኽ">
+      <textCharAction />
+    </node>
+    <node label="ኾ">
+      <textCharAction />
+    </node>
+    <node label="ዉ">
+      <textCharAction />
+    </node>
+    <node label="ዊ">
+      <textCharAction />
+    </node>
+    <node label="ዋ">
+      <textCharAction />
+    </node>
+    <node label="ዌ">
+      <textCharAction />
+    </node>
+    <node label="ው">
+      <textCharAction />
+    </node>
+    <node label="ዎ">
+      <textCharAction />
+    </node>
+    <node label="ዑ">
+      <textCharAction />
+    </node>
+    <node label="ዒ">
+      <textCharAction />
+    </node>
+    <node label="ዓ">
+      <textCharAction />
+    </node>
+    <node label="ዔ">
+      <textCharAction />
+    </node>
+    <node label="ዕ">
+      <textCharAction />
+    </node>
+    <node label="ዖ">
+      <textCharAction />
+    </node>
+    <node label="ዙ">
+      <textCharAction />
+    </node>
+    <node label="ዚ">
+      <textCharAction />
+    </node>
+    <node label="ዛ">
+      <textCharAction />
+    </node>
+    <node label="ዜ">
+      <textCharAction />
+    </node>
+    <node label="ዝ">
+      <textCharAction />
+    </node>
+    <node label="ዞ">
+      <textCharAction />
+    </node>
+    <node label="ዟ">
+      <textCharAction />
+    </node>
+    <node label="ዡ">
+      <textCharAction />
+    </node>
+    <node label="ዢ">
+      <textCharAction />
+    </node>
+    <node label="ዣ">
+      <textCharAction />
+    </node>
+    <node label="ዤ">
+      <textCharAction />
+    </node>
+    <node label="ዥ">
+      <textCharAction />
+    </node>
+    <node label="ዦ">
+      <textCharAction />
+    </node>
+    <node label="ዧ">
+      <textCharAction />
+    </node>
+    <node label="ዩ">
+      <textCharAction />
+    </node>
+    <node label="ዪ">
+      <textCharAction />
+    </node>
+    <node label="ያ">
+      <textCharAction />
+    </node>
+    <node label="ዬ">
+      <textCharAction />
+    </node>
+    <node label="ይ">
+      <textCharAction />
+    </node>
+    <node label="ዮ">
+      <textCharAction />
+    </node>
+    <node label="ዱ">
+      <textCharAction />
+    </node>
+    <node label="ዲ">
+      <textCharAction />
+    </node>
+    <node label="ዳ">
+      <textCharAction />
+    </node>
+    <node label="ዴ">
+      <textCharAction />
+    </node>
+    <node label="ድ">
+      <textCharAction />
+    </node>
+    <node label="ዶ">
+      <textCharAction />
+    </node>
+    <node label="ዷ">
+      <textCharAction />
+    </node>
+    <node label="ጁ">
+      <textCharAction />
+    </node>
+    <node label="ጂ">
+      <textCharAction />
+    </node>
+    <node label="ጃ">
+      <textCharAction />
+    </node>
+    <node label="ጄ">
+      <textCharAction />
+    </node>
+    <node label="ጅ">
+      <textCharAction />
+    </node>
+    <node label="ጆ">
+      <textCharAction />
+    </node>
+    <node label="ጇ">
+      <textCharAction />
+    </node>
+    <node label="ጉ">
+      <textCharAction />
+    </node>
+    <node label="ጊ">
+      <textCharAction />
+    </node>
+    <node label="ጋ">
+      <textCharAction />
+    </node>
+    <node label="ጌ">
+      <textCharAction />
+    </node>
+    <node label="ግ">
+      <textCharAction />
+    </node>
+    <node label="ጎ">
+      <textCharAction />
+    </node>
+    <node label="ጒ">
+      <textCharAction />
+    </node>
+    <node label="ጓ">
+      <textCharAction />
+    </node>
+    <node label="ጔ">
+      <textCharAction />
+    </node>
+    <node label="ጕ">
+      <textCharAction />
+    </node>
+    <node label="ጡ">
+      <textCharAction />
+    </node>
+    <node label="ጢ">
+      <textCharAction />
+    </node>
+    <node label="ጣ">
+      <textCharAction />
+    </node>
+    <node label="ጤ">
+      <textCharAction />
+    </node>
+    <node label="ጥ">
+      <textCharAction />
+    </node>
+    <node label="ጦ">
+      <textCharAction />
+    </node>
+    <node label="ጧ">
+      <textCharAction />
+    </node>
+    <node label="ጩ">
+      <textCharAction />
+    </node>
+    <node label="ጪ">
+      <textCharAction />
+    </node>
+    <node label="ጫ">
+      <textCharAction />
+    </node>
+    <node label="ጬ">
+      <textCharAction />
+    </node>
+    <node label="ጭ">
+      <textCharAction />
+    </node>
+    <node label="ጮ">
+      <textCharAction />
+    </node>
+    <node label="ጯ">
+      <textCharAction />
+    </node>
+    <node label="ጱ">
+      <textCharAction />
+    </node>
+    <node label="ጲ">
+      <textCharAction />
+    </node>
+    <node label="ጳ">
+      <textCharAction />
+    </node>
+    <node label="ጴ">
+      <textCharAction />
+    </node>
+    <node label="ጵ">
+      <textCharAction />
+    </node>
+    <node label="ጶ">
+      <textCharAction />
+    </node>
+    <node label="ጷ">
+      <textCharAction />
+    </node>
+    <node label="ጹ">
+      <textCharAction />
+    </node>
+    <node label="ጺ">
+      <textCharAction />
+    </node>
+    <node label="ጻ">
+      <textCharAction />
+    </node>
+    <node label="ጼ">
+      <textCharAction />
+    </node>
+    <node label="ጽ">
+      <textCharAction />
+    </node>
+    <node label="ጾ">
+      <textCharAction />
+    </node>
+    <node label="ጿ">
+      <textCharAction />
+    </node>
+    <node label="ፁ">
+      <textCharAction />
+    </node>
+    <node label="ፂ">
+      <textCharAction />
+    </node>
+    <node label="ፃ">
+      <textCharAction />
+    </node>
+    <node label="ፄ">
+      <textCharAction />
+    </node>
+    <node label="ፅ">
+      <textCharAction />
+    </node>
+    <node label="ፆ">
+      <textCharAction />
+    </node>
+    <node label="ፉ">
+      <textCharAction />
+    </node>
+    <node label="ፊ">
+      <textCharAction />
+    </node>
+    <node label="ፋ">
+      <textCharAction />
+    </node>
+    <node label="ፌ">
+      <textCharAction />
+    </node>
+    <node label="ፍ">
+      <textCharAction />
+    </node>
+    <node label="ፎ">
+      <textCharAction />
+    </node>
+    <node label="ፏ">
+      <textCharAction />
+    </node>
+    <node label="ፑ">
+      <textCharAction />
+    </node>
+    <node label="ፒ">
+      <textCharAction />
+    </node>
+    <node label="ፓ">
+      <textCharAction />
+    </node>
+    <node label="ፔ">
+      <textCharAction />
+    </node>
+    <node label="ፕ">
+      <textCharAction />
+    </node>
+    <node label="ፖ">
+      <textCharAction />
+    </node>
+    <node label="ፗ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ሀ">
+      <textCharAction />
+    </node>
+    <node label="ለ">
+      <textCharAction />
+    </node>
+    <node label="ሐ">
+      <textCharAction />
+    </node>
+    <node label="መ">
+      <textCharAction />
+    </node>
+    <node label="ሠ">
+      <textCharAction />
+    </node>
+    <node label="ረ">
+      <textCharAction />
+    </node>
+    <node label="ሰ">
+      <textCharAction />
+    </node>
+    <node label="ሸ">
+      <textCharAction />
+    </node>
+    <node label="ቀ">
+      <textCharAction />
+    </node>
+    <node label="ቈ">
+      <textCharAction />
+    </node>
+    <node label="በ">
+      <textCharAction />
+    </node>
+    <node label="ቨ">
+      <textCharAction />
+    </node>
+    <node label="ተ">
+      <textCharAction />
+    </node>
+    <node label="ቸ">
+      <textCharAction />
+    </node>
+    <node label="ኀ">
+      <textCharAction />
+    </node>
+    <node label="ኈ">
+      <textCharAction />
+    </node>
+    <node label="ነ">
+      <textCharAction />
+    </node>
+    <node label="ኘ">
+      <textCharAction />
+    </node>
+    <node label="አ">
+      <textCharAction />
+    </node>
+    <node label="ከ">
+      <textCharAction />
+    </node>
+    <node label="ኰ">
+      <textCharAction />
+    </node>
+    <node label="ኸ">
+      <textCharAction />
+    </node>
+    <node label="ወ">
+      <textCharAction />
+    </node>
+    <node label="ዐ">
+      <textCharAction />
+    </node>
+    <node label="ዘ">
+      <textCharAction />
+    </node>
+    <node label="ዠ">
+      <textCharAction />
+    </node>
+    <node label="የ">
+      <textCharAction />
+    </node>
+    <node label="ደ">
+      <textCharAction />
+    </node>
+    <node label="ጀ">
+      <textCharAction />
+    </node>
+    <node label="ገ">
+      <textCharAction />
+    </node>
+    <node label="ጐ">
+      <textCharAction />
+    </node>
+    <node label="ጠ">
+      <textCharAction />
+    </node>
+    <node label="ጨ">
+      <textCharAction />
+    </node>
+    <node label="ጰ">
+      <textCharAction />
+    </node>
+    <node label="ጸ">
+      <textCharAction />
+    </node>
+    <node label="ፀ">
+      <textCharAction />
+    </node>
+    <node label="ፈ">
+      <textCharAction />
+    </node>
+    <node label="ፐ">
+      <textCharAction />
+    </node>
+    <node label="ሁ">
+      <textCharAction />
+    </node>
+    <node label="ሂ">
+      <textCharAction />
+    </node>
+    <node label="ሃ">
+      <textCharAction />
+    </node>
+    <node label="ሄ">
+      <textCharAction />
+    </node>
+    <node label="ህ">
+      <textCharAction />
+    </node>
+    <node label="ሆ">
+      <textCharAction />
+    </node>
+    <node label="ሉ">
+      <textCharAction />
+    </node>
+    <node label="ሊ">
+      <textCharAction />
+    </node>
+    <node label="ላ">
+      <textCharAction />
+    </node>
+    <node label="ሌ">
+      <textCharAction />
+    </node>
+    <node label="ል">
+      <textCharAction />
+    </node>
+    <node label="ሎ">
+      <textCharAction />
+    </node>
+    <node label="ሏ">
+      <textCharAction />
+    </node>
+    <node label="ሑ">
+      <textCharAction />
+    </node>
+    <node label="ሒ">
+      <textCharAction />
+    </node>
+    <node label="ሓ">
+      <textCharAction />
+    </node>
+    <node label="ሔ">
+      <textCharAction />
+    </node>
+    <node label="ሕ">
+      <textCharAction />
+    </node>
+    <node label="ሖ">
+      <textCharAction />
+    </node>
+    <node label="ሗ">
+      <textCharAction />
+    </node>
+    <node label="ሙ">
+      <textCharAction />
+    </node>
+    <node label="ሚ">
+      <textCharAction />
+    </node>
+    <node label="ማ">
+      <textCharAction />
+    </node>
+    <node label="ሜ">
+      <textCharAction />
+    </node>
+    <node label="ም">
+      <textCharAction />
+    </node>
+    <node label="ሞ">
+      <textCharAction />
+    </node>
+    <node label="ሟ">
+      <textCharAction />
+    </node>
+    <node label="ሡ">
+      <textCharAction />
+    </node>
+    <node label="ሢ">
+      <textCharAction />
+    </node>
+    <node label="ሣ">
+      <textCharAction />
+    </node>
+    <node label="ሤ">
+      <textCharAction />
+    </node>
+    <node label="ሥ">
+      <textCharAction />
+    </node>
+    <node label="ሦ">
+      <textCharAction />
+    </node>
+    <node label="ሧ">
+      <textCharAction />
+    </node>
+    <node label="ሩ">
+      <textCharAction />
+    </node>
+    <node label="ሪ">
+      <textCharAction />
+    </node>
+    <node label="ራ">
+      <textCharAction />
+    </node>
+    <node label="ሬ">
+      <textCharAction />
+    </node>
+    <node label="ር">
+      <textCharAction />
+    </node>
+    <node label="ሮ">
+      <textCharAction />
+    </node>
+    <node label="ሯ">
+      <textCharAction />
+    </node>
+    <node label="ሱ">
+      <textCharAction />
+    </node>
+    <node label="ሲ">
+      <textCharAction />
+    </node>
+    <node label="ሳ">
+      <textCharAction />
+    </node>
+    <node label="ሴ">
+      <textCharAction />
+    </node>
+    <node label="ስ">
+      <textCharAction />
+    </node>
+    <node label="ሶ">
+      <textCharAction />
+    </node>
+    <node label="ሷ">
+      <textCharAction />
+    </node>
+    <node label="ሹ">
+      <textCharAction />
+    </node>
+    <node label="ሺ">
+      <textCharAction />
+    </node>
+    <node label="ሻ">
+      <textCharAction />
+    </node>
+    <node label="ሼ">
+      <textCharAction />
+    </node>
+    <node label="ሽ">
+      <textCharAction />
+    </node>
+    <node label="ሾ">
+      <textCharAction />
+    </node>
+    <node label="ሿ">
+      <textCharAction />
+    </node>
+    <node label="ቁ">
+      <textCharAction />
+    </node>
+    <node label="ቂ">
+      <textCharAction />
+    </node>
+    <node label="ቃ">
+      <textCharAction />
+    </node>
+    <node label="ቄ">
+      <textCharAction />
+    </node>
+    <node label="ቅ">
+      <textCharAction />
+    </node>
+    <node label="ቆ">
+      <textCharAction />
+    </node>
+    <node label="ቊ">
+      <textCharAction />
+    </node>
+    <node label="ቋ">
+      <textCharAction />
+    </node>
+    <node label="ቌ">
+      <textCharAction />
+    </node>
+    <node label="ቍ">
+      <textCharAction />
+    </node>
+    <node label="ቡ">
+      <textCharAction />
+    </node>
+    <node label="ቢ">
+      <textCharAction />
+    </node>
+    <node label="ባ">
+      <textCharAction />
+    </node>
+    <node label="ቤ">
+      <textCharAction />
+    </node>
+    <node label="ብ">
+      <textCharAction />
+    </node>
+    <node label="ቦ">
+      <textCharAction />
+    </node>
+    <node label="ቧ">
+      <textCharAction />
+    </node>
+    <node label="ቩ">
+      <textCharAction />
+    </node>
+    <node label="ቪ">
+      <textCharAction />
+    </node>
+    <node label="ቫ">
+      <textCharAction />
+    </node>
+    <node label="ቬ">
+      <textCharAction />
+    </node>
+    <node label="ቭ">
+      <textCharAction />
+    </node>
+    <node label="ቮ">
+      <textCharAction />
+    </node>
+    <node label="ቯ">
+      <textCharAction />
+    </node>
+    <node label="ቱ">
+      <textCharAction />
+    </node>
+    <node label="ቲ">
+      <textCharAction />
+    </node>
+    <node label="ታ">
+      <textCharAction />
+    </node>
+    <node label="ቴ">
+      <textCharAction />
+    </node>
+    <node label="ት">
+      <textCharAction />
+    </node>
+    <node label="ቶ">
+      <textCharAction />
+    </node>
+    <node label="ቷ">
+      <textCharAction />
+    </node>
+    <node label="ቹ">
+      <textCharAction />
+    </node>
+    <node label="ቺ">
+      <textCharAction />
+    </node>
+    <node label="ቻ">
+      <textCharAction />
+    </node>
+    <node label="ቼ">
+      <textCharAction />
+    </node>
+    <node label="ች">
+      <textCharAction />
+    </node>
+    <node label="ቾ">
+      <textCharAction />
+    </node>
+    <node label="ቿ">
+      <textCharAction />
+    </node>
+    <node label="ኁ">
+      <textCharAction />
+    </node>
+    <node label="ኂ">
+      <textCharAction />
+    </node>
+    <node label="ኃ">
+      <textCharAction />
+    </node>
+    <node label="ኄ">
+      <textCharAction />
+    </node>
+    <node label="ኅ">
+      <textCharAction />
+    </node>
+    <node label="ኆ">
+      <textCharAction />
+    </node>
+    <node label="ኊ">
+      <textCharAction />
+    </node>
+    <node label="ኋ">
+      <textCharAction />
+    </node>
+    <node label="ኌ">
+      <textCharAction />
+    </node>
+    <node label="ኍ">
+      <textCharAction />
+    </node>
+    <node label="ኑ">
+      <textCharAction />
+    </node>
+    <node label="ኒ">
+      <textCharAction />
+    </node>
+    <node label="ና">
+      <textCharAction />
+    </node>
+    <node label="ኔ">
+      <textCharAction />
+    </node>
+    <node label="ን">
+      <textCharAction />
+    </node>
+    <node label="ኖ">
+      <textCharAction />
+    </node>
+    <node label="ኗ">
+      <textCharAction />
+    </node>
+    <node label="ኙ">
+      <textCharAction />
+    </node>
+    <node label="ኚ">
+      <textCharAction />
+    </node>
+    <node label="ኛ">
+      <textCharAction />
+    </node>
+    <node label="ኜ">
+      <textCharAction />
+    </node>
+    <node label="ኝ">
+      <textCharAction />
+    </node>
+    <node label="ኞ">
+      <textCharAction />
+    </node>
+    <node label="ኟ">
+      <textCharAction />
+    </node>
+    <node label="ኡ">
+      <textCharAction />
+    </node>
+    <node label="ኢ">
+      <textCharAction />
+    </node>
+    <node label="ኣ">
+      <textCharAction />
+    </node>
+    <node label="ኤ">
+      <textCharAction />
+    </node>
+    <node label="እ">
+      <textCharAction />
+    </node>
+    <node label="ኦ">
+      <textCharAction />
+    </node>
+    <node label="ኧ">
+      <textCharAction />
+    </node>
+    <node label="ኩ">
+      <textCharAction />
+    </node>
+    <node label="ኪ">
+      <textCharAction />
+    </node>
+    <node label="ካ">
+      <textCharAction />
+    </node>
+    <node label="ኬ">
+      <textCharAction />
+    </node>
+    <node label="ክ">
+      <textCharAction />
+    </node>
+    <node label="ኮ">
+      <textCharAction />
+    </node>
+    <node label="ኲ">
+      <textCharAction />
+    </node>
+    <node label="ኳ">
+      <textCharAction />
+    </node>
+    <node label="ኴ">
+      <textCharAction />
+    </node>
+    <node label="ኵ">
+      <textCharAction />
+    </node>
+    <node label="ኹ">
+      <textCharAction />
+    </node>
+    <node label="ኺ">
+      <textCharAction />
+    </node>
+    <node label="ኻ">
+      <textCharAction />
+    </node>
+    <node label="ኼ">
+      <textCharAction />
+    </node>
+    <node label="ኽ">
+      <textCharAction />
+    </node>
+    <node label="ኾ">
+      <textCharAction />
+    </node>
+    <node label="ዉ">
+      <textCharAction />
+    </node>
+    <node label="ዊ">
+      <textCharAction />
+    </node>
+    <node label="ዋ">
+      <textCharAction />
+    </node>
+    <node label="ዌ">
+      <textCharAction />
+    </node>
+    <node label="ው">
+      <textCharAction />
+    </node>
+    <node label="ዎ">
+      <textCharAction />
+    </node>
+    <node label="ዑ">
+      <textCharAction />
+    </node>
+    <node label="ዒ">
+      <textCharAction />
+    </node>
+    <node label="ዓ">
+      <textCharAction />
+    </node>
+    <node label="ዔ">
+      <textCharAction />
+    </node>
+    <node label="ዕ">
+      <textCharAction />
+    </node>
+    <node label="ዖ">
+      <textCharAction />
+    </node>
+    <node label="ዙ">
+      <textCharAction />
+    </node>
+    <node label="ዚ">
+      <textCharAction />
+    </node>
+    <node label="ዛ">
+      <textCharAction />
+    </node>
+    <node label="ዜ">
+      <textCharAction />
+    </node>
+    <node label="ዝ">
+      <textCharAction />
+    </node>
+    <node label="ዞ">
+      <textCharAction />
+    </node>
+    <node label="ዟ">
+      <textCharAction />
+    </node>
+    <node label="ዡ">
+      <textCharAction />
+    </node>
+    <node label="ዢ">
+      <textCharAction />
+    </node>
+    <node label="ዣ">
+      <textCharAction />
+    </node>
+    <node label="ዤ">
+      <textCharAction />
+    </node>
+    <node label="ዥ">
+      <textCharAction />
+    </node>
+    <node label="ዦ">
+      <textCharAction />
+    </node>
+    <node label="ዧ">
+      <textCharAction />
+    </node>
+    <node label="ዩ">
+      <textCharAction />
+    </node>
+    <node label="ዪ">
+      <textCharAction />
+    </node>
+    <node label="ያ">
+      <textCharAction />
+    </node>
+    <node label="ዬ">
+      <textCharAction />
+    </node>
+    <node label="ይ">
+      <textCharAction />
+    </node>
+    <node label="ዮ">
+      <textCharAction />
+    </node>
+    <node label="ዱ">
+      <textCharAction />
+    </node>
+    <node label="ዲ">
+      <textCharAction />
+    </node>
+    <node label="ዳ">
+      <textCharAction />
+    </node>
+    <node label="ዴ">
+      <textCharAction />
+    </node>
+    <node label="ድ">
+      <textCharAction />
+    </node>
+    <node label="ዶ">
+      <textCharAction />
+    </node>
+    <node label="ዷ">
+      <textCharAction />
+    </node>
+    <node label="ጁ">
+      <textCharAction />
+    </node>
+    <node label="ጂ">
+      <textCharAction />
+    </node>
+    <node label="ጃ">
+      <textCharAction />
+    </node>
+    <node label="ጄ">
+      <textCharAction />
+    </node>
+    <node label="ጅ">
+      <textCharAction />
+    </node>
+    <node label="ጆ">
+      <textCharAction />
+    </node>
+    <node label="ጇ">
+      <textCharAction />
+    </node>
+    <node label="ጉ">
+      <textCharAction />
+    </node>
+    <node label="ጊ">
+      <textCharAction />
+    </node>
+    <node label="ጋ">
+      <textCharAction />
+    </node>
+    <node label="ጌ">
+      <textCharAction />
+    </node>
+    <node label="ግ">
+      <textCharAction />
+    </node>
+    <node label="ጎ">
+      <textCharAction />
+    </node>
+    <node label="ጒ">
+      <textCharAction />
+    </node>
+    <node label="ጓ">
+      <textCharAction />
+    </node>
+    <node label="ጔ">
+      <textCharAction />
+    </node>
+    <node label="ጕ">
+      <textCharAction />
+    </node>
+    <node label="ጡ">
+      <textCharAction />
+    </node>
+    <node label="ጢ">
+      <textCharAction />
+    </node>
+    <node label="ጣ">
+      <textCharAction />
+    </node>
+    <node label="ጤ">
+      <textCharAction />
+    </node>
+    <node label="ጥ">
+      <textCharAction />
+    </node>
+    <node label="ጦ">
+      <textCharAction />
+    </node>
+    <node label="ጧ">
+      <textCharAction />
+    </node>
+    <node label="ጩ">
+      <textCharAction />
+    </node>
+    <node label="ጪ">
+      <textCharAction />
+    </node>
+    <node label="ጫ">
+      <textCharAction />
+    </node>
+    <node label="ጬ">
+      <textCharAction />
+    </node>
+    <node label="ጭ">
+      <textCharAction />
+    </node>
+    <node label="ጮ">
+      <textCharAction />
+    </node>
+    <node label="ጯ">
+      <textCharAction />
+    </node>
+    <node label="ጱ">
+      <textCharAction />
+    </node>
+    <node label="ጲ">
+      <textCharAction />
+    </node>
+    <node label="ጳ">
+      <textCharAction />
+    </node>
+    <node label="ጴ">
+      <textCharAction />
+    </node>
+    <node label="ጵ">
+      <textCharAction />
+    </node>
+    <node label="ጶ">
+      <textCharAction />
+    </node>
+    <node label="ጷ">
+      <textCharAction />
+    </node>
+    <node label="ጹ">
+      <textCharAction />
+    </node>
+    <node label="ጺ">
+      <textCharAction />
+    </node>
+    <node label="ጻ">
+      <textCharAction />
+    </node>
+    <node label="ጼ">
+      <textCharAction />
+    </node>
+    <node label="ጽ">
+      <textCharAction />
+    </node>
+    <node label="ጾ">
+      <textCharAction />
+    </node>
+    <node label="ጿ">
+      <textCharAction />
+    </node>
+    <node label="ፁ">
+      <textCharAction />
+    </node>
+    <node label="ፂ">
+      <textCharAction />
+    </node>
+    <node label="ፃ">
+      <textCharAction />
+    </node>
+    <node label="ፄ">
+      <textCharAction />
+    </node>
+    <node label="ፅ">
+      <textCharAction />
+    </node>
+    <node label="ፆ">
+      <textCharAction />
+    </node>
+    <node label="ፉ">
+      <textCharAction />
+    </node>
+    <node label="ፊ">
+      <textCharAction />
+    </node>
+    <node label="ፋ">
+      <textCharAction />
+    </node>
+    <node label="ፌ">
+      <textCharAction />
+    </node>
+    <node label="ፍ">
+      <textCharAction />
+    </node>
+    <node label="ፎ">
+      <textCharAction />
+    </node>
+    <node label="ፏ">
+      <textCharAction />
+    </node>
+    <node label="ፑ">
+      <textCharAction />
+    </node>
+    <node label="ፒ">
+      <textCharAction />
+    </node>
+    <node label="ፓ">
+      <textCharAction />
+    </node>
+    <node label="ፔ">
+      <textCharAction />
+    </node>
+    <node label="ፕ">
+      <textCharAction />
+    </node>
+    <node label="ፖ">
+      <textCharAction />
+    </node>
+    <node label="ፗ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="0">
+      <textCharAction />
+    </node>
+    <node label="1">
+      <textCharAction />
+    </node>
+    <node label="2">
+      <textCharAction />
+    </node>
+    <node label="3">
+      <textCharAction />
+    </node>
+    <node label="4">
+      <textCharAction />
+    </node>
+    <node label="5">
+      <textCharAction />
+    </node>
+    <node label="6">
+      <textCharAction />
+    </node>
+    <node label="7">
+      <textCharAction />
+    </node>
+    <node label="8">
+      <textCharAction />
+    </node>
+    <node label="9">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

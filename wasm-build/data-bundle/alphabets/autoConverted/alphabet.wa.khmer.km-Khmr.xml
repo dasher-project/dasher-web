@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Khmer (WorldAlphabets)" orientation="LR" trainingFilename="" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ក">
+      <textCharAction />
+    </node>
+    <node label="ខ">
+      <textCharAction />
+    </node>
+    <node label="គ">
+      <textCharAction />
+    </node>
+    <node label="ឃ">
+      <textCharAction />
+    </node>
+    <node label="ង">
+      <textCharAction />
+    </node>
+    <node label="ច">
+      <textCharAction />
+    </node>
+    <node label="ឆ">
+      <textCharAction />
+    </node>
+    <node label="ជ">
+      <textCharAction />
+    </node>
+    <node label="ឈ">
+      <textCharAction />
+    </node>
+    <node label="ញ">
+      <textCharAction />
+    </node>
+    <node label="ដ">
+      <textCharAction />
+    </node>
+    <node label="ឋ">
+      <textCharAction />
+    </node>
+    <node label="ឌ">
+      <textCharAction />
+    </node>
+    <node label="ឍ">
+      <textCharAction />
+    </node>
+    <node label="ណ">
+      <textCharAction />
+    </node>
+    <node label="ត">
+      <textCharAction />
+    </node>
+    <node label="ថ">
+      <textCharAction />
+    </node>
+    <node label="ទ">
+      <textCharAction />
+    </node>
+    <node label="ធ">
+      <textCharAction />
+    </node>
+    <node label="ន">
+      <textCharAction />
+    </node>
+    <node label="ប">
+      <textCharAction />
+    </node>
+    <node label="ផ">
+      <textCharAction />
+    </node>
+    <node label="ព">
+      <textCharAction />
+    </node>
+    <node label="ភ">
+      <textCharAction />
+    </node>
+    <node label="ម">
+      <textCharAction />
+    </node>
+    <node label="យ">
+      <textCharAction />
+    </node>
+    <node label="រ">
+      <textCharAction />
+    </node>
+    <node label="ឫ">
+      <textCharAction />
+    </node>
+    <node label="ឬ">
+      <textCharAction />
+    </node>
+    <node label="ល">
+      <textCharAction />
+    </node>
+    <node label="ឭ">
+      <textCharAction />
+    </node>
+    <node label="ឮ">
+      <textCharAction />
+    </node>
+    <node label="វ">
+      <textCharAction />
+    </node>
+    <node label="ស">
+      <textCharAction />
+    </node>
+    <node label="ហ">
+      <textCharAction />
+    </node>
+    <node label="ឡ">
+      <textCharAction />
+    </node>
+    <node label="អ">
+      <textCharAction />
+    </node>
+    <node label="ឥ">
+      <textCharAction />
+    </node>
+    <node label="ឦ">
+      <textCharAction />
+    </node>
+    <node label="ឧ">
+      <textCharAction />
+    </node>
+    <node label="ឩ">
+      <textCharAction />
+    </node>
+    <node label="ឪ">
+      <textCharAction />
+    </node>
+    <node label="ឯ">
+      <textCharAction />
+    </node>
+    <node label="ឰ">
+      <textCharAction />
+    </node>
+    <node label="ឱ">
+      <textCharAction />
+    </node>
+    <node label="ឳ">
+      <textCharAction />
+    </node>
+    <node label="ឲ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ក">
+      <textCharAction />
+    </node>
+    <node label="ខ">
+      <textCharAction />
+    </node>
+    <node label="គ">
+      <textCharAction />
+    </node>
+    <node label="ឃ">
+      <textCharAction />
+    </node>
+    <node label="ង">
+      <textCharAction />
+    </node>
+    <node label="ច">
+      <textCharAction />
+    </node>
+    <node label="ឆ">
+      <textCharAction />
+    </node>
+    <node label="ជ">
+      <textCharAction />
+    </node>
+    <node label="ឈ">
+      <textCharAction />
+    </node>
+    <node label="ញ">
+      <textCharAction />
+    </node>
+    <node label="ដ">
+      <textCharAction />
+    </node>
+    <node label="ឋ">
+      <textCharAction />
+    </node>
+    <node label="ឌ">
+      <textCharAction />
+    </node>
+    <node label="ឍ">
+      <textCharAction />
+    </node>
+    <node label="ណ">
+      <textCharAction />
+    </node>
+    <node label="ត">
+      <textCharAction />
+    </node>
+    <node label="ថ">
+      <textCharAction />
+    </node>
+    <node label="ទ">
+      <textCharAction />
+    </node>
+    <node label="ធ">
+      <textCharAction />
+    </node>
+    <node label="ន">
+      <textCharAction />
+    </node>
+    <node label="ប">
+      <textCharAction />
+    </node>
+    <node label="ផ">
+      <textCharAction />
+    </node>
+    <node label="ព">
+      <textCharAction />
+    </node>
+    <node label="ភ">
+      <textCharAction />
+    </node>
+    <node label="ម">
+      <textCharAction />
+    </node>
+    <node label="យ">
+      <textCharAction />
+    </node>
+    <node label="រ">
+      <textCharAction />
+    </node>
+    <node label="ឫ">
+      <textCharAction />
+    </node>
+    <node label="ឬ">
+      <textCharAction />
+    </node>
+    <node label="ល">
+      <textCharAction />
+    </node>
+    <node label="ឭ">
+      <textCharAction />
+    </node>
+    <node label="ឮ">
+      <textCharAction />
+    </node>
+    <node label="វ">
+      <textCharAction />
+    </node>
+    <node label="ស">
+      <textCharAction />
+    </node>
+    <node label="ហ">
+      <textCharAction />
+    </node>
+    <node label="ឡ">
+      <textCharAction />
+    </node>
+    <node label="អ">
+      <textCharAction />
+    </node>
+    <node label="ឥ">
+      <textCharAction />
+    </node>
+    <node label="ឦ">
+      <textCharAction />
+    </node>
+    <node label="ឧ">
+      <textCharAction />
+    </node>
+    <node label="ឩ">
+      <textCharAction />
+    </node>
+    <node label="ឪ">
+      <textCharAction />
+    </node>
+    <node label="ឯ">
+      <textCharAction />
+    </node>
+    <node label="ឰ">
+      <textCharAction />
+    </node>
+    <node label="ឱ">
+      <textCharAction />
+    </node>
+    <node label="ឳ">
+      <textCharAction />
+    </node>
+    <node label="ឲ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

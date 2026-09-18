@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Lao (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_lo_Laoo.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ກ">
+      <textCharAction />
+    </node>
+    <node label="ຂ">
+      <textCharAction />
+    </node>
+    <node label="ຄ">
+      <textCharAction />
+    </node>
+    <node label="ຈ">
+      <textCharAction />
+    </node>
+    <node label="ສ">
+      <textCharAction />
+    </node>
+    <node label="ຊ">
+      <textCharAction />
+    </node>
+    <node label="ດ">
+      <textCharAction />
+    </node>
+    <node label="ຕ">
+      <textCharAction />
+    </node>
+    <node label="ຖ">
+      <textCharAction />
+    </node>
+    <node label="ທ">
+      <textCharAction />
+    </node>
+    <node label="ບ">
+      <textCharAction />
+    </node>
+    <node label="ປ">
+      <textCharAction />
+    </node>
+    <node label="ຜ">
+      <textCharAction />
+    </node>
+    <node label="ຝ">
+      <textCharAction />
+    </node>
+    <node label="ພ">
+      <textCharAction />
+    </node>
+    <node label="ຟ">
+      <textCharAction />
+    </node>
+    <node label="ຢ">
+      <textCharAction />
+    </node>
+    <node label="ຣ">
+      <textCharAction />
+    </node>
+    <node label="ງ">
+      <textCharAction />
+    </node>
+    <node label="ຯ">
+      <textCharAction />
+    </node>
+    <node label="ະ">
+      <textCharAction />
+    </node>
+    <node label="າ">
+      <textCharAction />
+    </node>
+    <node label="ຳ">
+      <textCharAction />
+    </node>
+    <node label="ຽ">
+      <textCharAction />
+    </node>
+    <node label="ເ">
+      <textCharAction />
+    </node>
+    <node label="ແ">
+      <textCharAction />
+    </node>
+    <node label="ໂ">
+      <textCharAction />
+    </node>
+    <node label="ໃ">
+      <textCharAction />
+    </node>
+    <node label="ໄ">
+      <textCharAction />
+    </node>
+    <node label="ໆ">
+      <textCharAction />
+    </node>
+    <node label="ໜ">
+      <textCharAction />
+    </node>
+    <node label="ໝ">
+      <textCharAction />
+    </node>
+    <node label="ຍ">
+      <textCharAction />
+    </node>
+    <node label="ນ">
+      <textCharAction />
+    </node>
+    <node label="ມ">
+      <textCharAction />
+    </node>
+    <node label="ລ">
+      <textCharAction />
+    </node>
+    <node label="ຫ">
+      <textCharAction />
+    </node>
+    <node label="ວ">
+      <textCharAction />
+    </node>
+    <node label="ອ">
+      <textCharAction />
+    </node>
+    <node label="ຮ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ກ">
+      <textCharAction />
+    </node>
+    <node label="ຂ">
+      <textCharAction />
+    </node>
+    <node label="ຄ">
+      <textCharAction />
+    </node>
+    <node label="ຈ">
+      <textCharAction />
+    </node>
+    <node label="ສ">
+      <textCharAction />
+    </node>
+    <node label="ຊ">
+      <textCharAction />
+    </node>
+    <node label="ດ">
+      <textCharAction />
+    </node>
+    <node label="ຕ">
+      <textCharAction />
+    </node>
+    <node label="ຖ">
+      <textCharAction />
+    </node>
+    <node label="ທ">
+      <textCharAction />
+    </node>
+    <node label="ບ">
+      <textCharAction />
+    </node>
+    <node label="ປ">
+      <textCharAction />
+    </node>
+    <node label="ຜ">
+      <textCharAction />
+    </node>
+    <node label="ຝ">
+      <textCharAction />
+    </node>
+    <node label="ພ">
+      <textCharAction />
+    </node>
+    <node label="ຟ">
+      <textCharAction />
+    </node>
+    <node label="ຢ">
+      <textCharAction />
+    </node>
+    <node label="ຣ">
+      <textCharAction />
+    </node>
+    <node label="ງ">
+      <textCharAction />
+    </node>
+    <node label="ຯ">
+      <textCharAction />
+    </node>
+    <node label="ະ">
+      <textCharAction />
+    </node>
+    <node label="າ">
+      <textCharAction />
+    </node>
+    <node label="ຳ">
+      <textCharAction />
+    </node>
+    <node label="ຽ">
+      <textCharAction />
+    </node>
+    <node label="ເ">
+      <textCharAction />
+    </node>
+    <node label="ແ">
+      <textCharAction />
+    </node>
+    <node label="ໂ">
+      <textCharAction />
+    </node>
+    <node label="ໃ">
+      <textCharAction />
+    </node>
+    <node label="ໄ">
+      <textCharAction />
+    </node>
+    <node label="ໆ">
+      <textCharAction />
+    </node>
+    <node label="ໜ">
+      <textCharAction />
+    </node>
+    <node label="ໝ">
+      <textCharAction />
+    </node>
+    <node label="ຍ">
+      <textCharAction />
+    </node>
+    <node label="ນ">
+      <textCharAction />
+    </node>
+    <node label="ມ">
+      <textCharAction />
+    </node>
+    <node label="ລ">
+      <textCharAction />
+    </node>
+    <node label="ຫ">
+      <textCharAction />
+    </node>
+    <node label="ວ">
+      <textCharAction />
+    </node>
+    <node label="ອ">
+      <textCharAction />
+    </node>
+    <node label="ຮ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

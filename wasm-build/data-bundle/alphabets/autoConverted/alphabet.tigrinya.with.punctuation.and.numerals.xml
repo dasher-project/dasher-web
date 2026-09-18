@@ -1,0 +1,1734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Tigrinya (ትግርኛ) with punctuation and numerals" orientation="LR" trainingFilename="training_wa_ti_Ethi.txt" colorsName="European/Asian">
+	<!-- identical alphabet used for Tigrinya, Amharic and Ethiopic -->
+	<group name="ethiopic letters" colorInfoName="lowercase">
+		<node label="ሀ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE HA  -->
+			<textCharAction />
+		</node>
+		<node label="ሁ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE HU  -->
+			<textCharAction />
+		</node>
+		<node label="ሂ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE HI  -->
+			<textCharAction />
+		</node>
+		<node label="ሃ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE HAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሄ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE HEE  -->
+			<textCharAction />
+		</node>
+		<node label="ህ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE HE  -->
+			<textCharAction />
+		</node>
+		<node label="ሆ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE HO  -->
+			<textCharAction />
+		</node>
+		<node label="ለ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE LA  -->
+			<textCharAction />
+		</node>
+		<node label="ሉ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE LU  -->
+			<textCharAction />
+		</node>
+		<node label="ሊ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE LI  -->
+			<textCharAction />
+		</node>
+		<node label="ላ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE LAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሌ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE LEE  -->
+			<textCharAction />
+		</node>
+		<node label="ል">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE LE  -->
+			<textCharAction />
+		</node>
+		<node label="ሎ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE LO  -->
+			<textCharAction />
+		</node>
+		<node label="ሏ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE LWA  -->
+			<textCharAction />
+		</node>
+		<node label="ሐ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE HHA  -->
+			<textCharAction />
+		</node>
+		<node label="ሑ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE HHU  -->
+			<textCharAction />
+		</node>
+		<node label="ሒ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE HHI  -->
+			<textCharAction />
+		</node>
+		<node label="ሓ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE HHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሔ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE HHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ሕ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE HHE  -->
+			<textCharAction />
+		</node>
+		<node label="ሖ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE HHO  -->
+			<textCharAction />
+		</node>
+		<node label="ሗ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE HHWA  -->
+			<textCharAction />
+		</node>
+		<node label="መ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE MA  -->
+			<textCharAction />
+		</node>
+		<node label="ሙ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE MU  -->
+			<textCharAction />
+		</node>
+		<node label="ሚ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE MI  -->
+			<textCharAction />
+		</node>
+		<node label="ማ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE MAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሜ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE MEE  -->
+			<textCharAction />
+		</node>
+		<node label="ም">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE ME  -->
+			<textCharAction />
+		</node>
+		<node label="ሞ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE MO  -->
+			<textCharAction />
+		</node>
+		<node label="ሟ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE MWA  -->
+			<textCharAction />
+		</node>
+		<node label="ሠ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE SZA  -->
+			<textCharAction />
+		</node>
+		<node label="ሡ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE SZU  -->
+			<textCharAction />
+		</node>
+		<node label="ሢ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE SZI  -->
+			<textCharAction />
+		</node>
+		<node label="ሣ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE SZAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሤ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE SZEE  -->
+			<textCharAction />
+		</node>
+		<node label="ሥ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE SZE  -->
+			<textCharAction />
+		</node>
+		<node label="ሦ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE SZO  -->
+			<textCharAction />
+		</node>
+		<node label="ሧ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE SZWA  -->
+			<textCharAction />
+		</node>
+		<node label="ረ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE RA  -->
+			<textCharAction />
+		</node>
+		<node label="ሩ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE RU  -->
+			<textCharAction />
+		</node>
+		<node label="ሪ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE RI  -->
+			<textCharAction />
+		</node>
+		<node label="ራ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE RAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሬ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE REE  -->
+			<textCharAction />
+		</node>
+		<node label="ር">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE RE  -->
+			<textCharAction />
+		</node>
+		<node label="ሮ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE RO  -->
+			<textCharAction />
+		</node>
+		<node label="ሯ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE RWA  -->
+			<textCharAction />
+		</node>
+		<node label="ሰ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE SA  -->
+			<textCharAction />
+		</node>
+		<node label="ሱ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE SU  -->
+			<textCharAction />
+		</node>
+		<node label="ሲ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE SI  -->
+			<textCharAction />
+		</node>
+		<node label="ሳ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE SAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሴ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE SEE  -->
+			<textCharAction />
+		</node>
+		<node label="ስ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE SE  -->
+			<textCharAction />
+		</node>
+		<node label="ሶ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE SO  -->
+			<textCharAction />
+		</node>
+		<node label="ሷ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE SWA  -->
+			<textCharAction />
+		</node>
+		<node label="ሸ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE SHA  -->
+			<textCharAction />
+		</node>
+		<node label="ሹ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE SHU  -->
+			<textCharAction />
+		</node>
+		<node label="ሺ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE SHI  -->
+			<textCharAction />
+		</node>
+		<node label="ሻ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE SHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ሼ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE SHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ሽ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE SHE  -->
+			<textCharAction />
+		</node>
+		<node label="ሾ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE SHO  -->
+			<textCharAction />
+		</node>
+		<node label="ሿ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE SHWA  -->
+			<textCharAction />
+		</node>
+		<node label="ቀ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE QA  -->
+			<textCharAction />
+		</node>
+		<node label="ቁ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE QU  -->
+			<textCharAction />
+		</node>
+		<node label="ቂ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE QI  -->
+			<textCharAction />
+		</node>
+		<node label="ቃ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE QAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቄ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE QEE  -->
+			<textCharAction />
+		</node>
+		<node label="ቅ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE QE  -->
+			<textCharAction />
+		</node>
+		<node label="ቆ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE QO  -->
+			<textCharAction />
+		</node>
+		<node label="ቈ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE QWA are these 5 coloured wrong?-->
+			<textCharAction />
+		</node>
+		<node label="ቊ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE QWI  -->
+			<textCharAction />
+		</node>
+		<node label="ቋ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE QWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቌ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE QWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ቍ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE QWE  -->
+			<textCharAction />
+		</node>
+		<node label="ቐ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHA  -->
+			<textCharAction />
+		</node>
+		<node label="ቑ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHU  -->
+			<textCharAction />
+		</node>
+		<node label="ቒ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHI  -->
+			<textCharAction />
+		</node>
+		<node label="ቓ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቔ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ቕ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHE  -->
+			<textCharAction />
+		</node>
+		<node label="ቖ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHO  -->
+			<textCharAction />
+		</node>
+		<node label="ቘ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHWA  -->
+			<textCharAction />
+		</node>
+		<node label="ቚ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHWI  -->
+			<textCharAction />
+		</node>
+		<node label="ቛ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቜ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE QHWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ቝ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE QHWE  -->
+			<textCharAction />
+		</node>
+		<node label="በ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE BA  -->
+			<textCharAction />
+		</node>
+		<node label="ቡ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE BU  -->
+			<textCharAction />
+		</node>
+		<node label="ቢ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE BI  -->
+			<textCharAction />
+		</node>
+		<node label="ባ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE BAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቤ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE BEE  -->
+			<textCharAction />
+		</node>
+		<node label="ብ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE BE  -->
+			<textCharAction />
+		</node>
+		<node label="ቦ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE BO  -->
+			<textCharAction />
+		</node>
+		<node label="ቧ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE BWA  -->
+			<textCharAction />
+		</node>
+		<node label="ቨ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE VA  -->
+			<textCharAction />
+		</node>
+		<node label="ቩ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE VU  -->
+			<textCharAction />
+		</node>
+		<node label="ቪ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE VI  -->
+			<textCharAction />
+		</node>
+		<node label="ቫ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE VAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቬ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE VEE  -->
+			<textCharAction />
+		</node>
+		<node label="ቭ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE VE  -->
+			<textCharAction />
+		</node>
+		<node label="ቮ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE VO  -->
+			<textCharAction />
+		</node>
+		<node label="ቯ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE VWA  -->
+			<textCharAction />
+		</node>
+		<node label="ተ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TA  -->
+			<textCharAction />
+		</node>
+		<node label="ቱ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TU  -->
+			<textCharAction />
+		</node>
+		<node label="ቲ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TI  -->
+			<textCharAction />
+		</node>
+		<node label="ታ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቴ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TEE  -->
+			<textCharAction />
+		</node>
+		<node label="ት">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TE  -->
+			<textCharAction />
+		</node>
+		<node label="ቶ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TO  -->
+			<textCharAction />
+		</node>
+		<node label="ቷ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TWA  -->
+			<textCharAction />
+		</node>
+		<node label="ቸ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE CA  -->
+			<textCharAction />
+		</node>
+		<node label="ቹ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE CU  -->
+			<textCharAction />
+		</node>
+		<node label="ቺ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE CI  -->
+			<textCharAction />
+		</node>
+		<node label="ቻ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE CAA  -->
+			<textCharAction />
+		</node>
+		<node label="ቼ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE CEE  -->
+			<textCharAction />
+		</node>
+		<node label="ች">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE CE  -->
+			<textCharAction />
+		</node>
+		<node label="ቾ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE CO  -->
+			<textCharAction />
+		</node>
+		<node label="ቿ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE CWA  -->
+			<textCharAction />
+		</node>
+		<node label="ኀ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XA  -->
+			<textCharAction />
+		</node>
+		<node label="ኁ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XU  -->
+			<textCharAction />
+		</node>
+		<node label="ኂ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XI  -->
+			<textCharAction />
+		</node>
+		<node label="ኃ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኄ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XEE  -->
+			<textCharAction />
+		</node>
+		<node label="ኅ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XE  -->
+			<textCharAction />
+		</node>
+		<node label="ኆ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XO  -->
+			<textCharAction />
+		</node>
+		<node label="ኈ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XWA  -->
+			<textCharAction />
+		</node>
+		<node label="ኊ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XWI  -->
+			<textCharAction />
+		</node>
+		<node label="ኋ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኌ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE XWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ኍ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE XWE  -->
+			<textCharAction />
+		</node>
+		<node label="ነ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE NA  -->
+			<textCharAction />
+		</node>
+		<node label="ኑ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE NU  -->
+			<textCharAction />
+		</node>
+		<node label="ኒ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE NI  -->
+			<textCharAction />
+		</node>
+		<node label="ና">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE NAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኔ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE NEE  -->
+			<textCharAction />
+		</node>
+		<node label="ን">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE NE  -->
+			<textCharAction />
+		</node>
+		<node label="ኖ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE NO  -->
+			<textCharAction />
+		</node>
+		<node label="ኗ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE NWA  -->
+			<textCharAction />
+		</node>
+		<node label="ኘ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE NYA should start new colour group here?-->
+			<textCharAction />
+		</node>
+		<node label="ኙ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE NYU  -->
+			<textCharAction />
+		</node>
+		<node label="ኚ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE NYI  -->
+			<textCharAction />
+		</node>
+		<node label="ኛ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE NYAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኜ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE NYEE  -->
+			<textCharAction />
+		</node>
+		<node label="ኝ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE NYE  -->
+			<textCharAction />
+		</node>
+		<node label="ኞ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE NYO  -->
+			<textCharAction />
+		</node>
+		<node label="ኟ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE NYWA  -->
+			<textCharAction />
+		</node>
+		<node label="አ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL A  -->
+			<textCharAction />
+		</node>
+		<node label="ኡ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL U  -->
+			<textCharAction />
+		</node>
+		<node label="ኢ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL I  -->
+			<textCharAction />
+		</node>
+		<node label="ኣ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL AA  -->
+			<textCharAction />
+		</node>
+		<node label="ኤ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL EE  -->
+			<textCharAction />
+		</node>
+		<node label="እ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL E  -->
+			<textCharAction />
+		</node>
+		<node label="ኦ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL O  -->
+			<textCharAction />
+		</node>
+		<node label="ኧ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GLOTTAL WA  -->
+			<textCharAction />
+		</node>
+		<node label="ከ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KA  -->
+			<textCharAction />
+		</node>
+		<node label="ኩ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KU  -->
+			<textCharAction />
+		</node>
+		<node label="ኪ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KI  -->
+			<textCharAction />
+		</node>
+		<node label="ካ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኬ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KEE  -->
+			<textCharAction />
+		</node>
+		<node label="ክ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KE  -->
+			<textCharAction />
+		</node>
+		<node label="ኮ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KO  -->
+			<textCharAction />
+		</node>
+		<node label="ኰ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KWA new colour? -->
+			<textCharAction />
+		</node>
+		<node label="ኲ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KWI  -->
+			<textCharAction />
+		</node>
+		<node label="ኳ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኴ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE KWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ኵ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE KWE  -->
+			<textCharAction />
+		</node>
+		<node label="ኸ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXA  -->
+			<textCharAction />
+		</node>
+		<node label="ኹ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE KXU  -->
+			<textCharAction />
+		</node>
+		<node label="ኺ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXI  -->
+			<textCharAction />
+		</node>
+		<node label="ኻ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE KXAA  -->
+			<textCharAction />
+		</node>
+		<node label="ኼ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXEE  -->
+			<textCharAction />
+		</node>
+		<node label="ኽ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXE  -->
+			<textCharAction />
+		</node>
+		<node label="ኾ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE KXO  -->
+			<textCharAction />
+		</node>
+		<node label="ዀ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXWA  -->
+			<textCharAction />
+		</node>
+		<node label="ዂ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE KXWI  -->
+			<textCharAction />
+		</node>
+		<node label="ዃ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዄ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE KXWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ዅ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE KXWE  -->
+			<textCharAction />
+		</node>
+		<node label="ወ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE WA  -->
+			<textCharAction />
+		</node>
+		<node label="ዉ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE WU  -->
+			<textCharAction />
+		</node>
+		<node label="ዊ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE WI  -->
+			<textCharAction />
+		</node>
+		<node label="ዋ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE WAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዌ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE WEE  -->
+			<textCharAction />
+		</node>
+		<node label="ው">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE WE  -->
+			<textCharAction />
+		</node>
+		<node label="ዎ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE WO  -->
+			<textCharAction />
+		</node>
+		<node label="ዐ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL A  -->
+			<textCharAction />
+		</node>
+		<node label="ዑ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL U  -->
+			<textCharAction />
+		</node>
+		<node label="ዒ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL I  -->
+			<textCharAction />
+		</node>
+		<node label="ዓ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL AA  -->
+			<textCharAction />
+		</node>
+		<node label="ዔ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL EE  -->
+			<textCharAction />
+		</node>
+		<node label="ዕ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL E  -->
+			<textCharAction />
+		</node>
+		<node label="ዖ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHARYNGEAL O  -->
+			<textCharAction />
+		</node>
+		<node label="ዘ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE ZA  -->
+			<textCharAction />
+		</node>
+		<node label="ዙ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE ZU  -->
+			<textCharAction />
+		</node>
+		<node label="ዚ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE ZI  -->
+			<textCharAction />
+		</node>
+		<node label="ዛ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE ZAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዜ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE ZEE  -->
+			<textCharAction />
+		</node>
+		<node label="ዝ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE ZE  -->
+			<textCharAction />
+		</node>
+		<node label="ዞ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE ZO  -->
+			<textCharAction />
+		</node>
+		<node label="ዟ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE ZWA  -->
+			<textCharAction />
+		</node>
+		<node label="ዠ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE ZHA  -->
+			<textCharAction />
+		</node>
+		<node label="ዡ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE ZHU  -->
+			<textCharAction />
+		</node>
+		<node label="ዢ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE ZHI  -->
+			<textCharAction />
+		</node>
+		<node label="ዣ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE ZHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዤ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE ZHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ዥ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE ZHE  -->
+			<textCharAction />
+		</node>
+		<node label="ዦ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE ZHO  -->
+			<textCharAction />
+		</node>
+		<node label="ዧ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE ZHWA  -->
+			<textCharAction />
+		</node>
+		<node label="የ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE YA  -->
+			<textCharAction />
+		</node>
+		<node label="ዩ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE YU  -->
+			<textCharAction />
+		</node>
+		<node label="ዪ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE YI  -->
+			<textCharAction />
+		</node>
+		<node label="ያ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE YAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዬ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE YEE  -->
+			<textCharAction />
+		</node>
+		<node label="ይ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE YE  -->
+			<textCharAction />
+		</node>
+		<node label="ዮ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE YO  -->
+			<textCharAction />
+		</node>
+		<node label="ደ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE DA  -->
+			<textCharAction />
+		</node>
+		<node label="ዱ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE DU  -->
+			<textCharAction />
+		</node>
+		<node label="ዲ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE DI  -->
+			<textCharAction />
+		</node>
+		<node label="ዳ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE DAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዴ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE DEE  -->
+			<textCharAction />
+		</node>
+		<node label="ድ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE DE  -->
+			<textCharAction />
+		</node>
+		<node label="ዶ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE DO  -->
+			<textCharAction />
+		</node>
+		<node label="ዷ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE DWA  -->
+			<textCharAction />
+		</node>
+		<node label="ዸ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE DDA  -->
+			<textCharAction />
+		</node>
+		<node label="ዹ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE DDU  -->
+			<textCharAction />
+		</node>
+		<node label="ዺ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE DDI  -->
+			<textCharAction />
+		</node>
+		<node label="ዻ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE DDAA  -->
+			<textCharAction />
+		</node>
+		<node label="ዼ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE DDEE  -->
+			<textCharAction />
+		</node>
+		<node label="ዽ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE DDE  -->
+			<textCharAction />
+		</node>
+		<node label="ዾ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE DDO  -->
+			<textCharAction />
+		</node>
+		<node label="ዿ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE DDWA  -->
+			<textCharAction />
+		</node>
+		<node label="ጀ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE JA  -->
+			<textCharAction />
+		</node>
+		<node label="ጁ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE JU  -->
+			<textCharAction />
+		</node>
+		<node label="ጂ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE JI  -->
+			<textCharAction />
+		</node>
+		<node label="ጃ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE JAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጄ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE JEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጅ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE JE  -->
+			<textCharAction />
+		</node>
+		<node label="ጆ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE JO  -->
+			<textCharAction />
+		</node>
+		<node label="ጇ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE JWA  -->
+			<textCharAction />
+		</node>
+		<node label="ገ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GA  -->
+			<textCharAction />
+		</node>
+		<node label="ጉ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GU  -->
+			<textCharAction />
+		</node>
+		<node label="ጊ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GI  -->
+			<textCharAction />
+		</node>
+		<node label="ጋ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጌ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GEE  -->
+			<textCharAction />
+		</node>
+		<node label="ግ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GE  -->
+			<textCharAction />
+		</node>
+		<node label="ጎ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GO  -->
+			<textCharAction />
+		</node>
+		<node label="ጐ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GWA new colour?  -->
+			<textCharAction />
+		</node>
+		<node label="ጒ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GWI  -->
+			<textCharAction />
+		</node>
+		<node label="ጓ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GWAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጔ">
+			<!--Old Char Color: 78-->
+			<!--Note: ETHIOPIC SYLLABLE GWEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጕ">
+			<!--Old Char Color: 88-->
+			<!--Note: ETHIOPIC SYLLABLE GWE  -->
+			<textCharAction />
+		</node>
+		<node label="ጘ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE GGA  -->
+			<textCharAction />
+		</node>
+		<node label="ጙ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE GGU  -->
+			<textCharAction />
+		</node>
+		<node label="ጚ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE GGI  -->
+			<textCharAction />
+		</node>
+		<node label="ጛ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE GGAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጜ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE GGEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጝ">
+			<!--Old Char Color: 89-->
+			<!--Note: ETHIOPIC SYLLABLE GGE  -->
+			<textCharAction />
+		</node>
+		<node label="ጞ">
+			<!--Old Char Color: 79-->
+			<!--Note: ETHIOPIC SYLLABLE GGO  -->
+			<textCharAction />
+		</node>
+		<node label="ጠ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE THA  -->
+			<textCharAction />
+		</node>
+		<node label="ጡ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE THU  -->
+			<textCharAction />
+		</node>
+		<node label="ጢ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE THI  -->
+			<textCharAction />
+		</node>
+		<node label="ጣ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE THAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጤ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE THEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጥ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE THE  -->
+			<textCharAction />
+		</node>
+		<node label="ጦ">
+			<!--Old Char Color: 70-->
+			<!--Note: ETHIOPIC SYLLABLE THO  -->
+			<textCharAction />
+		</node>
+		<node label="ጧ">
+			<!--Old Char Color: 80-->
+			<!--Note: ETHIOPIC SYLLABLE THWA  -->
+			<textCharAction />
+		</node>
+		<node label="ጨ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE CHA  -->
+			<textCharAction />
+		</node>
+		<node label="ጩ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE CHU  -->
+			<textCharAction />
+		</node>
+		<node label="ጪ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE CHI  -->
+			<textCharAction />
+		</node>
+		<node label="ጫ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE CHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጬ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE CHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጭ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE CHE  -->
+			<textCharAction />
+		</node>
+		<node label="ጮ">
+			<!--Old Char Color: 71-->
+			<!--Note: ETHIOPIC SYLLABLE CHO  -->
+			<textCharAction />
+		</node>
+		<node label="ጯ">
+			<!--Old Char Color: 81-->
+			<!--Note: ETHIOPIC SYLLABLE CHWA  -->
+			<textCharAction />
+		</node>
+		<node label="ጰ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHA  -->
+			<textCharAction />
+		</node>
+		<node label="ጱ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHU  -->
+			<textCharAction />
+		</node>
+		<node label="ጲ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHI  -->
+			<textCharAction />
+		</node>
+		<node label="ጳ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጴ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጵ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHE  -->
+			<textCharAction />
+		</node>
+		<node label="ጶ">
+			<!--Old Char Color: 72-->
+			<!--Note: ETHIOPIC SYLLABLE PHO  -->
+			<textCharAction />
+		</node>
+		<node label="ጷ">
+			<!--Old Char Color: 82-->
+			<!--Note: ETHIOPIC SYLLABLE PHWA  -->
+			<textCharAction />
+		</node>
+		<node label="ጸ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TSA  -->
+			<textCharAction />
+		</node>
+		<node label="ጹ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TSU  -->
+			<textCharAction />
+		</node>
+		<node label="ጺ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TSI  -->
+			<textCharAction />
+		</node>
+		<node label="ጻ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TSAA  -->
+			<textCharAction />
+		</node>
+		<node label="ጼ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TSEE  -->
+			<textCharAction />
+		</node>
+		<node label="ጽ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TSE  -->
+			<textCharAction />
+		</node>
+		<node label="ጾ">
+			<!--Old Char Color: 73-->
+			<!--Note: ETHIOPIC SYLLABLE TSO  -->
+			<textCharAction />
+		</node>
+		<node label="ጿ">
+			<!--Old Char Color: 83-->
+			<!--Note: ETHIOPIC SYLLABLE TSWA  -->
+			<textCharAction />
+		</node>
+		<node label="ፀ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE TZA  -->
+			<textCharAction />
+		</node>
+		<node label="ፁ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE TZU  -->
+			<textCharAction />
+		</node>
+		<node label="ፂ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE TZI  -->
+			<textCharAction />
+		</node>
+		<node label="ፃ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE TZAA  -->
+			<textCharAction />
+		</node>
+		<node label="ፄ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE TZEE  -->
+			<textCharAction />
+		</node>
+		<node label="ፅ">
+			<!--Old Char Color: 84-->
+			<!--Note: ETHIOPIC SYLLABLE TZE  -->
+			<textCharAction />
+		</node>
+		<node label="ፆ">
+			<!--Old Char Color: 74-->
+			<!--Note: ETHIOPIC SYLLABLE TZO  -->
+			<textCharAction />
+		</node>
+		<node label="ፈ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE FA  -->
+			<textCharAction />
+		</node>
+		<node label="ፉ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE FU  -->
+			<textCharAction />
+		</node>
+		<node label="ፊ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE FI  -->
+			<textCharAction />
+		</node>
+		<node label="ፋ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE FAA  -->
+			<textCharAction />
+		</node>
+		<node label="ፌ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE FEE  -->
+			<textCharAction />
+		</node>
+		<node label="ፍ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE FE  -->
+			<textCharAction />
+		</node>
+		<node label="ፎ">
+			<!--Old Char Color: 75-->
+			<!--Note: ETHIOPIC SYLLABLE FO  -->
+			<textCharAction />
+		</node>
+		<node label="ፏ">
+			<!--Old Char Color: 85-->
+			<!--Note: ETHIOPIC SYLLABLE FWA  -->
+			<textCharAction />
+		</node>
+		<node label="ፐ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE PA  -->
+			<textCharAction />
+		</node>
+		<node label="ፑ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE PU  -->
+			<textCharAction />
+		</node>
+		<node label="ፒ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE PI  -->
+			<textCharAction />
+		</node>
+		<node label="ፓ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE PAA  -->
+			<textCharAction />
+		</node>
+		<node label="ፔ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE PEE  -->
+			<textCharAction />
+		</node>
+		<node label="ፕ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE PE  -->
+			<textCharAction />
+		</node>
+		<node label="ፖ">
+			<!--Old Char Color: 76-->
+			<!--Note: ETHIOPIC SYLLABLE PO  -->
+			<textCharAction />
+		</node>
+		<node label="ፗ">
+			<!--Old Char Color: 86-->
+			<!--Note: ETHIOPIC SYLLABLE PWA  -->
+			<textCharAction />
+		</node>
+		<node label="ፘ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE RYA  -->
+			<textCharAction />
+		</node>
+		<node label="ፙ">
+			<!--Old Char Color: 87-->
+			<!--Note: ETHIOPIC SYLLABLE MYA  -->
+			<textCharAction />
+		</node>
+		<node label="ፚ">
+			<!--Old Char Color: 77-->
+			<!--Note: ETHIOPIC SYLLABLE FYA  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

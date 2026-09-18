@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Jane Austen English Lower Case" orientation="LR" trainingFilename="training_emmaLC_GB.txt" colorsName="Default">
+	<group name="Lower case Latin letters">
+		<node label="a">
+			<textCharAction />
+		</node>
+		<node label="b">
+			<textCharAction />
+		</node>
+		<node label="c">
+			<textCharAction />
+		</node>
+		<node label="d">
+			<textCharAction />
+		</node>
+		<node label="e">
+			<textCharAction />
+		</node>
+		<node label="f">
+			<textCharAction />
+		</node>
+		<node label="g">
+			<textCharAction />
+		</node>
+		<node label="h">
+			<textCharAction />
+		</node>
+		<node label="i">
+			<textCharAction />
+		</node>
+		<node label="j">
+			<textCharAction />
+		</node>
+		<node label="k">
+			<textCharAction />
+		</node>
+		<node label="l">
+			<textCharAction />
+		</node>
+		<node label="m">
+			<textCharAction />
+		</node>
+		<node label="n">
+			<textCharAction />
+		</node>
+		<node label="o">
+			<textCharAction />
+		</node>
+		<node label="p">
+			<textCharAction />
+		</node>
+		<node label="q">
+			<textCharAction />
+		</node>
+		<node label="r">
+			<textCharAction />
+		</node>
+		<node label="s">
+			<textCharAction />
+		</node>
+		<node label="t">
+			<textCharAction />
+		</node>
+		<node label="u">
+			<textCharAction />
+		</node>
+		<node label="v">
+			<textCharAction />
+		</node>
+		<node label="w">
+			<textCharAction />
+		</node>
+		<node label="x">
+			<textCharAction />
+		</node>
+		<node label="y">
+			<textCharAction />
+		</node>
+		<node label="z">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label=".">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<!--Note: box-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Cherokee" orientation="LR" trainingFilename="training_wa_chr_Cher.txt" colorsName="European/Asian">
+	<group name="A">
+		<node label="Ꭰ">
+			<!--Note:  CHEROKEE LETTER A  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭱ">
+			<!--Note:  CHEROKEE LETTER E  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭲ">
+			<!--Note:  CHEROKEE LETTER I  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭳ">
+			<!--Note:  CHEROKEE LETTER O  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭴ">
+			<!--Note:  CHEROKEE LETTER U  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭵ">
+			<!--Note:  CHEROKEE LETTER V  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="GA" colorInfoName="lowercase">
+		<!--Old Group Color: 191-->
+		<node label="Ꭶ">
+			<!--Note:  CHEROKEE LETTER GA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭷ">
+			<!--Note:  CHEROKEE LETTER KA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭸ">
+			<!--Note:  CHEROKEE LETTER GE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭹ">
+			<!--Note:  CHEROKEE LETTER GI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭺ">
+			<!--Note:  CHEROKEE LETTER GO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭻ">
+			<!--Note:  CHEROKEE LETTER GU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭼ">
+			<!--Note:  CHEROKEE LETTER GV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="HA" colorInfoName="lowercase">
+		<!--Old Group Color: 192-->
+		<node label="Ꭽ">
+			<!--Note:  CHEROKEE LETTER HA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭾ">
+			<!--Note:  CHEROKEE LETTER HE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꭿ">
+			<!--Note:  CHEROKEE LETTER HI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮀ">
+			<!--Note:  CHEROKEE LETTER HO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮁ">
+			<!--Note:  CHEROKEE LETTER HU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮂ">
+			<!--Note:  CHEROKEE LETTER HV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="LA" colorInfoName="lowercase">
+		<!--Old Group Color: 193-->
+		<node label="Ꮃ">
+			<!--Note:  CHEROKEE LETTER LA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮄ">
+			<!--Note:  CHEROKEE LETTER LE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮅ">
+			<!--Note:  CHEROKEE LETTER LI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮆ">
+			<!--Note:  CHEROKEE LETTER LO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮇ">
+			<!--Note:  CHEROKEE LETTER LU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮈ">
+			<!--Note:  CHEROKEE LETTER LV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="MA" colorInfoName="lowercase">
+		<!--Old Group Color: 194-->
+		<node label="Ꮉ">
+			<!--Note:  CHEROKEE LETTER MA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮊ">
+			<!--Note:  CHEROKEE LETTER ME  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮋ">
+			<!--Note:  CHEROKEE LETTER MI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮌ">
+			<!--Note:  CHEROKEE LETTER MO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮍ">
+			<!--Note:  CHEROKEE LETTER MU  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="NA" colorInfoName="lowercase">
+		<!--Old Group Color: 195-->
+		<node label="Ꮎ">
+			<!--Note:  CHEROKEE LETTER NA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮏ">
+			<!--Note:  CHEROKEE LETTER HNA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮐ">
+			<!--Note:  CHEROKEE LETTER NAH  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮑ">
+			<!--Note:  CHEROKEE LETTER NE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮒ">
+			<!--Note:  CHEROKEE LETTER NI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮓ">
+			<!--Note:  CHEROKEE LETTER NO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮔ">
+			<!--Note:  CHEROKEE LETTER NU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮕ">
+			<!--Note:  CHEROKEE LETTER NV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="QUA" colorInfoName="lowercase">
+		<!--Old Group Color: 196-->
+		<node label="Ꮖ">
+			<!--Note:  CHEROKEE LETTER QUA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮗ">
+			<!--Note:  CHEROKEE LETTER QUE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮘ">
+			<!--Note:  CHEROKEE LETTER QUI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮙ">
+			<!--Note:  CHEROKEE LETTER QUO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮚ">
+			<!--Note:  CHEROKEE LETTER QUU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮛ">
+			<!--Note:  CHEROKEE LETTER QUV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="SA" colorInfoName="lowercase">
+		<!--Old Group Color: 197-->
+		<node label="Ꮜ">
+			<!--Note:  CHEROKEE LETTER SA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮝ">
+			<!--Note:  CHEROKEE LETTER S  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮞ">
+			<!--Note:  CHEROKEE LETTER SE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮟ">
+			<!--Note:  CHEROKEE LETTER SI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮠ">
+			<!--Note:  CHEROKEE LETTER SO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮡ">
+			<!--Note:  CHEROKEE LETTER SU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮢ">
+			<!--Note:  CHEROKEE LETTER SV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="DA" colorInfoName="lowercase">
+		<!--Old Group Color: 198-->
+		<node label="Ꮣ">
+			<!--Note:  CHEROKEE LETTER DA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮤ">
+			<!--Note:  CHEROKEE LETTER TA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮥ">
+			<!--Note:  CHEROKEE LETTER DE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮦ">
+			<!--Note:  CHEROKEE LETTER TE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮧ">
+			<!--Note:  CHEROKEE LETTER DI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮨ">
+			<!--Note:  CHEROKEE LETTER TI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮩ">
+			<!--Note:  CHEROKEE LETTER DO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮪ">
+			<!--Note:  CHEROKEE LETTER DU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮫ">
+			<!--Note:  CHEROKEE LETTER DV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="DL" colorInfoName="lowercase">
+		<!--Old Group Color: 199-->
+		<node label="Ꮬ">
+			<!--Note:  CHEROKEE LETTER DLA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮭ">
+			<!--Note:  CHEROKEE LETTER TLA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮮ">
+			<!--Note:  CHEROKEE LETTER TLE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮯ">
+			<!--Note:  CHEROKEE LETTER TLI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮰ">
+			<!--Note:  CHEROKEE LETTER TLO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮱ">
+			<!--Note:  CHEROKEE LETTER TLU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮲ">
+			<!--Note:  CHEROKEE LETTER TLV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="TS" colorInfoName="lowercase">
+		<!--Old Group Color: 190-->
+		<node label="Ꮳ">
+			<!--Note:  CHEROKEE LETTER TSA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮴ">
+			<!--Note:  CHEROKEE LETTER TSE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮵ">
+			<!--Note:  CHEROKEE LETTER TSI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮶ">
+			<!--Note:  CHEROKEE LETTER TSO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮷ">
+			<!--Note:  CHEROKEE LETTER TSU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮸ">
+			<!--Note:  CHEROKEE LETTER TSV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="WA" colorInfoName="lowercase">
+		<!--Old Group Color: 191-->
+		<node label="Ꮹ">
+			<!--Note:  CHEROKEE LETTER WA  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮺ">
+			<!--Note:  CHEROKEE LETTER WE  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮻ">
+			<!--Note:  CHEROKEE LETTER WI  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮼ">
+			<!--Note:  CHEROKEE LETTER WO  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮽ">
+			<!--Note:  CHEROKEE LETTER WU  -->
+			<textCharAction />
+		</node>
+		<node label="Ꮾ">
+			<!--Note:  CHEROKEE LETTER WV  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="YA" colorInfoName="lowercase">
+		<!--Old Group Color: 192-->
+		<node label="Ꮿ">
+			<!--Note:  CHEROKEE LETTER YA  -->
+			<textCharAction />
+		</node>
+		<node label="Ᏸ">
+			<!--Note:  CHEROKEE LETTER YE  -->
+			<textCharAction />
+		</node>
+		<node label="Ᏹ">
+			<!--Note:  CHEROKEE LETTER YI  -->
+			<textCharAction />
+		</node>
+		<node label="Ᏺ">
+			<!--Note:  CHEROKEE LETTER YO  -->
+			<textCharAction />
+		</node>
+		<node label="Ᏻ">
+			<!--Note:  CHEROKEE LETTER YU  -->
+			<textCharAction />
+		</node>
+		<node label="Ᏼ">
+			<!--Note:  CHEROKEE LETTER YV -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

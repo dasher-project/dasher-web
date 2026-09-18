@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Nepali with punctuation and numerals" orientation="LR" trainingFilename="training_nepali_NP.txt" colorsName="European/Asian">
+	<group name="lower case letters">
+		<node label="अ">
+			<!--Note: DEVANAGARI LETTER A  -->
+			<textCharAction />
+		</node>
+		<node label="आ">
+			<!--Note: DEVANAGARI LETTER AA  -->
+			<textCharAction />
+		</node>
+		<node label="इ">
+			<!--Note: DEVANAGARI LETTER I  -->
+			<textCharAction />
+		</node>
+		<node label="ई">
+			<!--Note: DEVANAGARI LETTER II  -->
+			<textCharAction />
+		</node>
+		<node label="उ">
+			<!--Note: DEVANAGARI LETTER U  -->
+			<textCharAction />
+		</node>
+		<node label="ऊ">
+			<!--Note: DEVANAGARI LETTER UU  -->
+			<textCharAction />
+		</node>
+		<node label="ऋ">
+			<!--Note: DEVANAGARI LETTER VOCALIC R  -->
+			<textCharAction />
+		</node>
+		<node label="ए">
+			<!--Note: DEVANAGARI LETTER E  -->
+			<textCharAction />
+		</node>
+		<node label="ऐ">
+			<!--Note: DEVANAGARI LETTER AI  -->
+			<textCharAction />
+		</node>
+		<node label="ओ">
+			<!--Note: DEVANAGARI LETTER O  -->
+			<textCharAction />
+		</node>
+		<node label="औ">
+			<!--Note: DEVANAGARI LETTER AU  -->
+			<textCharAction />
+		</node>
+		<node label="क">
+			<!--Note: DEVANAGARI LETTER KA  -->
+			<textCharAction />
+		</node>
+		<node label="ख">
+			<!--Note: DEVANAGARI LETTER KHA  -->
+			<textCharAction />
+		</node>
+		<node label="ग">
+			<!--Note: DEVANAGARI LETTER GA  -->
+			<textCharAction />
+		</node>
+		<node label="घ">
+			<!--Note: DEVANAGARI LETTER GHA  -->
+			<textCharAction />
+		</node>
+		<node label="ङ">
+			<!--Note: DEVANAGARI LETTER NGA  -->
+			<textCharAction />
+		</node>
+		<node label="च">
+			<!--Note: DEVANAGARI LETTER CA  -->
+			<textCharAction />
+		</node>
+		<node label="छ">
+			<!--Note: DEVANAGARI LETTER CHA  -->
+			<textCharAction />
+		</node>
+		<node label="ज">
+			<!--Note: DEVANAGARI LETTER JA  -->
+			<textCharAction />
+		</node>
+		<node label="झ">
+			<!--Note: DEVANAGARI LETTER JHA  -->
+			<textCharAction />
+		</node>
+		<node label="ञ">
+			<!--Note: DEVANAGARI LETTER NYA  -->
+			<textCharAction />
+		</node>
+		<node label="ट">
+			<!--Note: DEVANAGARI LETTER TTA  -->
+			<textCharAction />
+		</node>
+		<node label="ठ">
+			<!--Note: DEVANAGARI LETTER TTHA  -->
+			<textCharAction />
+		</node>
+		<node label="ड">
+			<!--Note: DEVANAGARI LETTER DDA  -->
+			<textCharAction />
+		</node>
+		<node label="ढ">
+			<!--Note: DEVANAGARI LETTER DDHA  -->
+			<textCharAction />
+		</node>
+		<node label="ण">
+			<!--Note: DEVANAGARI LETTER NNA  -->
+			<textCharAction />
+		</node>
+		<node label="त">
+			<!--Note: DEVANAGARI LETTER TA  -->
+			<textCharAction />
+		</node>
+		<node label="थ">
+			<!--Note: DEVANAGARI LETTER THA  -->
+			<textCharAction />
+		</node>
+		<node label="द">
+			<!--Note: DEVANAGARI LETTER DA  -->
+			<textCharAction />
+		</node>
+		<node label="ध">
+			<!--Note: DEVANAGARI LETTER DHA  -->
+			<textCharAction />
+		</node>
+		<node label="न">
+			<!--Note: DEVANAGARI LETTER NA  -->
+			<textCharAction />
+		</node>
+		<node label="प">
+			<!--Note: DEVANAGARI LETTER PA  -->
+			<textCharAction />
+		</node>
+		<node label="फ">
+			<!--Note: DEVANAGARI LETTER PHA  -->
+			<textCharAction />
+		</node>
+		<node label="ब">
+			<!--Note: DEVANAGARI LETTER BA  -->
+			<textCharAction />
+		</node>
+		<node label="भ">
+			<!--Note: DEVANAGARI LETTER BHA  -->
+			<textCharAction />
+		</node>
+		<node label="म">
+			<!--Note: DEVANAGARI LETTER MA  -->
+			<textCharAction />
+		</node>
+		<node label="य">
+			<!--Note: DEVANAGARI LETTER YA  -->
+			<textCharAction />
+		</node>
+		<node label="र">
+			<!--Note: DEVANAGARI LETTER RA  -->
+			<textCharAction />
+		</node>
+		<node label="ल">
+			<!--Note: DEVANAGARI LETTER LA  -->
+			<textCharAction />
+		</node>
+		<node label="व">
+			<!--Note: DEVANAGARI LETTER VA  -->
+			<textCharAction />
+		</node>
+		<node label="श">
+			<!--Note: DEVANAGARI LETTER SHA  -->
+			<textCharAction />
+		</node>
+		<node label="ष">
+			<!--Note: DEVANAGARI LETTER SSA  -->
+			<textCharAction />
+		</node>
+		<node label="स">
+			<!--Note: DEVANAGARI LETTER SA  -->
+			<textCharAction />
+		</node>
+		<node label="ह">
+			<!--Note: DEVANAGARI LETTER HA  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="2">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="3">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="4">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="5">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="6">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="7">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="8">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="9">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="0">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="*">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="+">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="=">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="/">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="#">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="$">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="|">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="\">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="~">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="^">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="_">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="@">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="[">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="]">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="{">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="}">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="(">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label=")">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="“">
+			<!--Old Char Color: 108-->
+			<!--Note: left double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<!--Old Char Color: 109-->
+			<!--Note: deprecated vertical double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="”">
+			<!--Old Char Color: 106-->
+			<!--Note: right double quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="‘">
+			<!--Old Char Color: 107-->
+			<!--Note: left single quotation mark-->
+			<textCharAction />
+		</node>
+		<node label="’">
+			<!--Old Char Color: 108-->
+			<!--Note: right single quotation mark and apostrophe-->
+			<textCharAction />
+		</node>
+		<node label="`">
+			<!--Old Char Color: 109-->
+			<!--Note: left quote from keyboard-->
+			<textCharAction />
+		</node>
+		<node label="◌̓">
+			<!--Old Char Color: 105-->
+			<!--Note:  apostrophe-->
+			<textCharAction unicode="39" />
+		</node>
+		<node label="◊">
+			<!--Old Char Color: 9-->
+			<!--Note: TAB (represented by a diamond)-->
+			<textCharAction unicode="9" />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<textCharAction />
+		</node>
+		<node label=";">
+			<!--Old Char Color: 102-->
+			<textCharAction />
+		</node>
+		<node label="?">
+			<!--Old Char Color: 103-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+		<node label=",">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

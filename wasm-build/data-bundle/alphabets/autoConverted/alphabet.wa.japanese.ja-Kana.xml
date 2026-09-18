@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Japanese (WorldAlphabets)" orientation="LR" trainingFilename="training_wa_ja_Kana.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ア">
+      <textCharAction />
+    </node>
+    <node label="イ">
+      <textCharAction />
+    </node>
+    <node label="ウ">
+      <textCharAction />
+    </node>
+    <node label="エ">
+      <textCharAction />
+    </node>
+    <node label="オ">
+      <textCharAction />
+    </node>
+    <node label="カ">
+      <textCharAction />
+    </node>
+    <node label="キ">
+      <textCharAction />
+    </node>
+    <node label="ク">
+      <textCharAction />
+    </node>
+    <node label="ケ">
+      <textCharAction />
+    </node>
+    <node label="コ">
+      <textCharAction />
+    </node>
+    <node label="サ">
+      <textCharAction />
+    </node>
+    <node label="シ">
+      <textCharAction />
+    </node>
+    <node label="ス">
+      <textCharAction />
+    </node>
+    <node label="セ">
+      <textCharAction />
+    </node>
+    <node label="ソ">
+      <textCharAction />
+    </node>
+    <node label="タ">
+      <textCharAction />
+    </node>
+    <node label="チ">
+      <textCharAction />
+    </node>
+    <node label="ツ">
+      <textCharAction />
+    </node>
+    <node label="テ">
+      <textCharAction />
+    </node>
+    <node label="ト">
+      <textCharAction />
+    </node>
+    <node label="ナ">
+      <textCharAction />
+    </node>
+    <node label="ニ">
+      <textCharAction />
+    </node>
+    <node label="ヌ">
+      <textCharAction />
+    </node>
+    <node label="ネ">
+      <textCharAction />
+    </node>
+    <node label="ノ">
+      <textCharAction />
+    </node>
+    <node label="ハ">
+      <textCharAction />
+    </node>
+    <node label="ヒ">
+      <textCharAction />
+    </node>
+    <node label="フ">
+      <textCharAction />
+    </node>
+    <node label="ヘ">
+      <textCharAction />
+    </node>
+    <node label="ホ">
+      <textCharAction />
+    </node>
+    <node label="マ">
+      <textCharAction />
+    </node>
+    <node label="ミ">
+      <textCharAction />
+    </node>
+    <node label="ム">
+      <textCharAction />
+    </node>
+    <node label="メ">
+      <textCharAction />
+    </node>
+    <node label="モ">
+      <textCharAction />
+    </node>
+    <node label="ヤ">
+      <textCharAction />
+    </node>
+    <node label="ユ">
+      <textCharAction />
+    </node>
+    <node label="ヨ">
+      <textCharAction />
+    </node>
+    <node label="ラ">
+      <textCharAction />
+    </node>
+    <node label="リ">
+      <textCharAction />
+    </node>
+    <node label="ル">
+      <textCharAction />
+    </node>
+    <node label="レ">
+      <textCharAction />
+    </node>
+    <node label="ロ">
+      <textCharAction />
+    </node>
+    <node label="ワ">
+      <textCharAction />
+    </node>
+    <node label="ヲ">
+      <textCharAction />
+    </node>
+    <node label="ン">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ア">
+      <textCharAction />
+    </node>
+    <node label="イ">
+      <textCharAction />
+    </node>
+    <node label="ウ">
+      <textCharAction />
+    </node>
+    <node label="エ">
+      <textCharAction />
+    </node>
+    <node label="オ">
+      <textCharAction />
+    </node>
+    <node label="カ">
+      <textCharAction />
+    </node>
+    <node label="キ">
+      <textCharAction />
+    </node>
+    <node label="ク">
+      <textCharAction />
+    </node>
+    <node label="ケ">
+      <textCharAction />
+    </node>
+    <node label="コ">
+      <textCharAction />
+    </node>
+    <node label="サ">
+      <textCharAction />
+    </node>
+    <node label="シ">
+      <textCharAction />
+    </node>
+    <node label="ス">
+      <textCharAction />
+    </node>
+    <node label="セ">
+      <textCharAction />
+    </node>
+    <node label="ソ">
+      <textCharAction />
+    </node>
+    <node label="タ">
+      <textCharAction />
+    </node>
+    <node label="チ">
+      <textCharAction />
+    </node>
+    <node label="ツ">
+      <textCharAction />
+    </node>
+    <node label="テ">
+      <textCharAction />
+    </node>
+    <node label="ト">
+      <textCharAction />
+    </node>
+    <node label="ナ">
+      <textCharAction />
+    </node>
+    <node label="ニ">
+      <textCharAction />
+    </node>
+    <node label="ヌ">
+      <textCharAction />
+    </node>
+    <node label="ネ">
+      <textCharAction />
+    </node>
+    <node label="ノ">
+      <textCharAction />
+    </node>
+    <node label="ハ">
+      <textCharAction />
+    </node>
+    <node label="ヒ">
+      <textCharAction />
+    </node>
+    <node label="フ">
+      <textCharAction />
+    </node>
+    <node label="ヘ">
+      <textCharAction />
+    </node>
+    <node label="ホ">
+      <textCharAction />
+    </node>
+    <node label="マ">
+      <textCharAction />
+    </node>
+    <node label="ミ">
+      <textCharAction />
+    </node>
+    <node label="ム">
+      <textCharAction />
+    </node>
+    <node label="メ">
+      <textCharAction />
+    </node>
+    <node label="モ">
+      <textCharAction />
+    </node>
+    <node label="ヤ">
+      <textCharAction />
+    </node>
+    <node label="ユ">
+      <textCharAction />
+    </node>
+    <node label="ヨ">
+      <textCharAction />
+    </node>
+    <node label="ラ">
+      <textCharAction />
+    </node>
+    <node label="リ">
+      <textCharAction />
+    </node>
+    <node label="ル">
+      <textCharAction />
+    </node>
+    <node label="レ">
+      <textCharAction />
+    </node>
+    <node label="ロ">
+      <textCharAction />
+    </node>
+    <node label="ワ">
+      <textCharAction />
+    </node>
+    <node label="ヲ">
+      <textCharAction />
+    </node>
+    <node label="ン">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

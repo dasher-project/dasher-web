@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Arabic (WorldAlphabets)" orientation="RL" trainingFilename="training_wa_ar_Arab.txt" colorsName="Default">
+  <group name="Lower case" colorInfoName="lowercase">
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ث">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="ح">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ذ">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="ص">
+      <textCharAction />
+    </node>
+    <node label="ض">
+      <textCharAction />
+    </node>
+    <node label="ط">
+      <textCharAction />
+    </node>
+    <node label="ظ">
+      <textCharAction />
+    </node>
+    <node label="ع">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ك">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+    <node label="ء">
+      <textCharAction />
+    </node>
+    <node label="آ">
+      <textCharAction />
+    </node>
+    <node label="أ">
+      <textCharAction />
+    </node>
+    <node label="ؤ">
+      <textCharAction />
+    </node>
+    <node label="إ">
+      <textCharAction />
+    </node>
+    <node label="ئ">
+      <textCharAction />
+    </node>
+    <node label="ة">
+      <textCharAction />
+    </node>
+    <node label="ى">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Upper case" colorInfoName="uppercase">
+    <node label="ا">
+      <textCharAction />
+    </node>
+    <node label="ب">
+      <textCharAction />
+    </node>
+    <node label="ت">
+      <textCharAction />
+    </node>
+    <node label="ث">
+      <textCharAction />
+    </node>
+    <node label="ج">
+      <textCharAction />
+    </node>
+    <node label="ح">
+      <textCharAction />
+    </node>
+    <node label="خ">
+      <textCharAction />
+    </node>
+    <node label="د">
+      <textCharAction />
+    </node>
+    <node label="ذ">
+      <textCharAction />
+    </node>
+    <node label="ر">
+      <textCharAction />
+    </node>
+    <node label="ز">
+      <textCharAction />
+    </node>
+    <node label="س">
+      <textCharAction />
+    </node>
+    <node label="ش">
+      <textCharAction />
+    </node>
+    <node label="ص">
+      <textCharAction />
+    </node>
+    <node label="ض">
+      <textCharAction />
+    </node>
+    <node label="ط">
+      <textCharAction />
+    </node>
+    <node label="ظ">
+      <textCharAction />
+    </node>
+    <node label="ع">
+      <textCharAction />
+    </node>
+    <node label="غ">
+      <textCharAction />
+    </node>
+    <node label="ف">
+      <textCharAction />
+    </node>
+    <node label="ق">
+      <textCharAction />
+    </node>
+    <node label="ك">
+      <textCharAction />
+    </node>
+    <node label="ل">
+      <textCharAction />
+    </node>
+    <node label="م">
+      <textCharAction />
+    </node>
+    <node label="ن">
+      <textCharAction />
+    </node>
+    <node label="ه">
+      <textCharAction />
+    </node>
+    <node label="و">
+      <textCharAction />
+    </node>
+    <node label="ي">
+      <textCharAction />
+    </node>
+    <node label="ء">
+      <textCharAction />
+    </node>
+    <node label="آ">
+      <textCharAction />
+    </node>
+    <node label="أ">
+      <textCharAction />
+    </node>
+    <node label="ؤ">
+      <textCharAction />
+    </node>
+    <node label="إ">
+      <textCharAction />
+    </node>
+    <node label="ئ">
+      <textCharAction />
+    </node>
+    <node label="ة">
+      <textCharAction />
+    </node>
+    <node label="ى">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Digits" colorInfoName="numbers">
+    <node label="٠">
+      <textCharAction />
+    </node>
+    <node label="١">
+      <textCharAction />
+    </node>
+    <node label="٢">
+      <textCharAction />
+    </node>
+    <node label="٣">
+      <textCharAction />
+    </node>
+    <node label="٤">
+      <textCharAction />
+    </node>
+    <node label="٥">
+      <textCharAction />
+    </node>
+    <node label="٦">
+      <textCharAction />
+    </node>
+    <node label="٧">
+      <textCharAction />
+    </node>
+    <node label="٨">
+      <textCharAction />
+    </node>
+    <node label="٩">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="paragraphSpace" colorInfoName="paragraphSpace">
+    <node label="¶" text="&#10;">
+      <textCharAction />
+    </node>
+    <node label="␣" text=" ">
+      <textCharAction />
+    </node>
+  </group>
+  <group name="Editing" colorInfoName="punctuation">
+    <node label="⌫">
+      <deleteTextAction distance="last char" />
+    </node>
+    <node label="⌦">
+      <deleteTextAction distance="next char" />
+    </node>
+    <node label="⌫ Word">
+      <deleteTextAction distance="last word" />
+    </node>
+  </group>
+</alphabet>

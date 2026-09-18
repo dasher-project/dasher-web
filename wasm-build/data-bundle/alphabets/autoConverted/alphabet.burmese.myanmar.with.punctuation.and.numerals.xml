@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Burmese / Myanmar with punctuation and numerals" orientation="LR" trainingFilename="training_wa_my_Mymr.txt" colorsName="Default">
+	<group name="Myanmar letters">
+		<node label="က">
+			<!--Note:  KA  -->
+			<textCharAction />
+		</node>
+		<node label="ခ">
+			<!--Note:  KHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဂ">
+			<!--Note:  GA  -->
+			<textCharAction />
+		</node>
+		<node label="ဃ">
+			<!--Note:  GHA  -->
+			<textCharAction />
+		</node>
+		<node label="င">
+			<!--Note:  NGA  -->
+			<textCharAction />
+		</node>
+		<node label="စ">
+			<!--Note:  CA  -->
+			<textCharAction />
+		</node>
+		<node label="ဆ">
+			<!--Note:  CHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဇ">
+			<!--Note:  JA  -->
+			<textCharAction />
+		</node>
+		<node label="ဈ">
+			<!--Note:  JHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဉ">
+			<!--Note:  NYA  -->
+			<textCharAction />
+		</node>
+		<node label="ည">
+			<!--Note:  NNYA  -->
+			<textCharAction />
+		</node>
+		<node label="ဋ">
+			<!--Note:  TTA  -->
+			<textCharAction />
+		</node>
+		<node label="ဌ">
+			<!--Note:  TTHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဍ">
+			<!--Note:  DDA  -->
+			<textCharAction />
+		</node>
+		<node label="ဎ">
+			<!--Note:  DDHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဏ">
+			<!--Note:  NNA  -->
+			<textCharAction />
+		</node>
+		<node label="တ">
+			<!--Note:  TA  -->
+			<textCharAction />
+		</node>
+		<node label="ထ">
+			<!--Note:  THA  -->
+			<textCharAction />
+		</node>
+		<node label="ဒ">
+			<!--Note:  DA  -->
+			<textCharAction />
+		</node>
+		<node label="ဓ">
+			<!--Note:  DHA  -->
+			<textCharAction />
+		</node>
+		<node label="န">
+			<!--Note:  NA  -->
+			<textCharAction />
+		</node>
+		<node label="ပ">
+			<!--Note:  PA  -->
+			<textCharAction />
+		</node>
+		<node label="ဖ">
+			<!--Note:  PHA  -->
+			<textCharAction />
+		</node>
+		<node label="ဗ">
+			<!--Note:  BA  -->
+			<textCharAction />
+		</node>
+		<node label="ဘ">
+			<!--Note:  BHA  -->
+			<textCharAction />
+		</node>
+		<node label="မ">
+			<!--Note:  MA  -->
+			<textCharAction />
+		</node>
+		<node label="ယ">
+			<!--Note:  YA  -->
+			<textCharAction />
+		</node>
+		<node label="ရ">
+			<!--Note:  RA  -->
+			<textCharAction />
+		</node>
+		<node label="လ">
+			<!--Note:  LA  -->
+			<textCharAction />
+		</node>
+		<node label="ဝ">
+			<!--Note:  WA  -->
+			<textCharAction />
+		</node>
+		<node label="ၐ">
+			<!--Note:  SHA  -->
+			<textCharAction />
+		</node>
+		<node label="ၑ">
+			<!--Note:  SSA  -->
+			<textCharAction />
+		</node>
+		<node label="သ">
+			<!--Note:  SA  -->
+			<textCharAction />
+		</node>
+		<node label="ဟ">
+			<!--Note:  HA  -->
+			<textCharAction />
+		</node>
+		<node label="ဠ">
+			<!--Note:  LLA  -->
+			<textCharAction />
+		</node>
+		<node label="အ">
+			<!--Note:  A  -->
+			<textCharAction />
+		</node>
+		<node label="ဣ">
+			<!--Note:  I  -->
+			<textCharAction />
+		</node>
+		<node label="ဤ">
+			<!--Note:  II  -->
+			<textCharAction />
+		</node>
+		<node label="ဥ">
+			<!--Note:  U  -->
+			<textCharAction />
+		</node>
+		<node label="ဦ">
+			<!--Note:  UU  -->
+			<textCharAction />
+		</node>
+		<node label="ဧ">
+			<!--Note:  E  -->
+			<textCharAction />
+		</node>
+		<node label="ဩ">
+			<!--Note:  O  -->
+			<textCharAction />
+		</node>
+		<node label="ဪ">
+			<!--Note:  AU  -->
+			<textCharAction />
+		</node>
+		<node label="ၒ">
+			<!--Note:  VOCALIC R  -->
+			<textCharAction />
+		</node>
+		<node label="ၓ">
+			<!--Note:  VOCALIC RR  -->
+			<textCharAction />
+		</node>
+		<node label="ၔ">
+			<!--Note:  VOCALIC L  -->
+			<textCharAction />
+		</node>
+		<node label="ၕ">
+			<!--Note:  VOCALIC LL  -->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Vowels Myanmar" colorInfoName="lowercase">
+		<!--Old Group Color: 111-->
+		<node label="◌ာ">
+			<!--Note:  VOWEL SIGN AA  -->
+			<textCharAction unicode="4140" />
+		</node>
+		<node label="◌ိ">
+			<!--Note:  VOWEL SIGN I  -->
+			<textCharAction unicode="4141" />
+		</node>
+		<node label="◌ီ">
+			<!--Note:  VOWEL SIGN II  -->
+			<textCharAction unicode="4142" />
+		</node>
+		<node label="◌ု">
+			<!--Note:  VOWEL SIGN U  -->
+			<textCharAction unicode="4143" />
+		</node>
+		<node label="◌ူ">
+			<!--Note:  VOWEL SIGN UU  -->
+			<textCharAction unicode="4144" />
+		</node>
+		<node label="◌ေ">
+			<!--Note:  VOWEL SIGN E  -->
+			<textCharAction unicode="4145" />
+		</node>
+		<node label="◌ဲ">
+			<!--Note:  VOWEL SIGN AI  -->
+			<textCharAction unicode="4146" />
+		</node>
+		<node label="◌ၖ">
+			<!--Note:  VOWEL SIGN VOCALIC R  -->
+			<textCharAction unicode="4182" />
+		</node>
+		<node label="◌ၗ">
+			<!--Note:  VOWEL SIGN VOCALIC RR  -->
+			<textCharAction unicode="4183" />
+		</node>
+		<node label="◌ၘ">
+			<!--Note:  VOWEL SIGN VOCALIC L  -->
+			<textCharAction unicode="4184" />
+		</node>
+		<node label="◌ၙ">
+			<!--Note:  VOWEL SIGN VOCALIC LL  -->
+			<textCharAction unicode="4185" />
+		</node>
+		<node label="◌္">
+			<!--Note:  SIGN VIRAMA  -->
+			<textCharAction unicode="4153" />
+		</node>
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<textCharAction />
+		</node>
+		<node label="2">
+			<textCharAction />
+		</node>
+		<node label="3">
+			<textCharAction />
+		</node>
+		<node label="4">
+			<textCharAction />
+		</node>
+		<node label="5">
+			<textCharAction />
+		</node>
+		<node label="6">
+			<textCharAction />
+		</node>
+		<node label="7">
+			<textCharAction />
+		</node>
+		<node label="8">
+			<textCharAction />
+		</node>
+		<node label="9">
+			<textCharAction />
+		</node>
+		<node label="0">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="%">
+			<textCharAction />
+		</node>
+		<node label="*">
+			<textCharAction />
+		</node>
+		<node label="+">
+			<textCharAction />
+		</node>
+		<node label="=">
+			<textCharAction />
+		</node>
+		<node label="/">
+			<textCharAction />
+		</node>
+		<node label="#">
+			<textCharAction />
+		</node>
+		<node label="$">
+			<textCharAction />
+		</node>
+		<node label="|">
+			<textCharAction />
+		</node>
+		<node label="\">
+			<textCharAction />
+		</node>
+		<node label="~">
+			<textCharAction />
+		</node>
+		<node label="^">
+			<textCharAction />
+		</node>
+		<node label="_">
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<textCharAction />
+		</node>
+		<node label="@">
+			<textCharAction />
+		</node>
+		<node label="[">
+			<textCharAction />
+		</node>
+		<node label="]">
+			<textCharAction />
+		</node>
+		<node label="{">
+			<textCharAction />
+		</node>
+		<node label="}">
+			<textCharAction />
+		</node>
+		<node label="&lt;">
+			<textCharAction />
+		</node>
+		<node label="&gt;">
+			<textCharAction />
+		</node>
+		<node label="(">
+			<textCharAction />
+		</node>
+		<node label=")">
+			<textCharAction />
+		</node>
+		<node label="&quot;">
+			<textCharAction />
+		</node>
+		<node label="`">
+			<textCharAction />
+		</node>
+		<node label="'">
+			<textCharAction />
+		</node>
+		<node label="-">
+			<textCharAction />
+		</node>
+		<node label=":">
+			<textCharAction />
+		</node>
+		<node label=";">
+			<textCharAction />
+		</node>
+		<node label="?">
+			<textCharAction />
+		</node>
+		<node label="!">
+			<textCharAction />
+		</node>
+		<node label=",">
+			<textCharAction />
+		</node>
+		<node label=".">
+			<textCharAction />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

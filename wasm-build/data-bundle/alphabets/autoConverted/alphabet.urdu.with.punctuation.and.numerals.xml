@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">
+<alphabet name="Urdu with punctuation and numerals" orientation="RL" trainingFilename="training_wa_ur_Arab.txt" colorsName="European/Asian">
+	<group name="letters">
+		<group name="Vowels etc" colorInfoName="lowercase">
+			<!--Old Group Color: 110-->
+			<node label="◌ً">
+				<!--Old Char Color: 90-->
+				<!--Note: FATHATAN - RARE-->
+				<textCharAction unicode="1611" />
+			</node>
+			<node label="◌ٌ">
+				<!--Old Char Color: 91-->
+				<!--Note: dammatan - RARE-->
+				<textCharAction unicode="1612" />
+			</node>
+			<node label="◌ٍ">
+				<!--Old Char Color: 92-->
+				<!--Note: kasratan - RARE-->
+				<textCharAction unicode="1613" />
+			</node>
+			<node label="◌َ">
+				<!--Old Char Color: 93-->
+				<!--Note: fatha -->
+				<textCharAction unicode="1614" />
+			</node>
+			<node label="◌ُ">
+				<!--Old Char Color: 94-->
+				<!--Note: damma-->
+				<textCharAction unicode="1615" />
+			</node>
+			<node label="◌ِ">
+				<!--Old Char Color: 90-->
+				<!--Note: kasra -->
+				<textCharAction unicode="1616" />
+			</node>
+			<node label="◌ّ">
+				<!--Old Char Color: 91-->
+				<!--Note: shadda-->
+				<textCharAction unicode="1617" />
+			</node>
+			<node label="◌ْ">
+				<!--Old Char Color: 92-->
+				<!--Note: sukun - RARE-->
+				<textCharAction unicode="1618" />
+			</node>
+			<!-- <s d="&#x0653;" t="&#x0653;"      note="maddah above (sometimes used to make combined characters)"  /> -->
+			<node label="ٔ">
+				<!--Old Char Color: 93-->
+				<!--Note: hamza above (sometimes used to make combined characters)-->
+				<textCharAction />
+			</node>
+			<!-- <s d="&#x0655;" t="&#x0655;"  b="70"  note="hamza below (sometimes used to make combined characters)"  /> -->
+			<node label="◌ٰ">
+				<!--Old Char Color: 94-->
+				<!--Note: superscript alef-->
+				<textCharAction unicode="1648" />
+			</node>
+		</group>
+		<group name="Hamza" colorInfoName="lowercase">
+			<!--Old Group Color: 60-->
+			<node label="آ">
+				<!--Old Char Color: 80-->
+				<!--Note: ARABIC LETTER ALEF WITH MADDA ABOVE  -->
+				<textCharAction />
+			</node>
+			<node label="ا">
+				<!--Old Char Color: 70-->
+				<!--Note:  ALEF  -->
+				<textCharAction />
+			</node>
+			<node label="ء">
+				<!--Old Char Color: 70-->
+				<!--Note:  HAMZA  RARE-->
+				<textCharAction />
+			</node>
+			<!-- <s d="&#x0623;" t="&#x0623;"  b="70" note="ARABIC LETTER ALEF WITH HAMZA ABOVE   RARE "  /> -->
+			<!-- <s d="&#x0672;" t="&#x0672;"  b="80" note="ARABIC LETTER ALEF WITH WAVY HAMZA ABOVE  "  /> -->
+			<!-- <s d="&#x0624;" t="&#x0624;"  b="79"  note="ARABIC LETTER WAW WITH HAMZA ABOVE    RARE "  /> -->
+			<!-- <s d="&#x0625;" t="&#x0625;"  b="70" note="ARABIC LETTER ALEF WITH HAMZA BELOW   RARE "  /> -->
+		</group>
+		<group>
+			<!--Old Group Color: 61-->
+			<node label="ب">
+				<!--Old Char Color: 81-->
+				<!--Note:  BEH  -->
+				<textCharAction />
+			</node>
+			<!-- <s d="&#x0629;" t="&#x0629;"   b="71"  note=" TEH MARBUTA   RARE "  /> -->
+			<node label="ت">
+				<!--Old Char Color: 71-->
+				<!--Note:  TEH  -->
+				<textCharAction />
+			</node>
+			<node label="ٹ">
+				<!--Old Char Color: 81-->
+				<!--Note:  TTEH -->
+				<textCharAction />
+			</node>
+			<node label="ث">
+				<!--Old Char Color: 71-->
+				<!--Note:  THEH  -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 62-->
+			<node label="ج">
+				<!--Old Char Color: 72-->
+				<!--Note:  JEEM  -->
+				<textCharAction />
+			</node>
+			<node label="چ">
+				<!--Old Char Color: 72-->
+				<!--Note: TCHEH -->
+				<textCharAction />
+			</node>
+			<node label="ح">
+				<!--Old Char Color: 82-->
+				<!--Note:  HAH  -->
+				<textCharAction />
+			</node>
+			<node label="خ">
+				<!--Old Char Color: 72-->
+				<!--Note:  KHAH  -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 63-->
+			<node label="د">
+				<!--Old Char Color: 73-->
+				<!--Note:  DAL  -->
+				<textCharAction />
+			</node>
+			<node label="ڈ">
+				<!--Old Char Color: 83-->
+				<!--Note: DDAL-->
+				<textCharAction />
+			</node>
+			<node label="ذ">
+				<!--Old Char Color: 73-->
+				<!--Note:  THAL  -->
+				<textCharAction />
+			</node>
+			<node label="ر">
+				<!--Old Char Color: 83-->
+				<!--Note:  REH  -->
+				<textCharAction />
+			</node>
+			<node label="ڑ">
+				<!--Old Char Color: 73-->
+				<!--Note:  RREH -->
+				<textCharAction />
+			</node>
+			<node label="ز">
+				<!--Old Char Color: 83-->
+				<!--Note:  ZAIN  -->
+				<textCharAction />
+			</node>
+			<node label="ژ">
+				<!--Old Char Color: 73-->
+				<!--Note: JEH -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 64-->
+			<node label="س">
+				<!--Old Char Color: 74-->
+				<!--Note:  SEEN  -->
+				<textCharAction />
+			</node>
+			<node label="ش">
+				<!--Old Char Color: 84-->
+				<!--Note:  SHEEN  -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 65-->
+			<node label="ص">
+				<!--Old Char Color: 75-->
+				<!--Note:  SAD  -->
+				<textCharAction />
+			</node>
+			<node label="ض">
+				<!--Old Char Color: 85-->
+				<!--Note:  DAD  -->
+				<textCharAction />
+			</node>
+			<node label="ط">
+				<!--Old Char Color: 75-->
+				<!--Note:  TAH  -->
+				<textCharAction />
+			</node>
+			<node label="ظ">
+				<!--Old Char Color: 85-->
+				<!--Note:  ZAH  -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 66-->
+			<node label="ع">
+				<!--Old Char Color: 76-->
+				<!--Note:  AIN  -->
+				<textCharAction />
+			</node>
+			<node label="غ">
+				<!--Old Char Color: 86-->
+				<!--Note:  GHAIN  -->
+				<textCharAction />
+			</node>
+			<node label="ف">
+				<!--Old Char Color: 76-->
+				<!--Note:  FEH  -->
+				<textCharAction />
+			</node>
+			<node label="ق">
+				<!--Old Char Color: 86-->
+				<!--Note:  QAF  -->
+				<textCharAction />
+			</node>
+		</group>
+		<group>
+			<!--Old Group Color: 67-->
+			<!-- <s d="&#x0643;" t="&#x0643;"   b="76"  note=" KAF  "  /> -->
+			<node label="ل">
+				<!--Old Char Color: 77-->
+				<!--Note:  LAM  -->
+				<textCharAction />
+			</node>
+			<node label="م">
+				<!--Old Char Color: 87-->
+				<!--Note:  MEEM  -->
+				<textCharAction />
+			</node>
+			<node label="ن">
+				<!--Old Char Color: 77-->
+				<!--Note:  NOON  -->
+				<textCharAction />
+			</node>
+			<!-- <s d="&#x0647;" t="&#x0647;"   b="78"  note=" HEH  "  /> -->
+		</group>
+		<group>
+			<!--Old Group Color: 68-->
+			<node label="و">
+				<!--Old Char Color: 78-->
+				<!--Note:  WAW  -->
+				<textCharAction />
+			</node>
+			<!-- <s d="&#x0649;" t="&#x0649;"   b="89"  note=" ALEF MAKSURA (Looks like YEH!)"  /> -->
+			<!-- <s d="&#x064A;" t="&#x064A;"   b="79"  note=" YEH  "  /> -->
+			<node label="ئ">
+				<!--Old Char Color: 88-->
+				<!--Note:  YEH WITH HAMZA ABOVE  -->
+				<textCharAction />
+			</node>
+		</group>
+		<!-- note unused group colour 69/79/89 -->
+	</group>
+	<group name="Numbers" colorInfoName="numbers">
+		<!--Old Group Color: 113-->
+		<node label="1">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="2">
+			<!--Old Char Color: 105-->
+			<textCharAction />
+		</node>
+		<node label="3">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="4">
+			<!--Old Char Color: 106-->
+			<textCharAction />
+		</node>
+		<node label="5">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="6">
+			<!--Old Char Color: 107-->
+			<textCharAction />
+		</node>
+		<node label="7">
+			<!--Old Char Color: 93-->
+			<textCharAction />
+		</node>
+		<node label="8">
+			<!--Old Char Color: 108-->
+			<textCharAction />
+		</node>
+		<node label="9">
+			<!--Old Char Color: 94-->
+			<textCharAction />
+		</node>
+		<node label="0">
+			<!--Old Char Color: 109-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Arabic-Indic numbers" colorInfoName="numbers">
+		<!--Old Group Color: 116-->
+		<node label="١">
+			<!--Old Char Color: 90-->
+			<!--Note: ONE-->
+			<textCharAction />
+		</node>
+		<node label="٢">
+			<!--Old Char Color: 105-->
+			<!--Note: TWO-->
+			<textCharAction />
+		</node>
+		<node label="٣">
+			<!--Old Char Color: 91-->
+			<!--Note: THREE-->
+			<textCharAction />
+		</node>
+		<node label="٤">
+			<!--Old Char Color: 106-->
+			<!--Note: FOUR-->
+			<textCharAction />
+		</node>
+		<node label="٥">
+			<!--Old Char Color: 92-->
+			<!--Note: FIVE-->
+			<textCharAction />
+		</node>
+		<node label="٦">
+			<!--Old Char Color: 107-->
+			<!--Note: SIX-->
+			<textCharAction />
+		</node>
+		<node label="٧">
+			<!--Old Char Color: 93-->
+			<!--Note: SEVEN-->
+			<textCharAction />
+		</node>
+		<node label="٨">
+			<!--Old Char Color: 108-->
+			<!--Note: EIGHT-->
+			<textCharAction />
+		</node>
+		<node label="٩">
+			<!--Old Char Color: 94-->
+			<!--Note: NINE-->
+			<textCharAction />
+		</node>
+		<node label="٠">
+			<!--Old Char Color: 109-->
+			<!--Note: ZERO-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="ASCII Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 114-->
+		<node label="~">
+			<!--Old Char Color: 99-->
+			<textCharAction />
+		</node>
+		<node label="@">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="#">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="$">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="%">
+			<!--Old Char Color: 90-->
+			<textCharAction />
+		</node>
+		<node label="^">
+			<!--Old Char Color: 95-->
+			<textCharAction />
+		</node>
+		<node label="&amp;">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+		<node label="*">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="-">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label="_">
+			<!--Old Char Color: 96-->
+			<textCharAction />
+		</node>
+		<node label="\">
+			<!--Old Char Color: 98-->
+			<textCharAction />
+		</node>
+		<node label="|">
+			<!--Old Char Color: 97-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Punctuation" colorInfoName="punctuation">
+		<!--Old Group Color: 112-->
+		<node label="﷼">
+			<!--Old Char Color: 90-->
+			<!--Note: currency-->
+			<textCharAction />
+		</node>
+		<node label="٪">
+			<!--Old Char Color: 91-->
+			<!--Note: Arabic percent-->
+			<textCharAction />
+		</node>
+		<node label="+">
+			<!--Old Char Color: 92-->
+			<textCharAction />
+		</node>
+		<node label="−">
+			<!--Old Char Color: 93-->
+			<!--Note: minus-->
+			<textCharAction />
+		</node>
+		<node label="×">
+			<!--Old Char Color: 94-->
+			<!--Note: times-->
+			<textCharAction />
+		</node>
+		<node label="÷">
+			<!--Old Char Color: 90-->
+			<!--Note: divide-->
+			<textCharAction />
+		</node>
+		<node label="=">
+			<!--Old Char Color: 91-->
+			<textCharAction />
+		</node>
+		<node label="/">
+			<!--Old Char Color: 92-->
+			<!--Note: keep in persian as separator-->
+			<textCharAction />
+		</node>
+		<node label="‏&lt;‏">
+			<!--Old Char Color: 109-->
+			<textCharAction unicode="60" />
+		</node>
+		<node label="‏&gt;‏">
+			<!--Old Char Color: 105-->
+			<textCharAction unicode="62" />
+		</node>
+		<node label="‏{‏">
+			<!--Old Char Color: 107-->
+			<textCharAction unicode="123" />
+		</node>
+		<node label="‏}‏">
+			<!--Old Char Color: 108-->
+			<textCharAction unicode="125" />
+		</node>
+		<node label="‏[‏">
+			<!--Old Char Color: 105-->
+			<textCharAction unicode="91" />
+		</node>
+		<node label="‏]‏">
+			<!--Old Char Color: 106-->
+			<textCharAction unicode="93" />
+		</node>
+		<node label="‏(‏">
+			<!--Old Char Color: 106-->
+			<textCharAction unicode="40" />
+		</node>
+		<node label="‏)‏">
+			<!--Old Char Color: 107-->
+			<textCharAction unicode="41" />
+		</node>
+		<node label="‏‹‏">
+			<!--Note: French opening single quotation mark-->
+			<textCharAction unicode="8249" />
+		</node>
+		<node label="‏›‏">
+			<!--Note: French opening single quotation mark-->
+			<textCharAction unicode="8250" />
+		</node>
+		<node label="‏«‏">
+			<!--Note: French left double quotation mark-->
+			<textCharAction unicode="171" />
+		</node>
+		<node label="‏»‏">
+			<!--Note: French right double quotation mark-->
+			<textCharAction unicode="187" />
+		</node>
+		<node label="‐">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label="!">
+			<!--Old Char Color: 100-->
+			<textCharAction />
+		</node>
+		<node label="؟">
+			<!--Old Char Color: 101-->
+			<!--Note: Arabic question mark-->
+			<textCharAction />
+		</node>
+		<node label=":">
+			<!--Old Char Color: 101-->
+			<textCharAction />
+		</node>
+		<node label="؛">
+			<!--Old Char Color: 102-->
+			<!--Note: Arabic semicolon-->
+			<textCharAction />
+		</node>
+		<node label="،">
+			<!--Old Char Color: 103-->
+			<!--Note: Arabic comma-->
+			<textCharAction />
+		</node>
+		<node label=".">
+			<!--Old Char Color: 104-->
+			<textCharAction />
+		</node>
+	</group>
+	<group name="Joiners" colorInfoName="lowercase">
+		<!--Old Group Color: 111-->
+		<node label="∥">
+			<!--Old Char Color: 73-->
+			<!--Note: Zero width non-joiner-->
+			<textCharAction unicode="8204" />
+		</node>
+		<node label="↕">
+			<!--Old Char Color: 74-->
+			<!--Note: Zero width joiner-->
+			<textCharAction unicode="8205" />
+		</node>
+	</group>
+	<group name="paragraphSpace" colorInfoName="paragraphSpace">
+		<node label="¶">
+			<!--Old Char Color: 9-->
+			<textCharAction />
+		</node>
+		<node label="□">
+			<!--Old Char Color: 9-->
+			<textCharAction unicode="32" />
+		</node>
+	</group>
+</alphabet>

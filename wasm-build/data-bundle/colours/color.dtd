@@ -1,0 +1,56 @@
+<!-- Color schemes contain defintions of colors to be used by Dasher -->
+<!ELEMENT colors (groupColorInfo*)>
+<!ATTLIST colors name CDATA #REQUIRED> <!-- Name of the ColorSchema -->
+<!ATTLIST colors parentName CDATA "Default"> <!-- Parent ColorSchema from which missing data is inherited -->
+
+<!-- Special Colors that are used in various places in Dasher Rendering -->
+<!ATTLIST colors
+    backgroundColor CDATA #IMPLIED
+    crosshairColor CDATA #IMPLIED
+    inputLineColor CDATA #IMPLIED
+    inputPositionColor CDATA #IMPLIED
+    rootNodeColor CDATA #IMPLIED
+    defaultOutlineColor CDATA #IMPLIED
+    defaultLabelColor CDATA #IMPLIED
+    selectionHighlightColor CDATA #IMPLIED
+    selectionInactiveColor CDATA #IMPLIED
+    circleOutlineColor CDATA #IMPLIED
+    circleStoppedColor CDATA #IMPLIED
+    circleWaitingColor CDATA #IMPLIED
+    circleStartedColor CDATA #IMPLIED
+    firstStartBoxColor CDATA #IMPLIED
+    secondStartBoxColor CDATA #IMPLIED
+    twoPushDynamicActiveMarkerColor CDATA #IMPLIED
+    twoPushDynamicInactiveMarkerColor CDATA #IMPLIED
+    twoPushDynamicOuterGuidesColor CDATA #IMPLIED
+    infoTextColor CDATA #IMPLIED
+    infoTextBackgroundColor CDATA #IMPLIED
+    warningTextColor CDATA #IMPLIED
+    warningTextBackgroundColor CDATA #IMPLIED
+    gameGuideColor CDATA #IMPLIED
+    oneButtonDynamicOuterGuidesColor CDATA #IMPLIED
+    conversionNodeColor CDATA #IMPLIED
+    appearance (light|dark) #IMPLIED  <!-- Light/dark classification for system appearance matching (see RFC 0007) -->
+    companion CDATA #IMPLIED  <!-- Name of the opposite-appearance partner palette -->
+>
+
+<!-- Group Color Definition -->
+<!ELEMENT groupColorInfo EMPTY>
+<!ATTLIST groupColorInfo name CDATA #REQUIRED> <!-- Name of the Group that is referenced by the alphabet -->
+<!ATTLIST groupColorInfo groupColor CDATA #IMPLIED> <!-- Color of the group itself -->
+<!ATTLIST groupColorInfo altGroupColor CDATA #IMPLIED>
+<!ATTLIST groupColorInfo groupOutlineColor CDATA #IMPLIED> <!-- OutlineColor of the group itself -->
+<!ATTLIST groupColorInfo altGroupOutlineColor CDATA #IMPLIED>
+<!ATTLIST groupColorInfo groupLabelColor CDATA #IMPLIED> <!-- LabelColor of the group itself -->
+<!ATTLIST groupColorInfo altGroupLabelColor CDATA #IMPLIED>
+ <!-- Sequence colors that are split and iterated in Dasher to cover the whole alphabet.
+    A sequence is defined by a list of hex color values separated by commas.
+    Example: nodeColorSequence="#B4DAA2FF,#BEEEBEFF" -->
+<!ATTLIST groupColorInfo
+    nodeColorSequence CDATA #IMPLIED
+    altNodeColorSequence CDATA #IMPLIED
+    nodeOutlineColorSequence CDATA #IMPLIED
+    altNodeOutlineColorSequence CDATA #IMPLIED
+    nodeLabelColorSequence CDATA #IMPLIED
+    altNodeLabelColorSequence CDATA #IMPLIED
+>
