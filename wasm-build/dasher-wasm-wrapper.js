@@ -19,6 +19,27 @@ class DasherWasm {
         this._outputCbPtr = null;
         this._messageCbPtr = null;
         this._heapPtrs = [];
+        // Optional render filters, used by the Learning Center so that only the
+        // intended choices are visible:
+        //  sliverRatio  > 0: among sibling boxes, any shorter than this fraction
+        //                    of the tallest sibling is hidden, with everything
+        //                    inside it (near-zero-probability leftovers).
+        //  hideLabel    set: a box carrying this label is hidden with its label
+        //                    and everything inside it (an invisible "end" box).
+        //  boxGapRatio  > 0: boxes are drawn shrunk vertically by this fraction
+        //                    of their height, so neighbours don't touch.
+        this.sliverRatio = 0;
+        this.hideLabel = '';
+        this.boxGapRatio = 0;
+        //  labelScale   > 1: letters inside boxes are drawn larger.
+        this.labelScale = 1;
+        // Recent frame signatures, to tell whether the view is moving (zooming).
+        // frozen: the engine is not advanced at all (the canvas keeps its last
+        // picture), so nothing can start zooming. Used while a prompt is up.
+        this.frozen = false;
+        this._redrawOnce = false;
+        this.motionHistory = [];
+        this._prevRects = null;
     }
 
     /**
@@ -140,6 +161,7 @@ class DasherWasm {
      */
     setScreenSize(width, height) {
         if (!this.context) return;
+        this._redrawOnce = true; // a resize clears the canvas: draw it again
         this.module._dasher_set_screen_size(this.context, width, height);
     }
 
@@ -426,6 +448,8 @@ class DasherWasm {
      */
     frame(time) {
         if (!this.context) return;
+        if (this.frozen && !this._redrawOnce) return;
+        this._redrawOnce = false;
         const t = time != null ? Math.trunc(time) : Date.now();
         const cmdsPtr = this.module._malloc(4);
         const cmdCountPtr = this.module._malloc(4);
@@ -440,6 +464,7 @@ class DasherWasm {
             const strs = this.module.getValue(strsPtr, '*');
             const strCount = this.module.getValue(strCountPtr, 'i32');
 
+            this._recordSignature(cmds, cmdCount);
             this.renderFrame(cmds, cmdCount, strs, strCount);
         } finally {
             this.module._free(cmdsPtr);
@@ -447,6 +472,43 @@ class DasherWasm {
             this.module._free(strsPtr);
             this.module._free(strCountPtr);
         }
+    }
+
+    // How many boxes changed position since the previous frame. It is 0 when
+    // Dasher is standing still, and falls off smoothly as a zoom eases to a stop.
+    // (Boxes are compared as a set, so boxes appearing or disappearing while
+    // zooming don't cause huge jumps; and deep zoom is handled because every
+    // visible box is included, not just the big outer ones.)
+    _recordSignature(cmds, cmdCount) {
+        const cur = new Set();
+        for (let i = 0; i < cmdCount; i += 6) {
+            if (this.module.getValue(cmds + i * 4, 'i32') === 4) {
+                const h = (((this.module.getValue(cmds + (i + 1) * 4, 'i32') * 31
+                    + this.module.getValue(cmds + (i + 2) * 4, 'i32')) * 31
+                    + this.module.getValue(cmds + (i + 3) * 4, 'i32')) * 31
+                    + this.module.getValue(cmds + (i + 4) * 4, 'i32')) | 0;
+                cur.add(h);
+            }
+        }
+        let changed = 0;
+        if (this._prevRects) for (const h of cur) if (!this._prevRects.has(h)) changed++;
+        this._prevRects = cur;
+        this.motionHistory.push(changed);
+        if (this.motionHistory.length > 10) this.motionHistory.shift();
+    }
+
+    /** Average number of boxes that moved per frame over the last few frames. */
+    motionLevel() {
+        const h = this.motionHistory.slice(-8);
+        return h.length < 8 ? 0 : h.reduce((a, b) => a + b, 0) / h.length;
+    }
+
+    /**
+     * True while the view is zooming. Clicking toggles this in click-to-start
+     * mode; mouseUp does not stop it.
+     */
+    isMoving() {
+        return this.motionLevel() > 3;
     }
 
     /**
@@ -463,7 +525,11 @@ class DasherWasm {
         // invisible on HiDPI canvases.
         this._lineWidth = Math.max(1, Math.round(this.canvas.width / 700));
 
+        const hidden = (this.sliverRatio > 0 || this.hideLabel)
+            ? this._findSlivers(cmds, cmdCount, strs, strCount) : null;
+
         for (let i = 0; i < cmdCount; i += 6) {
+            if (hidden && hidden[i / 6]) continue;
             const opcode = this.module.getValue(cmds + i * 4, 'i32');
             const a = this.module.getValue(cmds + (i + 1) * 4, 'i32');
             const b = this.module.getValue(cmds + (i + 2) * 4, 'i32');
@@ -472,6 +538,95 @@ class DasherWasm {
             const argb = this.module.getValue(cmds + (i + 5) * 4, 'i32');
             this.renderCommand(opcode, a, b, c, d, argb, strs, strCount);
         }
+    }
+
+    /**
+     * Work out which draw commands to skip (see sliverRatio / hideLabel).
+     * The engine emits every box rectangle first (parents before children),
+     * then every label. Returns a Uint8Array indexed by command number
+     * (1 = skip).
+     */
+    _findSlivers(cmds, cmdCount, strs, strCount) {
+        const n = cmdCount / 6;
+        const hidden = new Uint8Array(n);
+        const rects = []; // {k, x1, y1, x2, y2, parent}
+        const texts = []; // {k, x, y, label}
+        const geti = (k, j) => this.module.getValue(cmds + k * 24 + j * 4, 'i32');
+        for (let k = 0; k < n; k++) {
+            const op = geti(k, 0);
+            if (op === 3 || op === 4) {
+                const a = geti(k, 1), b = geti(k, 2), c = geti(k, 3), d = geti(k, 4);
+                rects.push({ k, x1: Math.min(a, c), y1: Math.min(b, d), x2: Math.max(a, c), y2: Math.max(b, d), parent: -1 });
+            } else if (op === 5) {
+                const idx = geti(k, 4);
+                let label = '';
+                if (this.hideLabel && strs && idx < strCount) {
+                    label = this.module.UTF8ToString(this.module.getValue(strs + idx * 4, '*'));
+                }
+                texts.push({ k, x: geti(k, 1) + 1, y: geti(k, 2) - geti(k, 3) * 0.3, label });
+            }
+        }
+        const tol = 1;
+        const hid = new Uint8Array(rects.length);
+        // nearest earlier rectangle containing each rectangle = its parent box
+        for (let i = 0; i < rects.length; i++) {
+            const r = rects[i];
+            for (let j = i - 1; j >= 0; j--) {
+                const p = rects[j];
+                if (r.x1 >= p.x1 - tol && r.x2 <= p.x2 + tol && r.y1 >= p.y1 - tol && r.y2 <= p.y2 + tol) {
+                    r.parent = j;
+                    break;
+                }
+            }
+        }
+        if (this.sliverRatio > 0) {
+            const maxH = new Map();
+            const count = new Map();
+            for (const r of rects) {
+                const h = r.y2 - r.y1;
+                maxH.set(r.parent, Math.max(maxH.get(r.parent) || 0, h));
+                count.set(r.parent, (count.get(r.parent) || 0) + 1);
+            }
+            rects.forEach((r, i) => {
+                if (count.get(r.parent) > 1 && (r.y2 - r.y1) < this.sliverRatio * maxH.get(r.parent)) hid[i] = 1;
+            });
+        }
+        // which rectangle does each label sit in? (the last one containing it)
+        const textRect = texts.map(t => {
+            for (let j = rects.length - 1; j >= 0; j--) {
+                const p = rects[j];
+                if (t.x >= p.x1 && t.x <= p.x2 && t.y >= p.y1 && t.y <= p.y2) return j;
+            }
+            return -1;
+        });
+        if (this.hideLabel) {
+            // A label sits at its own box's left edge: find that box exactly
+            // (never a big ancestor, or everything would be hidden).
+            const W = this.canvas.width, H = this.canvas.height;
+            texts.forEach((t) => {
+                if (t.label !== this.hideLabel) return;
+                let best = -1, bestH = Infinity;
+                rects.forEach((r, j) => {
+                    const h = r.y2 - r.y1;
+                    if (Math.abs(r.x1 - (t.x - 1)) <= 3 && t.y >= r.y1 && t.y <= r.y2 && h < bestH
+                        && !((r.x2 - r.x1) >= W * 0.98 && h >= H * 0.98)) { best = j; bestH = h; }
+                });
+                if (best >= 0) hid[best] = 1;
+            });
+        }
+        // everything inside a hidden box is hidden too (parents precede children)
+        for (let i = 0; i < rects.length; i++) {
+            if (rects[i].parent >= 0 && hid[rects[i].parent]) hid[i] = 1;
+            if (hid[i]) hidden[rects[i].k] = 1;
+        }
+        texts.forEach((t, i) => {
+            if ((textRect[i] >= 0 && hid[textRect[i]]) || (this.hideLabel && t.label === this.hideLabel)) hidden[t.k] = 1;
+        });
+        // Safety net: never blank the whole screen.
+        let shown = 0;
+        for (let i = 0; i < rects.length; i++) if (!hidden[rects[i].k]) shown++;
+        if (rects.length > 0 && shown <= 1) hidden.fill(0);
+        return hidden;
     }
 
     renderCommand(opcode, a, b, c, d, argb, strs, strCount) {
@@ -519,7 +674,13 @@ class DasherWasm {
 
             case 4: // Rectangle filled
                 this.ctx.fillStyle = color;
-                this.ctx.fillRect(a, b, c - a, d - b);
+                if (this.boxGapRatio > 0 && !(a <= 0 && b <= 0 && c >= this.canvas.width && d >= this.canvas.height)) {
+                    // shrink vertically so neighbouring boxes don't touch
+                    const inset = Math.min((d - b) * this.boxGapRatio / 2, Math.max(0, (d - b - 2) / 2));
+                    this.ctx.fillRect(a, b + inset, c - a, d - b - 2 * inset);
+                } else {
+                    this.ctx.fillRect(a, b, c - a, d - b);
+                }
                 break;
 
             case 5: // Text
@@ -528,7 +689,7 @@ class DasherWasm {
                     const text = this.module.UTF8ToString(strPtr);
                     if (text) {
                         this.ctx.fillStyle = color;
-                        this.ctx.font = `${c}px sans-serif`;
+                        this.ctx.font = `${Math.round(c * (this.labelScale || 1))}px sans-serif`;
                         this.ctx.textBaseline = 'alphabetic';
                         this.ctx.fillText(text, a, b);
                     }

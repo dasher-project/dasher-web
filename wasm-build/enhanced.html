@@ -7,8 +7,8 @@
     <style>
         /* Design tokens: dasher-project/dasher-design-guide DESIGN.md (v6.0 alpha) */
         :root {
-            --primary: #FF1493;      /* TEST: hot pink (was Dasher Teal #99D4CD) */
-            --secondary: #7CFC00;    /* TEST: lime (was Warm Yellow #F8E063) */
+            --primary: #99D4CD;      /* Dasher Teal */
+            --secondary: #F8E063;    /* Warm Yellow */
             --tertiary: #EB5B5C;     /* Coral Red */
             --text: #0F4B75;         /* Deep Navy */
             --bg: #F4F7F6;
@@ -124,6 +124,140 @@
             border: 1px solid var(--border); background: var(--highlight);
             color: var(--text); border-radius: var(--radius-sm);
             font-size: 0.75rem; padding: 4px 10px; cursor: pointer;
+        }
+
+        /* Learning Center drawer (right) */
+        #learning-panel {
+            position: fixed; top: var(--topbar-h); right: 0; bottom: var(--statusbar-h);
+            width: 340px; max-width: 90vw; z-index: 20;
+            display: flex; flex-direction: column;
+            background: var(--surface); border-left: 1px solid var(--border);
+            box-shadow: -4px 0 16px rgba(0,0,0,0.15);
+            transform: translateX(100%); visibility: hidden;
+            transition: transform 0.2s ease, visibility 0.2s;
+        }
+        #learning-panel.open { transform: translateX(0); visibility: visible; }
+        .lc-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: var(--sp-md); border-bottom: 1px solid var(--border);
+        }
+        .lc-header h2 { margin: 0; font-size: 1.125rem; font-weight: 600; }
+        #lc-close {
+            border: none; background: transparent; color: var(--text-dim);
+            font-size: 1.5rem; line-height: 1; cursor: pointer;
+            width: 32px; height: 32px; border-radius: var(--radius-sm);
+        }
+        #lc-close:hover { background: var(--highlight); }
+        .lc-body { padding: var(--sp-md); overflow-y: auto; }
+        .lc-cat { border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: var(--sp-sm); }
+        .lc-cat summary {
+            list-style: none; cursor: pointer; padding: 12px var(--sp-md);
+            display: flex; flex-direction: column; gap: 2px; font-weight: 600; font-size: 0.9375rem;
+            position: relative; padding-right: 36px;
+        }
+        .lc-cat summary::-webkit-details-marker { display: none; }
+        .lc-cat summary::after {
+            content: '\25B8'; position: absolute; right: var(--sp-md); top: 12px;
+            color: var(--text-dim); transition: transform 0.15s;
+        }
+        .lc-cat[open] summary::after { transform: rotate(90deg); }
+        .lc-cat summary small { font-weight: 300; font-size: 0.75rem; color: var(--text-dim); }
+        .lc-cat .lc-grid { padding: 0 var(--sp-md) var(--sp-md); }
+        .lc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-sm); }
+        .lc-card {
+            min-height: 80px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 6px;
+            border: 2px dashed var(--border); border-radius: var(--radius-md);
+            background: var(--highlight); color: var(--text);
+            font-size: 0.9375rem; font-weight: 500; cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .lc-card small { font-size: 0.6875rem; font-weight: 300; color: var(--text-dim); }
+        .lc-card:hover { border-color: var(--primary); }
+        .lc-card.selected { border-style: solid; border-color: var(--primary); background: var(--primary); color: #0F4B75; }
+        .lc-card.selected small { color: #0F4B75; }
+
+        /* Tutorial (Learning Center) */
+        #tut-overlay {
+            position: absolute; top: var(--sp-md); left: 50%; transform: translate(-50%, 0);
+            transition: top 0.75s cubic-bezier(.2,.8,.2,1), transform 0.75s cubic-bezier(.2,.8,.2,1), box-shadow 0.75s;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            max-width: 90%; min-width: min(420px, 90%); text-align: center; z-index: 6;
+        }
+        #tut-overlay[hidden] { display: none; }
+        /* intro: the prompt sits at the crosshair, then slides up to the top */
+        #tut-overlay.centered {
+            top: 50%; transform: translate(-50%, -50%) scale(1.25);
+            box-shadow: 0 14px 44px rgba(0,0,0,0.35);
+        }
+        #tut-curtain {
+            position: absolute; inset: 0; z-index: 5; pointer-events: none;
+            background: var(--canvas-bg); opacity: 0; transition: opacity 0.4s ease;
+        }
+        #tut-curtain.on { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+            #tut-overlay, #tut-curtain { transition: none; }
+        }
+        #tut-step { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; }
+        #tut-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 8px; }
+        #tut-dots i { width: 18px; height: 5px; border-radius: 3px; background: var(--border); }
+        #tut-dots i.done { background: #1F8A70; }
+        #tut-dots i.now { background: var(--text); }
+        #tut-target { font-size: 1.75rem; letter-spacing: 2px; line-height: 1.4; white-space: pre-wrap; word-break: break-word; }
+        #tut-target .done { color: #1F8A70; font-weight: 600; }
+        #tut-target .todo { color: var(--text-dim); }
+        #tut-target .wrong { color: var(--tertiary); font-weight: 600; text-decoration: line-through; }
+        #tut-msg { font-size: 0.875rem; color: var(--text-dim); margin-top: 6px; min-height: 1.3em; }
+        #tut-msg.good { color: #1F8A70; font-weight: 600; font-size: 1rem; }
+        #tut-msg.bad { color: var(--tertiary); }
+        .tut-actions { margin-top: 8px; display: flex; gap: 8px; justify-content: center; }
+        .tut-actions button, #tut-done button {
+            border: 1px solid var(--border); background: var(--highlight);
+            color: var(--text); border-radius: var(--radius-sm);
+            font-size: 0.8125rem; padding: 6px 12px; cursor: pointer;
+        }
+        .tut-actions button:hover, #tut-done button:hover { border-color: var(--primary); }
+        .tut-actions label { display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; }
+        #tut-arrow {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            z-index: 6; display: flex; align-items: center; gap: 10px;
+            background: var(--surface); border: 2px solid var(--tertiary); color: var(--tertiary);
+            border-radius: var(--radius-lg); padding: 10px 16px; max-width: 220px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2); font-size: 0.8125rem; font-weight: 600; line-height: 1.3;
+            pointer-events: none; animation: tut-nudge 0.9s ease-in-out infinite;
+        }
+        #tut-arrow[hidden] { display: none; }
+        #tut-arrow .arr { font-size: 2.2rem; line-height: 1; }
+        @keyframes tut-nudge { 0%,100% { transform: translate(0, -50%); } 50% { transform: translate(-8px, -50%); } }
+        @media (prefers-reduced-motion: reduce) { #tut-arrow { animation: none; } }
+        #tut-done {
+            position: fixed; inset: 0; z-index: 40; display: flex;
+            align-items: center; justify-content: center;
+            background: rgba(15, 75, 117, 0.35); overflow: hidden;
+        }
+        #tut-done[hidden] { display: none; }
+        .tut-done-card {
+            position: relative; z-index: 2; background: var(--surface);
+            border-radius: var(--radius-lg); padding: 28px 32px; text-align: center;
+            max-width: min(440px, 90vw); box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            animation: tut-pop 0.5s cubic-bezier(.2,1.4,.4,1);
+        }
+        .tut-done-card .trophy { font-size: 4rem; line-height: 1; animation: tut-bounce 1.2s ease-in-out infinite; }
+        .tut-done-card h2 { margin: 12px 0 6px; font-size: 1.5rem; }
+        .tut-done-card p { margin: 0 0 16px; color: var(--text-dim); font-size: 0.9375rem; }
+        .tut-done-card .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .tut-done-card button.primary { background: var(--primary); color: #0F4B75; border-color: var(--primary); font-weight: 600; }
+        .confetti-bit {
+            position: absolute; top: -20px; width: 10px; height: 16px; opacity: 0.95;
+            animation: tut-fall linear forwards;
+        }
+        @keyframes tut-fall { to { transform: translateY(110vh) rotate(720deg); } }
+        @keyframes tut-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes tut-bounce { 0%,100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-10px) rotate(6deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            .confetti-bit, .tut-done-card, .tut-done-card .trophy { animation: none; }
         }
 
         /* Editor pane (right) */
@@ -448,8 +582,8 @@
 >
   <rect width="18" height="18" x="3" y="3" rx="2" />
   <path d="M15 3v18" /></symbol>
-<symbol id="i-gamepad-2" viewBox="0 0 24 24"><svg
-  class="lucide lucide-gamepad-2"
+<symbol id="i-graduation-cap" viewBox="0 0 24 24"><svg
+  class="lucide lucide-graduation-cap"
   xmlns="http://www.w3.org/2000/svg"
   width="24"
   height="24"
@@ -460,11 +594,9 @@
   stroke-linecap="round"
   stroke-linejoin="round"
 >
-  <line x1="6" x2="10" y1="11" y2="11" />
-  <line x1="8" x2="8" y1="9" y2="13" />
-  <line x1="15" x2="15.01" y1="12" y2="12" />
-  <line x1="18" x2="18.01" y1="10" y2="10" />
-  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" /></symbol>
+  <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
+  <path d="M22 10v6" />
+  <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></symbol>
 <symbol id="i-settings" viewBox="0 0 24 24"><svg
   class="lucide lucide-settings"
   xmlns="http://www.w3.org/2000/svg"
@@ -554,8 +686,8 @@
         <button class="tool-btn" id="tb-save" title="Save output as a text file" aria-label="Save" disabled>
             <svg><use href="#i-save"/></svg></button>
         <div class="tb-sep"></div>
-        <button class="tool-btn" id="tb-game" title="Game mode — type the target text" aria-label="Game mode" disabled>
-            <svg><use href="#i-gamepad-2"/></svg></button>
+        <button class="tool-btn" id="tb-game" title="Learning Center" aria-label="Learning Center" aria-expanded="false" aria-controls="learning-panel" disabled>
+            <svg><use href="#i-graduation-cap"/></svg></button>
         <div class="layout-picker">
             <svg class="layout-icon"><use href="#i-panel-right"/></svg>
             <select id="layout-select" aria-label="Output pane position" disabled>
@@ -582,6 +714,24 @@
                     <button id="game-exit">Leave game mode</button>
                 </div>
             </div>
+            <div id="tut-curtain"></div>
+            <div id="tut-overlay" hidden>
+                <div id="tut-step"></div>
+                <div id="tut-dots"></div>
+                <div id="tut-target"></div>
+                <div id="tut-msg"></div>
+                <div class="tut-actions">
+                    <button id="tut-restart">Restart step</button>
+                    <button id="tut-exit">Exit lesson</button>
+                    <label title="If you don't back out of a wrong letter, Dasher gently steers back for you">
+                        <input type="checkbox" id="tut-assist" checked> Auto-correct
+                    </label>
+                </div>
+            </div>
+            <div id="tut-arrow" hidden aria-live="polite">
+                <span class="arr" aria-hidden="true">&#9664;</span>
+                <span id="tut-arrow-text">Wrong letter. Move your pointer left to zoom back out.</span>
+            </div>
         </div>
         <aside class="editor-pane">
             <h2 id="editor-title">Output</h2>
@@ -593,6 +743,53 @@
                 <button id="ed-speak" class="cta" title="Speak the output aloud"><svg><use href="#i-volume-2"/></svg>Quick speak</button>
             </div>
         </aside>
+    </div>
+
+    <aside id="learning-panel" aria-label="Learning Center">
+        <div class="lc-header">
+            <h2>Learning Center</h2>
+            <button id="lc-close" aria-label="Close Learning Center">&times;</button>
+        </div>
+        <div class="lc-body">
+            <details class="lc-cat" open>
+                <summary><span>Tutorials</span><small>Learn the basics step by step</small></summary>
+                <div class="lc-grid">
+                    <button class="lc-card" id="start-beginner-1">Beginner 1<small>Basics of typing &middot; ~3 min</small></button>
+                    <button class="lc-card">Beginner 2<small>Placeholder</small></button>
+                    <button class="lc-card">Beginner 3<small>Placeholder</small></button>
+                </div>
+            </details>
+            <details class="lc-cat">
+                <summary><span>Goal Setting</span><small>Set targets and track progress</small></summary>
+                <div class="lc-grid">
+                    <button class="lc-card">Goal Setting<small>Placeholder</small></button>
+                </div>
+            </details>
+            <details class="lc-cat">
+                <summary><span>Curriculum: Getting Good at Dasher</span><small>How to build your skill over time</small></summary>
+                <div class="lc-grid">
+                    <button class="lc-card">Curriculum<small>Placeholder</small></button>
+                </div>
+            </details>
+            <details class="lc-cat">
+                <summary><span>Practice</span><small>Free practice and drills</small></summary>
+                <div class="lc-grid">
+                    <button class="lc-card">Practice<small>Placeholder</small></button>
+                </div>
+            </details>
+        </div>
+    </aside>
+
+    <div id="tut-done" hidden role="dialog" aria-modal="true" aria-labelledby="tut-done-title">
+        <div class="tut-done-card">
+            <div class="trophy" aria-hidden="true">&#127942;</div>
+            <h2 id="tut-done-title">Lesson complete!</h2>
+            <p>Congrats! You&rsquo;ve completed the Beginner 1 tutorial on the basics of typing with Dasher.</p>
+            <div class="row">
+                <button id="tut-again">Do it again</button>
+                <button id="tut-back" class="primary">Back to Learning Center</button>
+            </div>
+        </div>
     </div>
 
     <footer class="statusbar" role="status" aria-label="Adjustment controls">
@@ -912,10 +1109,473 @@
             tbGame.classList.remove('active');
         }
 
-        tbGame.addEventListener('click', () => {
-            if (dasher && dasher.gameModeActive()) leaveGame();
-            else enterGame();
+        // Learning Center drawer (replaces the old Game mode toolbar button;
+        // enterGame()/leaveGame() above are kept for wiring up activities later)
+        const learningPanel = document.getElementById('learning-panel');
+        function setLearningCenter(open) {
+            learningPanel.classList.toggle('open', open);
+            tbGame.classList.toggle('active', open);
+            tbGame.setAttribute('aria-expanded', String(open));
+        }
+        tbGame.addEventListener('click', () => setLearningCenter(!learningPanel.classList.contains('open')));
+        document.getElementById('lc-close').addEventListener('click', () => setLearningCenter(false));
+        learningPanel.querySelectorAll('.lc-card').forEach(card => {
+            card.addEventListener('click', () => {
+                learningPanel.querySelectorAll('.lc-card').forEach(c => c.classList.toggle('selected', c === card));
+            });
         });
+
+        // ── Beginner 1 tutorial ──────────────────────────────────────────
+        // Each exercise is typed with the real Dasher engine. For the guided
+        // steps (opts > 0) we generate a tiny alphabet plus a training text so
+        // that at every position only `opts` letters get a visible box: the
+        // correct one and (opts - 1) decoys. opts = 0 is the normal alphabet.
+        const TUT_EXERCISES = [
+            { target: 'hello',        opts: 1 },
+            { target: 'how are you',  opts: 1 },
+            { target: 'mom',          opts: 2 },
+            { target: 'garden',       opts: 2 },
+            { target: 'ha ha ha',     opts: 2 },
+            { target: 'see you',      opts: 3 },
+            { target: 'my red car',   opts: 4 },
+            { target: 'i like it',    opts: 5 },
+            { target: 'we eat fish',  opts: 6 },
+            { target: 'good day',     opts: 0 },
+            { target: 'thank you',    opts: 0 },
+            { target: 'see you soon', opts: 0 },
+        ];
+        const tutOverlay = document.getElementById('tut-overlay');
+        const tutStepEl = document.getElementById('tut-step');
+        const tutDotsEl = document.getElementById('tut-dots');
+        const tutTargetEl = document.getElementById('tut-target');
+        const tutMsgEl = document.getElementById('tut-msg');
+        const tutDone = document.getElementById('tut-done');
+        const tutArrow = document.getElementById('tut-arrow');
+        const tutAssistEl = document.getElementById('tut-assist');
+        const tutCurtain = document.getElementById('tut-curtain');
+        const tut = { active: false, index: 0, locked: false, intro: false, saved: null, built: new Set(), assist: false, wrongSince: 0, timers: [] };
+        const TUT_INTRO_MS = 2400;   // prompt sits at the crosshair this long
+        const TUT_SLIDE_MS = 800;    // then slides up; input unlocks when it lands
+        // Dasher keeps zooming after a click until you click again (mouseUp does
+        // not stop it). Between steps we stop it ourselves, so every step starts
+        // from a standstill and the learner clicks to begin.
+        // Behind the screen-clear: park the pointer far from the start circle,
+        // let the engine run for a moment, and if the view moves (Dasher restarts
+        // its own zoom after an alphabet switch) click to stop it. Then freeze the
+        // engine so it cannot move again until the prompt has gone.
+        function tutProbeStop(done) {
+            const token = tut.settleToken = (tut.settleToken || 0) + 1;
+            let clicks = 0, before = 0;
+            dasher.mouseUp();
+            dasher.mouseMove(canvas.width * 0.92, canvas.height * 0.12);
+            tutFreeze(false);
+            const probe = () => {
+                if (token !== tut.settleToken) return;     // superseded
+                const level = dasher.motionLevel();
+                if (level > 3 && clicks < 3 && (clicks === 0 || level > before * 0.7)) {
+                    before = level;
+                    dasher.mouseDown();                    // toggles zooming off
+                    clicks++;
+                    tutLater(() => {
+                        dasher.mouseUp();
+                        dasher.motionHistory = []; dasher._prevRects = null;
+                        tutLater(probe, 450);
+                    }, 60);
+                    return;
+                }
+                tutFreeze(true);
+                if (done) done();
+            };
+            // let the new scene draw first (its first frames look like "movement"),
+            // then watch for real motion
+            tutLater(() => {
+                dasher.motionHistory = []; dasher._prevRects = null;
+                tutLater(probe, 300);
+            }, 200);
+        }
+        // Freeze the engine entirely while a prompt is up: even if Dasher tries to
+        // restart its own zoom, it can't, because it isn't advancing.
+        const tutFreeze = (on) => {
+            dasher.frozen = on;
+            if (!on) { dasher.motionHistory = []; dasher._prevRects = null; }   // readings go stale while frozen
+        };
+        function tutLater(fn, ms) { tut.timers.push(setTimeout(fn, ms)); }
+        function tutClearTimers() { tut.timers.forEach(clearTimeout); tut.timers = []; }
+        const tutInputBlocked = () => tut.active && (tut.intro || tut.locked);
+        // slower for the early steps so there is time to watch what happens
+        const TUT_SPEED = { 1: 45, 2: 60, 3: 60, 4: 60, 5: 70, 6: 70 };
+
+        // Guided alphabets, written into the engine's virtual filesystem.
+        //
+        //  opts = 1   one real path. Training text is the word followed by a
+        //             hidden "end" symbol, so every step has one big box and the
+        //             tree stops being drawn after the last letter.
+        //  opts >= 2  every letter gets `opts` options: the letters the text
+        //             needs after it, plus random filler letters, all with equal
+        //             odds. The model is trained on a long random walk over that
+        //             letter graph, which gives exactly those next-letter odds.
+        const TUT_END = '\u2022'; // hidden "end of word" box (see hideLabel)
+
+        function tutSeeded(id) {
+            let seed = 0;
+            for (const c of id) seed = (seed * 31 + c.charCodeAt(0)) >>> 0;
+            return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+        }
+
+        function tutBuildAlphabet(id, target, nOpt) {
+            const FS = dasher.module.FS;
+            const rnd = tutSeeded(id);
+            let symbols;   // alphabet symbols; ' ' = space
+            let train;
+            if (nOpt === 1) {
+                symbols = [...new Set(target.replace(/ /g, '').split(''))].sort();
+                // the engine starts a text in a "space" context, so a space symbol
+                // is needed for the first letter to be the big box
+                symbols.push(' ', TUT_END);
+                // After each prefix the hidden end box gets about a third of the
+                // room, which leaves a gap between letters and gives the learner
+                // more time per letter. (Longer segments pass through the shorter
+                // prefixes, so work the weights out from the last letter back.)
+                const ratio = 0.35 / 0.65;
+                const full = 60;
+                const endWeight = new Array(target.length);
+                let after = 0;
+                for (let i = target.length - 1; i >= 0; i--) {
+                    endWeight[i] = Math.max(1, Math.round(ratio * (full + after)));
+                    after += endWeight[i];
+                }
+                train = (' ' + target + TUT_END).repeat(full);
+                for (let i = 0; i < target.length; i++) train += (' ' + target.slice(0, i) + TUT_END).repeat(endWeight[i]);
+            } else {
+                const seq = ' ' + target;
+                const after = new Map();
+                for (let i = 0; i + 1 < seq.length; i++) {
+                    if (!after.has(seq[i])) after.set(seq[i], new Set());
+                    after.get(seq[i]).add(seq[i + 1]);
+                }
+                const used = new Set(seq.split(''));
+                const pool = 'etaoinshrdlcumwfgypbvkxjqz'.split('');
+                const options = new Map();
+                const queue = [...used];
+                while (queue.length) {
+                    const c = queue.pop();
+                    if (options.has(c)) continue;
+                    const opts = new Set(after.get(c) || []);
+                    while (opts.size < nOpt) {
+                        // mostly reuse letters already in play, sometimes bring in a new one
+                        const cands = [];
+                        for (const x of used) if (x !== ' ' && !opts.has(x)) cands.push(x, x);
+                        const fresh = pool.filter(x => !used.has(x) && !opts.has(x));
+                        for (let f = 0; f < 2 && fresh.length; f++) cands.push(fresh.splice(Math.floor(rnd() * fresh.length), 1)[0]);
+                        const pick = cands[Math.floor(rnd() * cands.length)];
+                        opts.add(pick);
+                        if (!used.has(pick)) { used.add(pick); queue.push(pick); }
+                    }
+                    options.set(c, [...opts]);
+                }
+                // Random walk: at each letter step to one of its options. Every
+                // letter is followed by each of its options equally often.
+                let cur = ' ';
+                train = '';
+                for (let k = 0; k < 60000; k++) {
+                    const o = options.get(cur);
+                    cur = o[Math.floor(rnd() * o.length)];
+                    train += cur;
+                    if (k % 64 === 63) { train += ' '; cur = ' '; } // revisit the start-of-text context
+                }
+                symbols = [...used].filter(c => c !== ' ').sort();
+                symbols.push(' ');
+            }
+            const nodes = symbols.map(c => c === ' '
+                ? '<node label="\u25A1"><textCharAction unicode="32" /></node>'
+                : `<node label="${c}"><textCharAction /></node>`).join('\n');
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">\n`
+                + `<alphabet name="${id}" orientation="LR" trainingFilename="train_${id}.txt" colorsName="European/Asian">\n`
+                + `<group name="g" colorInfoName="lowercase">\n${nodes}\n</group>\n</alphabet>`;
+            FS.writeFile('/data/alphabets/alphabet.' + id + '.xml', xml);
+            FS.writeFile('/data/training/train_' + id + '.txt', train);
+            dasher.setScreenSize(canvas.width, canvas.height);
+        }
+
+        function tutLongParam(name, value) {
+            const k = dasher.findParameterKey(name);
+            if (k < 0) return null;
+            const old = dasher.getLongParameter(k);
+            if (value !== undefined) dasher.setLongParameter(k, value);
+            return old;
+        }
+
+        // Model order = how many previous letters the predictions look at. The
+        // choice steps are designed around the previous letter only; with longer
+        // contexts the (sparsely trained) odds get noisy and the right letter can
+        // come out tiny. Single-path steps need the normal order. The model is
+        // built when the alphabet is selected, so set this just before that.
+        let tutOrderKeyCache;
+        function tutOrder(value) {
+            if (tutOrderKeyCache === undefined) {
+                tutOrderKeyCache = -1;
+                const n = dasher.getParameterCount();
+                for (let i = 0; i < n; i++) {
+                    const info = dasher.getParameterInfo(i);
+                    if (info && info.name === 'Max N-gram Order') { tutOrderKeyCache = info.key; break; }
+                }
+            }
+            if (tutOrderKeyCache < 0) return null;
+            const old = dasher.getLongParameter(tutOrderKeyCache);
+            if (value !== undefined && value !== old) dasher.setLongParameter(tutOrderKeyCache, value);
+            return old;
+        }
+
+        // The last steps use plain lowercase letters + space with Dasher's usual
+        // English predictions (the regular alphabet has capitals, digits and
+        // punctuation, which this lesson shouldn't make the learner deal with).
+        function tutBuildFullAlphabet(id) {
+            const FS = dasher.module.FS;
+            const nodes = 'abcdefghijklmnopqrstuvwxyz'.split('').map(c => `<node label="${c}"><textCharAction /></node>`)
+                .concat(['<node label="\u25A1"><textCharAction unicode="32" /></node>']).join('\n');
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE alphabet SYSTEM "../alphabet.dtd">\n`
+                + `<alphabet name="${id}" orientation="LR" trainingFilename="training_english_GB.txt" colorsName="European/Asian">\n`
+                + `<group name="g" colorInfoName="lowercase">\n${nodes}\n</group>\n</alphabet>`;
+            FS.writeFile('/data/alphabets/alphabet.' + id + '.xml', xml);
+            dasher.setScreenSize(canvas.width, canvas.height);
+        }
+
+        function tutStartStep(i) {
+            const ex = TUT_EXERCISES[i];
+            tutClearTimers();
+            tut.index = i;
+            tut.locked = false;
+            tut.intro = true;      // no input until the prompt has slid up
+            dasher.mouseUp();
+            // gentler speed for the early steps (restored when the lesson ends)
+            const sp = TUT_SPEED[ex.opts];
+            dasher.setSpeed(sp ? Math.min(tut.saved.speed, sp) : tut.saved.speed);
+            updateSpeedDisplay();
+            // Clear the text first: the model's starting context is read from it.
+            // (Don't use dasher.reset() here: it also drops the default
+            // start-of-text context, which changes the odds at the first letter.)
+            dasher.resetOutputText();
+            extraPrefix = '';
+            // The model is rebuilt on every alphabet switch, so the exclusion
+            // setting has to be right before it. (The guided steps need it off
+            // for exact odds; it's safe to change while zoomed in.)
+            tutLongParam('LP_LM_UPDATE_EXCLUSION', ex.opts > 0 ? 0 : tut.saved.updateExcl);
+            tutOrder(ex.opts >= 2 ? 1 : tut.saved.order);
+            let id;
+            if (ex.opts > 0) {
+                id = `tut_b1_s${i + 1}`;
+                if (!tut.built.has(id)) { tutBuildAlphabet(id, ex.target, ex.opts); tut.built.add(id); }
+            } else {
+                id = 'tut_b1_full';
+                if (!tut.built.has(id)) { tutBuildFullAlphabet(id); tut.built.add(id); }
+            }
+            // Re-selecting the alphabet that is already active does nothing, so
+            // on a restart hop to another one first to get a fresh view.
+            if (dasher.getAlphabet() === id) {
+                const other = tut.built.size > 1 ? [...tut.built].find(x => x !== id) : null;
+                if (other) dasher.setAlphabet(other);
+                else {
+                    tutBuildAlphabet('tut_b1_blank', 'a', 2);
+                    dasher.setAlphabet('tut_b1_blank');
+                }
+            }
+            dasher.setAlphabet(id);
+            tutRenderFlags(ex);
+            tut.assist = false;
+            tut.wrongSince = 0;
+            tutArrow.hidden = true;
+            updateOutput();
+
+            tutStepEl.textContent = `Beginner 1 \u00B7 Step ${i + 1} of ${TUT_EXERCISES.length}`;
+            tutDotsEl.innerHTML = TUT_EXERCISES.map((_, k) =>
+                `<i class="${k < i ? 'done' : (k === i ? 'now' : '')}"></i>`).join('');
+            let hint;
+            if (ex.opts === 1) hint = 'Only one box at a time \u2014 steer into it to spell the word.';
+            else if (ex.opts > 1) hint = `Pick the right letter out of ${ex.opts}.`;
+            else hint = 'Full alphabet \u2014 just like real Dasher!';
+            if (ex.target.includes(' ')) hint += ' The \u25A1 box is a space.';
+            tutMsgEl.className = '';
+            tutMsgEl.textContent = hint;
+            hint += ' Click to start zooming.';
+            tut.hint = hint;
+            tutRenderTarget('');
+            // intro: prompt at the crosshair, then it slides up and input unlocks
+            tutOverlay.classList.add('centered');
+            // Cover the canvas while it is reset. Behind the cover, make sure Dasher
+            // is standing still, then freeze it; reveal the still scene under the prompt.
+            tutCurtain.classList.add('on');
+            tutLater(() => tutProbeStop(() => tutCurtain.classList.remove('on')), 450);
+            tutLater(() => {
+                tutOverlay.classList.remove('centered');
+                // the engine stays frozen until the prompt has landed at the top
+                tutLater(() => { tutFreeze(false); tut.intro = false; }, TUT_SLIDE_MS);
+            }, TUT_INTRO_MS);
+        }
+
+        // Guided steps keep a few ~1% leftover boxes; hide them (and the hidden
+        // end box) so only the real choices show. With 2-4 choices, also leave a
+        // little gap between the boxes so the learner has to look for the letter.
+        function tutRenderFlags(ex) {
+            dasher.sliverRatio = ex.opts > 0 ? 0.1 : 0;
+            dasher.hideLabel = ex.opts === 1 ? TUT_END : '';
+            dasher.boxGapRatio = (ex.opts >= 2 && ex.opts <= 4) ? 0.14 : 0;
+            dasher.labelScale = ex.opts > 0 ? 2 : 1;
+        }
+
+        // While the learner is stuck on a wrong letter, Auto-correct steers the
+        // pointer back (left of the crosshair), which zooms out and removes it.
+        function pointerTo(x, y) {
+            if (tutInputBlocked()) return;
+            if (tut.assist) { x = canvas.width * 0.08; y = canvas.height / 2; }
+            dasher.mouseMove(x, y);
+        }
+
+        function tutRenderTarget(out) {
+            const target = TUT_EXERCISES[tut.index].target;
+            let k = 0;
+            while (k < out.length && k < target.length && out[k] === target[k]) k++;
+            const wrong = out.length > k ? out.slice(k) : '';
+            tutTargetEl.innerHTML = '';
+            const add = (cls, text) => {
+                if (!text) return;
+                const sp = document.createElement('span');
+                sp.className = cls; sp.textContent = text;
+                tutTargetEl.appendChild(sp);
+            };
+            add('done', target.slice(0, k));
+            add('wrong', wrong);
+            add('todo', target.slice(k));
+            return { correct: k, wrong };
+        }
+
+        // The learner typed the whole text: lock input, celebrate, clear the
+        // screen, then bring in the next step (or the finish screen).
+        function tutStepDone() {
+            tut.locked = true;
+            tut.assist = false; tutArrow.hidden = true;
+            tutMsgEl.className = 'good';
+            tutMsgEl.textContent = ['Nice!', 'Great!', 'Well done!', 'Perfect!'][tut.index % 4];
+            dasher.mouseUp();   // release the mouse
+            tutFreeze(true);    // and stop Dasher dead: nothing can zoom from here on
+            tutLater(() => {
+                tutCurtain.classList.add('on');
+                tutLater(() => {
+                    if (tut.index + 1 < TUT_EXERCISES.length) tutStartStep(tut.index + 1);
+                    else tutFinish();
+                }, 450);
+            }, 1200);
+        }
+
+        function updateTutorial() {
+            if (!tut.active || !dasher) return;
+            if (tut.locked || tut.intro) { dasher.mouseUp(); return; }
+            const out = dasher.getOutputText();
+            const target = TUT_EXERCISES[tut.index].target;
+            const { wrong } = tutRenderTarget(out);
+            if (out.startsWith(target)) {
+                tutStepDone();
+            } else if (wrong) {
+                if (!tut.wrongSince) tut.wrongSince = performance.now();
+                tutArrow.hidden = false;
+                tutMsgEl.className = 'bad';
+                if (!tut.assist && tutAssistEl.checked && performance.now() - tut.wrongSince > 3000) tut.assist = true;
+                tutMsgEl.textContent = tut.assist
+                    ? 'Going back for you\u2026 then steer forward into the right letter.'
+                    : 'Oops \u2014 that\u2019s not the next letter. Zoom backwards to undo it, then go forward again.';
+                if (tut.assist) dasher.mouseMove(canvas.width * 0.08, canvas.height / 2);
+            } else {
+                if (tut.wrongSince) {
+                    tut.wrongSince = 0; tut.assist = false; tutArrow.hidden = true;
+                    tutMsgEl.className = '';
+                    tutMsgEl.textContent = 'Back on track \u2014 now go forward again.';
+                } else if (tutMsgEl.className) {
+                    tutMsgEl.className = '';
+                    tutMsgEl.textContent = tut.hint;
+                }
+            }
+        }
+
+        function tutStart() {
+            if (!dasher || tut.active) return;
+            setLearningCenter(false);
+            if (dasher.gameModeActive && dasher.gameModeActive()) leaveGame();
+            tut.saved = {
+                fullAlphabet: dasher.getAlphabet(),
+                // Don't touch LP_UNIFORM: changing it while zoomed crashes the engine.
+                updateExcl: tutLongParam('LP_LM_UPDATE_EXCLUSION'),
+                adaptive: dasher.getBoolParameter(dasher.findParameterKey('BP_LM_ADAPTIVE')),
+                speed: dasher.getSpeed(),
+                order: tutOrder(),
+            };
+            dasher.setBoolParameter(dasher.findParameterKey('BP_LM_ADAPTIVE'), false);
+            tut.active = true;
+            tutDone.hidden = true;
+            tutOverlay.classList.add('centered');
+            tutOverlay.hidden = false;
+            tbGame.classList.add('active');
+            tutStartStep(0);
+        }
+
+        function tutStop() {
+            if (!tut.active) return;
+            tutClearTimers();
+            tutFreeze(false);
+            tutCurtain.classList.remove('on');
+            tutOverlay.classList.remove('centered');
+            tut.intro = false;
+            dasher.setSpeed(tut.saved.speed);
+            updateSpeedDisplay();
+            tut.active = false;
+            tutOverlay.hidden = true;
+            tutDone.hidden = true;
+            dasher.sliverRatio = 0;
+            dasher.hideLabel = '';
+            dasher.boxGapRatio = 0;
+            dasher.labelScale = 1;
+            tut.assist = false;
+            tutArrow.hidden = true;
+            dasher.mouseUp();
+            tutLongParam('LP_LM_UPDATE_EXCLUSION', tut.saved.updateExcl);
+            tutOrder(tut.saved.order);
+            dasher.setBoolParameter(dasher.findParameterKey('BP_LM_ADAPTIVE'), tut.saved.adaptive);
+            dasher.resetOutputText();
+            extraPrefix = '';
+            dasher.setAlphabet(tut.saved.fullAlphabet);
+            updateOutput();
+            tbGame.classList.remove('active');
+        }
+
+        function tutFinish() {
+            tutFreeze(false);
+            tutCurtain.classList.remove('on');
+            tutOverlay.classList.remove('centered');
+            tutArrow.hidden = true;
+            tutOverlay.hidden = true;
+            tutDone.hidden = false;
+            tutConfetti();
+        }
+
+        function tutConfetti() {
+            tutDone.querySelectorAll('.confetti-bit').forEach(n => n.remove());
+            const colors = ['#99D4CD', '#F8E063', '#EB5B5C', '#0F4B75', '#7CC4FA', '#C58AF9'];
+            for (let n = 0; n < 90; n++) {
+                const b = document.createElement('i');
+                b.className = 'confetti-bit';
+                b.style.left = Math.random() * 100 + '%';
+                b.style.background = colors[n % colors.length];
+                b.style.animationDuration = (2.2 + Math.random() * 2.2) + 's';
+                b.style.animationDelay = (Math.random() * 0.8) + 's';
+                b.style.transform = `rotate(${Math.random() * 360}deg)`;
+                tutDone.appendChild(b);
+            }
+        }
+
+        window.dasherTutorial = { start: tutStart, done: tutStepDone, startStep: tutStartStep, stop: tutStop, finish: tutFinish, state: tut }; // debug/console access
+        document.getElementById('start-beginner-1').addEventListener('click', tutStart);
+        document.getElementById('tut-restart').addEventListener('click', () => { if (tut.active) tutStartStep(tut.index); });
+        document.getElementById('tut-exit').addEventListener('click', tutStop);
+        document.getElementById('tut-back').addEventListener('click', () => { tutStop(); setLearningCenter(true); });
+        document.getElementById('tut-again').addEventListener('click', () => { tutDone.hidden = true; tutOverlay.hidden = false; tutStartStep(0); });
         document.getElementById('game-exit').addEventListener('click', leaveGame);
 
         function updateGamePanel() {
@@ -1441,10 +2101,15 @@
         canvas.addEventListener('mousemove', (e) => {
             if (dasher) {
                 const { x, y } = getCanvasCoords(e);
-                dasher.mouseMove(x, y);
+                pointerTo(x, y);
             }
         });
-        canvas.addEventListener('mousedown', () => { if (dasher) dasher.mouseDown(); });
+        canvas.addEventListener('mousedown', (e) => {
+            if (!dasher || tutInputBlocked()) return;
+            const { x, y } = getCanvasCoords(e);
+            pointerTo(x, y);   // the engine aims at its last pointer position
+            dasher.mouseDown();
+        });
         canvas.addEventListener('mouseup', () => { if (dasher) { dasher.mouseUp(); speakNewText(); } });
         canvas.addEventListener('mouseleave', () => { if (dasher) dasher.mouseUp(); });
 
@@ -1452,15 +2117,15 @@
             e.preventDefault();
             if (dasher) {
                 const { x, y } = getCanvasCoords(e);
-                dasher.mouseMove(x, y);
-                dasher.mouseDown();
+                pointerTo(x, y);
+                if (!tutInputBlocked()) dasher.mouseDown();
             }
         }, { passive: false });
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
             if (dasher) {
                 const { x, y } = getCanvasCoords(e);
-                dasher.mouseMove(x, y);
+                pointerTo(x, y);
             }
         }, { passive: false });
         canvas.addEventListener('touchend', (e) => {
@@ -1494,6 +2159,7 @@
                     lastFpsTime = time;
                 }
                 updateGamePanel();
+                updateTutorial();
             }
             requestAnimationFrame(renderLoop);
         }
