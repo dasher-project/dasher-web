@@ -1,0 +1,98 @@
+name: Engine bump
+
+# RFC 0022 item 2: keep this frontend's DasherCore pin current without
+# anyone queuing submodule PRs by hand. Weekly (Mondays 07:00 UTC) and on
+# demand: compares the newest DasherCore v* tag against the pinned submodule;
+# when behind, opens a PR that bumps the pin to the tag, with the engine
+# changelog (commits between pin and tag) in the body. Green CI on that PR
+# is the whole update procedure; frontend adaptation work rides the PR as
+# additional commits before merge.
+#
+# Uses only this repo's GITHUB_TOKEN (same-repo PRs) — no org app, no PAT.
+# SUBMODULE below is the only per-repo line.
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  ENGINE_REPO: dasher-project/DasherCore
+  SUBMODULE: DasherCore
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (recursive submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0  # the pin's describe needs its tag history
+
+      - name: Compare pin to the newest DasherCore tag
+        id: check
+        run: |
+          set -euo pipefail
+          LATEST=$(git ls-remote --tags --sort=-v:refname "https://github.com/${ENGINE_REPO}.git" "v*" \
+            | grep -v "\^{}" | head -1 | sed 's|.*refs/tags/||')
+          PINNED=$(git -C "$SUBMODULE" describe --tags --abbrev=0 2>/dev/null || echo "none")
+          echo "latest=$LATEST pinned=$PINNED"
+          NEWER=$(printf '%s\n%s\n' "$PINNED" "$LATEST" | sort -V | tail -1)
+          if [ "$LATEST" = "$PINNED" ] || [ "$NEWER" != "$LATEST" ]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+            echo "Pin $PINNED is current (latest tag: $LATEST) — nothing to do."
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "latest=$LATEST" >> "$GITHUB_OUTPUT"
+            echo "pinned=$PINNED" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if an engine-bump PR is already open
+        if: steps.check.outputs.up_to_date == 'false'
+        id: dup
+        run: |
+          set -euo pipefail
+          BRANCH="chore/engine-bump-${{ steps.check.outputs.latest }}"
+          if gh pr list --head "$BRANCH" --state open | grep -q .; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "PR for $BRANCH already open."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Bump the submodule to the tag and open the PR
+        if: steps.check.outputs.up_to_date == 'false' && steps.dup.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          LATEST="${{ steps.check.outputs.latest }}"
+          PINNED="${{ steps.check.outputs.pinned }}"
+          BRANCH="chore/engine-bump-${LATEST}"
+          # The engine changelog: commits between the current pin and the tag.
+          git -C "$SUBMODULE" fetch --tags origin
+          CHANGELOG=$(git -C "$SUBMODULE" log --oneline "${PINNED}..${LATEST}" | head -60 || echo "(changelog unavailable)")
+          git config user.name "dasher-bot"
+          git config user.email "noreply@dasher.at"
+          git checkout -b "$BRANCH"
+          git -C "$SUBMODULE" checkout "$LATEST"
+          git add "$SUBMODULE"
+          git commit -m "chore: bump DasherCore to ${LATEST} (RFC 0022 engine-bump automation)"
+          git push origin "$BRANCH"
+          gh pr create --head "$BRANCH" --title "chore: bump DasherCore to ${LATEST}" --body "Automated engine-bump (RFC 0022 item 2). **${PINNED} → ${LATEST}**
+
+          Merge when CI is green; frontend adaptation work rides this PR as additional commits.
+
+          <details><summary>Engine changelog (${PINNED}..${LATEST})</summary>
+
+          \`\`\`
+          ${CHANGELOG}
+          \`\`\`
+          </details>"
+        env:
+          GH_TOKEN: ${{ github.token }}
