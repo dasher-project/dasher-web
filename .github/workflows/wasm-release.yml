@@ -21,7 +21,7 @@ jobs:
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: latest
+          version: 6.0.13  # pinned: 7.0.0 libc++ drops labs/llabs/lldiv (DasherCore#113); matches build-deploy.yml
 
       - name: Verify emcc
         run: emcc --version
